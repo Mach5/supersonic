@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<subsonic-response xmlns="http://subsonic.org/restapi"
+                   status="ok" version="1.1.1">
+
+    <playlists>
+        <playlist id="1" name="Best of the 70s"/>
+        <playlist id="2" name="Best of the 80s"/>
+        <playlist id="3" name="Best of the 90s"/>
+    </playlists>
+
+</subsonic-response>
+
