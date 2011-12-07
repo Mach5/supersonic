@@ -95,6 +95,10 @@ Linux locale issue
 
 DONE IN ANDROID 3.4
 --------------------
+Ensure readable text in notification when background is dark.
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/13416901b8cec7db
+  http://stackoverflow.com/questions/4867338/custom-notification-layouts-and-text-colors/7320604#7320604
+
 
 TODO IN ANDROID 3.4
 --------------------
@@ -758,11 +762,11 @@ Update
     https://myapps.developer.motorola.com/
     https://slideme.org/application/subsonic
     http://www.camangimarket.com/index.html
-svn copy https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk/subsonic-android https://subsonic.svn.sourceforge.net/svnroot/subsonic/tags/android-release-3.3.beta1 -m "Tagging Android 3.3.beta1"
+svn copy https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk/subsonic-android https://subsonic.svn.sourceforge.net/svnroot/subsonic/tags/android-release-3.3 -m "Tagging Android 3.3"
 Create new directory in FRS
   https://sourceforge.net/projects/subsonic/files/android/
 Upload files to SourceForge (in separate shell, REMEMBER TO CHANGE VERSION BELOW).
-  rsync -avP -e ssh subsonic-android/bin/subsonic-release.apk  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/android/3.3.beta1/subsonic-3.3.beta1.apk
+  rsync -avP -e ssh subsonic-android/bin/subsonic-release.apk  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/android/3.3/subsonic-3.3.apk
 
 
 HOW TO RELEASE TRANSCODING PACK

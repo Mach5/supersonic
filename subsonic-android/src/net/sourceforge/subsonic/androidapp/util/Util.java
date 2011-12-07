@@ -40,7 +40,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 import android.widget.Toast;
 import net.sourceforge.subsonic.androidapp.R;
 import net.sourceforge.subsonic.androidapp.activity.DownloadActivity;
@@ -94,6 +97,8 @@ public final class Util {
 
     // Used by hexEncode()
     private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+    private final static Pair<Integer, Integer> NOTIFICATION_TEXT_COLORS = new Pair<Integer, Integer>();
     private static Toast toast;
 
     private Util() {
@@ -591,8 +596,16 @@ public final class Util {
 		// set the text for the notifications
         contentView.setTextViewText(R.id.notification_title, title);
         contentView.setTextViewText(R.id.notification_artist, text);
-        
-        notification.contentView = contentView;  
+
+        Pair<Integer, Integer> colors = getNotificationTextColors(context);
+        if (colors.getFirst() != null) {
+            contentView.setTextColor(R.id.notification_title, colors.getFirst());
+        }
+        if (colors.getSecond() != null) {
+            contentView.setTextColor(R.id.notification_artist, colors.getSecond());
+        }
+
+        notification.contentView = contentView;
         
         Intent notificationIntent = new Intent(context, DownloadActivity.class);
         notification.contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
@@ -772,5 +785,45 @@ public final class Util {
         }
 
         context.sendBroadcast(intent);
+    }
+
+    /**
+     * Resolves the default text color for notifications.
+     *
+     * Based on http://stackoverflow.com/questions/4867338/custom-notification-layouts-and-text-colors/7320604#7320604
+     */
+    private static Pair<Integer, Integer> getNotificationTextColors(Context context) {
+        if (NOTIFICATION_TEXT_COLORS.getFirst() == null && NOTIFICATION_TEXT_COLORS.getSecond() == null) {
+            try {
+                Notification notification = new Notification();
+                String title = "title";
+                String content = "content";
+                notification.setLatestEventInfo(context, title, content, null);
+                LinearLayout group = new LinearLayout(context);
+                ViewGroup event = (ViewGroup) notification.contentView.apply(context, group);
+                findNotificationTextColors(event, title, content);
+                group.removeAllViews();
+            } catch (Exception x) {
+                Log.w(TAG, "Failed to resolve notification text colors.", x);
+            }
+        }
+        return NOTIFICATION_TEXT_COLORS;
+    }
+
+    private static void findNotificationTextColors(ViewGroup group, String title, String content) {
+        for (int i = 0; i < group.getChildCount(); i++) {
+            if (group.getChildAt(i) instanceof TextView) {
+                TextView textView = (TextView) group.getChildAt(i);
+                String text = textView.getText().toString();
+                if (title.equals(text)) {
+                    NOTIFICATION_TEXT_COLORS.setFirst(textView.getTextColors().getDefaultColor());
+                }
+                else if (content.equals(text)) {
+                    NOTIFICATION_TEXT_COLORS.setSecond(textView.getTextColors().getDefaultColor());
+                }
+            }
+            else if (group.getChildAt(i) instanceof ViewGroup)
+                findNotificationTextColors((ViewGroup) group.getChildAt(i), title, content);
+        }
     }
 }
