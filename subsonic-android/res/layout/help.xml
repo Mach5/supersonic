@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<RelativeLayout xmlns:a="http://schemas.android.com/apk/res/android"
-                a:layout_width="fill_parent"
-                a:layout_height="fill_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
 
-    <LinearLayout a:id="@+id/help_buttons"
-                  a:layout_width="fill_parent"
-                  a:layout_height="wrap_content"
-                  a:layout_weight="0"
-                  a:layout_alignParentBottom="true"
-                  a:padding="4dip"
-                  a:gravity="center_horizontal"
-                  a:background="#ffcccccc">
+    <LinearLayout android:id="@+id/help_buttons"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="0"
+                  android:layout_alignParentBottom="true"
+                  android:padding="4dip"
+                  android:gravity="center_horizontal"
+                  android:background="#ffcccccc">
 
-        <Button a:id="@+id/help_back"
-                a:text="@string/help.back"
-                a:layout_width="wrap_content"
-                a:layout_height="fill_parent"
-                a:layout_marginRight="5dip"
-                a:paddingLeft="25dip"
-                a:paddingRight="25dip"/>
+        <Button android:id="@+id/help_back"
+                android:text="@string/help.back"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginRight="5dip"
+                android:paddingLeft="25dip"
+                android:paddingRight="25dip"/>
 
-        <Button a:id="@+id/help_close"
-                a:text="@string/help.close"
-                a:layout_width="wrap_content"
-                a:layout_height="fill_parent"
-                a:layout_marginLeft="5dip"
-                a:paddingLeft="25dip"
-                a:paddingRight="25dip"/>
+        <Button android:id="@+id/help_close"
+                android:text="@string/help.close"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dip"
+                android:paddingLeft="25dip"
+                android:paddingRight="25dip"/>
     </LinearLayout>
 
 
     <WebView
-            a:id="@+id/help_contents"
-            a:layout_width="fill_parent"
-            a:layout_height="wrap_content"
-            a:layout_above="@id/help_buttons"
-            a:layout_weight="1"
-            a:fadingEdge="vertical"
-            a:fadingEdgeLength="12dip"/>
+            android:id="@+id/help_contents"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/help_buttons"
+            android:layout_weight="1"
+            android:fadingEdge="vertical"
+            android:fadingEdgeLength="12dip"/>
 
   </RelativeLayout>

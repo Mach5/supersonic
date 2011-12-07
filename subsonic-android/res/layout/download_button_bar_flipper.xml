@@ -1,61 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <net.sourceforge.subsonic.androidapp.util.MyViewFlipper
-        xmlns:a="http://schemas.android.com/apk/res/android"
-        a:id="@+id/download_button_bar_flipper"
-        a:layout_width="fill_parent"
-        a:layout_height="wrap_content"
-        a:background="@android:color/black">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/download_button_bar_flipper"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/black">
 
     <RelativeLayout
-            a:layout_width="fill_parent"
-            a:layout_height="wrap_content"
-            a:background="@android:color/black"
-            a:paddingLeft="8dip"
-            a:paddingRight="8dip">
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/black"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip">
 
         <TextView
-                a:id="@+id/download_position"
-                a:layout_width="wrap_content"
-                a:layout_height="wrap_content"
-                a:layout_alignParentLeft="true"
-                a:layout_alignParentTop="true"
-                a:layout_marginRight="6dip"
-                a:text="0:00"
-                a:textAppearance="?android:attr/textAppearanceSmall"
-                a:textColor="@color/mediaControlForeground"/>
+                android:id="@+id/download_position"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="6dip"
+                android:text="0:00"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/mediaControlForeground"/>
         <TextView
-                a:id="@+id/download_duration"
-                a:layout_width="wrap_content"
-                a:layout_height="wrap_content"
-                a:layout_alignParentRight="true"
-                a:layout_alignParentTop="true"
-                a:layout_marginLeft="6dip"
-                a:text="-:--"
-                a:textAppearance="?android:attr/textAppearanceSmall"
-                a:textColor="@color/mediaControlForeground"/>
+                android:id="@+id/download_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="6dip"
+                android:text="-:--"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/mediaControlForeground"/>
         <TextView
-                a:id="@+id/download_artist"
-                a:layout_width="wrap_content"
-                a:layout_height="wrap_content"
-                a:layout_toRightOf="@+id/download_position"
-                a:layout_toLeftOf="@+id/download_duration"
-                a:layout_centerHorizontal="true"
-                a:layout_alignParentTop="true"
-                a:singleLine="true"
-                a:ellipsize="end"
-                a:gravity="center_horizontal"
-                a:textAppearance="?android:attr/textAppearanceSmall"
-                a:textColor="#c0c0c0"/>
+                android:id="@+id/download_artist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/download_position"
+                android:layout_toLeftOf="@+id/download_duration"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#c0c0c0"/>
         <TextView
-                a:id="@+id/download_album"
-                a:layout_width="wrap_content"
-                a:layout_height="wrap_content"
-                a:layout_centerHorizontal="true"
-                a:layout_below="@+id/download_artist"
-                a:singleLine="true"
-                a:ellipsize="end"
-                a:textAppearance="?android:attr/textAppearanceSmall"
-                a:textColor="#c0c0c0"/>
+                android:id="@+id/download_album"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/download_artist"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#c0c0c0"/>
     </RelativeLayout>
 
     <include layout="@layout/button_bar"/>

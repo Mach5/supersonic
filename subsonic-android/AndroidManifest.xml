@@ -1,116 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:a="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="net.sourceforge.subsonic.androidapp"
-          a:installLocation="auto"
-          a:versionCode="46"
-          a:versionName="3.3">
+          android:installLocation="auto"
+          android:versionCode="46"
+          android:versionName="3.3">
 
-    <uses-permission a:name="android.permission.INTERNET"/>
-    <uses-permission a:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission a:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission a:name="android.permission.WAKE_LOCK"/>
-    <uses-permission a:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission a:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission a:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
-    <uses-sdk a:minSdkVersion="3" a:targetSdkVersion="10"/>
+    <uses-sdk android:minSdkVersion="3" android:targetSdkVersion="10"/>
 
-    <supports-screens a:anyDensity="true" a:xlargeScreens="true" a:largeScreens="true" a:normalScreens="true" a:smallScreens="true"/>
+    <supports-screens android:anyDensity="true" android:xlargeScreens="true" android:largeScreens="true" android:normalScreens="true" android:smallScreens="true"/>
 
-    <application a:label="@string/common.appname" a:icon="@drawable/launch" a:theme="@style/Wheat">
+    <application android:label="@string/common.appname" android:icon="@drawable/launch" android:theme="@style/Wheat">
 
-        <activity a:name="net.sourceforge.subsonic.androidapp.activity.MainActivity"
-                  a:label="Subsonic"
-                  a:configChanges="orientation|keyboardHidden"
-                  a:launchMode="standard">
+        <activity android:name="net.sourceforge.subsonic.androidapp.activity.MainActivity"
+                  android:label="Subsonic"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:launchMode="standard">
             <intent-filter>
-                <action a:name="android.intent.action.MAIN"/>
-                <category a:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity a:name="net.sourceforge.subsonic.androidapp.activity.SelectArtistActivity"
-                  a:configChanges="orientation|keyboardHidden"
-                  a:launchMode="standard"/>
+        <activity android:name="net.sourceforge.subsonic.androidapp.activity.SelectArtistActivity"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:launchMode="standard"/>
 
-        <activity a:name="net.sourceforge.subsonic.androidapp.activity.SelectAlbumActivity"
-                  a:configChanges="orientation|keyboardHidden"/>
+        <activity android:name="net.sourceforge.subsonic.androidapp.activity.SelectAlbumActivity"
+                  android:configChanges="orientation|keyboardHidden"/>
 
-        <activity a:name="net.sourceforge.subsonic.androidapp.activity.SearchActivity"
-                  a:label="@string/search.label"
-                  a:configChanges="orientation|keyboardHidden"
-                  a:launchMode="singleTask"/>
+        <activity android:name="net.sourceforge.subsonic.androidapp.activity.SearchActivity"
+                  android:label="@string/search.label"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:launchMode="singleTask"/>
 
-        <activity a:name="net.sourceforge.subsonic.androidapp.activity.SelectPlaylistActivity"
-                  a:label="@string/playlist.label"
-                  a:configChanges="orientation|keyboardHidden"
-                  a:launchMode="standard"/>
+        <activity android:name="net.sourceforge.subsonic.androidapp.activity.SelectPlaylistActivity"
+                  android:label="@string/playlist.label"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:launchMode="standard"/>
 
-        <activity a:name="net.sourceforge.subsonic.androidapp.activity.DownloadActivity"
-                  a:configChanges="keyboardHidden"
-                  a:launchMode="singleTask"/>
+        <activity android:name="net.sourceforge.subsonic.androidapp.activity.DownloadActivity"
+                  android:configChanges="keyboardHidden"
+                  android:launchMode="singleTask"/>
 
-        <activity a:name="net.sourceforge.subsonic.androidapp.activity.SettingsActivity"
-                  a:theme="@android:style/Theme"
-                  a:configChanges="orientation|keyboardHidden"
-                  a:launchMode="singleTask"/>
+        <activity android:name="net.sourceforge.subsonic.androidapp.activity.SettingsActivity"
+                  android:theme="@android:style/Theme"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:launchMode="singleTask"/>
 
-        <activity a:name="net.sourceforge.subsonic.androidapp.activity.HelpActivity"
-                  a:label="@string/help.label"
-                  a:launchMode="singleTask"/>
+        <activity android:name="net.sourceforge.subsonic.androidapp.activity.HelpActivity"
+                  android:label="@string/help.label"
+                  android:launchMode="singleTask"/>
 
-        <activity a:name="net.sourceforge.subsonic.androidapp.activity.LyricsActivity"
-                  a:configChanges="orientation|keyboardHidden"
-                  a:launchMode="singleTask"/>
+        <activity android:name="net.sourceforge.subsonic.androidapp.activity.LyricsActivity"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:launchMode="singleTask"/>
 
-        <activity a:name="net.sourceforge.subsonic.androidapp.activity.EqualizerActivity"
-                  a:label="@string/equalizer.label"
-                  a:configChanges="orientation|keyboardHidden"
-                  a:launchMode="singleTask"/>
+        <activity android:name="net.sourceforge.subsonic.androidapp.activity.EqualizerActivity"
+                  android:label="@string/equalizer.label"
+                  android:configChanges="orientation|keyboardHidden"
+                  android:launchMode="singleTask"/>
 
-        <activity a:name="net.sourceforge.subsonic.androidapp.activity.VoiceQueryReceiverActivity"
-                  a:launchMode="singleTask">
+        <activity android:name="net.sourceforge.subsonic.androidapp.activity.VoiceQueryReceiverActivity"
+                  android:launchMode="singleTask">
             <intent-filter>
-                <action a:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
-                <category a:name="android.intent.category.DEFAULT" />
+                <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <activity a:name="net.sourceforge.subsonic.androidapp.activity.QueryReceiverActivity"
-                  a:launchMode="singleTask">
+        <activity android:name="net.sourceforge.subsonic.androidapp.activity.QueryReceiverActivity"
+                  android:launchMode="singleTask">
             <intent-filter>
-                <action a:name="android.intent.action.SEARCH"/>
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
-            <meta-data a:name="android.app.searchable" a:resource="@xml/searchable"/>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
         </activity>
 
-        <service a:name="net.sourceforge.subsonic.androidapp.service.DownloadServiceImpl"
-                 a:label="Subsonic Download Service"/>
+        <service android:name="net.sourceforge.subsonic.androidapp.service.DownloadServiceImpl"
+                 android:label="Subsonic Download Service"/>
 
-        <receiver a:name="net.sourceforge.subsonic.androidapp.receiver.MediaButtonIntentReceiver">
-            <intent-filter a:priority="999">
-                <action a:name="android.intent.action.MEDIA_BUTTON" />
+        <receiver android:name="net.sourceforge.subsonic.androidapp.receiver.MediaButtonIntentReceiver">
+            <intent-filter android:priority="999">
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 
-        <receiver a:name="net.sourceforge.subsonic.androidapp.receiver.BluetoothIntentReceiver">
+        <receiver android:name="net.sourceforge.subsonic.androidapp.receiver.BluetoothIntentReceiver">
             <intent-filter>
-                <action a:name="android.bluetooth.a2dp.action.SINK_STATE_CHANGED"/>
+                <action android:name="android.bluetooth.a2dp.action.SINK_STATE_CHANGED"/>
             </intent-filter>
         </receiver>
 
-        <receiver a:name="net.sourceforge.subsonic.androidapp.provider.SubsonicAppWidgetProvider" >
+        <receiver android:name="net.sourceforge.subsonic.androidapp.provider.SubsonicAppWidgetProvider" >
             <intent-filter>
-                <action a:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
-            <meta-data a:name="android.appwidget.provider" a:resource="@xml/appwidget_info"/>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/appwidget_info"/>
         </receiver>
 
-        <provider a:name="net.sourceforge.subsonic.androidapp.provider.SearchSuggestionProvider"
-                  a:authorities="net.sourceforge.subsonic.androidapp.provider.SearchSuggestionProvider"/>
+        <provider android:name="net.sourceforge.subsonic.androidapp.provider.SearchSuggestionProvider"
+                  android:authorities="net.sourceforge.subsonic.androidapp.provider.SearchSuggestionProvider"/>
 
-        <meta-data a:name="android.app.default_searchable"
-                   a:value="net.sourceforge.subsonic.androidapp.activity.QueryReceiverActivity"/>
+        <meta-data android:name="android.app.default_searchable"
+                   android:value="net.sourceforge.subsonic.androidapp.activity.QueryReceiverActivity"/>
 
     </application>
 

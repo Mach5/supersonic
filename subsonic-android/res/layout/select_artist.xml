@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-              a:orientation="vertical"
-              a:layout_width="fill_parent"
-              a:layout_height="fill_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
 
     <include layout="@layout/action_bar"/>
 
     <View
-            a:layout_width="fill_parent"
-            a:layout_height="1px"
-            a:background="@color/dividerColor"/>
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/dividerColor"/>
 
     <include layout="@layout/tab_progress"/>
 
-    <ListView a:id="@+id/select_artist_list"
-              a:textFilterEnabled="true"
-              a:fastScrollEnabled="true"
-              a:layout_width="fill_parent"
-              a:layout_height="0dip"
-              a:layout_weight="1.0"/>
+    <ListView android:id="@+id/select_artist_list"
+              android:textFilterEnabled="true"
+              android:fastScrollEnabled="true"
+              android:layout_width="fill_parent"
+              android:layout_height="0dip"
+              android:layout_weight="1.0"/>
 
     <include layout="@layout/button_bar"/>
 

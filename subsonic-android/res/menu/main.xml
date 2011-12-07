@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:a="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item 
-            a:id="@+id/menu_exit"
-            a:icon="@drawable/ic_menu_exit"
-            a:title="@string/menu.exit"
+            android:id="@+id/menu_exit"
+            android:icon="@drawable/ic_menu_exit"
+            android:title="@string/menu.exit"
             />
 
     <item 
-            a:id="@+id/menu_settings"
-            a:icon="@drawable/ic_menu_settings"
-            a:title="@string/menu.settings"
+            android:id="@+id/menu_settings"
+            android:icon="@drawable/ic_menu_settings"
+            android:title="@string/menu.settings"
             />
 
     <item 
-            a:id="@+id/menu_help"
-            a:icon="@drawable/ic_menu_help"
-            a:title="@string/menu.help"
+            android:id="@+id/menu_help"
+            android:icon="@drawable/ic_menu_help"
+            android:title="@string/menu.help"
             />
 
 </menu>

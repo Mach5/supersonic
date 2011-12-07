@@ -1,75 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:a="http://schemas.android.com/apk/res/android"
-              a:orientation="horizontal"
-              a:layout_width="fill_parent"
-              a:layout_height="?android:attr/listPreferredItemHeight">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="?android:attr/listPreferredItemHeight">
 
     <CheckedTextView
-            a:id="@+id/song_check"
-            a:layout_width="wrap_content"
-            a:layout_height="fill_parent"
-            a:gravity="center_vertical"
-            a:checkMark="?android:attr/textCheckMark"
-            a:paddingLeft="3dip"/>
+            android:id="@+id/song_check"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center_vertical"
+            android:checkMark="?android:attr/textCheckMark"
+            android:paddingLeft="3dip"/>
 
-    <LinearLayout a:orientation="vertical"
-                  a:layout_width="0dip"
-                  a:layout_height="wrap_content"
-                  a:layout_weight="1"
-                  a:layout_gravity="center_vertical">
+    <LinearLayout android:orientation="vertical"
+                  android:layout_width="0dip"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  android:layout_gravity="center_vertical">
 
-        <LinearLayout a:orientation="horizontal"
-                      a:layout_width="fill_parent"
-                      a:layout_height="wrap_content"
-                      a:layout_gravity="center_vertical">
-
-            <TextView
-                    a:id="@+id/song_title"
-                    a:layout_width="0dip"
-                    a:layout_height="wrap_content"
-                    a:layout_weight="1"
-                    a:layout_gravity="left|center_vertical"
-                    a:textAppearance="?android:attr/textAppearanceMedium"
-                    a:singleLine="true"
-                    a:ellipsize="marquee"
-                    a:drawablePadding="6dip"
-                    a:paddingLeft="6dip"
-                    a:paddingRight="6dip"/>
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical">
 
             <TextView
-                    a:id="@+id/song_status"
-                    a:layout_width="wrap_content"
-                    a:layout_height="wrap_content"
-                    a:layout_gravity="right|center_vertical"
-                    a:drawablePadding="1dip"
-                    a:paddingRight="6dip"/>
+                    android:id="@+id/song_title"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="left|center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:drawablePadding="6dip"
+                    android:paddingLeft="6dip"
+                    android:paddingRight="6dip"/>
+
+            <TextView
+                    android:id="@+id/song_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:drawablePadding="1dip"
+                    android:paddingRight="6dip"/>
         </LinearLayout>
 
-        <LinearLayout a:orientation="horizontal"
-                      a:layout_width="fill_parent"
-                      a:layout_height="wrap_content"
-                      a:layout_gravity="center_vertical">
+        <LinearLayout android:orientation="horizontal"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical">
 
             <TextView
-                    a:id="@+id/song_artist"
-                    a:layout_width="0dip"
-                    a:layout_height="wrap_content"
-                    a:layout_weight="1"
-                    a:layout_gravity="left|center_vertical"
-                    a:textAppearance="?android:attr/textAppearanceSmall"
-                    a:singleLine="true"
-                    a:ellipsize="middle"
-                    a:paddingLeft="6dip"/>
+                    android:id="@+id/song_artist"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="left|center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:singleLine="true"
+                    android:ellipsize="middle"
+                    android:paddingLeft="6dip"/>
 
             <TextView
-                    a:id="@+id/song_duration"
-                    a:layout_width="wrap_content"
-                    a:layout_height="wrap_content"
-                    a:layout_gravity="right|center_vertical"
-                    a:textAppearance="?android:attr/textAppearanceSmall"
-                    a:singleLine="true"
-                    a:paddingLeft="3dip"
-                    a:paddingRight="9dip"/>
+                    android:id="@+id/song_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:singleLine="true"
+                    android:paddingLeft="3dip"
+                    android:paddingRight="9dip"/>
 
         </LinearLayout>
     </LinearLayout>
