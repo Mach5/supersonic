@@ -13,16 +13,16 @@ TRANSCODING
 
 /var/subsonic/transcode/ffmpeg -ss 0 -i /Users/sindre/Movies/Test/Sample.wtv -async 1 -b 1000k -s 480x360 -ar 44100 -ac 2 -f flv -scodec copy -vcodec libx264 -preset veryfast -threads 0 foo.flv
 
-DONE IN 4.6.beta2
+DONE IN 4.7
 -----------------
+Serve generic cover art if failing to scale original.
 
-TODO IN 4.6
+TODO IN 4.7
 -----------------
 Retain track number when doing lame downsampling.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 Add "-map_meta_data 0:0" to transcoding?
   http://forum.subsonic.org/forum/viewtopic.php?f=3&t=3270&p=34114#p34114
-Serve generic cover art if failing to load original.
 REST: Ensure that podcast dir is included.
 Test with IE 9
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=8295&p=33672#p33672

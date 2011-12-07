@@ -90,8 +90,12 @@ public class CoverArtController implements Controller, LastModified {
         }
 
         // Send cached image, creating it if necessary.
-        File cachedImage = getCachedImage(file, size);
-        sendImage(cachedImage, response);
+        try {
+            File cachedImage = getCachedImage(file, size);
+            sendImage(cachedImage, response);
+        } catch (IOException e) {
+            sendDefault(size, response);
+        }
 
         return null;
     }
