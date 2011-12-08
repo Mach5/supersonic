@@ -95,7 +95,7 @@ public class SettingsService {
     private static final String KEY_LICENSE_EMAIL = "LicenseEmail";
     private static final String KEY_LICENSE_CODE = "LicenseCode";
     private static final String KEY_LICENSE_DATE = "LicenseDate";
-    private static final String KEY_DOWNSAMPLING_COMMAND = "DownsamplingCommand2";
+    private static final String KEY_DOWNSAMPLING_COMMAND = "DownsamplingCommand3";
     private static final String KEY_JUKEBOX_COMMAND = "JukeboxCommand";
     private static final String KEY_REWRITE_URL = "RewriteUrl";
     private static final String KEY_LDAP_ENABLED = "LdapEnabled";
@@ -153,7 +153,7 @@ public class SettingsService {
     private static final String DEFAULT_LICENSE_EMAIL = null;
     private static final String DEFAULT_LICENSE_CODE = null;
     private static final String DEFAULT_LICENSE_DATE = null;
-    private static final String DEFAULT_DOWNSAMPLING_COMMAND = "lame -S -h --resample 44.1 -b %b --tt %t --ta %a --tl %l %s -";
+    private static final String DEFAULT_DOWNSAMPLING_COMMAND = "ffmpeg -i %s -ab %bk -v 0 -f mp3 -";
     private static final String DEFAULT_JUKEBOX_COMMAND = "ffmpeg -ss %o -i %s -v 0 -f au -";
     private static final boolean DEFAULT_REWRITE_URL = true;
     private static final boolean DEFAULT_LDAP_ENABLED = false;
@@ -176,8 +176,8 @@ public class SettingsService {
     private static final long DEFAULT_SETTINGS_CHANGED = 0L;
 
     // Array of obsolete keys.  Used to clean property file.
-    private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort", "DownsamplingCommand",
-            "AutoCoverBatch", "MusicMask", "VideoMask", "CoverArtMask");
+    private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort",
+            "DownsamplingCommand", "DownsamplingCommand2", "AutoCoverBatch", "MusicMask", "VideoMask", "CoverArtMask");
 
     private static final String LOCALES_FILE = "/net/sourceforge/subsonic/i18n/locales.txt";
     private static final String THEMES_FILE = "/net/sourceforge/subsonic/theme/themes.txt";

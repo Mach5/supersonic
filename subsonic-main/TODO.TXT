@@ -15,12 +15,13 @@ TRANSCODING
 DONE IN 4.7
 -----------------
 Serve generic cover art if failing to scale original.
+Use ffmpeg rather than lame for downsampling.
+  Retain track number when doing lame downsampling.
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 
 TODO IN 4.7
 -----------------
 Serve generic cover art if failing to load original.
-Retain track number when doing lame downsampling.
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
   http://forum.subsonic.org/forum/viewtopic.php?f=3&t=3270&p=34114#p34114
