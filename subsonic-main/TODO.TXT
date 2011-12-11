@@ -21,6 +21,13 @@ Use ffmpeg rather than lame for downsampling.
 
 TODO IN 4.7
 -----------------
+REST API authentication & session
+  https://mail.google.com/mail/?shva=1#inbox/1341d1f45f89d15a
+  Update API doc
+  Wrong username/password with BASIC auth gives bad error message "401 LDAP authentication disabled for user"
+  wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies  "http://localhost:8080/rest/ping.view?u=admin&p=admin&v=1.6&c=android" -O -
+  wget --auth-no-challenge --http-user=admin --http-password=admin --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies  "http://localhost:8080/rest/ping.view?u=sindre&p=foo&v=1.6&c=android" -O -
+
 Serve generic cover art if failing to load original.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
@@ -104,6 +111,7 @@ Fix crash in SectionIndexer
 
 TODO IN ANDROID 3.4
 --------------------
+Don't pause on incoming call if RC.
 Change generic album art.
 Bug if switching to RC and back for a song that is currently downloading.
 Add OFL button.

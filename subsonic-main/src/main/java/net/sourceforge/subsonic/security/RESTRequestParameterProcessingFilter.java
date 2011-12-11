@@ -88,20 +88,8 @@ public class RESTRequestParameterProcessingFilter implements Filter {
         // The username and password parameters are not required if the user
         // was previously authenticated, for example using Basic Auth.
         Authentication previousAuth = SecurityContextHolder.getContext().getAuthentication();
-        if (previousAuth == null) {
-            if (username == null || password == null) {
-                errorCode = RESTController.ErrorCode.MISSING_PARAMETER;
-            }
-        } else {
-            if (username != null || password != null) {
-//                LOG.warn("Username and password provided in URL params, but discarded. User already authenticated as "
-//                        + previousAuth.getName());
-            }
-            username = previousAuth.getName();
-        }
-
-
-        if (version == null || client == null) {
+        boolean missingCredentials = previousAuth == null && (username == null || password == null);
+        if (missingCredentials || version == null || client == null) {
             errorCode = RESTController.ErrorCode.MISSING_PARAMETER;
         }
 
@@ -109,8 +97,8 @@ public class RESTRequestParameterProcessingFilter implements Filter {
             errorCode = checkAPIVersion(version);
         }
 
-        if (errorCode == null && previousAuth == null) {
-            errorCode = authenticate(username, password);
+        if (errorCode == null) {
+            errorCode = authenticate(username, password, previousAuth);
         }
 
         if (errorCode == null) {
@@ -121,8 +109,6 @@ public class RESTRequestParameterProcessingFilter implements Filter {
         if (errorCode == null) {
             chain.doFilter(request, response);
         } else {
-            LOG.info("Authentication failed for user " + username);
-
             SecurityContextHolder.getContext().setAuthentication(null);
             sendErrorXml(httpRequest, httpResponse, errorCode);
         }
@@ -142,12 +128,25 @@ public class RESTRequestParameterProcessingFilter implements Filter {
         return null;
     }
 
-    private RESTController.ErrorCode authenticate(String username, String password) {
+    private RESTController.ErrorCode authenticate(String username, String password, Authentication previousAuth) {
+
+        // Previously authenticated and username not overridden?
+        if (username == null && previousAuth != null) {
+            return null;
+        }
+
+        // Ensure password is given.
+        if (password == null) {
+            return RESTController.ErrorCode.MISSING_PARAMETER;
+        }
+
         try {
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
             Authentication authResult = authenticationManager.authenticate(authRequest);
             SecurityContextHolder.getContext().setAuthentication(authResult);
+//            LOG.info("Authentication succeeded for user " + username);
         } catch (AuthenticationException x) {
+            LOG.info("Authentication failed for user " + username);
             return RESTController.ErrorCode.NOT_AUTHENTICATED;
         }
         return null;
