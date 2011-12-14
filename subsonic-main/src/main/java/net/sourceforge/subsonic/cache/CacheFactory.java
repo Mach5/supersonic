@@ -20,13 +20,18 @@ package net.sourceforge.subsonic.cache;
 
 
 import java.io.File;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.InitializingBean;
 
+import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.config.Configuration;
 import net.sf.ehcache.config.ConfigurationFactory;
+import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.SettingsService;
 
 /**
@@ -37,6 +42,7 @@ import net.sourceforge.subsonic.service.SettingsService;
  */
 public class CacheFactory implements InitializingBean {
 
+    private static final Logger LOG = Logger.getLogger(CacheFactory.class);
     private CacheManager cacheManager;
 
     public void afterPropertiesSet() throws Exception {
@@ -47,9 +53,29 @@ public class CacheFactory implements InitializingBean {
         configuration.getDiskStoreConfiguration().setPath(cacheDir.getPath());
 
         cacheManager = CacheManager.create(configuration);
+
+        // Flush caches every hour.
+        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+        Runnable runnable = new Runnable() {
+            public void run() {
+                flushCaches();
+            }
+        };
+        // TODO
+        executor.scheduleWithFixedDelay(runnable, 60L, 60L, TimeUnit.SECONDS);
     }
 
     public Ehcache getCache(String name) {
-        return cacheManager.getCache(name);
+        Cache cache = cacheManager.getCache(name);
+        LOG.debug("Using " + name + " with " + cache.getStatistics().getObjectCount() + " entries.");
+        return cache;
     }
+
+    private void flushCaches() {
+        for (String name : cacheManager.getCacheNames()) {
+            cacheManager.getCache(name).flush();
+            LOG.debug("Flushing " + name);
+        }
+    }
+
 }

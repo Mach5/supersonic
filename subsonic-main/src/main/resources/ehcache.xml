@@ -213,27 +213,24 @@ used with JMX monitors.
            timeToIdleSeconds="0"
            timeToLiveSeconds="0"
            overflowToDisk="false"
-           diskSpoolBufferSizeMB="3"
+           diskSpoolBufferSizeMB="1"
            statistics="true"
             />
 
     <cache name="childDirCache"
            maxElementsInMemory="100"
            eternal="true"
-           timeToIdleSeconds="0"
-           timeToLiveSeconds="0"
            overflowToDisk="false"
-           diskSpoolBufferSizeMB="2"
+           diskSpoolBufferSizeMB="1"
            statistics="true"
             />
 
     <cache name="coverArtCache"
            maxElementsInMemory="200"
-           eternal="false"
-           timeToIdleSeconds="300"
-           timeToLiveSeconds="300"
-           overflowToDisk="false"
-           diskSpoolBufferSizeMB="2"
+           eternal="true"
+           diskPersistent="true"
+           overflowToDisk="true"
+           diskSpoolBufferSizeMB="1"
            statistics="true"
             />
 
@@ -248,16 +245,16 @@ used with JMX monitors.
             />
 
     <cache name="musicFolderCache"
-           maxElementsInMemory="0"
+           maxElementsInMemory="1"
            eternal="true"
            diskPersistent="true"
            overflowToDisk="true"
            statistics="true"
-           diskSpoolBufferSizeMB="2"
+           diskSpoolBufferSizeMB="1"
             />
 
     <cache name="chatCache"
-           maxElementsInMemory="0"
+           maxElementsInMemory="1"
            eternal="true"
            diskPersistent="true"
            overflowToDisk="true"

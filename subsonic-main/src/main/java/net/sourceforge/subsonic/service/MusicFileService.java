@@ -106,7 +106,7 @@ public class MusicFileService {
     public List<File> getCoverArt(MusicFile dir, int limit, int depth) throws IOException {
 
         // Look in cache.
-        Element element = coverArtCache.get(dir);
+        Element element = coverArtCache.get(dir.getPath());
         if (element != null) {
 
             // Check if cache is up-to-date.
@@ -119,7 +119,7 @@ public class MusicFileService {
         List<File> result = new ArrayList<File>();
         listCoverArtRecursively(dir, result, limit, depth);
 
-        coverArtCache.put(new Element(dir, result));
+        coverArtCache.put(new Element(dir.getPath(), result));
         return result;
     }
 
