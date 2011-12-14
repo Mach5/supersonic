@@ -28,6 +28,7 @@
     </bean>
 
     <bean id="coverArtCache" class="net.sourceforge.subsonic.domain.Cache">
+        <constructor-arg value="coverArt"/>
         <constructor-arg value="1"/>
         <constructor-arg ref="cacheDao"/>
     </bean>

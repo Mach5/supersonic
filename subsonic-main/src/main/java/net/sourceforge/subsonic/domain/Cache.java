@@ -26,20 +26,38 @@ import net.sourceforge.subsonic.dao.CacheDao;
  */
 public class Cache {
 
+    private final String name;
     private final int type;
     private final CacheDao cacheDao;
 
-    public Cache(int type, CacheDao cacheDao) {
+    private long hits;
+    private long misses;
+
+    public Cache(String name, int type, CacheDao cacheDao) {
+        this.name = name;
         this.type = type;
         this.cacheDao = cacheDao;
     }
 
     public CacheElement get(String key) {
-        return cacheDao.getCacheElement(type, key);
+        CacheElement element = cacheDao.getCacheElement(type, key);
+        if (element == null) {
+            misses++;
+        } else {
+            hits++;
+        }
+        return element;
     }
 
     public void put(String key, Object value) {
         CacheElement element = new CacheElement(type, key, value, System.currentTimeMillis());
         cacheDao.createCacheElement(element);
+    }
+
+    @Override
+    public String toString() {
+        double hitRate = (double) hits / (double) (hits + misses);
+        long hitRatePercentage = Math.round(hitRate * 100.0);
+        return "Cache '" + name + "': " + hits + " of " + (hits + misses) + " hits (" + hitRatePercentage + "%)";
     }
 }
