@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class MusicFileService {
 
-    private Ehcache musicFileCache;
+    private Cache musicFileCache;
     private Ehcache childDirCache;
     private Cache coverArtCache;
 
@@ -56,11 +56,11 @@ public class MusicFileService {
      * @throws SecurityException If access is denied to the given file.
      */
     public MusicFile getMusicFile(File file) {
-        Element element = musicFileCache.get(file);
+        CacheElement element = musicFileCache.get(file.getPath());
         if (element != null) {
 
             // Check if cache is up-to-date.
-            MusicFile cachedMusicFile = (MusicFile) element.getObjectValue();
+            MusicFile cachedMusicFile = (MusicFile) element.getValue();
             if (cachedMusicFile.lastModified() >= file.lastModified()) {
                 return cachedMusicFile;
             }
@@ -71,7 +71,10 @@ public class MusicFileService {
         }
 
         MusicFile musicFile = new MusicFile(file);
-        musicFileCache.put(new Element(file, musicFile));
+        // TODO: Consider reading metadata before caching.
+//        musicFile.getMetaData();
+
+        musicFileCache.put(file.getPath(), musicFile);
 
         return musicFile;
     }
@@ -236,7 +239,7 @@ public class MusicFileService {
         this.settingsService = settingsService;
     }
 
-    public void setMusicFileCache(Ehcache musicFileCache) {
+    public void setMusicFileCache(Cache musicFileCache) {
         this.musicFileCache = musicFileCache;
     }
 

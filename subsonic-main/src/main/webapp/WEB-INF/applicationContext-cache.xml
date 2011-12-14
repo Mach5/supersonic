@@ -11,10 +11,6 @@
         <constructor-arg value="userCache"/>
     </bean>
 
-    <bean id="musicFileCache" factory-bean="cacheFactory" factory-method="getCache">
-        <constructor-arg value="musicFileCache"/>
-    </bean>
-
     <bean id="childDirCache" factory-bean="cacheFactory" factory-method="getCache">
         <constructor-arg value="childDirCache"/>
     </bean>
@@ -32,5 +28,12 @@
         <constructor-arg value="1"/>
         <constructor-arg ref="cacheDao"/>
     </bean>
+
+    <bean id="musicFileCache" class="net.sourceforge.subsonic.domain.Cache">
+        <constructor-arg value="musicFile"/>
+        <constructor-arg value="2"/>
+        <constructor-arg ref="cacheDao"/>
+    </bean>
+
 
 </beans>

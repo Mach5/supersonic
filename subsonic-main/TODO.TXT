@@ -33,10 +33,9 @@ Improve performance on network shares
   http://forum.subsonic.org/forum/viewtopic.php?t=3771
   https://mail.google.com/mail/?shva=1#inbox/1343272326ddfa84
   Improve caching.
-  Upgrade Ehcache.
-  Install Ehcache Monitor.
   Use persistent cache.
-  Cache to SUBSONIC_HOME/cache
+  Consider caching musicfile metadata.
+
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
   http://forum.subsonic.org/forum/viewtopic.php?f=3&t=3270&p=34114#p34114
