@@ -205,8 +205,14 @@
 
         <dependency>
             <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <version>1.6.0-beta3</version>
+            <artifactId>ehcache-core</artifactId>
+            <version>2.5.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.terracotta</groupId>
+            <artifactId>ehcache-probe</artifactId>
+            <version>1.0.3</version>
         </dependency>
 
         <dependency>

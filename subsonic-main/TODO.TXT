@@ -112,6 +112,8 @@ Fix crash in SectionIndexer
 TODO IN ANDROID 3.4
 --------------------
 Don't pause on incoming call if RC.
+ICS theme
+  http://forum.subsonic.org/forum/viewtopic.php?f=5&t=8497
 Change generic album art.
 Bug if switching to RC and back for a song that is currently downloading.
 Add OFL button.
