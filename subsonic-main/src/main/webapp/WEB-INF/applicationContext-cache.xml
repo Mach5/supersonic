@@ -4,38 +4,31 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:/ehcache.xml"/>
+
+    <bean id="cacheFactory" class="net.sourceforge.subsonic.cache.CacheFactory"/>
+
+    <bean id="userCache" factory-bean="cacheFactory" factory-method="getCache">
+        <constructor-arg value="userCache"/>
     </bean>
 
-    <bean id="userCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-        <property name="cacheManager" ref="cacheManager"/>
-        <property name="cacheName" value="userCache"/>
+    <bean id="musicFileCache" factory-bean="cacheFactory" factory-method="getCache">
+        <constructor-arg value="musicFileCache"/>
     </bean>
 
-    <bean id="musicFileCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-        <property name="cacheManager" ref="cacheManager"/>
-        <property name="cacheName" value="musicFileCache"/>
+    <bean id="childDirCache" factory-bean="cacheFactory" factory-method="getCache">
+        <constructor-arg value="childDirCache"/>
     </bean>
 
-    <bean id="childDirCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-        <property name="cacheManager" ref="cacheManager"/>
-        <property name="cacheName" value="childDirCache"/>
+    <bean id="coverArtCache" factory-bean="cacheFactory" factory-method="getCache">
+        <constructor-arg value="coverArtCache"/>
     </bean>
 
-    <bean id="coverArtCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-        <property name="cacheManager" ref="cacheManager"/>
-        <property name="cacheName" value="coverArtCache"/>
+    <bean id="musicFolderCache" factory-bean="cacheFactory" factory-method="getCache">
+        <constructor-arg value="musicFolderCache"/>
     </bean>
 
-    <bean id="musicFolderCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-        <property name="cacheManager" ref="cacheManager"/>
-        <property name="cacheName" value="musicFolderCache"/>
-    </bean>
-
-    <bean id="chatCache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-        <property name="cacheManager" ref="cacheManager"/>
-        <property name="cacheName" value="chatCache"/>
+    <bean id="chatCache" factory-bean="cacheFactory" factory-method="getCache">
+        <constructor-arg value="chatCache"/>
     </bean>
 
 </beans>

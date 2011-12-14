@@ -68,7 +68,8 @@ used with JMX monitors.
     Subdirectories can be specified below the property e.g. java.io.tmpdir/one
 
     -->
-    <diskStore path="java.io.tmpdir/subsonic/ehcache"/>
+    <!--NOTE: The path is overridden in net.sourceforge.subsonic.cache.CacheFactory-->
+    <diskStore path="java.io.tmpdir"/>
 
     <!--
     TransactionManagerLookup configuration
