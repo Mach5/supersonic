@@ -19,16 +19,17 @@
         <constructor-arg value="childDirCache"/>
     </bean>
 
-    <bean id="coverArtCache" factory-bean="cacheFactory" factory-method="getCache">
-        <constructor-arg value="coverArtCache"/>
-    </bean>
-
     <bean id="musicFolderCache" factory-bean="cacheFactory" factory-method="getCache">
         <constructor-arg value="musicFolderCache"/>
     </bean>
 
     <bean id="chatCache" factory-bean="cacheFactory" factory-method="getCache">
         <constructor-arg value="chatCache"/>
+    </bean>
+
+    <bean id="coverArtCache" class="net.sourceforge.subsonic.domain.Cache">
+        <constructor-arg value="1"/>
+        <constructor-arg ref="cacheDao"/>
     </bean>
 
 </beans>

@@ -20,6 +20,8 @@ package net.sourceforge.subsonic.service;
 
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
+import net.sourceforge.subsonic.domain.Cache;
+import net.sourceforge.subsonic.domain.CacheElement;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.util.FileUtil;
@@ -41,7 +43,7 @@ public class MusicFileService {
 
     private Ehcache musicFileCache;
     private Ehcache childDirCache;
-    private Ehcache coverArtCache;
+    private Cache coverArtCache;
 
     private SecurityService securityService;
     private SettingsService settingsService;
@@ -106,12 +108,12 @@ public class MusicFileService {
     public List<File> getCoverArt(MusicFile dir, int limit, int depth) throws IOException {
 
         // Look in cache.
-        Element element = coverArtCache.get(dir.getPath());
+        CacheElement element = coverArtCache.get(dir.getPath());
         if (element != null) {
 
             // Check if cache is up-to-date.
-            if (element.getCreationTime() > getDirectoryLastModified(dir.getFile())) {
-                List<File> result = (List<File>) element.getObjectValue();
+            if (element.getCreated() > getDirectoryLastModified(dir.getFile())) {
+                List<File> result = (List<File>) element.getValue();
                 return result.subList(0, Math.min(limit, result.size()));
             }
         }
@@ -119,7 +121,7 @@ public class MusicFileService {
         List<File> result = new ArrayList<File>();
         listCoverArtRecursively(dir, result, limit, depth);
 
-        coverArtCache.put(new Element(dir.getPath(), result));
+        coverArtCache.put(dir.getPath(), result);
         return result;
     }
 
@@ -242,7 +244,7 @@ public class MusicFileService {
         this.childDirCache = childDirCache;
     }
 
-    public void setCoverArtCache(Ehcache coverArtCache) {
+    public void setCoverArtCache(Cache coverArtCache) {
         this.coverArtCache = coverArtCache;
     }
 }

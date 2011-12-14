@@ -28,7 +28,15 @@ REST API authentication & session
   wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies  "http://localhost:8080/rest/ping.view?u=admin&p=admin&v=1.6&c=android" -O -
   wget --auth-no-challenge --http-user=admin --http-password=admin --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies  "http://localhost:8080/rest/ping.view?u=sindre&p=foo&v=1.6&c=android" -O -
 
-Serve generic cover art if failing to load original.
+Improve performance on network shares
+  http://forum.subsonic.org/forum/viewtopic.php?f=5&t=1456&start=15#p27979
+  http://forum.subsonic.org/forum/viewtopic.php?t=3771
+  https://mail.google.com/mail/?shva=1#inbox/1343272326ddfa84
+  Improve caching.
+  Upgrade Ehcache.
+  Install Ehcache Monitor.
+  Use persistent cache.
+  Cache to SUBSONIC_HOME/cache
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
   http://forum.subsonic.org/forum/viewtopic.php?f=3&t=3270&p=34114#p34114

@@ -29,6 +29,7 @@ public abstract class DaoTestCaseBase extends TestCase {
     protected UserDao userDao;
     protected TranscodingDao transcodingDao;
     protected PodcastDao podcastDao;
+    protected CacheDao cacheDao;
 
     protected DaoTestCaseBase() {
         daoHelper = new DaoHelper();
@@ -40,6 +41,7 @@ public abstract class DaoTestCaseBase extends TestCase {
         userDao = new UserDao();
         transcodingDao = new TranscodingDao();
         podcastDao = new PodcastDao();
+        cacheDao = new CacheDao();
 
         playerDao.setDaoHelper(daoHelper);
         internetRadioDao.setDaoHelper(daoHelper);
@@ -48,6 +50,7 @@ public abstract class DaoTestCaseBase extends TestCase {
         userDao.setDaoHelper(daoHelper);
         transcodingDao.setDaoHelper(daoHelper);
         podcastDao.setDaoHelper(daoHelper);
+        cacheDao.setDaoHelper(daoHelper);
     }
 
     @Override
