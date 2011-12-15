@@ -18,13 +18,13 @@
  */
 package net.sourceforge.subsonic.service;
 
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
 import net.sourceforge.subsonic.domain.Cache;
 import net.sourceforge.subsonic.domain.CacheElement;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.util.FileUtil;
+import net.sourceforge.subsonic.util.Pair;
+
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 
 import java.io.File;
@@ -42,7 +42,7 @@ import java.util.List;
 public class MusicFileService {
 
     private Cache musicFileCache;
-    private Ehcache childDirCache;
+    private Cache childDirCache;
     private Cache coverArtCache;
 
     private SecurityService securityService;
@@ -138,18 +138,19 @@ public class MusicFileService {
      */
     @SuppressWarnings({"unchecked"})
     public synchronized List<MusicFile> getChildDirectories(MusicFile parent) throws IOException {
-        Element element = childDirCache.get(parent);
+        CacheElement element = childDirCache.get(parent.getPath());
         if (element != null) {
 
             // Check if cache is up-to-date.
-            MusicFile cachedParent = (MusicFile) element.getObjectKey();
+            Pair<MusicFile, List<MusicFile>> value = (Pair<MusicFile, List<MusicFile>>) element.getValue();
+            MusicFile cachedParent = value.getFirst();
             if (cachedParent.lastModified() >= parent.lastModified()) {
-                return (List<MusicFile>) element.getObjectValue();
+                return value.getSecond();
             }
         }
 
         List<MusicFile> children = parent.getChildren(false, true, true);
-        childDirCache.put(new Element(parent, children));
+        childDirCache.put(parent.getPath(), new Pair<MusicFile, List<MusicFile>>(parent, children));
 
         return children;
     }
@@ -243,7 +244,7 @@ public class MusicFileService {
         this.musicFileCache = musicFileCache;
     }
 
-    public void setChildDirCache(Ehcache childDirCache) {
+    public void setChildDirCache(Cache childDirCache) {
         this.childDirCache = childDirCache;
     }
 

@@ -217,13 +217,13 @@ used with JMX monitors.
            <!--statistics="true"-->
             <!--/>-->
 
-    <cache name="childDirCache"
-           maxElementsInMemory="100"
-           eternal="true"
-           overflowToDisk="false"
-           diskSpoolBufferSizeMB="1"
-           statistics="true"
-            />
+    <!--<cache name="childDirCache"-->
+           <!--maxElementsInMemory="100"-->
+           <!--eternal="true"-->
+           <!--overflowToDisk="false"-->
+           <!--diskSpoolBufferSizeMB="1"-->
+           <!--statistics="true"-->
+            <!--/>-->
 
     <!--<cache name="coverArtCache"-->
            <!--maxElementsInMemory="200"-->
