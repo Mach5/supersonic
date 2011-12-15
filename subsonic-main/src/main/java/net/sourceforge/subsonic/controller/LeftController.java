@@ -18,28 +18,9 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.SortedSet;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.LastModified;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-import org.springframework.web.servlet.support.RequestContextUtils;
-
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.Cache;
+import net.sourceforge.subsonic.domain.CacheElement;
 import net.sourceforge.subsonic.domain.InternetRadio;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import net.sourceforge.subsonic.domain.MusicFile;
@@ -53,7 +34,24 @@ import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.StringUtil;
-import net.sourceforge.subsonic.Logger;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.LastModified;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
+import org.springframework.web.servlet.support.RequestContextUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.SortedSet;
 
 /**
  * Controller for the left index frame.
@@ -70,7 +68,7 @@ public class LeftController extends ParameterizableViewController implements Las
     private MusicFileService musicFileService;
     private MusicIndexService musicIndexService;
     private PlayerService playerService;
-    private Ehcache musicFolderCache;
+    private Cache musicFolderCache;
 
     /**
      * {@inheritDoc}
@@ -204,22 +202,20 @@ public class LeftController extends ParameterizableViewController implements Las
     }
 
     public MusicFolderCacheEntry getCacheEntry(List<MusicFolder> musicFoldersToUse, long lastModified) throws Exception {
-        List<Integer> musicFolderIds = new ArrayList<Integer>();
+        StringBuilder musicFolderIds = new StringBuilder();
         for (MusicFolder musicFolder : musicFoldersToUse) {
-            musicFolderIds.add(musicFolder.getId());
+            musicFolderIds.append(musicFolder.getId()).append(",");
         }
+        musicFolderIds.setLength(musicFolderIds.length() - 1);
+        String key = musicFolderIds.toString();
 
-        Element element = musicFolderCache.get(musicFolderIds);
-        MusicFolderCacheEntry entry = null;
-        if (element != null) {
-            entry = (MusicFolderCacheEntry) element.getValue();
-        }
+        MusicFolderCacheEntry entry = musicFolderCache.getValue(key);
 
         if (entry == null || entry.lastModified < lastModified) {
             SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists = musicIndexService.getIndexedArtists(musicFoldersToUse);
             List<MusicFile> singleSongs = getSingleSongs(musicFoldersToUse);
             entry = new MusicFolderCacheEntry(indexedArtists, singleSongs, lastModified);
-            musicFolderCache.put(new Element(musicFolderIds, entry));
+            musicFolderCache.put(key, entry);
         }
 
         return entry;
@@ -245,7 +241,7 @@ public class LeftController extends ParameterizableViewController implements Las
         this.musicIndexService = musicIndexService;
     }
 
-    public void setMusicFolderCache(Ehcache musicFolderCache) {
+    public void setMusicFolderCache(Cache musicFolderCache) {
         this.musicFolderCache = musicFolderCache;
     }
 
@@ -260,7 +256,7 @@ public class LeftController extends ParameterizableViewController implements Las
         private final long lastModified;
 
         public MusicFolderCacheEntry(SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists,
-                List<MusicFile> singleSongs, long lastModified) {
+                                     List<MusicFile> singleSongs, long lastModified) {
             this.indexedArtists = indexedArtists;
             this.singleSongs = singleSongs;
             this.lastModified = lastModified;

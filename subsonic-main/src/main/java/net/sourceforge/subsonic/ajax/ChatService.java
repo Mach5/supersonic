@@ -20,7 +20,6 @@ package net.sourceforge.subsonic.ajax;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Cache;
-import net.sourceforge.subsonic.domain.CacheElement;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.util.BoundedList;
 import org.apache.commons.lang.StringUtils;
@@ -62,10 +61,8 @@ public class ChatService {
      */
     public void init() {
         try {
-            CacheElement element = chatCache.get(CACHE_KEY);
-            if (element != null && element.getValue() != null) {
-                messages = (LinkedList<Message>) element.getValue();
-            } else {
+            messages = chatCache.getValue(CACHE_KEY);
+            if (messages == null) {
                 messages = new BoundedList<Message>(MAX_MESSAGES);
             }
         } catch (Exception x) {

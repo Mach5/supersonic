@@ -244,14 +244,14 @@ used with JMX monitors.
            statistics="true"
             />
 
-    <cache name="musicFolderCache"
-           maxElementsInMemory="1"
-           eternal="true"
-           diskPersistent="true"
-           overflowToDisk="true"
-           statistics="true"
-           diskSpoolBufferSizeMB="1"
-            />
+    <!--<cache name="musicFolderCache"-->
+           <!--maxElementsInMemory="1"-->
+           <!--eternal="true"-->
+           <!--diskPersistent="true"-->
+           <!--overflowToDisk="true"-->
+           <!--statistics="true"-->
+           <!--diskSpoolBufferSizeMB="1"-->
+            <!--/>-->
 
     <!--<cache name="chatCache"-->
            <!--maxElementsInMemory="1"-->

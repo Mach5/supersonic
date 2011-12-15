@@ -56,14 +56,9 @@ public class MusicFileService {
      * @throws SecurityException If access is denied to the given file.
      */
     public MusicFile getMusicFile(File file) {
-        CacheElement element = musicFileCache.get(file.getPath());
-        if (element != null) {
-
-            // Check if cache is up-to-date.
-            MusicFile cachedMusicFile = (MusicFile) element.getValue();
-            if (cachedMusicFile.lastModified() >= file.lastModified()) {
-                return cachedMusicFile;
-            }
+        MusicFile cachedMusicFile = musicFileCache.getValue(file.getPath());
+        if (cachedMusicFile != null && cachedMusicFile.lastModified() >= file.lastModified()) {
+            return cachedMusicFile;
         }
 
         if (!securityService.isReadAllowed(file)) {
@@ -138,11 +133,10 @@ public class MusicFileService {
      */
     @SuppressWarnings({"unchecked"})
     public synchronized List<MusicFile> getChildDirectories(MusicFile parent) throws IOException {
-        CacheElement element = childDirCache.get(parent.getPath());
-        if (element != null) {
+        Pair<MusicFile, List<MusicFile>> value = childDirCache.getValue(parent.getPath());
+        if (value != null) {
 
             // Check if cache is up-to-date.
-            Pair<MusicFile, List<MusicFile>> value = (Pair<MusicFile, List<MusicFile>>) element.getValue();
             MusicFile cachedParent = value.getFirst();
             if (cachedParent.lastModified() >= parent.lastModified()) {
                 return value.getSecond();

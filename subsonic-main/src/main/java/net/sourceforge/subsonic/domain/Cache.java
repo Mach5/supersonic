@@ -49,6 +49,11 @@ public class Cache {
         return element;
     }
 
+    public <T> T getValue(String key) {
+        CacheElement element = get(key);
+        return element == null ? null : (T) element.getValue();
+    }
+
     public void put(String key, Object value) {
         CacheElement element = new CacheElement(type, key, value, System.currentTimeMillis());
         cacheDao.createCacheElement(element);
