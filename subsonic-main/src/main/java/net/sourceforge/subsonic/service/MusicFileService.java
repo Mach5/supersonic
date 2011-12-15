@@ -66,8 +66,9 @@ public class MusicFileService {
         }
 
         MusicFile musicFile = new MusicFile(file);
-        // TODO: Consider reading metadata before caching.
-//        musicFile.getMetaData();
+
+        // Read metadata before caching.
+        musicFile.getMetaData();
 
         musicFileCache.put(file.getPath(), musicFile);
 

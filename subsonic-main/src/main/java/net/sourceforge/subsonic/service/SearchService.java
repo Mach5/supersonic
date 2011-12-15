@@ -813,9 +813,10 @@ public class SearchService {
         }
 
         public void visit(MusicFile musicFile) {
+            // TODO: search for cover art if directory
             writer.println(Line.forFile(musicFile, oldIndex, musicFolders));
             count++;
-            if (count % 1000 == 0) {
+            if (count % 250 == 0) {
                 LOG.info("Created search index with " + count + " entries.");
             }
         }
