@@ -35,6 +35,7 @@ Improve performance on network shares
   Improve caching.
   Use persistent cache.
   Consider caching musicfile metadata.
+  Make caching type safe.
 
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?

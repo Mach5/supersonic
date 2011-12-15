@@ -207,15 +207,15 @@ used with JMX monitors.
     -->
 
 
-    <cache name="musicFileCache"
-           maxElementsInMemory="1000"
-           eternal="true"
-           timeToIdleSeconds="0"
-           timeToLiveSeconds="0"
-           overflowToDisk="false"
-           diskSpoolBufferSizeMB="1"
-           statistics="true"
-            />
+    <!--<cache name="musicFileCache"-->
+           <!--maxElementsInMemory="1000"-->
+           <!--eternal="true"-->
+           <!--timeToIdleSeconds="0"-->
+           <!--timeToLiveSeconds="0"-->
+           <!--overflowToDisk="false"-->
+           <!--diskSpoolBufferSizeMB="1"-->
+           <!--statistics="true"-->
+            <!--/>-->
 
     <cache name="childDirCache"
            maxElementsInMemory="100"
@@ -225,14 +225,14 @@ used with JMX monitors.
            statistics="true"
             />
 
-    <cache name="coverArtCache"
-           maxElementsInMemory="200"
-           eternal="true"
-           diskPersistent="true"
-           overflowToDisk="true"
-           diskSpoolBufferSizeMB="1"
-           statistics="true"
-            />
+    <!--<cache name="coverArtCache"-->
+           <!--maxElementsInMemory="200"-->
+           <!--eternal="true"-->
+           <!--diskPersistent="true"-->
+           <!--overflowToDisk="true"-->
+           <!--diskSpoolBufferSizeMB="1"-->
+           <!--statistics="true"-->
+            <!--/>-->
 
     <cache name="userCache"
            maxElementsInMemory="1000"
@@ -253,14 +253,14 @@ used with JMX monitors.
            diskSpoolBufferSizeMB="1"
             />
 
-    <cache name="chatCache"
-           maxElementsInMemory="1"
-           eternal="true"
-           diskPersistent="true"
-           overflowToDisk="true"
-           diskSpoolBufferSizeMB="1"
-           statistics="true"
-            />
+    <!--<cache name="chatCache"-->
+           <!--maxElementsInMemory="1"-->
+           <!--eternal="true"-->
+           <!--diskPersistent="true"-->
+           <!--overflowToDisk="true"-->
+           <!--diskSpoolBufferSizeMB="1"-->
+           <!--statistics="true"-->
+            <!--/>-->
 
     <!--
     Sample caches. Following are some example caches. Remove these before use.

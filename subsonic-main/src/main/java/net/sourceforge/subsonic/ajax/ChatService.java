@@ -18,9 +18,9 @@
  */
 package net.sourceforge.subsonic.ajax;
 
-import net.sf.ehcache.Ehcache;
-import net.sf.ehcache.Element;
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.Cache;
+import net.sourceforge.subsonic.domain.CacheElement;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.util.BoundedList;
 import org.apache.commons.lang.StringUtils;
@@ -47,13 +47,13 @@ import java.util.concurrent.TimeUnit;
 public class ChatService {
 
     private static final Logger LOG = Logger.getLogger(ChatService.class);
-    private static final Object CACHE_KEY = 1;
+    private static final String CACHE_KEY = "1";
     private static final int MAX_MESSAGES = 10;
     private static final long TTL_MILLIS = 3L * 24L * 60L * 60L * 1000L; // 3 days.
 
     private LinkedList<Message> messages;
     private SecurityService securityService;
-    private Ehcache chatCache;
+    private Cache chatCache;
 
     private long revision = System.identityHashCode(this);
 
@@ -62,7 +62,7 @@ public class ChatService {
      */
     public void init() {
         try {
-            Element element = chatCache.get(CACHE_KEY);
+            CacheElement element = chatCache.get(CACHE_KEY);
             if (element != null && element.getValue() != null) {
                 messages = (LinkedList<Message>) element.getValue();
             } else {
@@ -105,14 +105,14 @@ public class ChatService {
         message = StringUtils.trimToNull(message);
         if (message != null && user != null) {
             messages.addFirst(new Message(message, user, new Date()));
-            chatCache.put(new Element(CACHE_KEY, messages));
+            chatCache.put(CACHE_KEY, messages);
             revision++;
         }
     }
 
     public synchronized void clearMessages() {
         messages.clear();
-        chatCache.put(new Element(CACHE_KEY, messages));
+        chatCache.put(CACHE_KEY, messages);
         revision++;
     }
 
@@ -131,12 +131,13 @@ public class ChatService {
         this.securityService = securityService;
     }
 
-    public void setChatCache(Ehcache chatCache) {
+    public void setChatCache(Cache chatCache) {
         this.chatCache = chatCache;
     }
 
     public static class Messages implements Serializable {
 
+        private static final long serialVersionUID = -752602719879818165L;
         private final  List<Message> messages;
         private final long revision;
 
@@ -156,6 +157,7 @@ public class ChatService {
 
     public static class Message implements Serializable {
 
+        private static final long serialVersionUID = -1907101191518133712L;
         private final String content;
         private final String username;
         private final Date date;

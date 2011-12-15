@@ -19,10 +19,6 @@
         <constructor-arg value="musicFolderCache"/>
     </bean>
 
-    <bean id="chatCache" factory-bean="cacheFactory" factory-method="getCache">
-        <constructor-arg value="chatCache"/>
-    </bean>
-
     <bean id="coverArtCache" class="net.sourceforge.subsonic.domain.Cache">
         <constructor-arg value="coverArt"/>
         <constructor-arg value="1"/>
@@ -35,5 +31,10 @@
         <constructor-arg ref="cacheDao"/>
     </bean>
 
+    <bean id="chatCache" class="net.sourceforge.subsonic.domain.Cache">
+        <constructor-arg value="chat"/>
+        <constructor-arg value="3"/>
+        <constructor-arg ref="cacheDao"/>
+    </bean>
 
 </beans>
