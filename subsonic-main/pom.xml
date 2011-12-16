@@ -211,15 +211,15 @@
         </dependency>
 
         <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache-core</artifactId>
-            <version>2.5.0</version>
+            <groupId>com.db4o</groupId>
+            <artifactId>db4o-all</artifactId>
+            <version>8.0.224</version>
         </dependency>
 
         <dependency>
-            <groupId>org.terracotta</groupId>
-            <artifactId>ehcache-probe</artifactId>
-            <version>1.0.3</version>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache-core</artifactId>
+            <version>2.5.0</version>
         </dependency>
 
         <dependency>

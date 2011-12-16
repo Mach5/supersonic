@@ -42,9 +42,7 @@
         <property name="daoHelper" ref="daoHelper"/>
     </bean>
 
-    <bean id="cacheDao" class="net.sourceforge.subsonic.dao.CacheDao">
-        <property name="daoHelper" ref="daoHelper"/>
-    </bean>
+    <bean id="cacheDao" class="net.sourceforge.subsonic.dao.CacheDao"/>
 
     <bean id="daoHelper" class="net.sourceforge.subsonic.dao.DaoHelper"/>
 

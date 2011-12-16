@@ -74,10 +74,10 @@ used with JMX monitors.
 
 
     <!-- Uncomment this to enable cache monitoring. -->
-    <cacheManagerPeerListenerFactory
-            class="org.terracotta.ehcachedx.monitor.probe.ProbePeerListenerFactory"
-            properties="monitorAddress=localhost, monitorPort=9889, memoryMeasurement=true" />
-    
+    <!--<cacheManagerPeerListenerFactory-->
+            <!--class="org.terracotta.ehcachedx.monitor.probe.ProbePeerListenerFactory"-->
+            <!--properties="monitorAddress=localhost, monitorPort=9889, memoryMeasurement=true" />-->
+    <!---->
 
     <!--
     Cache configuration

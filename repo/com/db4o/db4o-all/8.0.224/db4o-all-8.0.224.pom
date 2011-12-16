@@ -1,0 +1,6 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.db4o</groupId>
+    <artifactId>db4o-all</artifactId>
+    <version>8.0.224</version>
+</project>

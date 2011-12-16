@@ -36,6 +36,14 @@ Improve performance on network shares
   Is childDirCache necessary? Probably. Used by RESTController.
   Show scan status in right.jsp
   Start scan automatically when changing music folders.
+  CacheDaoTestCase
+  CacheDao
+  db4o concurrency
+  When to commit?
+  Remove ehcache.
+  Memory usage.
+  Profile
+  
 
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?

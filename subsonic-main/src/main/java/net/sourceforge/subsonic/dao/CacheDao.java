@@ -18,22 +18,52 @@
  */
 package net.sourceforge.subsonic.dao;
 
+import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.CacheElement;
+import sun.rmi.runtime.Log;
+
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import com.db4o.Db4oEmbedded;
+import com.db4o.EmbeddedObjectContainer;
+import com.db4o.ObjectSet;
+import com.db4o.config.EmbeddedConfiguration;
+import com.db4o.internal.ObjectContainerBase;
+import com.db4o.internal.query.Db4oQueryExecutionListener;
+import com.db4o.internal.query.NQOptimizationInfo;
+import com.db4o.query.Predicate;
 
 /**
  * Provides database services for caching.
  *
  * @author Sindre Mehus
  */
-public class CacheDao extends AbstractDao {
+public class CacheDao {
 
-    private static final String COLUMNS = "type, key, value, created";
+    private static final Logger LOG = Logger.getLogger(CacheDao.class);
+    private final EmbeddedObjectContainer db;
 
-    private CacheRowMapper rowMapper = new CacheRowMapper();
+    public CacheDao() {
+        EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
+        config.common().objectClass(CacheElement.class).objectField("type").indexed(true);
+        config.common().objectClass(CacheElement.class).objectField("key").indexed(true);
+        config.common().objectClass(CacheElement.class).cascadeOnUpdate(true);
+        config.common().objectClass(CacheElement.class).cascadeOnDelete(true);
+        config.common().objectClass(CacheElement.class).cascadeOnActivate(true);
+
+        config.common().messageLevel(1);
+        System.out.println("Optimized: " + config.common().optimizeNativeQueries());
+        db = Db4oEmbedded.openFile(config, "d:/tmp/db40.db");
+
+//        ((ObjectContainerBase)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
+//            public void notifyQueryExecuted(NQOptimizationInfo info) {
+//                System.out.println(info);
+//            }
+//        });
+    }
 
     /**
      * Creates a new cache element.
@@ -42,25 +72,43 @@ public class CacheDao extends AbstractDao {
      */
     public void createCacheElement(CacheElement element) {
         deleteCacheElement(element);
-        String sql = "insert into cache (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")";
-        update(sql, element.getType(), element.getKey(), element.getValue(), element.getCreated());
+        db.store(element);
+        db.commit();
     }
 
     public CacheElement getCacheElement(int type, String key) {
-        String sql = "select " + COLUMNS + " from cache where type=? and key=?";
-        return queryOne(sql, rowMapper, type, key);
+        ObjectSet<CacheElement> result = db.query(new CacheElementPredicate(type, key));
+        if (result.size() > 1) {
+            LOG.error("Programming error. Got " + result.size() + " cache elements of type " + type + " and key " + key);
+        }
+        return result.isEmpty() ? null : result.get(0);
     }
 
     /**
      * Deletes the cache element with the given type and key.
      */
-    public void deleteCacheElement(CacheElement element) {
-        update("delete from cache where type=? and key=?", element.getType(), element.getKey());
+    private void deleteCacheElement(CacheElement element) {
+        // Retrieve it from the database first.
+        element = getCacheElement(element.getType(), element.getKey());
+        if (element != null) {
+            db.delete(element);
+        }
     }
 
-    private static class CacheRowMapper implements ParameterizedRowMapper<CacheElement> {
-        public CacheElement mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new CacheElement(rs.getInt(1), rs.getString(2), rs.getObject(3), rs.getLong(4));
+    private static class CacheElementPredicate extends Predicate<CacheElement> {
+        private static final long serialVersionUID = 54911003002373726L;
+
+        private final int type;
+        private final String key;
+
+        public CacheElementPredicate(int type, String key) {
+            this.type = type;
+            this.key = key;
+        }
+
+        @Override
+        public boolean match(CacheElement candidate) {
+            return candidate.getType() == type && candidate.getKey().equals(key);
         }
     }
 }
