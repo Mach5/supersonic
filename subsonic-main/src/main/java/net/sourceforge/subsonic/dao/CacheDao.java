@@ -18,23 +18,20 @@
  */
 package net.sourceforge.subsonic.dao;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.CacheElement;
-import sun.rmi.runtime.Log;
-
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import com.db4o.Db4oEmbedded;
 import com.db4o.EmbeddedObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.config.EmbeddedConfiguration;
+import com.db4o.defragment.Defragment;
 import com.db4o.internal.ObjectContainerBase;
 import com.db4o.internal.query.Db4oQueryExecutionListener;
 import com.db4o.internal.query.NQOptimizationInfo;
 import com.db4o.query.Predicate;
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.CacheElement;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Provides database services for caching.
@@ -47,18 +44,26 @@ public class CacheDao {
     private final EmbeddedObjectContainer db;
 
     public CacheDao() {
+        File dbFile = new File("/tmp/db40.db");
+//        if (dbFile.exists()) {
+//            try {
+//                Defragment.defrag(dbFile.getPath());
+//            }catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+
         EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
-        config.common().objectClass(CacheElement.class).objectField("type").indexed(true);
-        config.common().objectClass(CacheElement.class).objectField("key").indexed(true);
+        config.common().objectClass(CacheElement.class).objectField("id").indexed(true);
         config.common().objectClass(CacheElement.class).cascadeOnUpdate(true);
         config.common().objectClass(CacheElement.class).cascadeOnDelete(true);
         config.common().objectClass(CacheElement.class).cascadeOnActivate(true);
 
-        config.common().messageLevel(1);
+//        config.common().messageLevel(3);
         System.out.println("Optimized: " + config.common().optimizeNativeQueries());
-        db = Db4oEmbedded.openFile(config, "d:/tmp/db40.db");
+        db = Db4oEmbedded.openFile(config, dbFile.getPath());
 
-//        ((ObjectContainerBase)db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
+//        ((ObjectContainerBase) db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
 //            public void notifyQueryExecuted(NQOptimizationInfo info) {
 //                System.out.println(info);
 //            }
@@ -73,8 +78,14 @@ public class CacheDao {
     public void createCacheElement(CacheElement element) {
         deleteCacheElement(element);
         db.store(element);
-        db.commit();
+
+        if (changeCount++ == BATCH_SIZE) {
+            db.commit();
+            changeCount = 0;
+        }
     }
+    int changeCount = 0;
+    final int BATCH_SIZE = 100;
 
     public CacheElement getCacheElement(int type, String key) {
         long t0 = System.nanoTime();
@@ -84,7 +95,7 @@ public class CacheDao {
         }
         long t1 = System.nanoTime();
         if (!result.isEmpty()) {
-            System.out.println(result.get(0).getValue().getClass().getSimpleName() + ": " + ((t1-t0) / 1000) + " microsec");
+            System.out.println(result.get(0).getValue().getClass().getSimpleName() + ": " + ((t1 - t0) / 1000) + " microsec");
         }
 
         return result.isEmpty() ? null : result.get(0);
@@ -104,17 +115,15 @@ public class CacheDao {
     private static class CacheElementPredicate extends Predicate<CacheElement> {
         private static final long serialVersionUID = 54911003002373726L;
 
-        private final int type;
-        private final String key;
+        private final int id;
 
         public CacheElementPredicate(int type, String key) {
-            this.type = type;
-            this.key = key;
+            id = CacheElement.createId(type, key);
         }
 
         @Override
         public boolean match(CacheElement candidate) {
-            return candidate.getType() == type && candidate.getKey().equals(key);
+            return candidate.getId() == id;
         }
     }
 }

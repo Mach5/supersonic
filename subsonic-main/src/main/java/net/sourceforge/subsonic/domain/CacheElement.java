@@ -18,7 +18,7 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import java.util.Date;
+import net.sourceforge.subsonic.util.StringUtil;
 
 /**
  * @author Sindre Mehus
@@ -26,47 +26,42 @@ import java.util.Date;
  */
 public class CacheElement {
 
-    private int type;
-    private String key;
-    private Object value;
-    private long created;
+    private final int id;
+    private final int type;
+    private final String key;
+    private final Object value;
+    private final long created;
 
     public CacheElement(int type, String key, Object value, long created) {
         this.type = type;
         this.key = key;
         this.value = value;
         this.created = created;
+
+        id = createId(type, key);
+    }
+
+    public static int createId(int type, String key) {
+        return type + key.hashCode();
+    }
+
+    public int getId() {
+        return id;
     }
 
     public int getType() {
         return type;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
     public String getKey() {
         return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
     }
 
     public Object getValue() {
         return value;
     }
 
-    public void setValue(Object value) {
-        this.value = value;
-    }
-
     public long getCreated() {
         return created;
-    }
-
-    public void setCreated(long created) {
-        this.created = created;
     }
 }

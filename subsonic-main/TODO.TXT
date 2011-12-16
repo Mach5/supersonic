@@ -43,6 +43,10 @@ Improve performance on network shares
   Remove ehcache.
   Memory usage.
   Profile
+  Defragment.
+  Lots of short-term gets for the same MusicFile.  Use in-memory cache.
+  Low hit ratio.
+  Don't set MusicFile.includes.  Remove it.
   
 
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
