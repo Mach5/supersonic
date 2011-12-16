@@ -39,7 +39,7 @@ Improve performance on network shares
   CacheDaoTestCase
   CacheDao
   db4o concurrency
-  When to commit?
+  When to commit? Coalesce.
   Remove ehcache.
   Memory usage.
   Profile

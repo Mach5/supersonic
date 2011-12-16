@@ -77,10 +77,16 @@ public class CacheDao {
     }
 
     public CacheElement getCacheElement(int type, String key) {
+        long t0 = System.nanoTime();
         ObjectSet<CacheElement> result = db.query(new CacheElementPredicate(type, key));
         if (result.size() > 1) {
             LOG.error("Programming error. Got " + result.size() + " cache elements of type " + type + " and key " + key);
         }
+        long t1 = System.nanoTime();
+        if (!result.isEmpty()) {
+            System.out.println(result.get(0).getValue().getClass().getSimpleName() + ": " + ((t1-t0) / 1000) + " microsec");
+        }
+
         return result.isEmpty() ? null : result.get(0);
     }
 
