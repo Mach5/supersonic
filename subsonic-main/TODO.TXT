@@ -47,8 +47,10 @@ Improve performance on network shares
   Lots of short-term gets for the same MusicFile.  Use in-memory cache.
   Low hit ratio.
   Don't set MusicFile.includes.  Remove it.
+  Log statistics (access time, hit rate). Show in About page.
+  Make id field unique (long).
   
-
+Make it possible to suppress content length estimation.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
   http://forum.subsonic.org/forum/viewtopic.php?f=3&t=3270&p=34114#p34114
@@ -134,7 +136,9 @@ TODO IN ANDROID 3.4
 Don't pause on incoming call if RC.
 ICS theme
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=8497
+  https://mail.google.com/mail/?tab=cm#inbox/1344527f4abc11af
 Change generic album art.
+In ICS, doesn't pause when disconnected from Bluetooth.
 Bug if switching to RC and back for a song that is currently downloading.
 Add OFL button.
 Handle togglig OFL and RC.
