@@ -56,13 +56,13 @@ public class MusicFileService {
      * @throws SecurityException If access is denied to the given file.
      */
     public MusicFile getMusicFile(File file) {
+        if (!securityService.isReadAllowed(file)) {
+            throw new SecurityException("Access denied to file " + file);
+        }
+
         MusicFile cachedMusicFile = musicFileCache.getValue(file.getPath());
         if (cachedMusicFile != null && cachedMusicFile.lastModified() >= file.lastModified()) {
             return cachedMusicFile;
-        }
-
-        if (!securityService.isReadAllowed(file)) {
-            throw new SecurityException("Access denied to file " + file);
         }
 
         MusicFile musicFile = new MusicFile(file);

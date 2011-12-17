@@ -38,8 +38,6 @@ Improve performance on network shares
   Start scan automatically when changing music folders.
   CacheDaoTestCase
   CacheDao
-  db4o concurrency
-  When to commit? Coalesce.
   Remove ehcache.
   Memory usage.
   Profile
@@ -49,7 +47,8 @@ Improve performance on network shares
   Don't set MusicFile.includes.  Remove it.
   Log statistics (access time, hit rate). Show in About page.
   Make id field unique (long).
-  
+  Reduce number of lookups (14->11 for single album)
+
 Make it possible to suppress content length estimation.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
