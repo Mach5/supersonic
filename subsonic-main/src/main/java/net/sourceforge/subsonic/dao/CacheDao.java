@@ -83,13 +83,13 @@ public class CacheDao {
     public void createCacheElement(CacheElement element) {
         dataLock.writeLock().lock();
         try{
-        deleteCacheElement(element);
-        db.store(element);
+            deleteCacheElement(element);
+            db.store(element);
 
-        if (changeCount++ == BATCH_SIZE) {
-            db.commit();
-            changeCount = 0;
-        }
+            if (changeCount++ == BATCH_SIZE) {
+                db.commit();
+                changeCount = 0;
+            }
 
         } finally{
             dataLock.writeLock().unlock();
@@ -100,16 +100,10 @@ public class CacheDao {
         dataLock.readLock().lock();
         try{
 
-            long t0 = System.nanoTime();
             ObjectSet<CacheElement> result = db.query(new CacheElementPredicate(type, key));
             if (result.size() > 1) {
                 LOG.error("Programming error. Got " + result.size() + " cache elements of type " + type + " and key " + key);
             }
-            long t1 = System.nanoTime();
-            if (!result.isEmpty()) {
-                System.out.println(result.get(0).getValue().getClass().getSimpleName() + ": " + ((t1 - t0) / 1000) + " microsec");
-            }
-
             return result.isEmpty() ? null : result.get(0);
 
         } finally{
