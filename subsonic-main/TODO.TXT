@@ -48,6 +48,12 @@ Improve performance on network shares
   Log statistics (access time, hit rate). Show in About page.
   Make id field unique (long).
   Test tag editing vs caching.
+  Test corrupt database.
+  Keep database in subsonic home.
+  Analyze when tags are read.
+  MusicFile.isAlbum() can be slow.
+  Look for all usage of listFiles.
+
 
 Make it possible to suppress content length estimation.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668

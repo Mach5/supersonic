@@ -771,7 +771,7 @@ public class SearchService {
          */
         @Override
         public String toString() {
-            StringBuffer buf = new StringBuffer(256);
+            StringBuilder buf = new StringBuilder(256);
 
             if (isFile) {
                 buf.append('F').append(SEPARATOR);
@@ -797,7 +797,7 @@ public class SearchService {
         }
     }
 
-    private static class Scanner implements MusicFile.Visitor {
+    private class Scanner implements MusicFile.Visitor {
         private final PrintWriter writer;
         private final Map<File, Line> oldIndex;
         private final Set<File> musicFolders;
@@ -813,8 +813,19 @@ public class SearchService {
         }
 
         public void visit(MusicFile musicFile) {
-            // TODO: search for cover art if directory
-            writer.println(Line.forFile(musicFile, oldIndex, musicFolders));
+
+            Line line = Line.forFile(musicFile, oldIndex, musicFolders);
+            writer.println(line);
+
+            // Get cover art in order to store it in the cache.
+            if (line.isAlbum) {
+                try {
+                    musicFileService.getCoverArt(musicFile);
+                } catch (IOException x) {
+                    // Ignored.
+                }
+            }
+
             count++;
             if (count % 250 == 0) {
                 LOG.info("Created search index with " + count + " entries.");

@@ -120,7 +120,6 @@ public class MusicFileService {
      * @return A list of appropriate cover art images for the directory.
      * @throws IOException If an I/O error occurs.
      */
-    @SuppressWarnings({"unchecked"})
     public List<File> getCoverArt(MusicFile dir, int limit, int depth) throws IOException {
 
         // Look in cache.

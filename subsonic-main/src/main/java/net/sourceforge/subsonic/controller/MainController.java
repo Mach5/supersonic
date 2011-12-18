@@ -128,7 +128,7 @@ public class MainController extends ParameterizableViewController {
 
         CoverArtScheme scheme = player.getCoverArtScheme();
         if (scheme != CoverArtScheme.OFF) {
-            List<File> coverArts = getCoverArt(paths);
+            List<File> coverArts = getCoverArts(dir, children);
             int size = coverArts.size() > 1 ? scheme.getSize() : scheme.getSize() * 2;
             map.put("coverArts", coverArts);
             map.put("coverArtSize", size);
@@ -164,21 +164,29 @@ public class MainController extends ParameterizableViewController {
         return null;
     }
 
-    private List<File> getCoverArt(String[] paths) throws IOException {
+    private List<File> getCoverArts(MusicFile dir, List<MusicFile> children) throws IOException {
         int limit = settingsService.getCoverArtLimit();
         if (limit == 0) {
             limit = Integer.MAX_VALUE;
         }
 
-        List<File> result = new ArrayList<File>();
-        for (String path : paths) {
-            MusicFile dir = musicFileService.getMusicFile(path);
-            if (dir.isFile()) {
-                dir = dir.getParent();
+        List<File> coverArts = new ArrayList<File>();
+        if (dir.isAlbum()) {
+            coverArts.add(musicFileService.getCoverArt(dir));
+        } else {
+            for (MusicFile child : children) {
+                if (child.isDirectory()) {
+                    File coverArt = musicFileService.getCoverArt(child);
+                    if (coverArt != null) {
+                        coverArts.add(coverArt);
+                        if (coverArts.size() > limit) {
+                            break;
+                        }
+                    }
+                }
             }
-            result.addAll(musicFileService.getCoverArt(dir, limit - result.size(), 2));
         }
-        return result;
+        return coverArts;
     }
 
     private List<MusicFile> getMultiFolderChildren(String[] paths) throws IOException {

@@ -71,6 +71,7 @@ public class TimeLimitedCache<K, V> {
         } catch (Throwable x) {
             LOG.error("Programming error. Got exception while cleaning up TimeLimitedCache.", x);
         }
+        LOG.debug("Size after cleanup: " + map.size()); // TODO: Remove
     }
 
     private static class Entry<V> {
