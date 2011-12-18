@@ -25,6 +25,7 @@ import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.util.Pair;
 
+import net.sourceforge.subsonic.util.TimeLimitedCache;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 
 import java.io.File;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Provides services for instantiating and caching music files and cover art.
@@ -41,12 +43,17 @@ import java.util.List;
  */
 public class MusicFileService {
 
-    private Cache musicFileCache;
     private Cache childDirCache;
     private Cache coverArtCache;
+    private Cache musicFileDiskCache;
+    private final TimeLimitedCache<File, MusicFile> musicFileMemoryCache;
 
     private SecurityService securityService;
     private SettingsService settingsService;
+
+    public MusicFileService() {
+        musicFileMemoryCache = new TimeLimitedCache<File, MusicFile>(10, TimeUnit.SECONDS);
+    }
 
     /**
      * Returns a music file instance for the given file.  If possible, a cached value is returned.
@@ -56,12 +63,20 @@ public class MusicFileService {
      * @throws SecurityException If access is denied to the given file.
      */
     public MusicFile getMusicFile(File file) {
+
+        // Look in fast memory cache first.
+        MusicFile cachedMusicFile = musicFileMemoryCache.get(file);
+        if (cachedMusicFile != null) {
+            return cachedMusicFile;
+        }
+
         if (!securityService.isReadAllowed(file)) {
             throw new SecurityException("Access denied to file " + file);
         }
 
-        MusicFile cachedMusicFile = musicFileCache.getValue(file.getPath());
+        cachedMusicFile = musicFileDiskCache.getValue(file.getPath());
         if (cachedMusicFile != null && cachedMusicFile.lastModified() >= file.lastModified()) {
+            musicFileMemoryCache.put(file, cachedMusicFile);
             return cachedMusicFile;
         }
 
@@ -70,7 +85,9 @@ public class MusicFileService {
         // Read metadata before caching.
         musicFile.getMetaData();
 
-        musicFileCache.put(file.getPath(), musicFile);
+        // Put in caches.
+        musicFileMemoryCache.put(file, musicFile);
+        musicFileDiskCache.put(file.getPath(), musicFile);
 
         return musicFile;
     }
@@ -236,7 +253,7 @@ public class MusicFileService {
     }
 
     public void setMusicFileCache(Cache musicFileCache) {
-        this.musicFileCache = musicFileCache;
+        this.musicFileDiskCache = musicFileCache;
     }
 
     public void setChildDirCache(Cache childDirCache) {
