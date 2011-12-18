@@ -32,7 +32,6 @@ Improve performance on network shares
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=1456&start=15#p27979
   http://forum.subsonic.org/forum/viewtopic.php?t=3771
   https://mail.google.com/mail/?shva=1#inbox/1343272326ddfa84
-  Don't search recursively for cover art.  Simplify: One coverart per directory. Analyze usage. Use getChildDirectories()?
   Is childDirCache necessary? Probably. Used by RESTController.
   Show scan status in right.jsp
   Start scan automatically when changing music folders.
@@ -42,7 +41,6 @@ Improve performance on network shares
   Memory usage.
   Profile
   Defragment.
-  Lots of short-term gets for the same MusicFile.  Use in-memory cache.
   Low hit ratio.
   Don't set MusicFile.includes.  Remove it.
   Log statistics (access time, hit rate). Show in About page.
@@ -55,7 +53,7 @@ Improve performance on network shares
   MusicFile.lastModified is cached.
   Look for all usage of listFiles.
   Store something in cache also if no cover art is found.
-
+  LeftController crashes if no media folders defined. (LeftController:209)
 
 Make it possible to suppress content length estimation.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668

@@ -31,6 +31,7 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.CacheElement;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 

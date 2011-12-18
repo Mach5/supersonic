@@ -122,6 +122,8 @@ public class MusicFileService {
         return coverArt;
     }
 
+    private final File NULL_FILE = new File("NULL");
+
     private File getBestCoverArt(File[] candidates) {
         for (String mask : settingsService.getCoverArtFileTypesAsArray()) {
             for (File candidate : candidates) {
