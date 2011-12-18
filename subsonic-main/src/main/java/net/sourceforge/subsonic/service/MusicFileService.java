@@ -26,13 +26,10 @@ import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.util.Pair;
 
 import net.sourceforge.subsonic.util.TimeLimitedCache;
-import org.apache.commons.io.filefilter.DirectoryFileFilter;
+import org.apache.commons.io.filefilter.FileFileFilter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -104,40 +101,49 @@ public class MusicFileService {
     }
 
     /**
-     * Equivalent to <code>getCoverArt(dir, 1, 1)</code>.
+     * Returns a cover art image for the given directory.
      */
     public File getCoverArt(MusicFile dir) throws IOException {
-        List<File> list = getCoverArt(dir, 1, 1);
-        return list.isEmpty() ? null : list.get(0);
-    }
-
-    /**
-     * Returns a list of appropriate cover art images for the given directory.
-     *
-     * @param dir   The directory.
-     * @param limit Maximum number of images to return.
-     * @param depth Recursion depth when searching for images.
-     * @return A list of appropriate cover art images for the directory.
-     * @throws IOException If an I/O error occurs.
-     */
-    public List<File> getCoverArt(MusicFile dir, int limit, int depth) throws IOException {
 
         // Look in cache.
         CacheElement element = coverArtCache.get(dir.getPath());
         if (element != null) {
 
             // Check if cache is up-to-date.
-            if (element.getCreated() > getDirectoryLastModified(dir.getFile())) {
-                List<File> result = (List<File>) element.getValue();
-                return result.subList(0, Math.min(limit, result.size()));
+            if (element.getCreated() > dir.getFile().lastModified()) {
+                return (File) element.getValue();
             }
         }
 
-        List<File> result = new ArrayList<File>();
-        listCoverArtRecursively(dir, result, limit, depth);
+        File coverArt = getBestCoverArt(FileUtil.listFiles(dir.getFile(), FileFileFilter.FILE));
+        if (coverArt != null) {
+            coverArtCache.put(dir.getPath(), coverArt);
+        }
+        return coverArt;
+    }
 
-        coverArtCache.put(dir.getPath(), result);
-        return result;
+    private File getBestCoverArt(File[] candidates) {
+        for (String mask : settingsService.getCoverArtFileTypesAsArray()) {
+            for (File candidate : candidates) {
+                if (candidate.getName().toUpperCase().endsWith(mask.toUpperCase()) && !candidate.getName().startsWith(".")) {
+                    return candidate;
+                }
+            }
+        }
+
+        // Look for embedded images in audiofiles. (Only check first audio file encountered).
+        JaudiotaggerParser parser = new JaudiotaggerParser();
+        for (File candidate : candidates) {
+            MusicFile musicFile = getMusicFile(candidate);
+            if (parser.isApplicable(musicFile)) {
+                if (parser.isImageAvailable(musicFile)) {
+                    return candidate;
+                } else {
+                    return null;
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -164,75 +170,6 @@ public class MusicFileService {
         childDirCache.put(parent.getPath(), new Pair<MusicFile, List<MusicFile>>(parent, children));
 
         return children;
-    }
-
-    private long getDirectoryLastModified(File dir) {
-        long lastModified = dir.lastModified();
-        File[] subDirs = FileUtil.listFiles(dir, DirectoryFileFilter.INSTANCE);
-        for (File subDir : subDirs) {
-            lastModified = Math.max(lastModified, subDir.lastModified());
-        }
-        return lastModified;
-    }
-
-    private void listCoverArtRecursively(MusicFile dir, List<File> coverArtFiles, int limit, int depth) throws IOException {
-        if (depth == 0 || coverArtFiles.size() == limit) {
-            return;
-        }
-
-        File[] files = FileUtil.listFiles(dir.getFile());
-
-        // Sort alphabetically
-        Arrays.sort(files, new Comparator<File>() {
-            public int compare(File a, File b) {
-                if (a.isFile() && b.isDirectory()) {
-                    return 1;
-                }
-                if (a.isDirectory() && b.isFile()) {
-                    return -1;
-                }
-                return a.getName().compareToIgnoreCase(b.getName());
-            }
-        });
-
-        for (File file : files) {
-            if (file.isDirectory() && !dir.isExcluded(file)) {
-                listCoverArtRecursively(getMusicFile(file), coverArtFiles, limit, depth - 1);
-            }
-        }
-
-        if (coverArtFiles.size() == limit) {
-            return;
-        }
-
-        File best = getBestCoverArt(files);
-        if (best != null) {
-            coverArtFiles.add(best);
-        }
-    }
-
-    private File getBestCoverArt(File[] candidates) {
-        for (String mask : settingsService.getCoverArtFileTypesAsArray()) {
-            for (File candidate : candidates) {
-                if (candidate.getName().toUpperCase().endsWith(mask.toUpperCase()) && !candidate.getName().startsWith(".")) {
-                    return candidate;
-                }
-            }
-        }
-
-        // Look for embedded images in audiofiles. (Only check first audio file encountered).
-        JaudiotaggerParser parser = new JaudiotaggerParser();
-        for (File candidate : candidates) {
-            MusicFile musicFile = getMusicFile(candidate);
-            if (parser.isApplicable(musicFile)) {
-                if (parser.isImageAvailable(musicFile)) {
-                    return candidate;
-                } else {
-                    return null;
-                }
-            }
-        }
-        return null;
     }
 
     /**

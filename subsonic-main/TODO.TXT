@@ -52,7 +52,9 @@ Improve performance on network shares
   Keep database in subsonic home.
   Analyze when tags are read.
   MusicFile.isAlbum() can be slow.
+  MusicFile.lastModified is cached.
   Look for all usage of listFiles.
+  Store something in cache also if no cover art is found.
 
 
 Make it possible to suppress content length estimation.

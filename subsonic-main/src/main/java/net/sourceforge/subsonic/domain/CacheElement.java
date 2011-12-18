@@ -18,15 +18,13 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import net.sourceforge.subsonic.util.StringUtil;
-
 /**
  * @author Sindre Mehus
  * @version $Id$
  */
 public class CacheElement {
 
-    private final int id;
+    private final long id;
     private final int type;
     private final String key;
     private final Object value;
@@ -41,11 +39,11 @@ public class CacheElement {
         id = createId(type, key);
     }
 
-    public static int createId(int type, String key) {
-        return type + key.hashCode();
+    public static long createId(int type, String key) {
+        return ((long) type << 32) | Math.abs(key.hashCode());
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

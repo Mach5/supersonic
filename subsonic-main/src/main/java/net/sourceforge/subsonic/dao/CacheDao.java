@@ -125,7 +125,7 @@ public class CacheDao {
     private static class CacheElementPredicate extends Predicate<CacheElement> {
         private static final long serialVersionUID = 54911003002373726L;
 
-        private final int id;
+        private final long id;
 
         public CacheElementPredicate(int type, String key) {
             id = CacheElement.createId(type, key);
