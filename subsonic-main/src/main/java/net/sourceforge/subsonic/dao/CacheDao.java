@@ -22,16 +22,12 @@ import com.db4o.Db4oEmbedded;
 import com.db4o.EmbeddedObjectContainer;
 import com.db4o.ObjectSet;
 import com.db4o.config.EmbeddedConfiguration;
-import com.db4o.defragment.Defragment;
-import com.db4o.internal.ObjectContainerBase;
-import com.db4o.internal.query.Db4oQueryExecutionListener;
-import com.db4o.internal.query.NQOptimizationInfo;
 import com.db4o.query.Predicate;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.CacheElement;
+import net.sourceforge.subsonic.service.SettingsService;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -46,11 +42,19 @@ public class CacheDao {
     private static final int BATCH_SIZE = 100;
 
     private final EmbeddedObjectContainer db;
-    private final ReadWriteLock dataLock = new ReentrantReadWriteLock();
-    private int changeCount = 0;
+    private final ReadWriteLock dbLock = new ReentrantReadWriteLock();
+    private int writeCount = 0;
 
     public CacheDao() {
-        File dbFile = new File("/tmp/db40.db");
+
+        File subsonicHome = SettingsService.getSubsonicHome();
+        File dbDir = new File(subsonicHome, "cache");
+        File dbFile = new File(dbDir, "cache.dat");
+
+        if (!dbDir.exists()) {
+            dbDir.mkdirs();
+        }
+
 //        if (dbFile.exists()) {
 //            try {
 //                Defragment.defrag(dbFile.getPath());
@@ -82,23 +86,23 @@ public class CacheDao {
      * @param element The cache element to create (or update).
      */
     public void createCacheElement(CacheElement element) {
-        dataLock.writeLock().lock();
+        dbLock.writeLock().lock();
         try{
             deleteCacheElement(element);
             db.store(element);
 
-            if (changeCount++ == BATCH_SIZE) {
+            if (writeCount++ == BATCH_SIZE) {
                 db.commit();
-                changeCount = 0;
+                writeCount = 0;
             }
 
         } finally{
-            dataLock.writeLock().unlock();
+            dbLock.writeLock().unlock();
         }
     }
 
     public CacheElement getCacheElement(int type, String key) {
-        dataLock.readLock().lock();
+        dbLock.readLock().lock();
         try{
 
             ObjectSet<CacheElement> result = db.query(new CacheElementPredicate(type, key));
@@ -108,7 +112,7 @@ public class CacheDao {
             return result.isEmpty() ? null : result.get(0);
 
         } finally{
-            dataLock.readLock().unlock();
+            dbLock.readLock().unlock();
         }
     }
 

@@ -41,13 +41,10 @@ Improve performance on network shares
   Memory usage.
   Profile
   Defragment.
-  Low hit ratio.
   Don't set MusicFile.includes.  Remove it.
   Log statistics (access time, hit rate). Show in About page.
-  Make id field unique (long).
   Test tag editing vs caching.
   Test corrupt database.
-  Keep database in subsonic home.
   Analyze when tags are read.
   MusicFile.isAlbum() can be slow.
   MusicFile.lastModified is cached.
