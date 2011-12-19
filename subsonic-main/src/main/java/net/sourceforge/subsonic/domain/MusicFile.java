@@ -20,15 +20,12 @@ package net.sourceforge.subsonic.domain;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
@@ -43,7 +40,6 @@ import net.sourceforge.subsonic.service.ServiceLocator;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
 import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.StringUtil;
 
 /**
  * Represents a file or directory containing music. Music files can be put in a {@link Playlist},
@@ -61,7 +57,6 @@ public class MusicFile implements Serializable {
     private boolean isVideo;
     private long lastModified;
     private MetaData metaData;
-    private Set<String> excludes;
 
     /**
      * Do not use this method directly. Instead, use {@link MusicFileService#getMusicFile}.
@@ -418,8 +413,7 @@ public class MusicFile implements Serializable {
     }
 
     /**
-     * Returns whether the given file is excluded, i.e., whether it is listed in 'subsonic_exclude.txt' in
-     * the current directory.
+     * Returns whether the given file is excluded.
      *
      * @param file The child file in question.
      * @return Whether the child file is excluded.
@@ -427,22 +421,7 @@ public class MusicFile implements Serializable {
     public boolean isExcluded(File file) throws IOException {
 
         // Exclude all hidden files starting with a "." or "@eaDir" (thumbnail dir created on Synology devices).
-        if (file.getName().startsWith(".") || file.getName().startsWith("@eaDir")) {
-            return true;
-        }
-
-        if (excludes == null) {
-            excludes = new HashSet<String>();
-            File excludeFile = new File(this.file, "subsonic_exclude.txt");
-            if (FileUtil.exists(excludeFile)) {
-                String[] lines = StringUtil.readLines(new FileInputStream(excludeFile));
-                for (String line : lines) {
-                    excludes.add(line.toLowerCase());
-                }
-            }
-        }
-
-        return excludes.contains(file.getName().toLowerCase());
+        return file.getName().startsWith(".") || file.getName().startsWith("@eaDir");
     }
 
     /**
@@ -600,7 +579,7 @@ public class MusicFile implements Serializable {
                 return null;
             }
 
-            StringBuffer result = new StringBuffer(8);
+            StringBuilder result = new StringBuilder(8);
 
             int seconds = duration;
 

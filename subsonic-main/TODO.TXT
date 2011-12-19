@@ -41,7 +41,6 @@ Improve performance on network shares
   Memory usage.
   Profile
   Defragment.
-  Don't set MusicFile.includes.  Remove it.
   Log statistics (access time, hit rate). Show in About page.
   Test tag editing vs caching.
   Test corrupt database.
