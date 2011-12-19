@@ -81,8 +81,6 @@
                 <module>subsonic-installer-mac</module>
                 <module>subsonic-installer-debian</module>
                 <module>subsonic-installer-rpm</module>
-                <module>subsonic-backend</module>
-                <module>subsonic-site</module>
                 <module>subsonic-assembly</module>
             </modules>
         </profile>
