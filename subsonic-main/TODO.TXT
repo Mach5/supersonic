@@ -46,9 +46,8 @@ Improve performance on network shares
   Test tag editing vs caching.
   Test corrupt database.
   Analyze when tags are read.
-  MusicFile.isAlbum() can be slow.
+  MusicFile.isAlbum() can be slow. Cache it?
   MusicFile.lastModified is cached.
-  Look for all usage of listFiles.
   LeftController crashes if no media folders defined. (LeftController:209)
 
 Make it possible to suppress content length estimation.

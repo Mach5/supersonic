@@ -20,9 +20,6 @@ package net.sourceforge.subsonic.cache;
 
 
 import java.io.File;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.InitializingBean;
 
@@ -53,16 +50,6 @@ public class CacheFactory implements InitializingBean {
         configuration.getDiskStoreConfiguration().setPath(cacheDir.getPath());
 
         cacheManager = CacheManager.create(configuration);
-
-        // Flush caches every hour.
-        ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-        Runnable runnable = new Runnable() {
-            public void run() {
-                flushCaches();
-            }
-        };
-        // TODO
-        executor.scheduleWithFixedDelay(runnable, 60L, 60L, TimeUnit.SECONDS);
     }
 
     public Ehcache getCache(String name) {
@@ -70,12 +57,4 @@ public class CacheFactory implements InitializingBean {
         LOG.debug("Using " + name + " with " + cache.getStatistics().getObjectCount() + " entries.");
         return cache;
     }
-
-    private void flushCaches() {
-        for (String name : cacheManager.getCacheNames()) {
-            cacheManager.getCache(name).flush();
-            LOG.debug("Flushing " + name);
-        }
-    }
-
 }
