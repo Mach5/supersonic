@@ -192,7 +192,7 @@ public class MusicFile implements Serializable {
         String name = file.getName();
         try {
             // Remove artist name from album name, if present.
-            String parentName = getParent().getName() + " - ";
+            String parentName = file.getParentFile().getName() + " - ";
             if (name.startsWith(parentName)) {
                 name = name.substring(parentName.length());
             }

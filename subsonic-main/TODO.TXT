@@ -47,6 +47,7 @@ Improve performance on network shares
   Analyze when tags are read.
   MusicFile.lastModified is cached. Should be, probably.
   Cache firstChild?
+  Use ehcache as memory cache.
 
 Add Subsonic Channel (for Roku)
   http://www.randomwalking.com/project.php?project=roku_subsonic
