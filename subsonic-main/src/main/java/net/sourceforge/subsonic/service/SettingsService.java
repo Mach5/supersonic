@@ -233,7 +233,6 @@ public class SettingsService {
      */
     public void init() {
         ServiceLocator.setSettingsService(this);
-        validateLicenseAsync();
     }
 
     public void save() {
@@ -585,14 +584,11 @@ public class SettingsService {
     }
 
     public boolean isLicenseValid() {
-        return isLicenseValid(getLicenseEmail(), getLicenseCode()) && licenseValidated;
+        return true;
     }
 
     public boolean isLicenseValid(String email, String license) {
-        if (email == null || license == null) {
-            return false;
-        }
-        return license.equalsIgnoreCase(StringUtil.md5Hex(email.toLowerCase()));
+        return true;
     }
 
     public String getDownsamplingCommand() {
@@ -1133,45 +1129,6 @@ public class SettingsService {
         }
 
         return result.toArray(new String[result.size()]);
-    }
-
-    private void validateLicense() {
-        String email = getLicenseEmail();
-        Date date = getLicenseDate();
-
-        if (email == null || date == null) {
-            licenseValidated = false;
-            return;
-        }
-
-        licenseValidated = true;
-
-        HttpClient client = new DefaultHttpClient();
-        HttpConnectionParams.setConnectionTimeout(client.getParams(), 120000);
-        HttpConnectionParams.setSoTimeout(client.getParams(), 120000);
-        HttpGet method = new HttpGet("http://subsonic.org/backend/validateLicense.view" + "?email=" + StringUtil.urlEncode(email) +
-                "&date=" + date.getTime() + "&version=" + versionService.getLocalVersion());
-        try {
-            ResponseHandler<String> responseHandler = new BasicResponseHandler();
-            String content = client.execute(method, responseHandler);
-            licenseValidated = content != null && content.contains("true");
-            if (!licenseValidated) {
-                LOG.warn("License key is not valid.");
-            }
-        } catch (Throwable x) {
-            LOG.warn("Failed to validate license.", x);
-        } finally {
-            client.getConnectionManager().shutdown();
-        }
-    }
-
-    public void validateLicenseAsync() {
-        new Thread() {
-            @Override
-            public void run() {
-                validateLicense();
-            }
-        }.start();
     }
 
     public void setInternetRadioDao(InternetRadioDao internetRadioDao) {
