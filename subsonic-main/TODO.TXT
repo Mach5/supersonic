@@ -45,9 +45,11 @@ Improve performance on network shares
   Test tag editing vs caching.
   Test corrupt database.
   Analyze when tags are read.
-  MusicFile.isAlbum() can be slow. Cache it?
-  MusicFile.lastModified is cached.
+  MusicFile.lastModified is cached. Should be, probably.
+  Cache firstChild?
 
+Add Subsonic Channel (for Roku)
+  http://www.randomwalking.com/project.php?project=roku_subsonic
 Make it possible to suppress content length estimation.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
@@ -57,8 +59,6 @@ Test with IE 9
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=8295&p=33672#p33672
 Don't hardcode c:/subsonic in windows installer.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=8213
-Add Subsonic Channel (for Roku)
-  http://www.randomwalking.com/project.php?project=roku_subsonic
 Audio problems on Linux.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/133318f313c0ffbd
 Coniq:
@@ -131,6 +131,8 @@ Fix crash in SectionIndexer
 
 TODO IN ANDROID 3.4
 --------------------
+Check for lingering .partial files.
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 Don't pause on incoming call if RC.
 ICS theme
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=8497

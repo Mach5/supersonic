@@ -54,6 +54,7 @@ public class MusicFile implements Serializable {
     private File file;
     private boolean isFile;
     private boolean isDirectory;
+    private boolean isAlbum;
     private boolean isVideo;
     private long lastModified;
     private MetaData metaData;
@@ -74,6 +75,12 @@ public class MusicFile implements Serializable {
         lastModified = FileUtil.lastModified(file);
         String suffix = FilenameUtils.getExtension(file.getName()).toLowerCase();
         isVideo = isFile && isVideoFile(suffix);
+
+        try {
+            isAlbum = isDirectory && getFirstChild() != null;
+        } catch (IOException e) {
+            // Ignored
+        }
     }
 
     /**
@@ -127,7 +134,7 @@ public class MusicFile implements Serializable {
      * @throws IOException If an I/O error occurs.
      */
     public boolean isAlbum() throws IOException {
-        return !isFile && getFirstChild() != null;
+        return isAlbum;
     }
 
     /**
