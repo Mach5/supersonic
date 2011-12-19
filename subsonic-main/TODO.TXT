@@ -48,7 +48,6 @@ Improve performance on network shares
   Analyze when tags are read.
   MusicFile.isAlbum() can be slow. Cache it?
   MusicFile.lastModified is cached.
-  LeftController crashes if no media folders defined. (LeftController:209)
 
 Make it possible to suppress content length estimation.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668

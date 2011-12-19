@@ -204,10 +204,14 @@ public class LeftController extends ParameterizableViewController implements Las
 
     public MusicFolderCacheEntry getCacheEntry(List<MusicFolder> musicFoldersToUse, long lastModified) throws Exception {
         StringBuilder musicFolderIds = new StringBuilder();
-        for (MusicFolder musicFolder : musicFoldersToUse) {
-            musicFolderIds.append(musicFolder.getId()).append(",");
+        if (musicFoldersToUse.isEmpty()) {
+            musicFolderIds.append("NULL");
+        } else {
+            for (MusicFolder musicFolder : musicFoldersToUse) {
+                musicFolderIds.append(musicFolder.getId()).append(",");
+            }
+            musicFolderIds.setLength(musicFolderIds.length() - 1);
         }
-        musicFolderIds.setLength(musicFolderIds.length() - 1);
         String key = musicFolderIds.toString();
 
         MusicFolderCacheEntry entry = musicFolderCache.getValue(key);
