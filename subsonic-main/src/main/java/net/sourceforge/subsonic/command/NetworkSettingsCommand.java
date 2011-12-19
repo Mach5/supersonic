@@ -43,7 +43,7 @@ public class NetworkSettingsCommand {
     }
 
     public boolean isUrlRedirectionEnabled() {
-        return urlRedirectionEnabled;
+        return false;
     }
 
     public void setUrlRedirectionEnabled(boolean urlRedirectionEnabled) {
