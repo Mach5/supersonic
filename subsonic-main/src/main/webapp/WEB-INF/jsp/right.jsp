@@ -140,6 +140,30 @@
         }
     </script>
 
+    <script type="text/javascript">
+
+        startGetScanningStatusTimer();
+
+        function startGetScanningStatusTimer() {
+            nowPlayingService.getScanningStatus(getScanningStatusCallback);
+        }
+
+        function getScanningStatusCallback(scanInfo) {
+            dwr.util.setValue("scanCount", scanInfo.count);
+            if (scanInfo.scanning) {
+                $("scanningStatus").show();
+                setTimeout("startGetScanningStatusTimer()", 1000);
+            } else {
+                $("scanningStatus").hide();
+                setTimeout("startGetScanningStatusTimer()", 15000);
+            }
+        }
+    </script>
+
+    <div id="scanningStatus" style="display: none;" class="warning">
+        <fmt:message key="main.scanning"/> <span id="scanCount"></span>
+    </div>
+
     <h2><fmt:message key="main.chat"/></h2>
     <div style="padding-top:0.3em;padding-bottom:0.3em">
         <input id="message" value=" <fmt:message key="main.message"/>" style="width:90%" onclick="dwr.util.setValue('message', null);" onkeypress="dwr.util.onReturn(event, addMessage)"/>

@@ -99,6 +99,13 @@ public class SearchService {
     }
 
     /**
+     * Returns the number of files scanned so far.
+     */
+    public int getScanCount() {
+        return scanCount;
+    }
+
+    /**
      * Generates the search index.  If the index already exists it will be
      * overwritten.  The index is created asynchronously, i.e., this method returns
      * before the index is created.
@@ -165,7 +172,7 @@ public class SearchService {
             // Don't need this any longer.
             cachedArtists.clear();
 
-            LOG.info("Created search index with " + scanner.getCount() + " entries.");
+            LOG.info("Created search index with " + scanCount + " entries.");
 
         } catch (Exception x) {
             LOG.error("Failed to create search index.", x);
@@ -797,11 +804,12 @@ public class SearchService {
         }
     }
 
+    private int scanCount;
+
     private class Scanner implements MusicFile.Visitor {
         private final PrintWriter writer;
         private final Map<File, Line> oldIndex;
         private final Set<File> musicFolders;
-        private int count;
 
         Scanner(PrintWriter writer, Map<File, Line> oldIndex, List<MusicFolder> musicFolders) {
             this.writer = writer;
@@ -810,6 +818,7 @@ public class SearchService {
             for (MusicFolder musicFolder : musicFolders) {
                 this.musicFolders.add(musicFolder.getPath());
             }
+            scanCount = 0;
         }
 
         public void visit(MusicFile musicFile) {
@@ -826,9 +835,9 @@ public class SearchService {
                 }
             }
 
-            count++;
-            if (count % 250 == 0) {
-                LOG.info("Created search index with " + count + " entries.");
+            scanCount++;
+            if (scanCount % 250 == 0) {
+                LOG.info("Created search index with " + scanCount + " entries.");
             }
         }
 
@@ -838,10 +847,6 @@ public class SearchService {
 
         public boolean sorted() {
             return false;
-        }
-
-        public int getCount() {
-            return count;
         }
     }
 }

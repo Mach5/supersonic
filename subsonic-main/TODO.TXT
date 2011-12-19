@@ -18,6 +18,7 @@ Serve generic cover art if failing to scale original.
 Use ffmpeg rather than lame for downsampling.
   Retain track number when doing lame downsampling.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
+Show scanning status.
 
 TODO IN 4.7
 -----------------
@@ -33,7 +34,6 @@ Improve performance on network shares
   http://forum.subsonic.org/forum/viewtopic.php?t=3771
   https://mail.google.com/mail/?shva=1#inbox/1343272326ddfa84
   Is childDirCache necessary? Probably. Used by RESTController.
-  Show scan status in right.jsp
   Start scan automatically when changing music folders.
   CacheDaoTestCase
   CacheDao

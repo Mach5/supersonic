@@ -25,6 +25,7 @@ import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.StatusService;
 import net.sourceforge.subsonic.util.StringUtil;
@@ -49,6 +50,7 @@ public class NowPlayingService {
     private StatusService statusService;
     private MusicFileService musicFileService;
     private SettingsService settingsService;
+    private SearchService searchService;
 
     /**
      * Returns details about what the current player is playing.
@@ -71,6 +73,13 @@ public class NowPlayingService {
      */
     public List<NowPlayingInfo> getNowPlaying() throws Exception {
         return convert(statusService.getAllStreamStatuses());
+    }
+
+    /**
+     * Returns media folder scanning status.
+     */
+    public ScanInfo getScanningStatus() {
+        return new ScanInfo(searchService.isIndexBeingCreated(), searchService.getScanCount());
     }
 
     private List<NowPlayingInfo> convert(List<TransferStatus> statuses) throws Exception {
@@ -162,5 +171,9 @@ public class NowPlayingService {
 
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
+    }
+
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
     }
 }

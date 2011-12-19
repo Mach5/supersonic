@@ -175,6 +175,7 @@
         <property name="statusService" ref="statusService"/>
         <property name="musicFileService" ref="musicFileService"/>
         <property name="settingsService" ref="settingsService"/>
+        <property name="searchService" ref="searchService"/>
     </bean>
 
     <bean id="ajaxPlaylistService" class="net.sourceforge.subsonic.ajax.PlaylistService">
