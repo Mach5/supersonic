@@ -23,7 +23,6 @@ import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.MusicFileInfo;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.UserSettings;
-import net.sourceforge.subsonic.service.AdService;
 import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.MusicInfoService;
 import net.sourceforge.subsonic.service.PlayerService;
@@ -60,7 +59,6 @@ public class MainController extends ParameterizableViewController {
     private SettingsService settingsService;
     private MusicInfoService musicInfoService;
     private MusicFileService musicFileService;
-    private AdService adService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -94,9 +92,6 @@ public class MainController extends ParameterizableViewController {
         map.put("updateNowPlaying", request.getParameter("updateNowPlaying") != null);
         map.put("partyMode", userSettings.isPartyModeEnabled());
         map.put("brand", settingsService.getBrand());
-        if (!settingsService.isLicenseValid()) {
-            map.put("ad", adService.getAd());
-        }
 
         try {
             map.put("navigateUpAllowed", !dir.getParent().isRoot());
@@ -281,7 +276,4 @@ public class MainController extends ParameterizableViewController {
         this.musicFileService = musicFileService;
     }
 
-    public void setAdService(AdService adService) {
-        this.adService = adService;
-    }
 }

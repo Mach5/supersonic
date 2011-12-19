@@ -139,10 +139,6 @@
         <property name="musicInfoService" ref="musicInfoService"/>
     </bean>
 
-    <bean id="adService" class="net.sourceforge.subsonic.service.AdService">
-        <property name="adInterval" value="4"/>
-    </bean>
-
     <bean id="jukeboxService" class="net.sourceforge.subsonic.service.JukeboxService">
         <property name="statusService" ref="statusService"/>
         <property name="transcodingService" ref="transcodingService"/>
