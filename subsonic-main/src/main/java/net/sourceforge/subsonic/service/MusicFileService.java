@@ -40,6 +40,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class MusicFileService {
 
+    private final File NULL_FILE = new File("NULL");
+
     private Cache childDirCache;
     private Cache coverArtCache;
     private Cache musicFileDiskCache;
@@ -111,18 +113,15 @@ public class MusicFileService {
 
             // Check if cache is up-to-date.
             if (element.getCreated() > dir.getFile().lastModified()) {
-                return (File) element.getValue();
+                File file = (File) element.getValue();
+                return file.equals(NULL_FILE) ? null : file;
             }
         }
 
         File coverArt = getBestCoverArt(FileUtil.listFiles(dir.getFile(), FileFileFilter.FILE));
-        if (coverArt != null) {
-            coverArtCache.put(dir.getPath(), coverArt);
-        }
+        coverArtCache.put(dir.getPath(), coverArt == null ? NULL_FILE : coverArt);
         return coverArt;
     }
-
-    private final File NULL_FILE = new File("NULL");
 
     private File getBestCoverArt(File[] candidates) {
         for (String mask : settingsService.getCoverArtFileTypesAsArray()) {

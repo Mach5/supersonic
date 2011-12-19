@@ -49,7 +49,6 @@ Improve performance on network shares
   MusicFile.isAlbum() can be slow.
   MusicFile.lastModified is cached.
   Look for all usage of listFiles.
-  Store something in cache also if no cover art is found.
   LeftController crashes if no media folders defined. (LeftController:209)
 
 Make it possible to suppress content length estimation.
