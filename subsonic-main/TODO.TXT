@@ -45,9 +45,9 @@ Improve performance on network shares
   Test tag editing vs caching.
   Test corrupt database.
   Analyze when tags are read.
-  MusicFile.lastModified is cached. Should be, probably.
-  Cache firstChild?
+  Replace getFirstChild() with artist/album metadata.
   Use ehcache as memory cache.
+  MusicFile.isRoot()
 
 Add Subsonic Channel (for Roku)
   http://www.randomwalking.com/project.php?project=roku_subsonic

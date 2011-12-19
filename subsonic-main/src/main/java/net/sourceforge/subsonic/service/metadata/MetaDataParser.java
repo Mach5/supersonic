@@ -20,6 +20,7 @@ package net.sourceforge.subsonic.service.metadata;
 
 import net.sourceforge.subsonic.*;
 import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.util.FileUtil;
 
 import java.io.*;
 
@@ -119,7 +120,7 @@ public abstract class MetaDataParser {
      */
     protected MusicFile.MetaData getBasicMetaData(MusicFile file) {
         MusicFile.MetaData metaData = new MusicFile.MetaData();
-        metaData.setFileSize(file.length());
+        metaData.setFileSize(FileUtil.length(file.getFile()));
         metaData.setFormat(file.getSuffix());
         return metaData;
     }

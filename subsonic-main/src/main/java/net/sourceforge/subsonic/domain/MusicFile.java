@@ -51,13 +51,13 @@ public class MusicFile implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(MusicFile.class);
 
-    private File file;
-    private boolean isFile;
-    private boolean isDirectory;
+    private final File file;
+    private final boolean isFile;
+    private final boolean isDirectory;
     private boolean isAlbum;
-    private boolean isVideo;
-    private long lastModified;
-    private MetaData metaData;
+    private final boolean isVideo;
+    private final long lastModified;
+    private final MetaData metaData;
 
     /**
      * Do not use this method directly. Instead, use {@link MusicFileService#getMusicFile}.
@@ -81,13 +81,22 @@ public class MusicFile implements Serializable {
         } catch (IOException e) {
             // Ignored
         }
+
+        MetaDataParser parser = ServiceLocator.getMetaDataParserFactory().getParser(this);
+        metaData = (parser == null) ? null : parser.getMetaData(this);
     }
 
     /**
      * Empty constructor.  Used for testing purposes only.
      */
     protected MusicFile() {
+        file = null;
         isFile = true;
+        isDirectory = false;
+        isAlbum = false;
+        isVideo = false;
+        lastModified = 0L;
+        metaData = null;
     }
 
     /**
@@ -170,7 +179,7 @@ public class MusicFile implements Serializable {
      *         or <code>0L</code> if the file does not exist
      */
     public long length() {
-        return FileUtil.length(file);
+        return metaData == null ? 0L : metaData.fileSize;
     }
 
     /**
@@ -240,11 +249,7 @@ public class MusicFile implements Serializable {
      *
      * @return Meta data (artist, album, title etc) for this music file.
      */
-    public synchronized MetaData getMetaData() {
-        if (metaData == null) {
-            MetaDataParser parser = ServiceLocator.getMetaDataParserFactory().getParser(this);
-            metaData = (parser == null) ? null : parser.getMetaData(this);
-        }
+    public MetaData getMetaData() {
         return metaData;
     }
 
