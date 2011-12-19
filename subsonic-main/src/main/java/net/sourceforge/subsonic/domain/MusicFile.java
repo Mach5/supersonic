@@ -74,9 +74,9 @@ public class MusicFile implements Serializable {
         this.file = file;
 
         // Cache these values for performance.
-        isFile = file.isFile();
-        isDirectory = file.isDirectory();
-        lastModified = file.lastModified();
+        isFile = FileUtil.isFile(file);
+        isDirectory = FileUtil.isDirectory(file);
+        lastModified = FileUtil.lastModified(file);
         String suffix = FilenameUtils.getExtension(file.getName()).toLowerCase();
         isVideo = isFile && isVideoFile(suffix);
     }
@@ -168,7 +168,7 @@ public class MusicFile implements Serializable {
      *         or <code>0L</code> if the file does not exist
      */
     public long length() {
-        return file.length();
+        return FileUtil.length(file);
     }
 
     /**
@@ -177,7 +177,7 @@ public class MusicFile implements Serializable {
      * @return Whether this music file exists.
      */
     public boolean exists() {
-        return file.exists();
+        return FileUtil.exists(file);
     }
 
     /**
@@ -374,7 +374,7 @@ public class MusicFile implements Serializable {
     public MusicFile getFirstChild() throws IOException {
         File[] files = FileUtil.listFiles(file);
         for (File f : files) {
-            if (f.isFile() && acceptMedia(f)) {
+            if (FileUtil.isFile(f) && acceptMedia(f)) {
                 try {
                     return createMusicFile(f);
                 } catch (SecurityException x) {
@@ -391,7 +391,7 @@ public class MusicFile implements Serializable {
             return false;
         }
 
-        if (file.isDirectory()) {
+        if (FileUtil.isDirectory(file)) {
             return true;
         }
 
@@ -434,7 +434,7 @@ public class MusicFile implements Serializable {
         if (excludes == null) {
             excludes = new HashSet<String>();
             File excludeFile = new File(this.file, "subsonic_exclude.txt");
-            if (excludeFile.exists()) {
+            if (FileUtil.exists(excludeFile)) {
                 String[] lines = StringUtil.readLines(new FileInputStream(excludeFile));
                 for (String line : lines) {
                     excludes.add(line.toLowerCase());

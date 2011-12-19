@@ -74,7 +74,7 @@ public class MusicFileService {
         }
 
         cachedMusicFile = musicFileDiskCache.getValue(file.getPath());
-        if (cachedMusicFile != null && cachedMusicFile.lastModified() >= file.lastModified()) {
+        if (cachedMusicFile != null && cachedMusicFile.lastModified() >= FileUtil.lastModified(file)) {
             musicFileMemoryCache.put(file, cachedMusicFile);
             return cachedMusicFile;
         }
@@ -112,7 +112,7 @@ public class MusicFileService {
         if (element != null) {
 
             // Check if cache is up-to-date.
-            if (element.getCreated() > dir.getFile().lastModified()) {
+            if (element.getCreated() > FileUtil.lastModified(dir.getFile())) {
                 File file = (File) element.getValue();
                 return file.equals(NULL_FILE) ? null : file;
             }

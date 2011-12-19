@@ -18,14 +18,14 @@
  */
 package net.sourceforge.subsonic.util;
 
-import net.sourceforge.subsonic.Logger;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
+
+import net.sourceforge.subsonic.Logger;
 
 /**
  * Miscellaneous file utility methods.
@@ -42,12 +42,63 @@ public final class FileUtil {
     private FileUtil() {
     }
 
+    public static boolean isFile(final File file) {
+        return timed(new FileTask<Boolean>("isFile", file) {
+            @Override
+            public Boolean execute() {
+                return file.isFile();
+            }
+        });
+    }
+
+    public static boolean isDirectory(final File file) {
+        return timed(new FileTask<Boolean>("isDirectory", file) {
+            @Override
+            public Boolean execute() {
+                return file.isDirectory();
+            }
+        });
+    }
+
+    public static boolean exists(final File file) {
+        return timed(new FileTask<Boolean>("exists", file) {
+            @Override
+            public Boolean execute() {
+                return file.exists();
+            }
+        });
+    }
+
+    public static long lastModified(final File file) {
+        return timed(new FileTask<Long>("lastModified", file) {
+            @Override
+            public Long execute() {
+                return file.lastModified();
+            }
+        });
+    }
+
+    public static long length(final File file) {
+        return timed(new FileTask<Long>("length", file) {
+            @Override
+            public Long execute() {
+                return file.length();
+            }
+        });
+    }
+
     /**
      * Similar to {@link File#listFiles()}, but never returns null.
      * Instead a warning is logged, and an empty array is returned.
      */
-    public static File[] listFiles(File dir) {
-        File[] files = dir.listFiles();
+    public static File[] listFiles(final File dir) {
+        File[] files = timed(new FileTask<File[]>("listFiles1", dir) {
+            @Override
+            public File[] execute() {
+                return dir.listFiles();
+            }
+        });
+
         if (files == null) {
             LOG.warn("Failed to list children for " + dir.getPath());
             return new File[0];
@@ -59,8 +110,14 @@ public final class FileUtil {
      * Similar to {@link File#listFiles(FileFilter)}, but never returns null.
      * Instead a warning is logged, and an empty array is returned.
      */
-    public static File[] listFiles(File dir, FileFilter filter) {
-        File[] files = dir.listFiles(filter);
+    public static File[] listFiles(final File dir, final FileFilter filter) {
+        File[] files = timed(new FileTask<File[]>("listFiles2", dir) {
+            @Override
+            public File[] execute() {
+                return dir.listFiles(filter);
+            }
+        });
+
         if (files == null) {
             LOG.warn("Failed to list children for " + dir.getPath());
             return new File[0];
@@ -72,15 +129,20 @@ public final class FileUtil {
      * Similar to {@link File#listFiles(FilenameFilter)}, but never returns null.
      * Instead a warning is logged, and an empty array is returned.
      */
-    public static File[] listFiles(File dir, FilenameFilter filter, boolean sort) {
-        File[] files = dir.listFiles(filter);
+    public static File[] listFiles(final File dir, final FilenameFilter filter, boolean sort) {
+        File[] files = timed(new FileTask<File[]>("listFiles3", dir) {
+            @Override
+            public File[] execute() {
+                return dir.listFiles(filter);
+            }
+        });
         if (files == null) {
             LOG.warn("Failed to list children for " + dir.getPath());
             return new File[0];
         }
         if (sort) {
             Arrays.sort(files);
-        } 
+        }
         return files;
     }
 
@@ -101,6 +163,7 @@ public final class FileUtil {
 
     /**
      * Closes the "closable", ignoring any excepetions.
+     *
      * @param closeable The Closable to close, may be {@code null}.
      */
     public static void closeQuietly(Closeable closeable) {
@@ -111,6 +174,33 @@ public final class FileUtil {
                 // Ignored
             }
         }
+    }
 
+    private static <T> T timed(FileTask<T> task) {
+        long t0 = System.nanoTime();
+        try {
+            return task.execute();
+        } finally {
+            long t1 = System.nanoTime();
+            LOG.debug((t1 - t0) / 1000L + " microsec, " + task);
+        }
+    }
+
+    private static abstract class FileTask<T> {
+
+        private final String name;
+        private final File file;
+
+        public FileTask(String name, File file) {
+            this.name = name;
+            this.file = file;
+        }
+
+        public abstract T execute();
+
+        @Override
+        public String toString() {
+            return name + ", " + file;
+        }
     }
 }

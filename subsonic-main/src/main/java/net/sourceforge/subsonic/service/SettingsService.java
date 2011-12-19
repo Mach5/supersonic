@@ -52,6 +52,7 @@ import net.sourceforge.subsonic.domain.InternetRadio;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.Theme;
 import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.Util;
 
@@ -908,7 +909,7 @@ public class SettingsService {
         List<MusicFolder> all = musicFolderDao.getAllMusicFolders();
         List<MusicFolder> result = new ArrayList<MusicFolder>(all.size());
         for (MusicFolder folder : all) {
-            if (includeAll || folder.isEnabled() && folder.getPath().exists()) {
+            if (includeAll || folder.isEnabled() && FileUtil.exists(folder.getPath())) {
                 result.add(folder);
             }
         }

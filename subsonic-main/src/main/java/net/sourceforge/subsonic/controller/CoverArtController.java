@@ -24,6 +24,7 @@ import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.util.FileUtil;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
@@ -59,11 +60,11 @@ public class CoverArtController implements Controller, LastModified {
         }
 
         File file = new File(path);
-        if (!file.exists()) {
+        if (!FileUtil.exists(file)) {
             return -1;
         }
 
-        return file.lastModified();
+        return FileUtil.lastModified(file);
     }
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -136,7 +137,7 @@ public class CoverArtController implements Controller, LastModified {
         File cachedImage = new File(getImageCacheDirectory(size), md5 + ".jpeg");
 
         // Is cache missing or obsolete?
-        if (!cachedImage.exists() || file.lastModified() > cachedImage.lastModified()) {
+        if (!FileUtil.exists(cachedImage) || FileUtil.lastModified(file) > FileUtil.lastModified(cachedImage)) {
             InputStream in = null;
             OutputStream out = null;
             try {
@@ -182,7 +183,7 @@ public class CoverArtController implements Controller, LastModified {
     private synchronized File getImageCacheDirectory(int size) {
         File dir = new File(SettingsService.getSubsonicHome(), "thumbs");
         dir = new File(dir, String.valueOf(size));
-        if (!dir.exists()) {
+        if (!FileUtil.exists(dir)) {
             if (dir.mkdirs()) {
                 LOG.info("Created thumbnail cache " + dir);
             } else {

@@ -26,6 +26,7 @@ import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
+import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.util.StringUtil;
 
 import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.*;
@@ -383,7 +384,7 @@ public class SearchService {
             int n = RANDOM.nextInt(songs.size());
             File file = songs.get(n).file;
 
-            if (file.exists() && securityService.isReadAllowed(file)) {
+            if (FileUtil.exists(file) && securityService.isReadAllowed(file)) {
                 MusicFile musicFile = musicFileService.getMusicFile(file);
                 if (!result.contains(musicFile) && !musicFile.isVideo()) {
                     result.add(musicFile);
@@ -443,7 +444,7 @@ public class SearchService {
             int n = RANDOM.nextInt(cachedSongs.size());
             File file = cachedSongs.get(n).file;
 
-            if (file.exists() && securityService.isReadAllowed(file)) {
+            if (FileUtil.exists(file) && securityService.isReadAllowed(file)) {
                 MusicFile album = musicFileService.getMusicFile(file.getParentFile());
                 if (!album.isRoot() && !result.contains(album)) {
                     result.add(album);
@@ -482,7 +483,7 @@ public class SearchService {
             if (n == count + offset) {
                 break;
             }
-            if (line.file.exists() && securityService.isReadAllowed(line.file)) {
+            if (FileUtil.exists(line.file) && securityService.isReadAllowed(line.file)) {
                 if (n >= offset) {
                     result.add(musicFileService.getMusicFile(line.file));
                 }
@@ -614,7 +615,7 @@ public class SearchService {
         for (int i = 2; i < INDEX_VERSION; i++) {
             File file = getIndexFile(i);
             try {
-                if (file.exists()) {
+                if (FileUtil.exists(file)) {
                     if (file.delete()) {
                         LOG.info("Deleted old index file: " + file.getPath());
                     }
