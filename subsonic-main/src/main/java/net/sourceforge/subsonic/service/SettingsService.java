@@ -896,20 +896,21 @@ public class SettingsService {
      * @return Possibly empty list of all music folders.
      */
     public List<MusicFolder> getAllMusicFolders() {
-        return getAllMusicFolders(false);
+        return getAllMusicFolders(false, false);
     }
 
     /**
      * Returns all music folders.
      *
-     * @param includeAll Whether non-existing and disabled folders should be included.
+     * @param includeDisabled Whether to include disabled folders.
+     * @param includeNonExisting Whether to include non-existing folders.
      * @return Possibly empty list of all music folders.
      */
-    public List<MusicFolder> getAllMusicFolders(boolean includeAll) {
+    public List<MusicFolder> getAllMusicFolders(boolean includeDisabled, boolean includeNonExisting) {
         List<MusicFolder> all = musicFolderDao.getAllMusicFolders();
         List<MusicFolder> result = new ArrayList<MusicFolder>(all.size());
         for (MusicFolder folder : all) {
-            if (includeAll || folder.isEnabled() && FileUtil.exists(folder.getPath())) {
+            if ((includeDisabled || folder.isEnabled()) && (includeNonExisting || FileUtil.exists(folder.getPath()))) {
                 result.add(folder);
             }
         }

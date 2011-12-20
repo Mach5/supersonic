@@ -761,7 +761,7 @@ public class RESTController extends MultiActionController {
 
         String filePathLower = filePath.toLowerCase();
 
-        List<MusicFolder> musicFolders = settingsService.getAllMusicFolders();
+        List<MusicFolder> musicFolders = settingsService.getAllMusicFolders(false, true);
         for (MusicFolder musicFolder : musicFolders) {
             String folderPath = musicFolder.getPath().getPath();
             folderPath = folderPath.replace('\\', '/');

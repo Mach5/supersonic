@@ -210,7 +210,7 @@ public class SecurityService implements UserDetailsService {
      * @return Whether the given file is located in one of the music folders.
      */
     private boolean isInMusicFolder(File file) {
-        List<MusicFolder> folders = settingsService.getAllMusicFolders();
+        List<MusicFolder> folders = settingsService.getAllMusicFolders(false, true);
         String path = file.getPath();
         for (MusicFolder folder : folders) {
             if (isFileInFolder(path, folder.getPath().getPath())) {

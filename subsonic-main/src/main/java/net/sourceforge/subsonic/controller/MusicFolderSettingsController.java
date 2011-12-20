@@ -51,7 +51,7 @@ public class MusicFolderSettingsController extends ParameterizableViewController
         }
 
         ModelAndView result = super.handleRequestInternal(request, response);
-        map.put("musicFolders", settingsService.getAllMusicFolders(true));
+        map.put("musicFolders", settingsService.getAllMusicFolders(true, true));
 
         result.addObject("model", map);
         return result;
@@ -68,7 +68,7 @@ public class MusicFolderSettingsController extends ParameterizableViewController
 
     private String handleParameters(HttpServletRequest request) {
 
-        for (MusicFolder musicFolder : settingsService.getAllMusicFolders(true)) {
+        for (MusicFolder musicFolder : settingsService.getAllMusicFolders(true, true)) {
             Integer id = musicFolder.getId();
 
             String path = getParameter(request, "path", id);
