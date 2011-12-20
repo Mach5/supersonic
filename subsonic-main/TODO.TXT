@@ -44,7 +44,7 @@ Improve performance on network shares
   Log statistics (access time, hit rate). Show in About page.
   Test tag editing vs caching.
   Test corrupt database.
-  Analyze when tags are read.
+  Analyze when tags are read. Maybe no need to cache/reuse search index lines.
   Replace getFirstChild() with artist/album metadata.
   Use ehcache as memory cache.
   MusicFile.isRoot()
@@ -132,6 +132,7 @@ Fix crash in SectionIndexer
 
 TODO IN ANDROID 3.4
 --------------------
+Add SectionIndexer in SelectAlbumActivity.
 Check for lingering .partial files.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 Don't pause on incoming call if RC.

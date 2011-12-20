@@ -153,7 +153,7 @@ public class MusicFile implements Serializable {
      */
     public boolean isRoot() {
         SettingsService settings = ServiceLocator.getSettingsService();
-        List<MusicFolder> folders = settings.getAllMusicFolders();
+        List<MusicFolder> folders = settings.getAllMusicFolders(true);
         for (MusicFolder folder : folders) {
             if (file.equals(folder.getPath())) {
                 return true;
