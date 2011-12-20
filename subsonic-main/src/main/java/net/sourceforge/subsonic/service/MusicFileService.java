@@ -116,12 +116,12 @@ public class MusicFileService {
             }
         }
 
-        File coverArt = getBestCoverArt(FileUtil.listFiles(dir.getFile(), FileFileFilter.FILE));
+        File coverArt = getBestCoverArt(dir.getChildrenFiles(FileFileFilter.FILE));
         coverArtCache.put(dir.getPath(), coverArt == null ? NULL_FILE : coverArt);
         return coverArt;
     }
 
-    private File getBestCoverArt(File[] candidates) {
+    private File getBestCoverArt(List<File> candidates) {
         for (String mask : settingsService.getCoverArtFileTypesAsArray()) {
             for (File candidate : candidates) {
                 if (candidate.getName().toUpperCase().endsWith(mask.toUpperCase()) && !candidate.getName().startsWith(".")) {

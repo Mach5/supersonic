@@ -58,6 +58,7 @@ public class MusicFile implements Serializable {
     private final boolean isVideo;
     private final long lastModified;
     private final MetaData metaData;
+    private final File[] children;
 
     /**
      * Do not use this method directly. Instead, use {@link MusicFileService#getMusicFile}.
@@ -67,24 +68,24 @@ public class MusicFile implements Serializable {
      */
     @Deprecated
     public MusicFile(File file) {
-        this.file = file;
+            this.file = file;
 
-        // Cache these values for performance.
-        isFile = FileUtil.isFile(file);
-        isDirectory = FileUtil.isDirectory(file);
-        lastModified = FileUtil.lastModified(file);
-        String suffix = FilenameUtils.getExtension(file.getName()).toLowerCase();
-        isVideo = isFile && isVideoFile(suffix);
+            // Cache these values for performance.
+            isFile = FileUtil.isFile(file);
+            isDirectory = FileUtil.isDirectory(file);
+            lastModified = FileUtil.lastModified(file);
+            String suffix = FilenameUtils.getExtension(file.getName()).toLowerCase();
+            isVideo = isFile && isVideoFile(suffix);
+            children = isDirectory ? FileUtil.listFiles(file) : null;
+            try {
+                isAlbum = isDirectory && getFirstChild() != null;
+            } catch (IOException e) {
+                // Ignored
+            }
 
-        try {
-            isAlbum = isDirectory && getFirstChild() != null;
-        } catch (IOException e) {
-            // Ignored
+            MetaDataParser parser = ServiceLocator.getMetaDataParserFactory().getParser(this);
+            metaData = (parser == null) ? null : parser.getMetaData(this);
         }
-
-        MetaDataParser parser = ServiceLocator.getMetaDataParserFactory().getParser(this);
-        metaData = (parser == null) ? null : parser.getMetaData(this);
-    }
 
     /**
      * Empty constructor.  Used for testing purposes only.
@@ -97,6 +98,7 @@ public class MusicFile implements Serializable {
         isVideo = false;
         lastModified = 0L;
         metaData = null;
+        children = null;
     }
 
     /**
@@ -276,6 +278,23 @@ public class MusicFile implements Serializable {
     }
 
     /**
+     * If this is a directory, return all contained files, otherwise {@code null}.
+     */
+    public List<File> getChildrenFiles(FileFilter filter) {
+        if (children == null) {
+            return null;
+        }
+
+        List<File> filteredChildren = new ArrayList<File>(children.length);
+        for (File child : children) {
+            if (filter.accept(child)) {
+                filteredChildren.add(child);
+            }
+        }
+        return filteredChildren;
+    }
+
+    /**
      * Returns all music files that are children of this music file.
      *
      * @param includeFiles       Whether files should be included in the result.
@@ -296,10 +315,9 @@ public class MusicFile implements Serializable {
             filter = FalseFileFilter.INSTANCE;
         }
 
-        File[] children = FileUtil.listFiles(file, filter);
-        List<MusicFile> result = new ArrayList<MusicFile>(children.length);
-
-        for (File child : children) {
+        List<File> filteredChildren = getChildrenFiles(filter);
+        List<MusicFile> result = new ArrayList<MusicFile>(filteredChildren.size());
+        for (File child : filteredChildren) {
             try {
                 if (acceptMedia(child)) {
                     result.add(createMusicFile(child));
@@ -379,8 +397,11 @@ public class MusicFile implements Serializable {
      * @throws IOException If an I/O error occurs.
      */
     public MusicFile getFirstChild() throws IOException {
-        File[] files = FileUtil.listFiles(file);
-        for (File f : files) {
+        if (children == null) {
+            return null;
+        }
+
+        for (File f : children) {
             if (FileUtil.isFile(f) && acceptMedia(f)) {
                 try {
                     return createMusicFile(f);
