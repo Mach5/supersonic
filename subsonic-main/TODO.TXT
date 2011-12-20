@@ -38,12 +38,9 @@ Improve performance on network shares
   Profile
   Defragment.
   Test tag editing vs caching.
-  Test corrupt database.
   Analyze when tags are read. Maybe no need to cache/reuse search index lines.
   Use ehcache as memory cache.
   MusicFile.isRoot()
-  Don't need childDirCachce, use MusicFile.children instead.
-  Is childDirCache necessary? Probably. Used by RESTController.
   Add animated icon to scan progress.
 
 Add Subsonic Channel (for Roku)
