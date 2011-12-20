@@ -70,7 +70,6 @@ public class CacheDao {
         config.common().objectClass(CacheElement.class).cascadeOnActivate(true);
 
 //        config.common().messageLevel(3);
-        System.out.println("Optimized: " + config.common().optimizeNativeQueries());
         db = Db4oEmbedded.openFile(config, dbFile.getPath());
 
 //        ((ObjectContainerBase) db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {

@@ -210,7 +210,7 @@ public class RESTController extends MultiActionController {
             builder.end();
         }
 
-        // TODO: Add children
+        // Add children
         Player player = playerService.getPlayer(request, response);
         List<MusicFile> singleSongs = leftController.getSingleSongs(musicFolders);
         for (MusicFile singleSong : singleSongs) {

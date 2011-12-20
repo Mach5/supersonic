@@ -23,7 +23,6 @@ import net.sourceforge.subsonic.domain.CacheElement;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.Pair;
 
 import net.sourceforge.subsonic.util.TimeLimitedCache;
 import org.apache.commons.io.filefilter.FileFileFilter;
@@ -42,7 +41,6 @@ public class MusicFileService {
 
     private final File NULL_FILE = new File("NULL");
 
-    private Cache childDirCache;
     private Cache coverArtCache;
     private Cache musicFileDiskCache;
     private final TimeLimitedCache<File, MusicFile> musicFileMemoryCache;
@@ -146,32 +144,6 @@ public class MusicFileService {
     }
 
     /**
-     * Returns the (sorted) child directories of the given parent. If possible, a cached
-     * value is returned.
-     *
-     * @param parent The parent directory.
-     * @return The child directories.
-     * @throws IOException If an I/O error occurs.
-     */
-    @SuppressWarnings({"unchecked"})
-    public synchronized List<MusicFile> getChildDirectories(MusicFile parent) throws IOException {
-        Pair<MusicFile, List<MusicFile>> value = childDirCache.getValue(parent.getPath());
-        if (value != null) {
-
-            // Check if cache is up-to-date.
-            MusicFile cachedParent = value.getFirst();
-            if (cachedParent.lastModified() >= parent.lastModified()) {
-                return value.getSecond();
-            }
-        }
-
-        List<MusicFile> children = parent.getChildren(false, true, true);
-        childDirCache.put(parent.getPath(), new Pair<MusicFile, List<MusicFile>>(parent, children));
-
-        return children;
-    }
-
-    /**
      * Register in service locator so that non-Spring objects can access me.
      * This method is invoked automatically by Spring.
      */
@@ -189,10 +161,6 @@ public class MusicFileService {
 
     public void setMusicFileCache(Cache musicFileCache) {
         this.musicFileDiskCache = musicFileCache;
-    }
-
-    public void setChildDirCache(Cache childDirCache) {
-        this.childDirCache = childDirCache;
     }
 
     public void setCoverArtCache(Cache coverArtCache) {

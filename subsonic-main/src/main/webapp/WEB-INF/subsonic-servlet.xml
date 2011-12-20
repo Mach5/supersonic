@@ -46,7 +46,6 @@
             <list>
                 <ref bean="musicFileCache"/>
                 <ref bean="coverArtCache"/>
-                <ref bean="childDirCache"/>
                 <ref bean="musicFolderCache"/>
             </list>
         </property>

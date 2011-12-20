@@ -33,23 +33,18 @@ Improve performance on network shares
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=1456&start=15#p27979
   http://forum.subsonic.org/forum/viewtopic.php?t=3771
   https://mail.google.com/mail/?shva=1#inbox/1343272326ddfa84
-  Is childDirCache necessary? Probably. Used by RESTController.
   Start scan automatically when changing music folders.
-  CacheDaoTestCase
-  CacheDao
-  Remove ehcache.
   Memory usage.
   Profile
   Defragment.
-  Log statistics (access time, hit rate). Show in About page.
   Test tag editing vs caching.
   Test corrupt database.
   Analyze when tags are read. Maybe no need to cache/reuse search index lines.
-  Replace getFirstChild() with artist/album metadata.
   Use ehcache as memory cache.
   MusicFile.isRoot()
-  Don't need childDir cachce, use MusicFile.children instead.
-  Scan progress doesn't appear.
+  Don't need childDirCachce, use MusicFile.children instead.
+  Is childDirCache necessary? Probably. Used by RESTController.
+  Add animated icon to scan progress.
 
 Add Subsonic Channel (for Roku)
   http://www.randomwalking.com/project.php?project=roku_subsonic

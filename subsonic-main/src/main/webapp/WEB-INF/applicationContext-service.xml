@@ -53,7 +53,6 @@
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="musicFileCache" ref="musicFileCache"/>
-        <property name="childDirCache" ref="childDirCache"/>
         <property name="coverArtCache" ref="coverArtCache"/>
     </bean>
 

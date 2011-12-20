@@ -47,8 +47,7 @@ public class Cache {
         long t1 = System.nanoTime();
         totalLookupTimeMicros += (t1 - t0) / 1000L;
 
-        // TODO
-        System.out.println((element == null ? "M " : "  ") + name + ", " + key + ": " + (t1 - t0) / 1000L);
+//        LOG.debug((element == null ? "M " : "  ") + name + ", " + key + ": " + (t1 - t0) / 1000L);
 
         if (element == null) {
             misses++;
