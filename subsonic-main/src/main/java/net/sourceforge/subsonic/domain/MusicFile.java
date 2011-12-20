@@ -68,24 +68,24 @@ public class MusicFile implements Serializable {
      */
     @Deprecated
     public MusicFile(File file) {
-            this.file = file;
+        this.file = file;
 
-            // Cache these values for performance.
-            isFile = FileUtil.isFile(file);
-            isDirectory = FileUtil.isDirectory(file);
-            lastModified = FileUtil.lastModified(file);
-            String suffix = FilenameUtils.getExtension(file.getName()).toLowerCase();
-            isVideo = isFile && isVideoFile(suffix);
-            children = isDirectory ? FileUtil.listFiles(file) : null;
-            try {
-                isAlbum = isDirectory && getFirstChild() != null;
-            } catch (IOException e) {
-                // Ignored
-            }
-
-            MetaDataParser parser = ServiceLocator.getMetaDataParserFactory().getParser(this);
-            metaData = (parser == null) ? null : parser.getMetaData(this);
+        // Cache these values for performance.
+        isFile = FileUtil.isFile(file);
+        isDirectory = FileUtil.isDirectory(file);
+        lastModified = FileUtil.lastModified(file);
+        String suffix = FilenameUtils.getExtension(file.getName()).toLowerCase();
+        isVideo = isFile && isVideoFile(suffix);
+        children = isDirectory ? FileUtil.listFiles(file) : null;
+        try {
+            isAlbum = isDirectory && getFirstChild() != null;
+        } catch (IOException e) {
+            // Ignored
         }
+
+        MetaDataParser parser = ServiceLocator.getMetaDataParserFactory().getParser(this);
+        metaData = (parser == null) ? null : parser.getMetaData(this);
+    }
 
     /**
      * Empty constructor.  Used for testing purposes only.
@@ -154,6 +154,10 @@ public class MusicFile implements Serializable {
      * @return Whether this music file is one of the root music folders.
      */
     public boolean isRoot() {
+        return isRoot(file);
+    }
+
+    public static boolean isRoot(File file) {
         SettingsService settings = ServiceLocator.getSettingsService();
         List<MusicFolder> folders = settings.getAllMusicFolders(false, true);
         for (MusicFolder folder : folders) {
@@ -165,10 +169,10 @@ public class MusicFile implements Serializable {
     }
 
     /**
-     * Returns the time this music file was last modified.
-     *
-     * @return The time since this music file was last modified, in milliseconds since the epoch.
-     */
+    * Returns the time this music file was last modified.
+    *
+    * @return The time since this music file was last modified, in milliseconds since the epoch.
+    */
     public long lastModified() {
         return lastModified;
     }

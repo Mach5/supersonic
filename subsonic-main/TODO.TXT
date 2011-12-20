@@ -48,6 +48,8 @@ Improve performance on network shares
   Replace getFirstChild() with artist/album metadata.
   Use ehcache as memory cache.
   MusicFile.isRoot()
+  Don't need childDir cachce, use MusicFile.children instead.
+  Scan progress doesn't appear.
 
 Add Subsonic Channel (for Roku)
   http://www.randomwalking.com/project.php?project=roku_subsonic
