@@ -53,8 +53,6 @@ public class CacheFactory implements InitializingBean {
     }
 
     public Ehcache getCache(String name) {
-        Cache cache = cacheManager.getCache(name);
-        LOG.debug("Using " + name + " with " + cache.getStatistics().getObjectCount() + " entries.");
-        return cache;
+        return cacheManager.getCache(name);
     }
 }

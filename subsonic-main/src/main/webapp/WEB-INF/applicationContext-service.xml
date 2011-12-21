@@ -52,7 +52,8 @@
     <bean id="musicFileService" class="net.sourceforge.subsonic.service.MusicFileService" init-method="init">
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
-        <property name="musicFileCache" ref="musicFileCache"/>
+        <property name="musicFileDiskCache" ref="musicFileDiskCache"/>
+        <property name="musicFileMemoryCache" ref="musicFileMemoryCache"/>
         <property name="coverArtCache" ref="coverArtCache"/>
     </bean>
 

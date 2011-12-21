@@ -39,7 +39,7 @@ Improve performance on network shares
   Defragment.
   Test tag editing vs caching.
   Analyze when tags are read. Maybe no need to cache/reuse search index lines.
-  Use ehcache as memory cache.
+  Remove verbose logging in FileUtil.
   MusicFile.isRoot()
   Add animated icon to scan progress.
 

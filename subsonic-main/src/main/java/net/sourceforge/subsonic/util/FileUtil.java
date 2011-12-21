@@ -92,29 +92,10 @@ public final class FileUtil {
      * Instead a warning is logged, and an empty array is returned.
      */
     public static File[] listFiles(final File dir) {
-        File[] files = timed(new FileTask<File[]>("listFiles1", dir) {
+        File[] files = timed(new FileTask<File[]>("listFiles", dir) {
             @Override
             public File[] execute() {
                 return dir.listFiles();
-            }
-        });
-
-        if (files == null) {
-            LOG.warn("Failed to list children for " + dir.getPath());
-            return new File[0];
-        }
-        return files;
-    }
-
-    /**
-     * Similar to {@link File#listFiles(FileFilter)}, but never returns null.
-     * Instead a warning is logged, and an empty array is returned.
-     */
-    public static File[] listFiles(final File dir, final FileFilter filter) {
-        File[] files = timed(new FileTask<File[]>("listFiles2", dir) {
-            @Override
-            public File[] execute() {
-                return dir.listFiles(filter);
             }
         });
 
@@ -130,7 +111,7 @@ public final class FileUtil {
      * Instead a warning is logged, and an empty array is returned.
      */
     public static File[] listFiles(final File dir, final FilenameFilter filter, boolean sort) {
-        File[] files = timed(new FileTask<File[]>("listFiles3", dir) {
+        File[] files = timed(new FileTask<File[]>("listFiles2", dir) {
             @Override
             public File[] execute() {
                 return dir.listFiles(filter);

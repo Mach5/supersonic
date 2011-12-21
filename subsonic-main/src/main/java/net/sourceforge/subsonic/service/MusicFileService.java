@@ -18,19 +18,19 @@
  */
 package net.sourceforge.subsonic.service;
 
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
 import net.sourceforge.subsonic.domain.Cache;
 import net.sourceforge.subsonic.domain.CacheElement;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.util.FileUtil;
 
-import net.sourceforge.subsonic.util.TimeLimitedCache;
 import org.apache.commons.io.filefilter.FileFileFilter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Provides services for instantiating and caching music files and cover art.
@@ -43,14 +43,10 @@ public class MusicFileService {
 
     private Cache coverArtCache;
     private Cache musicFileDiskCache;
-    private final TimeLimitedCache<File, MusicFile> musicFileMemoryCache;
+    private Ehcache musicFileMemoryCache;
 
     private SecurityService securityService;
     private SettingsService settingsService;
-
-    public MusicFileService() {
-        musicFileMemoryCache = new TimeLimitedCache<File, MusicFile>(10, TimeUnit.SECONDS);
-    }
 
     /**
      * Returns a music file instance for the given file.  If possible, a cached value is returned.
@@ -62,7 +58,8 @@ public class MusicFileService {
     public MusicFile getMusicFile(File file) {
 
         // Look in fast memory cache first.
-        MusicFile cachedMusicFile = musicFileMemoryCache.get(file);
+        Element element = musicFileMemoryCache.get(file);
+        MusicFile cachedMusicFile = element == null ? null : (MusicFile) element.getObjectValue();
         if (cachedMusicFile != null) {
             return cachedMusicFile;
         }
@@ -73,15 +70,14 @@ public class MusicFileService {
 
         cachedMusicFile = musicFileDiskCache.getValue(file.getPath());
         if (cachedMusicFile != null && cachedMusicFile.lastModified() >= FileUtil.lastModified(file)) {
-            musicFileMemoryCache.put(file, cachedMusicFile);
+            musicFileMemoryCache.put(new Element(file, cachedMusicFile));
             return cachedMusicFile;
         }
 
         MusicFile musicFile = new MusicFile(file);
 
-
         // Put in caches.
-        musicFileMemoryCache.put(file, musicFile);
+        musicFileMemoryCache.put(new Element(file, cachedMusicFile));
         musicFileDiskCache.put(file.getPath(), musicFile);
 
         return musicFile;
@@ -159,8 +155,12 @@ public class MusicFileService {
         this.settingsService = settingsService;
     }
 
-    public void setMusicFileCache(Cache musicFileCache) {
-        this.musicFileDiskCache = musicFileCache;
+    public void setMusicFileDiskCache(Cache musicFileDiskCache) {
+        this.musicFileDiskCache = musicFileDiskCache;
+    }
+
+    public void setMusicFileMemoryCache(Ehcache musicFileMemoryCache) {
+        this.musicFileMemoryCache = musicFileMemoryCache;
     }
 
     public void setCoverArtCache(Cache coverArtCache) {

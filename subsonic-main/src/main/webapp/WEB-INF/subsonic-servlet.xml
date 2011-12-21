@@ -44,7 +44,7 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="caches">
             <list>
-                <ref bean="musicFileCache"/>
+                <ref bean="musicFileDiskCache"/>
                 <ref bean="coverArtCache"/>
                 <ref bean="musicFolderCache"/>
             </list>

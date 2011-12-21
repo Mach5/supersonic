@@ -65,7 +65,7 @@ public class Cache {
     public void put(String key, Object value) {
         CacheElement element = new CacheElement(type, key, value, System.currentTimeMillis());
         cacheDao.createCacheElement(element);
-        System.out.println(("P ") + name + ", " + key);
+//        LOG.debug(("P ") + name + ", " + key);
     }
 
     public String getStatistics() {
