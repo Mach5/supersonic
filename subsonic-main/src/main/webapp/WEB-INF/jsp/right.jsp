@@ -24,6 +24,10 @@
     }
 </script>
 
+<div id="scanningStatus" style="display: none;" class="warning">
+    <fmt:message key="main.scanning"/> <span id="scanCount"></span>
+</div>
+
 <c:if test="${model.showNowPlaying}">
 
     <!-- This script uses AJAX to periodically retrieve what all users are playing. -->
@@ -159,10 +163,6 @@
             }
         }
     </script>
-
-    <div id="scanningStatus" style="display: none;" class="warning">
-        <fmt:message key="main.scanning"/> <span id="scanCount"></span>
-    </div>
 
     <h2><fmt:message key="main.chat"/></h2>
     <div style="padding-top:0.3em;padding-bottom:0.3em">
