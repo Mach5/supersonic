@@ -43,6 +43,13 @@ Improve performance on network shares
   MusicFile.isRoot()
   Add animated icon to scan progress.
 
+java.lang.NullPointerException
+	at net.sourceforge.subsonic.service.MusicFileService.getCoverArt(MusicFileService.java:109)
+	at net.sourceforge.subsonic.controller.MainController.getCoverArts(MainController.java:179)
+	at net.sourceforge.subsonic.controller.MainController.handleRequestInternal(MainController.java:131)
+
+Lots of exists() when playing a song.
+
 Add Subsonic Channel (for Roku)
   http://www.randomwalking.com/project.php?project=roku_subsonic
 Make it possible to suppress content length estimation.

@@ -39,6 +39,7 @@ import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.ServiceLocator;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
+import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
 import net.sourceforge.subsonic.util.FileUtil;
 
 /**
@@ -83,8 +84,9 @@ public class MusicFile implements Serializable {
             // Ignored
         }
 
-        MetaDataParser parser = ServiceLocator.getMetaDataParserFactory().getParser(this);
-        metaData = (parser == null) ? null : parser.getMetaData(this);
+        MetaDataParserFactory factory = ServiceLocator.getMetaDataParserFactory();
+        MetaDataParser parser = factory == null ? null : factory.getParser(this);
+        metaData = parser == null ? null : parser.getMetaData(this);
     }
 
     /**
