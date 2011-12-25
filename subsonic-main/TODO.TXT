@@ -133,7 +133,7 @@ Ensure readable text in notification when background is dark.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/13416901b8cec7db
   http://stackoverflow.com/questions/4867338/custom-notification-layouts-and-text-colors/7320604#7320604
 Fix crash in SectionIndexer
-Enable fast scrolling of playlists.
+Enable fast scrolling of playlists, search results and songs.
 
 TODO IN ANDROID 3.4
 --------------------
