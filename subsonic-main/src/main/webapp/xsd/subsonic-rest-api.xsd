@@ -4,7 +4,7 @@
            targetNamespace="http://subsonic.org/restapi"
            attributeFormDefault="unqualified"
            elementFormDefault="qualified"
-           version="1.7.0">
+           version="1.8.0">
 
     <xs:element name="subsonic-response" type="sub:Response"/>
 

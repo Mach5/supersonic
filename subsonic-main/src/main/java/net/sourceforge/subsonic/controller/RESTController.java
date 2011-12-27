@@ -1187,6 +1187,7 @@ public class RESTController extends MultiActionController {
             command.setPodcastRole(ServletRequestUtils.getBooleanParameter(request, "podcastRole", false));
             command.setSettingsRole(ServletRequestUtils.getBooleanParameter(request, "settingsRole", true));
             command.setTranscodeSchemeName(ServletRequestUtils.getStringParameter(request, "transcodeScheme", TranscodeScheme.OFF.name()));
+            command.setShareRole(ServletRequestUtils.getBooleanParameter(request, "shareRole", false));
 
             userSettingsController.createUser(command);
             XMLBuilder builder = createXMLBuilder(request, response, true).endAll();

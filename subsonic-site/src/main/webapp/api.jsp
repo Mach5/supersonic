@@ -911,6 +911,12 @@
         <td>false</td>
         <td>Whether the user is allowed to administrate Podcasts.</td>
     </tr>
+    <tr>
+        <td><code>shareRole</code></td>
+        <td>No</td>
+        <td>false</td>
+        <td>(Since <a href="#versions">1.8.0</a>)Whether the user is allowed to share files with anyone.</td>
+    </tr>
 </table>
 
 <p>

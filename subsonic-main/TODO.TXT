@@ -19,6 +19,7 @@ Use ffmpeg rather than lame for downsampling.
   Retain track number when doing lame downsampling.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 Show scanning status.
+REST: Added "shareRole" to createUser
 
 TODO IN 4.7
 -----------------
