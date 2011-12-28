@@ -43,6 +43,7 @@
                 </ul>
                 <ul class="stars column-right">
                     <li><a href="#subsonictv">SubsonicTV</a> for Roku</li>
+                    <li><a href="#subsonos">Subsonos</a> for Sonos</li>
                 </ul>
             </div>
 
@@ -326,6 +327,26 @@
 
                         <p>
                             Developed by JNC Ventures and Musiclouds, it's available both as a free lite version and a paid premium version.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="featureitem">
+                <a name="subsonos"></a>
+
+                <div class="heading">Subsonos <a href="#top" class="backtotop" title="Top"><img src="inc/img/top.gif" alt="" height="16" width="16"/></a></div>
+                <div class="content">
+                    <div class="wide-content">
+                        <p>
+                            <a href="http://www.subsonos.com/">Subsonos</a> allows Subsonic users to enjoy their entire collection by streaming over a Sonos music system.
+                        </p>
+
+                        <a href="inc/img/screenshots/screen37.png"><img src="inc/img/screenshots/thumb37.png" alt="" class="img-center"/></a>
+
+                        <p>
+                            Subsonos is a translation service (or proxy) that sits between your Sonos music system and your Subsonic streaming server.
+                            Developed by NerdyHearn, Subsonos is currently in beta.
                         </p>
                     </div>
                 </div>
