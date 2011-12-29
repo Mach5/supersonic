@@ -39,11 +39,11 @@
             <div class="floatcontainer margin10-t margin10-b">
                 <ul class="stars column-left">
                     <li><a href="#sonicair">SonicAir</a> for BlackBerry PlayBook</li>
-                    <li><a href="#subsonicchannel">Subsonic Channel</a> for Roku</li>
+                    <li><a href="#subsonos">Subsonos</a> for Sonos</li>
                 </ul>
                 <ul class="stars column-right">
                     <li><a href="#subsonictv">SubsonicTV</a> for Roku</li>
-                    <li><a href="#subsonos">Subsonos</a> for Sonos</li>
+                    <li><a href="#subsonicchannel">Subsonic Channel</a> for Roku</li>
                 </ul>
             </div>
 
@@ -90,17 +90,22 @@
                     <div class="wide-content">
                         <p>
                             <img src="inc/img/android.png" alt="Android" class="img-left"/>
-                            Stream and download music from your home computer to your Android phone.
-                            All your music - anywhere, anytime!
+                            Stream music and video from your home computer to your phone. Never sync again!
+                            All your media - anywhere, anytime!
                         </p>
                         <p>
-                            Developed and maintained by Sindre Mehus, the author of Subsonic. Available for free
-                            on Android Market, or download it <a href="http://sourceforge.net/projects/subsonic/files/android">here</a>.
+                            Songs are cached for offline playback. Supports mp3, ogg, aac, flac, wma. Most video formats supported too.
                         </p>
 
                         <p>
-                            Supports streaming, downloading, playlists, album art and searching. For improved performance, music you have
-                            listened to is cached on the phone. An offline mode is also available for when you are outside 3G/Wi-Fi coverage.
+                            You can also use this app as a remote control for music playing on your server.
+                        </p>
+                        <p>
+                            Features offline mode, adaptive bitrates, equalizer and visualizer.
+                        </p>
+                        <p>
+                            Developed and maintained by Sindre Mehus, the author of Subsonic. Available
+                            on <a href="https://market.android.com/details?id=net.sourceforge.subsonic.androidapp">Android Market</a>.
                         </p>
 
                         <a href="inc/img/screenshots/screen12.png"><img src="inc/img/screenshots/thumb12.png" alt="" style="padding:3px;padding-left:40px;padding-right:20px"/></a>
@@ -312,25 +317,6 @@
                 </div>
             </div>
 
-            <div class="featureitem">
-                <a name="subsonictv"></a>
-
-                <div class="heading">SubsonicTV <a href="#top" class="backtotop" title="Top"><img src="inc/img/top.gif" alt="" height="16" width="16"/></a></div>
-                <div class="content">
-                    <div class="wide-content">
-                        <p>
-                            <a href="http://subsonictv.com/">SubsonicTV</a> for Roku is the perfect solution for enjoying your music &amp; video collection on your TV.
-                            No need to go through the hassle of uploading to the cloud and syncing your files.
-                        </p>
-
-                        <a href="inc/img/screenshots/screen33.png"><img src="inc/img/screenshots/thumb33.png" alt="" class="img-center"/></a>
-
-                        <p>
-                            Developed by JNC Ventures and Musiclouds, it's available both as a free lite version and a paid premium version.
-                        </p>
-                    </div>
-                </div>
-            </div>
 
             <div class="featureitem">
                 <a name="subsonos"></a>
@@ -347,6 +333,26 @@
                         <p>
                             Subsonos is a translation service (or proxy) that sits between your Sonos music system and your Subsonic streaming server.
                             Developed by NerdyHearn, Subsonos is currently in beta.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="featureitem">
+                <a name="subsonictv"></a>
+
+                <div class="heading">SubsonicTV <a href="#top" class="backtotop" title="Top"><img src="inc/img/top.gif" alt="" height="16" width="16"/></a></div>
+                <div class="content">
+                    <div class="wide-content">
+                        <p>
+                            <a href="http://subsonictv.com/">SubsonicTV</a> for Roku is the perfect solution for enjoying your music &amp; video collection on your TV.
+                            No need to go through the hassle of uploading to the cloud and syncing your files.
+                        </p>
+
+                        <a href="inc/img/screenshots/screen33.png"><img src="inc/img/screenshots/thumb33.png" alt="" class="img-center"/></a>
+
+                        <p>
+                            Developed by JNC Ventures and Musiclouds, it's available both as a free lite version and a paid premium version.
                         </p>
                     </div>
                 </div>
