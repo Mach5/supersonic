@@ -19,6 +19,9 @@
 package net.sourceforge.subsonic.command;
 
 import net.sourceforge.subsonic.controller.*;
+import net.sourceforge.subsonic.domain.Cache;
+
+import java.util.List;
 
 /**
  * Command used in {@link SearchSettingsController}.
@@ -30,6 +33,7 @@ public class SearchSettingsCommand {
     private String hour;
     private boolean isCreatingIndex;
     private String brand;
+    private List<Cache> caches;
 
     public String getInterval() {
         return interval;
@@ -61,5 +65,13 @@ public class SearchSettingsCommand {
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public List<Cache> getCaches() {
+        return caches;
+    }
+
+    public void setCaches(List<Cache> caches) {
+        this.caches = caches;
     }
 }

@@ -55,6 +55,11 @@
 </table>
 </form:form>
 
+<h2><fmt:message key="searchsettings.cachestatistics"/></h2>
+<c:forEach items="${command.caches}" var="cache">
+    ${cache.statistics}<br>
+</c:forEach>
+
 <c:if test="${command.creatingIndex}">
     <p><b><fmt:message key="searchsettings.text"><fmt:param value="${command.brand}"/></fmt:message></b></p>
 </c:if>

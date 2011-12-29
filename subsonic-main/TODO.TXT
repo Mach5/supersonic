@@ -20,15 +20,16 @@ Use ffmpeg rather than lame for downsampling.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 Show scanning status.
 REST: Added "shareRole" to createUser
-
-TODO IN 4.7
------------------
 REST API authentication & session
   https://mail.google.com/mail/?shva=1#inbox/1341d1f45f89d15a
   Update API doc
   Wrong username/password with BASIC auth gives bad error message "401 LDAP authentication disabled for user"
   wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies  "http://localhost:8080/rest/ping.view?u=admin&p=admin&v=1.6&c=android" -O -
   wget --auth-no-challenge --http-user=admin --http-password=admin --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies  "http://localhost:8080/rest/ping.view?u=sindre&p=foo&v=1.6&c=android" -O -
+
+TODO IN 4.7
+-----------------
+REST: Ensure that podcast dir is included.
 
 Improve performance on network shares
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=1456&start=15#p27979
@@ -54,13 +55,10 @@ java.lang.NullPointerException
 
 Lots of exists() when playing a song.
 
-Add Subsonic Channel (for Roku)
-  http://www.randomwalking.com/project.php?project=roku_subsonic
 Make it possible to suppress content length estimation.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
   http://forum.subsonic.org/forum/viewtopic.php?f=3&t=3270&p=34114#p34114
-REST: Ensure that podcast dir is included.
 Test with IE 9
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=8295&p=33672#p33672
 Don't hardcode c:/subsonic in windows installer.
@@ -131,14 +129,11 @@ Linux locale issue
 DONE IN ANDROID 3.4
 --------------------
 Ensure readable text in notification when background is dark.
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/13416901b8cec7db
-  http://stackoverflow.com/questions/4867338/custom-notification-layouts-and-text-colors/7320604#7320604
-Fix crash in SectionIndexer
+Fix crash when using fast scrolling.
 Enable fast scrolling of playlists, search results and songs.
 
 TODO IN ANDROID 3.4
 --------------------
-Add SectionIndexer in SelectAlbumActivity.
 Check for lingering .partial files.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 Don't pause on incoming call if RC.

@@ -42,13 +42,6 @@
         <property name="viewName" value="help"/>
         <property name="versionService" ref="versionService"/>
         <property name="settingsService" ref="settingsService"/>
-        <property name="caches">
-            <list>
-                <ref bean="musicFileDiskCache"/>
-                <ref bean="coverArtCache"/>
-                <ref bean="musicFolderCache"/>
-            </list>
-        </property>
     </bean>
     <bean id="moreController" class="net.sourceforge.subsonic.controller.MoreController">
         <property name="viewName" value="more"/>
@@ -200,6 +193,13 @@
         <property name="formView" value="searchSettings"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="searchService" ref="searchService"/>
+        <property name="caches">
+            <list>
+                <ref bean="musicFileDiskCache"/>
+                <ref bean="coverArtCache"/>
+                <ref bean="musicFolderCache"/>
+            </list>
+        </property>
     </bean>
     <bean id="generalSettingsController" class="net.sourceforge.subsonic.controller.GeneralSettingsController">
         <property name="commandClass" value="net.sourceforge.subsonic.command.GeneralSettingsCommand"/>
