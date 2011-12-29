@@ -193,6 +193,7 @@
         <property name="formView" value="searchSettings"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="searchService" ref="searchService"/>
+        <property name="cacheDao" ref="cacheDao"/>
         <property name="caches">
             <list>
                 <ref bean="musicFileDiskCache"/>

@@ -44,12 +44,13 @@ public class CacheDao {
     private EmbeddedObjectContainer db;
     private final ReadWriteLock dbLock = new ReentrantReadWriteLock();
     private int writeCount = 0;
+    private final File dbFile;
 
     public CacheDao() {
 
         File subsonicHome = SettingsService.getSubsonicHome();
         File dbDir = new File(subsonicHome, "cache");
-        File dbFile = new File(dbDir, "cache.dat");
+        dbFile = new File(dbDir, "cache.dat");
 
         if (!dbDir.exists()) {
             dbDir.mkdirs();
@@ -82,6 +83,21 @@ public class CacheDao {
 
         db = Db4oEmbedded.openFile(config, dbFile.getPath());
     }
+
+    /**
+     * Recreates the database.
+     */
+    public void clearDatabase() {
+        dbLock.writeLock().lock();
+        try {
+            db.close();
+            dbFile.delete();
+            openDatabase(dbFile);
+        } finally{
+            dbLock.writeLock().unlock();
+        }
+    }
+
 
     /**
      * Creates a new cache element.

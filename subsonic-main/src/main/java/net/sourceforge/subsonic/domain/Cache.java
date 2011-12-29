@@ -76,4 +76,10 @@ public class Cache {
         return "Cache '" + name + "': " + hits + " of " + accesses + " hits (" + hitRatePercentage + "%). " +
                 "Avg time: " + avgLookupTime + " microsec.";
     }
+
+    public void clearStatistics() {
+        hits = 0L;
+        misses = 0L;
+        totalLookupTimeMicros = 0L;
+    }
 }

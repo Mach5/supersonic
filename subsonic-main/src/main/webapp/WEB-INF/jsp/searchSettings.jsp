@@ -60,6 +60,10 @@
     ${cache.statistics}<br>
 </c:forEach>
 
+<p>
+<div class="forward"><a href="searchSettings.view?clear"><fmt:message key="searchsettings.clearcache"/></a></div>
+</p>
+
 <c:if test="${command.creatingIndex}">
     <p><b><fmt:message key="searchsettings.text"><fmt:param value="${command.brand}"/></fmt:message></b></p>
 </c:if>

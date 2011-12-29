@@ -19,6 +19,7 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.command.*;
+import net.sourceforge.subsonic.dao.CacheDao;
 import net.sourceforge.subsonic.domain.Cache;
 import net.sourceforge.subsonic.service.*;
 import org.springframework.web.servlet.mvc.*;
@@ -36,6 +37,7 @@ public class SearchSettingsController extends SimpleFormController {
     private SettingsService settingsService;
     private SearchService searchService;
     private List<Cache> caches;
+    private CacheDao cacheDao;
 
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         SearchSettingsCommand command = new SearchSettingsCommand();
@@ -43,6 +45,12 @@ public class SearchSettingsController extends SimpleFormController {
         if (request.getParameter("update") != null) {
             searchService.createIndex();
             command.setCreatingIndex(true);
+        }
+        if (request.getParameter("clear") != null) {
+            for (Cache cache : caches) {
+                cache.clearStatistics();
+                cacheDao.clearDatabase();
+            }
         }
 
         command.setInterval("" + settingsService.getIndexCreationInterval());
@@ -73,5 +81,9 @@ public class SearchSettingsController extends SimpleFormController {
 
     public void setCaches(List<Cache> caches) {
         this.caches = caches;
+    }
+
+    public void setCacheDao(CacheDao cacheDao) {
+        this.cacheDao = cacheDao;
     }
 }
