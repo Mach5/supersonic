@@ -73,7 +73,7 @@ public class Cache {
         double hitRate = accesses == 0 ? 0.0 : (double) hits / (double) accesses;
         long hitRatePercentage = Math.round(hitRate * 100.0);
         long avgLookupTime = accesses == 0 ? 0 : totalLookupTimeMicros / accesses;
-        return "Cache '" + name + "': " + hits + " of " + accesses + " hits (" + hitRatePercentage + "%). " +
+        return name + ": " + hits + " of " + accesses + " hits (" + hitRatePercentage + "%). " +
                 "Avg time: " + avgLookupTime + " microsec.";
     }
 
