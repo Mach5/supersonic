@@ -35,11 +35,11 @@ Improve performance on network shares
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=1456&start=15#p27979
   http://forum.subsonic.org/forum/viewtopic.php?t=3771
   https://mail.google.com/mail/?shva=1#inbox/1343272326ddfa84
+  Avoid call to isDirectory in MusicFile.java:428
   Start scan automatically when changing music folders.
-  Memory usage.
   Profile
   Defragment.
-  Test tag editing vs caching.
+  Test tag editing vs caching.  Maybe manually invalidate cache.
   Analyze when tags are read. Maybe no need to cache/reuse search index lines.
   Remove verbose logging in FileUtil.
   MusicFile.isRoot()

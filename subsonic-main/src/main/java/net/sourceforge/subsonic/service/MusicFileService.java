@@ -47,6 +47,7 @@ public class MusicFileService {
 
     private SecurityService securityService;
     private SettingsService settingsService;
+    private SearchService searchService;
 
     /**
      * Returns a music file instance for the given file.  If possible, a cached value is returned.
@@ -68,10 +69,13 @@ public class MusicFileService {
             throw new SecurityException("Access denied to file " + file);
         }
 
+
         cachedMusicFile = musicFileDiskCache.getValue(file.getPath());
-        if (cachedMusicFile != null && cachedMusicFile.lastModified() >= FileUtil.lastModified(file)) {
-            musicFileMemoryCache.put(new Element(file, cachedMusicFile));
-            return cachedMusicFile;
+        if (cachedMusicFile != null) {
+            if (useFastCache() || cachedMusicFile.lastModified() >= FileUtil.lastModified(file)) {
+                musicFileMemoryCache.put(new Element(file, cachedMusicFile));
+                return cachedMusicFile;
+            }
         }
 
         MusicFile musicFile = new MusicFile(file);
@@ -81,6 +85,10 @@ public class MusicFileService {
         musicFileDiskCache.put(file.getPath(), musicFile);
 
         return musicFile;
+    }
+
+    private boolean useFastCache() {
+        return settingsService.isFastCacheEnabled() && !searchService.isIndexBeingCreated();
     }
 
     /**
@@ -104,7 +112,7 @@ public class MusicFileService {
         if (element != null) {
 
             // Check if cache is up-to-date.
-            if (element.getCreated() > FileUtil.lastModified(dir.getFile())) {
+            if (useFastCache() || element.getCreated() > FileUtil.lastModified(dir.getFile())) {
                 File file = (File) element.getValue();
                 return file.equals(NULL_FILE) ? null : file;
             }
@@ -165,5 +173,9 @@ public class MusicFileService {
 
     public void setCoverArtCache(Cache coverArtCache) {
         this.coverArtCache = coverArtCache;
+    }
+
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
     }
 }

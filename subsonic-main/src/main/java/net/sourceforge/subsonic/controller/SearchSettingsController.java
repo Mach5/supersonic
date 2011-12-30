@@ -57,6 +57,7 @@ public class SearchSettingsController extends SimpleFormController {
         command.setHour("" + settingsService.getIndexCreationHour());
         command.setBrand(settingsService.getBrand());
         command.setCaches(caches);
+        command.setFastCache(settingsService.isFastCacheEnabled());
 
         return command;
     }
@@ -66,6 +67,7 @@ public class SearchSettingsController extends SimpleFormController {
 
         settingsService.setIndexCreationInterval(Integer.parseInt(command.getInterval()));
         settingsService.setIndexCreationHour(Integer.parseInt(command.getHour()));
+        settingsService.setFastCacheEnabled(command.isFastCache());
         settingsService.save();
 
         searchService.schedule();

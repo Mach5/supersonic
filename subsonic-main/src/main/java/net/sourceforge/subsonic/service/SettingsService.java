@@ -86,6 +86,7 @@ public class SettingsService {
     private static final String KEY_THEME_ID = "Theme";
     private static final String KEY_INDEX_CREATION_INTERVAL = "IndexCreationInterval";
     private static final String KEY_INDEX_CREATION_HOUR = "IndexCreationHour";
+    private static final String KEY_FAST_CACHE_ENABLED = "FastCacheEnabled";
     private static final String KEY_PODCAST_UPDATE_INTERVAL = "PodcastUpdateInterval";
     private static final String KEY_PODCAST_FOLDER = "PodcastFolder";
     private static final String KEY_PODCAST_EPISODE_RETENTION_COUNT = "PodcastEpisodeRetentionCount";
@@ -144,6 +145,7 @@ public class SettingsService {
     private static final String DEFAULT_THEME_ID = "default";
     private static final int DEFAULT_INDEX_CREATION_INTERVAL = 1;
     private static final int DEFAULT_INDEX_CREATION_HOUR = 3;
+    private static final boolean DEFAULT_FAST_CACHE_ENABLED = false;
     private static final int DEFAULT_PODCAST_UPDATE_INTERVAL = 24;
     private static final String DEFAULT_PODCAST_FOLDER = Util.getDefaultPodcastFolder();
     private static final int DEFAULT_PODCAST_EPISODE_RETENTION_COUNT = 10;
@@ -457,6 +459,14 @@ public class SettingsService {
      */
     public void setIndexCreationHour(int hour) {
         setProperty(KEY_INDEX_CREATION_HOUR, String.valueOf(hour));
+    }
+
+    public boolean isFastCacheEnabled() {
+        return Boolean.valueOf(properties.getProperty(KEY_FAST_CACHE_ENABLED, String.valueOf(DEFAULT_FAST_CACHE_ENABLED)));
+    }
+
+    public void setFastCacheEnabled(boolean enabled) {
+        properties.setProperty(KEY_FAST_CACHE_ENABLED, String.valueOf(enabled));
     }
 
     /**

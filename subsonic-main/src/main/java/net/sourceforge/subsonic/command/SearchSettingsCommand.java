@@ -34,6 +34,7 @@ public class SearchSettingsCommand {
     private boolean isCreatingIndex;
     private String brand;
     private List<Cache> caches;
+    private boolean fastCache;
 
     public String getInterval() {
         return interval;
@@ -73,5 +74,13 @@ public class SearchSettingsCommand {
 
     public void setCaches(List<Cache> caches) {
         this.caches = caches;
+    }
+
+    public boolean isFastCache() {
+        return fastCache;
+    }
+
+    public void setFastCache(boolean fastCache) {
+        this.fastCache = fastCache;
     }
 }

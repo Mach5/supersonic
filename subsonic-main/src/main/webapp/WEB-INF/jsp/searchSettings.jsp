@@ -12,10 +12,9 @@
 
 <form:form commandName="command" action="searchSettings.view" method="post">
 
-<table class="indent">
-    <tr>
-        <td><fmt:message key="searchsettings.auto"/></td>
-        <td>
+    <p>
+        <span style="white-space: nowrap">
+            <fmt:message key="searchsettings.auto"/>
             <form:select path="interval">
                 <fmt:message key="searchsettings.interval.never" var="never"/>
                 <fmt:message key="searchsettings.interval.one" var="one"/>
@@ -27,38 +26,44 @@
                     <form:option value="${interval}" label="${many}"/>
                 </c:forTokens>
             </form:select>
-        </td>
-
-        <td>
             <form:select path="hour">
                 <c:forEach begin="0" end="23" var="hour">
                     <fmt:message key="searchsettings.hour" var="hourLabel"><fmt:param value="${hour}"/></fmt:message>
                     <form:option value="${hour}" label="${hourLabel}"/>
                 </c:forEach>
             </form:select>
-        </td>
-    </tr>
+        </span>
+    </p>
 
-    <tr>
-        <td colspan="3">
-            <div class="forward"><a href="searchSettings.view?update"><fmt:message key="searchsettings.manual"/></a></div>
-        </td>
-    </tr>
+    <p>
+    <div class="forward"><a href="searchSettings.view?update"><fmt:message key="searchsettings.manual"/></a></div>
+    </p>
 
-    <tr>
-        <td colspan="3" style="padding-top:1.5em">
-            <input type="submit" value="<fmt:message key="common.save"/>" style="margin-right:0.3em">
-            <input type="button" value="<fmt:message key="common.cancel"/>" onclick="location.href='nowPlaying.view'">
-        </td>
-    </tr>
+    <div>
+        <form:checkbox path="fastCache" id="fastCache"/>
+        <label for="fastCache"><fmt:message key="searchsettings.fastcache"/></label><br>
+            <%--</p>--%>
+            <%--<p class="detail">--%>
+        <span class="detail" style="white-space: normal; width: 5%">
+    </div>
 
-</table>
+    <p class="detail" style="width:60%;white-space:normal;">
+        <fmt:message key="searchsettings.fastcache.description"/>
+    </p>
+
+    <p style="white-space: nowrap;">
+        <input type="submit" value="<fmt:message key="common.save"/>" style="margin-right:0.3em">
+        <input type="button" value="<fmt:message key="common.cancel"/>" onclick="location.href='nowPlaying.view'">
+    </p>
+
 </form:form>
 
 <h2><fmt:message key="searchsettings.cachestatistics"/></h2>
-<c:forEach items="${command.caches}" var="cache">
-    ${cache.statistics}<br>
-</c:forEach>
+<p class="detail">
+    <c:forEach items="${command.caches}" var="cache">
+        ${cache.statistics}<br>
+    </c:forEach>
+</p>
 
 <p>
 <div class="forward"><a href="searchSettings.view?clear"><fmt:message key="searchsettings.clearcache"/></a></div>
