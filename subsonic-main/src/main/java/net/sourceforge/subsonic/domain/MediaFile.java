@@ -54,6 +54,7 @@ public class MediaFile {
     private String comment;
     private Date created;
     private Date lastModified;
+    private Boolean enabled;
 
     public int getId() {
         return id;
@@ -261,5 +262,13 @@ public class MediaFile {
 
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }
