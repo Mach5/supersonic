@@ -346,6 +346,7 @@
                 <div class="content">
                     <div class="wide-content">
                         <p>
+                            <img src="inc/img/chumby.png" alt="Chumby" class="img-left"/>
                             Introducing the <a href="http://subsonic.develephant.net/">Subsonic app</a> for Chumby-powered devices.
                         </p>
 
