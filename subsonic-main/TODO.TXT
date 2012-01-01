@@ -20,6 +20,7 @@ format
 file_size
 width
 height
+cover_art_path
 play_count
 last_played
 comment
