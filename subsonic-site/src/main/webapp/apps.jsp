@@ -356,8 +356,8 @@
                             <li>Easy to use touchscreen tabletop experience for the Subsonic server.</li>
                             <li>Inviting home screen randomly cycles through your music collection.</li>
                             <li>Full alphabetical directory browsing and integrated soft keyboard for search.</li>
-                            <li>Play “DJ” and add albums and songs to the internal playlist while listening.</li>
-                            <li>Quick functions like “show 30 random albums”, “play 50 random songs”, etc.</li>
+                            <li>Play "DJ" and add albums and songs to the internal playlist while listening.</li>
+                            <li>Quick functions like "show 30 random albums", "play 50 random songs", etc.</li>
                             <li>Simple and responsive navigation system.</li>
                             <li>Runs on most Chumby-powered devices.</li>
                             <li>Long-term development road map.</li>
