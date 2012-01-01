@@ -40,6 +40,7 @@
                 <ul class="stars column-left">
                     <li><a href="#sonicair">SonicAir</a> for BlackBerry PlayBook</li>
                     <li><a href="#subsonos">Subsonos</a> for Sonos</li>
+                    <li><a href="#chumby">Subsonic</a> for Chumby</li>
                 </ul>
                 <ul class="stars column-right">
                     <li><a href="#subsonictv">SubsonicTV</a> for Roku</li>
@@ -333,6 +334,38 @@
                         <p>
                             Subsonos is a translation service (or proxy) that sits between your Sonos music system and your Subsonic streaming server.
                             Developed by NerdyHearn, Subsonos is currently in beta.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="featureitem">
+                <a name="chumby"></a>
+
+                <div class="heading">Subsonic for Chumby <a href="#top" class="backtotop" title="Top"><img src="inc/img/top.gif" alt="" height="16" width="16"/></a></div>
+                <div class="content">
+                    <div class="wide-content">
+                        <p>
+                            Introducing the <a href="http://subsonic.develephant.net/">Subsonic app</a> for Chumby-powered devices.
+                        </p>
+
+                        <a href="inc/img/screenshots/screen38.png"><img src="inc/img/screenshots/thumb38.png" alt="" class="img-center"/></a>
+
+                        <ul class="list">
+                            <li>Easy to use touchscreen tabletop experience for the Subsonic server.</li>
+                            <li>Inviting home screen randomly cycles through your music collection.</li>
+                            <li>Full alphabetical directory browsing and integrated soft keyboard for search.</li>
+                            <li>Play “DJ” and add albums and songs to the internal playlist while listening.</li>
+                            <li>Quick functions like “show 30 random albums”, “play 50 random songs”, etc.</li>
+                            <li>Simple and responsive navigation system.</li>
+                            <li>Runs on most Chumby-powered devices.</li>
+                            <li>Long-term development road map.</li>
+                            <li>Fully functional free trial.</li>
+                            <li>Only $5.99</li>
+                        </ul>
+
+                        <p>
+                            Subsonic for Chumby is provided by <a href="http://subsonic.develephant.net/">develephant</a>.
                         </p>
                     </div>
                 </div>

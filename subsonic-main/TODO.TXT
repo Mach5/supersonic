@@ -1,16 +1,34 @@
-TRANSCODING
------------
-- Update documentation in Settings > Transcoding
-- Support %o for audio ?
-- Are ID3 tags preserved by ffmpeg?
-- Increase volume? (-vol)
-- Use -async 30 rather than -async 1 ?
-- Subtitle support  (-scodec copy ?)
-    http://www.longtailvideo.com/support/addons/captions-plugin/14974/captions-plugin-reference-guide
-- Remove -ac2 ?
-- Update StringUtil mime types.
 
-/var/subsonic/transcode/ffmpeg -ss 0 -i /Users/sindre/Movies/Test/Sample.wtv -async 1 -b 1000k -s 480x360 -ar 44100 -ac 2 -f flv -scodec copy -vcodec libx264 -preset veryfast -threads 0 foo.flv
+media_file
+----------
+id
+path
+media_type (null, audio, video)
+is_directory
+is_album
+title
+album
+artist
+disc_number
+track_number
+year
+genre
+bit_rate
+variable_bit_rate
+duration
+format
+file_size
+width
+height
+play_count
+last_played
+comment
+created
+last_modified
+enabled
+
+unique key: path
+index on: is_album, album, artist, year, genre, play_count, last_played
 
 DONE IN 4.7
 -----------------
@@ -30,7 +48,8 @@ REST API authentication & session
 TODO IN 4.7
 -----------------
 REST: Ensure that podcast dir is included.
-
+Suppport HEAD request in StreamController
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
 Improve performance on network shares
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=1456&start=15#p27979
   http://forum.subsonic.org/forum/viewtopic.php?t=3771
