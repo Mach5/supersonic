@@ -31,6 +31,7 @@ public class ServiceLocator {
 
     private static SettingsService settingsService;
     private static MusicFileService musicFileService;
+    private static MediaFileService mediaFileService;
     private static MetaDataParserFactory metaDataParserFactory;
 
     private ServiceLocator() {
@@ -58,6 +59,10 @@ public class ServiceLocator {
 
     public static void setMetaDataParserFactory(MetaDataParserFactory metaDataParserFactory) {
         ServiceLocator.metaDataParserFactory = metaDataParserFactory;
+    }
+
+    public static void setMediaFileService(MediaFileService mediaFileService) {
+        ServiceLocator.mediaFileService = mediaFileService;
     }
 }
 

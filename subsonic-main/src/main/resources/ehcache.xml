@@ -206,6 +206,15 @@ used with JMX monitors.
             />
     -->
 
+    <cache name="mediaFileMemoryCache"
+           maxElementsInMemory="1000"
+           eternal="false"
+           timeToIdleSeconds="0"
+           timeToLiveSeconds="10"
+           overflowToDisk="false"
+           statistics="true"
+            />
+
     <cache name="musicFileMemoryCache"
            maxElementsInMemory="1000"
            eternal="false"

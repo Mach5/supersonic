@@ -48,6 +48,7 @@ import net.sourceforge.subsonic.util.FileUtil;
  *
  * @author Sindre Mehus
  */
+@Deprecated
 public class MusicFile implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(MusicFile.class);

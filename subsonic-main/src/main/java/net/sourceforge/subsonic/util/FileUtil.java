@@ -128,6 +128,24 @@ public final class FileUtil {
     }
 
     /**
+     * Similar to {@link File#listFiles(FileFilter)}, but never returns null.
+     * Instead a warning is logged, and an empty array is returned.
+     */
+    public static File[] listFiles(final File dir, final FileFilter filter) {
+        File[] files = timed(new FileTask<File[]>("listFiles3", dir) {
+            @Override
+            public File[] execute() {
+                return dir.listFiles(filter);
+            }
+        });
+        if (files == null) {
+            LOG.warn("Failed to list children for " + dir.getPath());
+            return new File[0];
+        }
+        return files;
+    }
+
+    /**
      * Returns a short path for the given file.  The path consists of the name
      * of the parent directory and the given file.
      */

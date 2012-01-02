@@ -11,6 +11,10 @@
         <constructor-arg value="userCache"/>
     </bean>
 
+    <bean id="mediaFileMemoryCache" factory-bean="cacheFactory" factory-method="getCache">
+        <constructor-arg value="mediaFileMemoryCache"/>
+    </bean>
+
     <bean id="musicFileMemoryCache" factory-bean="cacheFactory" factory-method="getCache">
         <constructor-arg value="musicFileMemoryCache"/>
     </bean>

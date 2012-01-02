@@ -41,7 +41,7 @@ public class MediaFileDao extends AbstractDao {
      *
      * @param file The media file to create.
      */
-    public void createMediaFile(MediaFile file) {
+    public void createOrUpdateMediaFile(MediaFile file) {
         String sql = "insert into media_file (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")";
         update(sql, null,
                 file.getPath(), file.getMediaType() == null ? null  : file.getMediaType().name(), file.getFormat(), file.isDirectory(), file.isAlbum(),

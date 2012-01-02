@@ -53,6 +53,14 @@
 
     <!-- Services -->
 
+    <bean id="mediaFileService" class="net.sourceforge.subsonic.service.MediaFileService" init-method="init">
+        <property name="securityService" ref="securityService"/>
+        <property name="settingsService" ref="settingsService"/>
+        <property name="searchService" ref="searchService"/>
+        <property name="mediaFileMemoryCache" ref="mediaFileMemoryCache"/>
+        <property name="mediaFileDao" ref="mediaFileDao"/>
+    </bean>
+
     <bean id="musicFileService" class="net.sourceforge.subsonic.service.MusicFileService" init-method="init">
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>

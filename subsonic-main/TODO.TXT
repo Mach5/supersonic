@@ -1,7 +1,16 @@
-Support per-artist cover art.
 When scanning media library, don't visit excluded directories.
 Only store recognized file types?
+Support per-artist cover art.
 Collapse media_type, is_album and is_directory
+Decide when to set "album" and "artist" for directories.
+Phase out MusicFile
+Create MediaFileService
+Implement "create media_file on demand" functionality.
+Start with something simple, then move on to MainController.
+
+Root folder should have parent == null.
+Deal with MusicFile.getName() and getNameWithoutSuffix()
+
 
 
 DONE IN 4.7

@@ -20,12 +20,11 @@ package net.sourceforge.subsonic.domain;
 
 import org.apache.commons.lang.StringUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
 /**
- * A media file (audio or video) with an assortment of its meta data.
+ * A media file (audio, video or directory) with an assortment of its meta data.
  *
  * @author Sindre Mehus
  * @version $Id$
@@ -326,19 +325,19 @@ public class MediaFile {
                 musicFile.isFile() ? StringUtils.lowerCase(musicFile.getSuffix()) : null,
                 musicFile.isDirectory(),
                 musicFile.isAlbum(),
-                metaData == null  ? null  : metaData.getTitle(),
-                metaData == null  ? null  : metaData.getAlbum(),
-                metaData == null  ? null  : metaData.getArtist(),
-                metaData == null  ? null  : metaData.getDiscNumber(),
-                metaData == null  ? null  : metaData.getTrackNumber(),
-                metaData == null  ? null  : metaData.getYearAsInteger(),
-                metaData == null  ? null  : metaData.getGenre(),
-                metaData == null  ? null  : metaData.getBitRate(),
-                metaData == null  ? null  : metaData.getVariableBitRate(),
-                metaData == null  ? null  : metaData.getDuration(),
+                metaData == null ? null : metaData.getTitle(),
+                metaData == null ? null : metaData.getAlbum(),
+                metaData == null ? null : metaData.getArtist(),
+                metaData == null ? null : metaData.getDiscNumber(),
+                metaData == null ? null : metaData.getTrackNumber(),
+                metaData == null ? null : metaData.getYearAsInteger(),
+                metaData == null ? null : metaData.getGenre(),
+                metaData == null ? null : metaData.getBitRate(),
+                metaData == null ? null : metaData.getVariableBitRate(),
+                metaData == null ? null : metaData.getDuration(),
                 musicFile.isFile() ? musicFile.length() : null,
-                metaData == null  ? null  : metaData.getWidth(),
-                metaData == null  ? null  : metaData.getHeight(),
+                metaData == null ? null : metaData.getWidth(),
+                metaData == null ? null : metaData.getHeight(),
                 coverArtPath,
                 musicFile.getFile().getParent(),
                 0,
