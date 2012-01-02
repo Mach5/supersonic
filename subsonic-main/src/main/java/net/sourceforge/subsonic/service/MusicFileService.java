@@ -20,8 +20,11 @@ package net.sourceforge.subsonic.service;
 
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.Cache;
 import net.sourceforge.subsonic.domain.CacheElement;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.util.FileUtil;
@@ -39,6 +42,8 @@ import java.util.List;
  */
 public class MusicFileService {
 
+    private static final Logger LOG = Logger.getLogger(MusicFileService.class);
+
     private final File NULL_FILE = new File("NULL");
 
     private Cache coverArtCache;
@@ -48,6 +53,7 @@ public class MusicFileService {
     private SecurityService securityService;
     private SettingsService settingsService;
     private SearchService searchService;
+    private MediaFileDao mediaFileDao;
 
     /**
      * Returns a music file instance for the given file.  If possible, a cached value is returned.
@@ -81,10 +87,28 @@ public class MusicFileService {
         MusicFile musicFile = new MusicFile(file);
 
         // Put in caches.
-        musicFileMemoryCache.put(new Element(file, cachedMusicFile));
+        musicFileMemoryCache.put(new Element(file, musicFile));
         musicFileDiskCache.put(file.getPath(), musicFile);
+        createMediaFile(musicFile);
 
         return musicFile;
+    }
+
+    private void createMediaFile(MusicFile musicFile) {
+        // TODO: handle existing file.
+        String coverArtPath = null;
+        try {
+            if (musicFile.isAlbum()) {
+                File coverArt = getCoverArt(musicFile);
+                if (coverArt != null) {
+                    coverArtPath = coverArt.getPath();
+                }
+            }
+
+            mediaFileDao.createMediaFile(MediaFile.forMusicFile(musicFile, coverArtPath));
+        } catch (IOException x) {
+            LOG.error("Failed to create media file.", x);
+        }
     }
 
     private boolean useFastCache() {
@@ -177,5 +201,9 @@ public class MusicFileService {
 
     public void setSearchService(SearchService searchService) {
         this.searchService = searchService;
+    }
+
+    public void setMediaFileDao(MediaFileDao mediaFileDao) {
+        this.mediaFileDao = mediaFileDao;
     }
 }

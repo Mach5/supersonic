@@ -1,35 +1,8 @@
+Support per-artist cover art.
+When scanning media library, don't visit excluded directories.
+Only store recognized file types?
+Collapse media_type, is_album and is_directory
 
-media_file
-----------
-id
-path
-media_type (null, audio, video)
-is_directory
-is_album
-title
-album
-artist
-disc_number
-track_number
-year
-genre
-bit_rate
-variable_bit_rate
-duration
-format
-file_size
-width
-height
-cover_art_path
-play_count
-last_played
-comment
-created
-last_modified
-enabled
-
-unique key: path
-index on: is_album, album, artist, year, genre, play_count, last_played
 
 DONE IN 4.7
 -----------------

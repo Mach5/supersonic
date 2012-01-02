@@ -18,6 +18,10 @@
  */
 package net.sourceforge.subsonic.domain;
 
+import org.apache.commons.lang.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -55,6 +59,39 @@ public class MediaFile {
     private Date created;
     private Date lastModified;
     private Boolean enabled;
+
+    public MediaFile(int id, String path, MediaType mediaType, String format, boolean isDirectory, boolean isAlbum, String title,
+                     String album, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
+                     Boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
+                     String parentPath, Integer playCount, Date lastPlayed, String comment, Date created, Date lastModified, Boolean enabled) {
+        this.id = id;
+        this.path = path;
+        this.mediaType = mediaType;
+        this.format = format;
+        this.isDirectory = isDirectory;
+        this.isAlbum = isAlbum;
+        this.title = title;
+        this.album = album;
+        this.artist = artist;
+        this.discNumber = discNumber;
+        this.trackNumber = trackNumber;
+        this.year = year;
+        this.genre = genre;
+        this.bitRate = bitRate;
+        this.variableBitRate = variableBitRate;
+        this.durationSeconds = durationSeconds;
+        this.fileSize = fileSize;
+        this.width = width;
+        this.height = height;
+        this.coverArtPath = coverArtPath;
+        this.parentPath = parentPath;
+        this.playCount = playCount;
+        this.lastPlayed = lastPlayed;
+        this.comment = comment;
+        this.created = created;
+        this.lastModified = lastModified;
+        this.enabled = enabled;
+    }
 
     public int getId() {
         return id;
@@ -270,5 +307,45 @@ public class MediaFile {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public static MediaFile forMusicFile(MusicFile musicFile, String coverArtPath) throws IOException {
+
+        MediaType mediaType = null;
+        if (musicFile.isVideo()) {
+            mediaType = MediaType.VIDEO;
+        } else if (musicFile.isFile()) {
+            mediaType = MediaType.AUDIO;  // TODO: is this correct?
+        }
+
+        MusicFile.MetaData metaData = musicFile.getMetaData();
+
+        return new MediaFile(0,
+                musicFile.getPath(),
+                mediaType,
+                musicFile.isFile() ? StringUtils.lowerCase(musicFile.getSuffix()) : null,
+                musicFile.isDirectory(),
+                musicFile.isAlbum(),
+                metaData == null  ? null  : metaData.getTitle(),
+                metaData == null  ? null  : metaData.getAlbum(),
+                metaData == null  ? null  : metaData.getArtist(),
+                metaData == null  ? null  : metaData.getDiscNumber(),
+                metaData == null  ? null  : metaData.getTrackNumber(),
+                metaData == null  ? null  : metaData.getYearAsInteger(),
+                metaData == null  ? null  : metaData.getGenre(),
+                metaData == null  ? null  : metaData.getBitRate(),
+                metaData == null  ? null  : metaData.getVariableBitRate(),
+                metaData == null  ? null  : metaData.getDuration(),
+                musicFile.isFile() ? musicFile.length() : null,
+                metaData == null  ? null  : metaData.getWidth(),
+                metaData == null  ? null  : metaData.getHeight(),
+                coverArtPath,
+                musicFile.getFile().getParent(),
+                0,
+                null,
+                null,
+                new Date(),
+                new Date(musicFile.lastModified()),
+                true);
     }
 }

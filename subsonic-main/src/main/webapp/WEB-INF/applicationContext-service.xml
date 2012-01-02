@@ -10,6 +10,10 @@
         <property name="daoHelper" ref="daoHelper"/>
     </bean>
 
+    <bean id="mediaFileDao" class="net.sourceforge.subsonic.dao.MediaFileDao">
+    <property name="daoHelper" ref="daoHelper"/>
+    </bean>
+
     <bean id="internetRadioDao" class="net.sourceforge.subsonic.dao.InternetRadioDao">
         <property name="daoHelper" ref="daoHelper"/>
     </bean>
@@ -56,6 +60,7 @@
         <property name="musicFileDiskCache" ref="musicFileDiskCache"/>
         <property name="musicFileMemoryCache" ref="musicFileMemoryCache"/>
         <property name="coverArtCache" ref="coverArtCache"/>
+        <property name="mediaFileDao" ref="mediaFileDao"/>
     </bean>
 
     <bean id="securityService" class="net.sourceforge.subsonic.service.SecurityService">

@@ -44,11 +44,14 @@ public class MediaFileDao extends AbstractDao {
     public void createMediaFile(MediaFile file) {
         String sql = "insert into media_file (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")";
         update(sql, null,
-                file.getPath(), file.getMediaType().name(), file.getFormat(), file.isDirectory(), file.isAlbum(),
+                file.getPath(), file.getMediaType() == null ? null  : file.getMediaType().name(), file.getFormat(), file.isDirectory(), file.isAlbum(),
                 file.getTitle(), file.getAlbum(), file.getArtist(), file.getDiscNumber(), file.getTrackNumber(),
                 file.getYear(), file.getGenre(), file.getBitRate(), file.getVariableBitRate(), file.getDurationSeconds(),
                 file.getFileSize(), file.getWidth(), file.getHeight(), file.getCoverArtPath(), file.getParentPath(),
-                file.getPlayCount(), file.getLastPlayed(), file.getComment(), file.getCreated(), file.getLastModified(), file.getEnabled());
+                file.getPlayCount(), file.getLastPlayed(), file.getComment(), file.getCreated(), file.getLastModified(),
+                file.getEnabled());
+
+        LOG.debug("Created media_file for " + file.getPath());
     }
 
 //    private static class MediaFileMapper implements ParameterizedRowMapper<MediaFileMapper> {
