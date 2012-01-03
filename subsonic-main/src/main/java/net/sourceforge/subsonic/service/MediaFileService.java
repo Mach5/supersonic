@@ -22,18 +22,14 @@ import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.MediaFileDao;
-import net.sourceforge.subsonic.domain.Cache;
-import net.sourceforge.subsonic.domain.CacheElement;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.Util;
 import org.apache.commons.io.filefilter.FileFileFilter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * Provides services for instantiating and caching media files and cover art.
@@ -43,8 +39,6 @@ import java.util.List;
 public class MediaFileService {
 
     private static final Logger LOG = Logger.getLogger(MediaFileService.class);
-
-    private final File NULL_FILE = new File("NULL");
 
     private Ehcache mediaFileMemoryCache;
 
@@ -90,6 +84,17 @@ public class MediaFileService {
         return mediaFile;
     }
 
+    /**
+     * Returns a media file instance for the given path name. If possible, a cached value is returned.
+     *
+     * @param pathName A path name for a file on the local file system.
+     * @return A memdia file instance.
+     * @throws SecurityException If access is denied to the given file.
+     */
+    public MediaFile getMediaFile(String pathName) {
+        return getMediaFile(new File(pathName));
+    }
+
     private MediaFile createMediaFile(File file) {
 
         MusicFile musicFile = new MusicFile(file);
@@ -102,26 +107,15 @@ public class MediaFileService {
                     coverArtPath = coverArt.getPath();
                 }
             }
-
-            return MediaFile.forMusicFile(musicFile, coverArtPath);
         } catch (IOException x) {
             LOG.error("Failed to create media file.", x);
         }
+
+        return MediaFile.forMusicFile(musicFile, coverArtPath);
     }
 
     private boolean useFastCache() {
         return settingsService.isFastCacheEnabled() && !searchService.isIndexBeingCreated();
-    }
-
-    /**
-     * Returns a media file instance for the given path name. If possible, a cached value is returned.
-     *
-     * @param pathName A path name for a file on the local file system.
-     * @return A memdia file instance.
-     * @throws SecurityException If access is denied to the given file.
-     */
-    public MediaFile getMediaFile(String pathName) {
-        return getMediaFile(new File(pathName));
     }
 
     /**
@@ -141,7 +135,8 @@ public class MediaFileService {
         // Look for embedded images in audiofiles. (Only check first audio file encountered).
         JaudiotaggerParser parser = new JaudiotaggerParser();
         for (File candidate : candidates) {
-            MusicFile musicFile = getMusicFile(candidate);
+            MediaFile mediaFile = getMediaFile(candidate);
+            MusicFile musicFile = mediaFile.toMusicFile();
             if (parser.isApplicable(musicFile)) {
                 if (parser.isImageAvailable(musicFile)) {
                     return candidate;

@@ -18,6 +18,8 @@
  */
 package net.sourceforge.subsonic.domain;
 
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.service.ServiceLocator;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
@@ -30,6 +32,8 @@ import java.util.Date;
  * @version $Id$
  */
 public class MediaFile {
+
+    private static final Logger LOG = Logger.getLogger(MediaFile.class);
 
     private int id;
     private String path;
@@ -45,7 +49,7 @@ public class MediaFile {
     private Integer year;
     private String genre;
     private Integer bitRate;
-    private Boolean variableBitRate;
+    private boolean variableBitRate;
     private Integer durationSeconds;
     private Long fileSize;
     private Integer width;
@@ -57,12 +61,12 @@ public class MediaFile {
     private String comment;
     private Date created;
     private Date lastModified;
-    private Boolean enabled;
+    private boolean enabled;
 
     public MediaFile(int id, String path, MediaType mediaType, String format, boolean isDirectory, boolean isAlbum, String title,
                      String album, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
-                     Boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
-                     String parentPath, Integer playCount, Date lastPlayed, String comment, Date created, Date lastModified, Boolean enabled) {
+                     boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
+                     String parentPath, Integer playCount, Date lastPlayed, String comment, Date created, Date lastModified, boolean enabled) {
         this.id = id;
         this.path = path;
         this.mediaType = mediaType;
@@ -204,11 +208,11 @@ public class MediaFile {
         this.bitRate = bitRate;
     }
 
-    public Boolean getVariableBitRate() {
+    public boolean isVariableBitRate() {
         return variableBitRate;
     }
 
-    public void setVariableBitRate(Boolean variableBitRate) {
+    public void setVariableBitRate(boolean variableBitRate) {
         this.variableBitRate = variableBitRate;
     }
 
@@ -300,15 +304,15 @@ public class MediaFile {
         this.lastModified = lastModified;
     }
 
-    public Boolean getEnabled() {
+    public boolean isEnabled() {
         return enabled;
     }
 
-    public void setEnabled(Boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    public static MediaFile forMusicFile(MusicFile musicFile, String coverArtPath) throws IOException {
+    public static MediaFile forMusicFile(MusicFile musicFile, String coverArtPath) {
 
         MediaType mediaType = null;
         if (musicFile.isVideo()) {
@@ -319,12 +323,20 @@ public class MediaFile {
 
         MusicFile.MetaData metaData = musicFile.getMetaData();
 
+        boolean isAlbum = false;
+
+        try {
+            isAlbum = musicFile.isAlbum();
+        } catch (IOException x) {
+            LOG.error("Error in isAlbum()", x);
+        }
+
         return new MediaFile(0,
                 musicFile.getPath(),
                 mediaType,
                 musicFile.isFile() ? StringUtils.lowerCase(musicFile.getSuffix()) : null,
                 musicFile.isDirectory(),
-                musicFile.isAlbum(),
+                isAlbum,
                 metaData == null ? null : metaData.getTitle(),
                 metaData == null ? null : metaData.getAlbum(),
                 metaData == null ? null : metaData.getArtist(),
@@ -333,7 +345,7 @@ public class MediaFile {
                 metaData == null ? null : metaData.getYearAsInteger(),
                 metaData == null ? null : metaData.getGenre(),
                 metaData == null ? null : metaData.getBitRate(),
-                metaData == null ? null : metaData.getVariableBitRate(),
+                metaData != null && Boolean.TRUE.equals(metaData.getVariableBitRate()),
                 metaData == null ? null : metaData.getDuration(),
                 musicFile.isFile() ? musicFile.length() : null,
                 metaData == null ? null : metaData.getWidth(),
@@ -346,5 +358,9 @@ public class MediaFile {
                 new Date(),
                 new Date(musicFile.lastModified()),
                 true);
+    }
+
+    public MusicFile toMusicFile() {
+        return ServiceLocator.getMusicFileService().getMusicFile(path);
     }
 }

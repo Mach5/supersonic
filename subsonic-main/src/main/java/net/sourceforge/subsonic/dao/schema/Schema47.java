@@ -56,7 +56,7 @@ public class Schema47 extends Schema {
                     "year int," +
                     "genre varchar," +
                     "bit_rate int," +
-                    "variable_bit_rate boolean," +
+                    "variable_bit_rate boolean not null," +
                     "duration_seconds int," +
                     "file_size bigint," +
                     "width int," +
