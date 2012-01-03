@@ -3,14 +3,13 @@ Only store recognized file types?
 Support per-artist cover art.
 Collapse media_type, is_album and is_directory
 Decide when to set "album" and "artist" for directories.
-Phase out MusicFile
-Create MediaFileService
-Implement "create media_file on demand" functionality.
+Phase out MusicFile (usages: 420)
 Start with something simple, then move on to MainController.
 
 Root folder should have parent == null.
-Deal with MusicFile.getName() and getNameWithoutSuffix()
-
+Make sure logic in MusicFile.getName() and getNameWithoutSuffix() is preserved in "album", "title" etc.
+MediaFileService.getChildrenOf(): when to store children in database?
+Use long rather than Date in MediaFile?
 
 
 DONE IN 4.7

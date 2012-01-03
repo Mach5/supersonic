@@ -22,6 +22,7 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.ServiceLocator;
 import org.apache.commons.lang.StringUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -61,12 +62,15 @@ public class MediaFile {
     private String comment;
     private Date created;
     private Date lastModified;
+    private Date childrenLastUpdated;
     private boolean enabled;
+    private String name;
 
     public MediaFile(int id, String path, MediaType mediaType, String format, boolean isDirectory, boolean isAlbum, String title,
                      String album, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
                      boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
-                     String parentPath, Integer playCount, Date lastPlayed, String comment, Date created, Date lastModified, boolean enabled) {
+                     String parentPath, Integer playCount, Date lastPlayed, String comment, Date created, Date lastModified,
+                     Date childrenLastUpdated, boolean enabled) {
         this.id = id;
         this.path = path;
         this.mediaType = mediaType;
@@ -93,7 +97,18 @@ public class MediaFile {
         this.comment = comment;
         this.created = created;
         this.lastModified = lastModified;
+        this.childrenLastUpdated = childrenLastUpdated;
         this.enabled = enabled;
+
+        if (isAlbum) {
+            name = album;
+        } else if (isDirectory) {
+            File file = new File(path);
+            name = file.getName();
+        } else {
+            name = title;
+        }
+
     }
 
     public int getId() {
@@ -136,6 +151,10 @@ public class MediaFile {
         isDirectory = directory;
     }
 
+    public boolean isFile() {
+        return !isDirectory;
+    }
+
     public boolean isAlbum() {
         return isAlbum;
     }
@@ -167,6 +186,11 @@ public class MediaFile {
     public void setArtist(String artist) {
         this.artist = artist;
     }
+
+    public String getName() {
+        return name;
+    }
+
 
     public Integer getDiscNumber() {
         return discNumber;
@@ -304,6 +328,17 @@ public class MediaFile {
         this.lastModified = lastModified;
     }
 
+    /**
+     * Returns when the children was last updated in the database.
+     */
+    public Date getChildrenLastUpdated() {
+        return childrenLastUpdated;
+    }
+
+    public void setChildrenLastUpdated(Date childrenLastUpdated) {
+        this.childrenLastUpdated = childrenLastUpdated;
+    }
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -357,6 +392,7 @@ public class MediaFile {
                 null,
                 new Date(),
                 new Date(musicFile.lastModified()),
+                new Date(0L),
                 true);
     }
 

@@ -30,6 +30,10 @@ import org.apache.commons.io.filefilter.FileFileFilter;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Provides services for instantiating and caching media files and cover art.
@@ -93,6 +97,59 @@ public class MediaFileService {
      */
     public MediaFile getMediaFile(String pathName) {
         return getMediaFile(new File(pathName));
+    }
+
+    /**
+     * Returns all media files that are children of a given media file.
+     *
+     * @param includeFiles       Whether files should be included in the result.
+     * @param includeDirectories Whether directories should be included in the result.
+     * @param sort               Whether to sort files in the same directory.
+     * @return All children media files.
+     * @throws IOException If an I/O error occurs.
+     */
+    public List<MediaFile> getChildrenOf(MediaFile parent, boolean includeFiles, boolean includeDirectories, boolean sort) throws IOException {
+
+        if (!parent.isDirectory()) {
+            return Collections.emptyList();
+        }
+
+        // Make sure children are stored and up-to-date in the database.
+        updateChildren(parent);
+
+        List<MediaFile> result = new ArrayList<MediaFile>();
+        for (MediaFile child : mediaFileDao.getChildrenOf(parent.getPath())) {
+            if (child.isDirectory() && includeDirectories) {
+                result.add(child);
+            }
+            if (child.isFile() && includeFiles) {
+                result.add(child);
+            }
+        }
+
+        if (sort) {
+            Collections.sort(result, new MediaFileSorter());
+        }
+
+        return result;
+    }
+
+    private void updateChildren(MediaFile parent) {
+
+        // Check timestamps.
+        if (parent.getChildrenLastUpdated().getTime() >= parent.getLastModified().getTime()) {
+            return;
+        }
+
+        // TODO: Use timestamp?
+
+        // TODO: Create listMediaFiles() method. Also to be used by SearchService.  Replace MusicFile.acceptMedia().
+
+        // TODO: Update children_last_updated in parent.
+
+        // TODO: Add new children, remove non-existent.
+
+        foo;
     }
 
     private MediaFile createMediaFile(File file) {
@@ -174,5 +231,53 @@ public class MediaFileService {
 
     public void setMediaFileDao(MediaFileDao mediaFileDao) {
         this.mediaFileDao = mediaFileDao;
+    }
+
+
+    /**
+     * Comparator for sorting media files.
+     */
+    private static class MediaFileSorter implements Comparator<MediaFile> {
+
+        public int compare(MediaFile a, MediaFile b) {
+            if (a.isFile() && b.isDirectory()) {
+                return 1;
+            }
+
+            if (a.isDirectory() && b.isFile()) {
+                return -1;
+            }
+
+            if (a.isDirectory() && b.isDirectory()) {
+                return a.getName().compareToIgnoreCase(b.getName());
+            }
+
+            // Compare by disc number, if present.
+            Integer discA = a.getDiscNumber();
+            Integer discB = b.getDiscNumber();
+            if (discA != null && discB != null) {
+                int i = discA.compareTo(discB);
+                if (i != 0) {
+                    return i;
+                }
+            }
+
+            Integer trackA = a.getTrackNumber();
+            Integer trackB = b.getTrackNumber();
+
+            if (trackA == null && trackB != null) {
+                return 1;
+            }
+
+            if (trackA != null && trackB == null) {
+                return -1;
+            }
+
+            if (trackA == null && trackB == null) {
+                return a.getName().compareToIgnoreCase(b.getName());
+            }
+
+            return trackA.compareTo(trackB);
+        }
     }
 }

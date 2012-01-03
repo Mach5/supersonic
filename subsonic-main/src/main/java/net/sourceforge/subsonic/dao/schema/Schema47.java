@@ -68,6 +68,7 @@ public class Schema47 extends Schema {
                     "comment varchar," +
                     "created datetime not null," +
                     "last_modified datetime not null," +
+                    "children_last_updated datetime not null," +
                     "enabled boolean not null," +
                     "unique (path))");
 

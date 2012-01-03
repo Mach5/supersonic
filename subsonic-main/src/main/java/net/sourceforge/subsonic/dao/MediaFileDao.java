@@ -25,6 +25,7 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * Provides database services for media files.
@@ -36,17 +37,28 @@ public class MediaFileDao extends AbstractDao {
     private static final Logger LOG = Logger.getLogger(MediaFileDao.class);
     private static final String COLUMNS = "id, path, media_type, format, is_directory, is_album, title, album, artist, disc_number, " +
             "track_number, year, genre, bit_rate, variable_bit_rate, duration_seconds, file_size, width, height, cover_art_path, " +
-            "parent_path, play_count, last_played, comment, created, last_modified, enabled";
+            "parent_path, play_count, last_played, comment, created, last_modified, children_last_updated, enabled";
 
     private final MediaFileMapper rowMapper = new MediaFileMapper();
 
     /**
      * Returns the media file for the given path.
+     *
      * @param path The path.
      * @return The media file or null.
      */
     public MediaFile getMediaFile(String path) {
         return queryOne("select " + COLUMNS + " from media_file where path=?", rowMapper, path);
+    }
+
+    /**
+     * Returns the media file that are direct children of the given path.
+     *
+     * @param path The path.
+     * @return The list of children.
+     */
+    public List<MediaFile> getChildrenOf(String path) {
+        return query("select " + COLUMNS + " from media_file where parent_path=?", rowMapper, path);
     }
 
     /**
@@ -59,12 +71,12 @@ public class MediaFileDao extends AbstractDao {
 
         String sql = "insert into media_file (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")";
         update(sql, null,
-                file.getPath(), file.getMediaType() == null ? null  : file.getMediaType().name(), file.getFormat(), file.isDirectory(), file.isAlbum(),
+                file.getPath(), file.getMediaType() == null ? null : file.getMediaType().name(), file.getFormat(), file.isDirectory(), file.isAlbum(),
                 file.getTitle(), file.getAlbum(), file.getArtist(), file.getDiscNumber(), file.getTrackNumber(),
                 file.getYear(), file.getGenre(), file.getBitRate(), file.isVariableBitRate(), file.getDurationSeconds(),
                 file.getFileSize(), file.getWidth(), file.getHeight(), file.getCoverArtPath(), file.getParentPath(),
                 file.getPlayCount(), file.getLastPlayed(), file.getComment(), file.getCreated(), file.getLastModified(),
-                file.isEnabled());
+                file.getChildrenLastUpdated(), file.isEnabled());
         LOG.debug("Created/updated media_file for " + file.getPath());
     }
 
@@ -97,7 +109,8 @@ public class MediaFileDao extends AbstractDao {
                     rs.getString(24),
                     rs.getTimestamp(25),
                     rs.getTimestamp(26),
-                    rs.getBoolean(27));
+                    rs.getTimestamp(27),
+                    rs.getBoolean(28));
         }
     }
 }
