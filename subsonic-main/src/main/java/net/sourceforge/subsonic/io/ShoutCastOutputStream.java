@@ -19,15 +19,14 @@
 package net.sourceforge.subsonic.io;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.SettingsService;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Implements SHOUTcast support by decorating an existing output stream.
@@ -135,9 +134,9 @@ public class ShoutCastOutputStream extends OutputStream {
     private void writeMetaData() throws IOException {
         String streamTitle = StringUtils.trimToEmpty(settingsService.getWelcomeTitle());
 
-        MusicFile musicFile = playlist.getCurrentFile();
-        if (musicFile != null) {
-            streamTitle = musicFile.getMetaData().getArtist() + " - " + musicFile.getMetaData().getTitle();
+        MediaFile mediaFile = playlist.getCurrentMediaFile();
+        if (mediaFile != null) {
+            streamTitle = mediaFile.getArtist() + " - " + mediaFile.getTitle();
         }
 
         byte[] bytes;
