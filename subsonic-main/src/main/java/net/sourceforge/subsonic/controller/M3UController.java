@@ -19,7 +19,7 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.PlayerService;
@@ -79,14 +79,13 @@ public class M3UController implements Controller {
 
     private void createClientSidePlaylist(PrintWriter out, Player player, String url) throws Exception {
         out.println("#EXTM3U");
-        for (MusicFile musicFile : player.getPlaylist().getFiles()) {
-            MusicFile.MetaData metaData = musicFile.getMetaData();
-            Integer duration = metaData.getDuration();
+        for (MediaFile mediaFile : player.getPlaylist().getMediaFiles()) {
+            Integer duration = mediaFile.getDurationSeconds();
             if (duration == null) {
                 duration = -1;
             }
-            out.println("#EXTINF:" + duration + "," + metaData.getArtist() + " - " + metaData.getTitle());
-            out.println(url + "player=" + player.getId() + "&pathUtf8Hex=" + StringUtil.utf8HexEncode(musicFile.getPath()) + "&suffix=." + transcodingService.getSuffix(player, musicFile, null));
+            out.println("#EXTINF:" + duration + "," + mediaFile.getArtist() + " - " + mediaFile.getTitle());
+            out.println(url + "player=" + player.getId() + "&pathUtf8Hex=" + StringUtil.utf8HexEncode(mediaFile.getPath()) + "&suffix=." + transcodingService.getSuffix(player, mediaFile.toMusicFile(), null));
         }
     }
 
