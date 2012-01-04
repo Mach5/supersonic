@@ -293,6 +293,10 @@ public class MediaFile {
         this.parentPath = parentPath;
     }
 
+    public File getParentFile() {
+        return file.getParentFile();
+    }
+
     public Integer getPlayCount() {
         return playCount;
     }

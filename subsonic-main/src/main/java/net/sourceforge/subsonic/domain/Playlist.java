@@ -98,8 +98,22 @@ public class Playlist {
      *
      * @return All music files in the playlist.
      */
+    @Deprecated
     public synchronized MusicFile[] getFiles() {
         return files.toArray(new MusicFile[files.size()]);
+    }
+
+    /**
+     * Returns all media files in the playlist.
+     *
+     * @return All media files in the playlist.
+     */
+    public synchronized List<MediaFile> getMediaFiles() {
+        List<MediaFile> result = new ArrayList<MediaFile>(files.size());
+        for (MusicFile file : files) {
+            result.add(MediaFile.forMusicFile(file, null));
+        }
+        return result;
     }
 
     /**
@@ -111,6 +125,17 @@ public class Playlist {
      */
     public synchronized MusicFile getFile(int index) {
         return files.get(index);
+    }
+
+    /**
+     * Returns the media file at the given index.
+     *
+     * @param index The index.
+     * @return The media file at the given index.
+     * @throws IndexOutOfBoundsException If the index is out of range.
+     */
+    public synchronized MediaFile getMediaFile(int index) {
+        return MediaFile.forMusicFile(files.get(index), null);
     }
 
     /**

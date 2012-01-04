@@ -320,7 +320,7 @@
         <property name="securityService" ref="securityService"/>
         <property name="playlistService" ref="playlistService"/>
         <property name="settingsService" ref="settingsService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
     <bean id="donateController" class="net.sourceforge.subsonic.controller.DonateController">
         <property name="commandClass" value="net.sourceforge.subsonic.command.DonateCommand"/>

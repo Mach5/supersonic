@@ -3,7 +3,7 @@ Only store recognized file types?
 Support per-artist cover art.
 Collapse media_type, is_album and is_directory
 Decide when to set "album" and "artist" for directories.
-Phase out MusicFile (usages: 420, 410, 398)
+Phase out MusicFile (usages: 420, 410, 398, 380)
 Start with something simple, then move on to MainController.
 Settings > Shared media is broken.
 

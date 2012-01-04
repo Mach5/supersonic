@@ -35,7 +35,6 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
-import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.Share;
@@ -93,12 +92,7 @@ public class ShareManagementController extends MultiActionController {
         } else if (playerId != null) {
             Player player = playerService.getPlayerById(playerId);
             Playlist playlist = player.getPlaylist();
-
-            // TODO: Simplify once Playlist has been refactored.
-            MusicFile[] files = playlist.getFiles();
-            for (MusicFile file : files) {
-                result.add(mediaFileService.getMediaFile(file.getFile()));
-            }
+            result = playlist.getMediaFiles();
         }
 
         return result;

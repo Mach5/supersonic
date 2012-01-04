@@ -19,13 +19,13 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.io.RangeOutputStream;
-import net.sourceforge.subsonic.service.MusicFileService;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
 import net.sourceforge.subsonic.service.SecurityService;
@@ -54,7 +54,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.zip.CRC32;
 
@@ -74,7 +73,7 @@ public class DownloadController implements Controller, LastModified {
     private SecurityService securityService;
     private PlaylistService playlistService;
     private SettingsService settingsService;
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
 
     public long getLastModified(HttpServletRequest request) {
         String path = request.getParameter("path");
@@ -197,14 +196,14 @@ public class DownloadController implements Controller, LastModified {
         ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
         out.setMethod(ZipOutputStream.STORED);  // No compression.
 
-        List<MusicFile> children = musicFileService.getMusicFile(dir).getChildren(true, true, true);
-        List<MusicFile> musicFiles = new ArrayList<MusicFile>();
+        List<MediaFile> allChildren = mediaFileService.getChildrenOf(dir, true, true, true);
+        List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
         for (int index : indexes) {
-            musicFiles.add(children.get(index));
+            mediaFiles.add(allChildren.get(index));
         }
 
-        for (MusicFile musicFile : musicFiles) {
-            zip(out, musicFile.getParent().getFile(), musicFile.getFile(), status, null);
+        for (MediaFile mediaFile : mediaFiles) {
+            zip(out, mediaFile.getParentFile(), mediaFile.getFile(), status, null);
         }
 
         out.close();
@@ -260,19 +259,19 @@ public class DownloadController implements Controller, LastModified {
         ZipOutputStream out = new ZipOutputStream(RangeOutputStream.wrap(response.getOutputStream(), range));
         out.setMethod(ZipOutputStream.STORED);  // No compression.
 
-        List<MusicFile> musicFiles = new ArrayList<MusicFile>();
+        List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
         if (indexes == null) {
-            Collections.addAll(musicFiles, playlist.getFiles());
+            mediaFiles.addAll(playlist.getMediaFiles());
         } else {
             for (int index : indexes) {
                 try {
-                    musicFiles.add(playlist.getFile(index));
+                    mediaFiles.add(playlist.getMediaFile(index));
                 } catch (IndexOutOfBoundsException x) { /* Ignored */}
             }
         }
 
-        for (MusicFile musicFile : musicFiles) {
-            zip(out, musicFile.getParent().getFile(), musicFile.getFile(), status, range);
+        for (MediaFile mediaFile : mediaFiles) {
+            zip(out, mediaFile.getParentFile(), mediaFile.getFile(), status, range);
         }
 
         out.close();
@@ -436,7 +435,7 @@ public class DownloadController implements Controller, LastModified {
         this.settingsService = settingsService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }
