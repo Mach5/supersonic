@@ -19,12 +19,12 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.domain.CoverArtScheme;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFileInfo;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.AdService;
-import net.sourceforge.subsonic.service.MusicFileService;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.MusicInfoService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +58,7 @@ public class MainController extends ParameterizableViewController {
     private PlayerService playerService;
     private SettingsService settingsService;
     private MusicInfoService musicInfoService;
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
     private AdService adService;
 
     @Override
@@ -69,9 +68,9 @@ public class MainController extends ParameterizableViewController {
         Player player = playerService.getPlayer(request, response);
         String[] paths = request.getParameterValues("path");
         String path = paths[0];
-        MusicFile dir = musicFileService.getMusicFile(path);
+        MediaFile dir = mediaFileService.getMediaFile(path);
         if (dir.isFile()) {
-            dir = dir.getParent();
+            dir = mediaFileService.getParentOf(dir);
         }
 
         // Redirect if root directory.
@@ -79,7 +78,7 @@ public class MainController extends ParameterizableViewController {
             return new ModelAndView(new RedirectView("home.view?"));
         }
 
-        List<MusicFile> children = paths.length == 1 ? dir.getChildren(true, true, true) : getMultiFolderChildren(paths);
+        List<MediaFile> children = paths.length == 1 ? mediaFileService.getChildrenOf(dir, true, true, true) : getMultiFolderChildren(paths);
         UserSettings userSettings = settingsService.getUserSettings(securityService.getCurrentUsername(request));
 
         map.put("dir", dir);
@@ -99,7 +98,9 @@ public class MainController extends ParameterizableViewController {
         }
 
         try {
-            map.put("navigateUpAllowed", !dir.getParent().isRoot());
+            MediaFile parent = mediaFileService.getParentOf(dir);
+            map.put("parent", parent);
+            map.put("navigateUpAllowed", !parent.isRoot());
         } catch (SecurityException x) {
             // Happens if Podcast directory is outside music folder.
         }
@@ -109,8 +110,8 @@ public class MainController extends ParameterizableViewController {
         String comment = musicInfo == null ? null : musicInfo.getComment();
         Date lastPlayed = musicInfo == null ? null : musicInfo.getLastPlayed();
         String username = securityService.getCurrentUsername(request);
-        Integer userRating = musicInfoService.getRatingForUser(username, dir);
-        Double averageRating = musicInfoService.getAverageRating(dir);
+        Integer userRating = musicInfoService.getRatingForUser(username, dir.toMusicFile());
+        Double averageRating = musicInfoService.getAverageRating(dir.toMusicFile());
 
         if (userRating == null) {
             userRating = 0;
@@ -145,26 +146,25 @@ public class MainController extends ParameterizableViewController {
         return result;
     }
 
-    private String guessArtist(List<MusicFile> children) {
-        MusicFile.MetaData metaData = getMetaData(children);
-        return metaData == null ? null : metaData.getArtist();
-    }
-
-    private String guessAlbum(List<MusicFile> children) {
-        MusicFile.MetaData metaData = getMetaData(children);
-        return metaData == null ? null : metaData.getAlbum();
-    }
-
-    private MusicFile.MetaData getMetaData(List<MusicFile> children) {
-        for (MusicFile child : children) {
-            if (child.isFile() && child.getMetaData() != null) {
-                return child.getMetaData();
+    private String guessArtist(List<MediaFile> children) {
+        for (MediaFile child : children) {
+            if (child.isFile() && child.getArtist() != null) {
+                return child.getArtist();
             }
         }
         return null;
     }
 
-    private List<File> getCoverArts(MusicFile dir, List<MusicFile> children) throws IOException {
+    private String guessAlbum(List<MediaFile> children) {
+        for (MediaFile child : children) {
+            if (child.isFile() && child.getArtist() != null) {
+                return child.getAlbumName();
+            }
+        }
+        return null;
+    }
+
+    private List<File> getCoverArts(MediaFile dir, List<MediaFile> children) throws IOException {
         int limit = settingsService.getCoverArtLimit();
         if (limit == 0) {
             limit = Integer.MAX_VALUE;
@@ -172,11 +172,11 @@ public class MainController extends ParameterizableViewController {
 
         List<File> coverArts = new ArrayList<File>();
         if (dir.isAlbum()) {
-            coverArts.add(musicFileService.getCoverArt(dir));
+            coverArts.add(mediaFileService.getCoverArt(dir));
         } else {
-            for (MusicFile child : children) {
+            for (MediaFile child : children) {
                 if (child.isDirectory()) {
-                    File coverArt = musicFileService.getCoverArt(child);
+                    File coverArt = mediaFileService.getCoverArt(child);
                     if (coverArt != null) {
                         coverArts.add(coverArt);
                         if (coverArts.size() > limit) {
@@ -189,26 +189,26 @@ public class MainController extends ParameterizableViewController {
         return coverArts;
     }
 
-    private List<MusicFile> getMultiFolderChildren(String[] paths) throws IOException {
-        List<MusicFile> result = new ArrayList<MusicFile>();
+    private List<MediaFile> getMultiFolderChildren(String[] paths) throws IOException {
+        List<MediaFile> result = new ArrayList<MediaFile>();
         for (String path : paths) {
-            MusicFile dir = musicFileService.getMusicFile(path);
+            MediaFile dir = mediaFileService.getMediaFile(path);
             if (dir.isFile()) {
-                dir = dir.getParent();
+                dir = mediaFileService.getParentOf(dir);
             }
-            result.addAll(dir.getChildren(true, true, true));
+            result.addAll(mediaFileService.getChildrenOf(dir, true, true, true));
         }
         return result;
     }
 
-    private List<MusicFile> getAncestors(MusicFile dir) throws IOException {
-        LinkedList<MusicFile> result = new LinkedList<MusicFile>();
+    private List<MediaFile> getAncestors(MediaFile dir) throws IOException {
+        LinkedList<MediaFile> result = new LinkedList<MediaFile>();
 
         try {
-            MusicFile parent = dir.getParent();
+            MediaFile parent = mediaFileService.getParentOf(dir);
             while (parent != null && !parent.isRoot()) {
                 result.addFirst(parent);
-                parent = parent.getParent();
+                parent = mediaFileService.getParentOf(parent);
             }
         } catch (SecurityException x) {
             // Happens if Podcast directory is outside music folder.
@@ -216,15 +216,11 @@ public class MainController extends ParameterizableViewController {
         return result;
     }
 
-    private void setPreviousAndNextAlbums(MusicFile dir, Map<String, Object> map) throws IOException {
-        if (dir.isAlbum() && !dir.getParent().isRoot()) {
-            List<MusicFile> sieblings = dir.getParent().getChildren(true, true, true);
-            for (Iterator<MusicFile> iterator = sieblings.iterator(); iterator.hasNext();) {
-                MusicFile siebling = iterator.next();
-                if (siebling.isFile()) {
-                    iterator.remove();
-                }
-            }
+    private void setPreviousAndNextAlbums(MediaFile dir, Map<String, Object> map) throws IOException {
+        MediaFile parent = mediaFileService.getParentOf(dir);
+
+        if (dir.isAlbum() && !parent.isRoot()) {
+            List<MediaFile> sieblings = mediaFileService.getChildrenOf(parent, false, true, true);
 
             int index = sieblings.indexOf(dir);
             if (index > 0) {
@@ -236,13 +232,12 @@ public class MainController extends ParameterizableViewController {
         }
     }
 
-    private boolean isMultipleArtists(List<MusicFile> children) {
+    private boolean isMultipleArtists(List<MediaFile> children) {
         // Collect unique artist names.
         Set<String> artists = new HashSet<String>();
-        for (MusicFile child : children) {
-            MusicFile.MetaData metaData = child.getMetaData();
-            if (metaData != null && metaData.getArtist() != null) {
-                artists.add(metaData.getArtist().toLowerCase());
+        for (MediaFile child : children) {
+            if (child.getArtist() != null) {
+                artists.add(child.getArtist().toLowerCase());
             }
         }
 
@@ -277,11 +272,11 @@ public class MainController extends ParameterizableViewController {
         this.musicInfoService = musicInfoService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
-
     public void setAdService(AdService adService) {
         this.adService = adService;
+    }
+
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }

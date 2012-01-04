@@ -259,6 +259,37 @@ public class MediaFile {
         this.durationSeconds = durationSeconds;
     }
 
+    public String getDurationString() {
+        if (durationSeconds == null) {
+            return null;
+        }
+
+        StringBuilder result = new StringBuilder(8);
+
+        int seconds = durationSeconds;
+
+        int hours = seconds / 3600;
+        seconds -= hours * 3600;
+
+        int minutes = seconds / 60;
+        seconds -= minutes * 60;
+
+        if (hours > 0) {
+            result.append(hours).append(':');
+            if (minutes < 10) {
+                result.append('0');
+            }
+        }
+
+        result.append(minutes).append(':');
+        if (seconds < 10) {
+            result.append('0');
+        }
+        result.append(seconds);
+
+        return result.toString();
+    }
+
     public Long getFileSize() {
         return fileSize;
     }

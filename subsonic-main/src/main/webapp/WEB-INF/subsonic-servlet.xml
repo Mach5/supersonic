@@ -29,7 +29,7 @@
         <property name="playerService" ref="playerService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="musicInfoService" ref="musicInfoService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="adService" ref="adService"/>
     </bean>
     <bean id="topController" class="net.sourceforge.subsonic.controller.TopController">

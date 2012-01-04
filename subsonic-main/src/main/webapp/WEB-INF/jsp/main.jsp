@@ -105,7 +105,7 @@
 <h2>
     <c:if test="${model.navigateUpAllowed}">
         <sub:url value="main.view" var="upUrl">
-            <sub:param name="path" value="${model.dir.parent.path}"/>
+            <sub:param name="path" value="${model.parent.path}"/>
         </sub:url>
         <a href="${upUrl}"><fmt:message key="main.up"/></a>
         <c:set var="needSep" value="true"/>
@@ -228,6 +228,7 @@
         <table style="border-collapse:collapse;white-space:nowrap">
             <c:set var="cutoff" value="${model.visibility.captionCutoff}"/>
             <c:forEach items="${model.children}" var="child" varStatus="loopStatus">
+                <%--@elvariable id="child" type="net.sourceforge.subsonic.domain.MediaFile"--%>
                 <c:choose>
                     <c:when test="${loopStatus.count % 2 == 1}">
                         <c:set var="class" value="class='bgcolor2'"/>
@@ -262,7 +263,7 @@
 
                             <c:if test="${model.visibility.trackNumberVisible}">
                                 <td ${class} style="padding-right:0.5em;text-align:right">
-                                    <span class="detail">${child.metaData.trackNumber}</span>
+                                    <span class="detail">${child.trackNumber}</span>
                                 </td>
                             </c:if>
 
@@ -272,54 +273,54 @@
 
                             <c:if test="${model.visibility.albumVisible}">
                                 <td ${class} style="padding-right:1.25em;white-space:nowrap">
-                                    <span class="detail" title="${child.metaData.album}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(child.metaData.album)}</str:truncateNicely></span>
+                                    <span class="detail" title="${child.albumName}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(child.albumName)}</str:truncateNicely></span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.artistVisible and model.multipleArtists}">
                                 <td ${class} style="padding-right:1.25em;white-space:nowrap">
-                                    <span class="detail" title="${child.metaData.artist}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(child.metaData.artist)}</str:truncateNicely></span>
+                                    <span class="detail" title="${child.artist}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(child.artist)}</str:truncateNicely></span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.genreVisible}">
                                 <td ${class} style="padding-right:1.25em;white-space:nowrap">
-                                    <span class="detail">${child.metaData.genre}</span>
+                                    <span class="detail">${child.genre}</span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.yearVisible}">
                                 <td ${class} style="padding-right:1.25em">
-                                    <span class="detail">${child.metaData.year}</span>
+                                    <span class="detail">${child.year}</span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.formatVisible}">
                                 <td ${class} style="padding-right:1.25em">
-                                    <span class="detail">${fn:toLowerCase(child.metaData.format)}</span>
+                                    <span class="detail">${fn:toLowerCase(child.format)}</span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.fileSizeVisible}">
                                 <td ${class} style="padding-right:1.25em;text-align:right">
-                                    <span class="detail"><sub:formatBytes bytes="${child.metaData.fileSize}"/></span>
+                                    <span class="detail"><sub:formatBytes bytes="${child.fileSize}"/></span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.durationVisible}">
                                 <td ${class} style="padding-right:1.25em;text-align:right">
-                                    <span class="detail">${child.metaData.durationAsString}</span>
+                                    <span class="detail">${child.durationString}</span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.bitRateVisible}">
                                 <td ${class} style="padding-right:0.25em">
                                     <span class="detail">
-                                        <c:if test="${not empty child.metaData.bitRate}">
-                                            ${child.metaData.bitRate} Kbps ${child.metaData.variableBitRate ? "vbr" : ""}
+                                        <c:if test="${not empty child.bitRate}">
+                                            ${child.bitRate} Kbps ${child.variableBitRate ? "vbr" : ""}
                                         </c:if>
-                                        <c:if test="${child.video and not empty child.metaData.width and not empty child.metaData.height}">
-                                            (${child.metaData.width}x${child.metaData.height})
+                                        <c:if test="${child.video and not empty child.width and not empty child.height}">
+                                            (${child.width}x${child.height})
                                         </c:if>
                                     </span>
                                 </td>
