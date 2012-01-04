@@ -188,7 +188,7 @@
     <bean id="ajaxNowPlayingService" class="net.sourceforge.subsonic.ajax.NowPlayingService">
         <property name="playerService" ref="playerService"/>
         <property name="statusService" ref="statusService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="searchService" ref="searchService"/>
     </bean>

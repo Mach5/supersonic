@@ -19,11 +19,11 @@
 package net.sourceforge.subsonic.ajax;
 
 import net.sourceforge.subsonic.domain.AvatarScheme;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.UserSettings;
-import net.sourceforge.subsonic.service.MusicFileService;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SettingsService;
@@ -48,9 +48,9 @@ public class NowPlayingService {
 
     private PlayerService playerService;
     private StatusService statusService;
-    private MusicFileService musicFileService;
     private SettingsService settingsService;
     private SearchService searchService;
+    private MediaFileService mediaFileService;
 
     /**
      * Returns details about what the current player is playing.
@@ -99,29 +99,27 @@ public class NowPlayingService {
                     continue;
                 }
 
-                MusicFile musicFile = musicFileService.getMusicFile(file);
-                File coverArt = musicFileService.getCoverArt(musicFile.getParent());
+                MediaFile mediaFile = mediaFileService.getMediaFile(file);
+                File coverArt = mediaFileService.getCoverArt(mediaFile);
 
-                String artist = musicFile.getMetaData().getArtist();
-                String title = musicFile.getMetaData().getTitle();
+                String artist = mediaFile.getArtist();
+                String title = mediaFile.getTitle();
                 String streamUrl = url.replaceFirst("/dwr/.*", "/stream?player=" + player.getId() + "&pathUtf8Hex=" +
-                                                               StringUtil.utf8HexEncode(file.getPath()));
+                        StringUtil.utf8HexEncode(file.getPath()));
                 String albumUrl = url.replaceFirst("/dwr/.*", "/main.view?pathUtf8Hex=" +
-                                                              StringUtil.utf8HexEncode(musicFile.getParent().getPath()));
+                        StringUtil.utf8HexEncode(mediaFile.getParentPath()));
                 String lyricsUrl = url.replaceFirst("/dwr/.*", "/lyrics.view?artistUtf8Hex=" +
-                                                               StringUtil.utf8HexEncode(musicFile.getMetaData().getArtist()) +
-                                                               "&songUtf8Hex=" +
-                                                               StringUtil.utf8HexEncode(musicFile.getMetaData().getTitle()));
+                        StringUtil.utf8HexEncode(artist) +
+                        "&songUtf8Hex=" + StringUtil.utf8HexEncode(title));
                 String coverArtUrl = coverArt == null ? null :
-                                     url.replaceFirst("/dwr/.*", "/coverArt.view?size=48&pathUtf8Hex=" + StringUtil.utf8HexEncode(coverArt.getPath()));
+                        url.replaceFirst("/dwr/.*", "/coverArt.view?size=48&pathUtf8Hex=" + StringUtil.utf8HexEncode(coverArt.getPath()));
                 String coverArtZoomUrl = coverArt == null ? null :
-                                         url.replaceFirst("/dwr/.*", "/coverArt.view?pathUtf8Hex=" + StringUtil.utf8HexEncode(coverArt.getPath()));
+                        url.replaceFirst("/dwr/.*", "/coverArt.view?pathUtf8Hex=" + StringUtil.utf8HexEncode(coverArt.getPath()));
 
                 String avatarUrl = null;
                 if (userSettings.getAvatarScheme() == AvatarScheme.SYSTEM) {
                     avatarUrl = url.replaceFirst("/dwr/.*", "/avatar.view?id=" + userSettings.getSystemAvatarId());
-                } else
-                if (userSettings.getAvatarScheme() == AvatarScheme.CUSTOM && settingsService.getCustomAvatar(username) != null) {
+                } else if (userSettings.getAvatarScheme() == AvatarScheme.CUSTOM && settingsService.getCustomAvatar(username) != null) {
                     avatarUrl = url.replaceFirst("/dwr/.*", "/avatar.view?username=" + username);
                 }
 
@@ -148,7 +146,7 @@ public class NowPlayingService {
                 long minutesAgo = status.getMillisSinceLastUpdate() / 1000L / 60L;
                 if (minutesAgo < 60) {
                     result.add(new NowPlayingInfo(username, artist, title, tooltip, streamUrl, albumUrl, lyricsUrl,
-                                                  coverArtUrl, coverArtZoomUrl, avatarUrl, (int) minutesAgo));
+                            coverArtUrl, coverArtZoomUrl, avatarUrl, (int) minutesAgo));
                 }
             }
         }
@@ -165,15 +163,15 @@ public class NowPlayingService {
         this.statusService = statusService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
-
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
     }
 
     public void setSearchService(SearchService searchService) {
         this.searchService = searchService;
+    }
+
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }
