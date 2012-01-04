@@ -264,11 +264,6 @@
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
     </bean>
-    <bean id="xspfPlaylistController" class="net.sourceforge.subsonic.controller.XspfPlaylistController">
-        <property name="viewName" value="xspfPlaylist"/>
-        <property name="playerService" ref="playerService"/>
-        <property name="musicFileService" ref="musicFileService"/>
-    </bean>
     <bean id="coverArtController" class="net.sourceforge.subsonic.controller.CoverArtController">
         <property name="securityService" ref="securityService"/>
         <property name="musicFileService" ref="musicFileService"/>
@@ -435,7 +430,6 @@
                 <prop key="/home.view">homeController</prop>
                 <prop key="/editTags.view">editTagsController</prop>
                 <prop key="/playlist.view">playlistController</prop>
-                <prop key="/xspfPlaylist.view">xspfPlaylistController</prop>
                 <prop key="/coverArt.view">coverArtController</prop>
                 <prop key="/avatar.view">avatarController</prop>
                 <prop key="/proxy.view">proxyController</prop>
