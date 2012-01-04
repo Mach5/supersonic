@@ -303,7 +303,7 @@
     </bean>
     <bean id="videoPlayerController" class="net.sourceforge.subsonic.controller.VideoPlayerController">
         <property name="viewName" value="videoPlayer"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="playerService" ref="playerService"/>
     </bean>

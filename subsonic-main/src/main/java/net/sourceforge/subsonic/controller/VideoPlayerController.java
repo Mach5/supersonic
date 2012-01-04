@@ -18,23 +18,21 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.util.StringUtil;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.service.MusicFileService;
-import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.util.StringUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Controller for the page used to play videos.
@@ -47,7 +45,7 @@ public class VideoPlayerController extends ParameterizableViewController {
     public static final int[] BIT_RATES = {200, 300, 400, 500, 700, 1000, 1200, 1500, 2000, 3000, 5000};
     private static final long TRIAL_DAYS = 30L;
 
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
     private SettingsService settingsService;
     private PlayerService playerService;
 
@@ -56,11 +54,11 @@ public class VideoPlayerController extends ParameterizableViewController {
 
         Map<String, Object> map = new HashMap<String, Object>();
         String path = request.getParameter("path");
-        MusicFile file = musicFileService.getMusicFile(path);
+        MediaFile file = mediaFileService.getMediaFile(path);
 
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
         timeOffset = Math.max(0, timeOffset);
-        Integer duration = file.getMetaData().getDuration();
+        Integer duration = file.getDurationSeconds();
         if (duration != null) {
             map.put("skipOffsets", createSkipOffsets(duration));
             timeOffset = Math.min(duration, timeOffset);
@@ -98,8 +96,8 @@ public class VideoPlayerController extends ParameterizableViewController {
         return result;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public void setSettingsService(SettingsService settingsService) {
