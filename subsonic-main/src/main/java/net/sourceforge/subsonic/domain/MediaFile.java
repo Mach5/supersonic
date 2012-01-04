@@ -65,6 +65,7 @@ public class MediaFile {
     private Date childrenLastUpdated;
     private boolean enabled;
     private String name;
+    private File file;
 
     public MediaFile(int id, String path, MediaType mediaType, String format, boolean isDirectory, boolean isAlbum, String title,
                      String album, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
@@ -99,11 +100,11 @@ public class MediaFile {
         this.lastModified = lastModified;
         this.childrenLastUpdated = childrenLastUpdated;
         this.enabled = enabled;
+        file = new File(path);
 
         if (isAlbum) {
             name = album;
         } else if (isDirectory) {
-            File file = new File(path);
             name = file.getName();
         } else {
             name = title;
@@ -125,6 +126,10 @@ public class MediaFile {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public File getFile() {
+        return file;
     }
 
     public MediaType getMediaType() {

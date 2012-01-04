@@ -26,6 +26,7 @@ import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.util.FileUtil;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.FileFileFilter;
 
 import java.io.File;
@@ -33,7 +34,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides services for instantiating and caching media files and cover art.
@@ -141,15 +144,70 @@ public class MediaFileService {
             return;
         }
 
-        // TODO: Use timestamp?
+        List<MediaFile> storedChildren = mediaFileDao.getChildrenOf(parent.getPath());
+        Map<String, MediaFile> storedChildrenMap = new HashMap<String, MediaFile>();
+        for (MediaFile child : storedChildren) {
+            storedChildrenMap.put(child.getPath(), child);
+        }
 
-        // TODO: Create listMediaFiles() method. Also to be used by SearchService.  Replace MusicFile.acceptMedia().
+        List<File> children = listMediaFiles(parent);
 
-        // TODO: Update children_last_updated in parent.
+        for (File child : children) {
+            if (storedChildrenMap.remove(child.getPath()) == null) {
+                // Add children that are not already stored.
+                mediaFileDao.createOrUpdateMediaFile(createMediaFile(child));
+            }
+        }
 
-        // TODO: Add new children, remove non-existent.
+        // Delete children that no longer exist on disk.
+        for (String path : storedChildrenMap.keySet()) {
+            mediaFileDao.deleteMediaFile(path);
+        }
 
-        foo;
+        // Update timestamp in parent.
+        parent.setChildrenLastUpdated(parent.getLastModified());
+        mediaFileDao.createOrUpdateMediaFile(parent);
+    }
+
+    private List<File> listMediaFiles(MediaFile parent) {
+        List<File> result = new ArrayList<File>();
+        for (File child : FileUtil.listFiles(parent.getFile())) {
+            String suffix = FilenameUtils.getExtension(child.getName()).toLowerCase();
+            if (!isExcluded(child) && (FileUtil.isDirectory(child) || isMusicFile(suffix) || isVideoFile(suffix))) {
+                result.add(child);
+            }
+        }
+        return result;
+    }
+
+    private boolean isMusicFile(String suffix) {
+        for (String s : settingsService.getMusicFileTypesAsArray()) {
+            if (suffix.equals(s.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isVideoFile(String suffix) {
+        for (String s : settingsService.getVideoFileTypesAsArray()) {
+            if (suffix.equals(s.toLowerCase())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns whether the given file is excluded.
+     *
+     * @param file The child file in question.
+     * @return Whether the child file is excluded.
+     */
+    private  boolean isExcluded(File file) {
+
+        // Exclude all hidden files starting with a "." or "@eaDir" (thumbnail dir created on Synology devices).
+        return file.getName().startsWith(".") || file.getName().startsWith("@eaDir");
     }
 
     private MediaFile createMediaFile(File file) {

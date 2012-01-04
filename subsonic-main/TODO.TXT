@@ -10,6 +10,7 @@ Root folder should have parent == null.
 Make sure logic in MusicFile.getName() and getNameWithoutSuffix() is preserved in "album", "title" etc.
 MediaFileService.getChildrenOf(): when to store children in database?
 Use long rather than Date in MediaFile?
+Remove id from MediaFile (not from table)
 
 
 DONE IN 4.7

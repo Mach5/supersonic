@@ -80,6 +80,10 @@ public class MediaFileDao extends AbstractDao {
         LOG.debug("Created/updated media_file for " + file.getPath());
     }
 
+    public void deleteMediaFile(String path) {
+        update("delete from media_file where path=?", path);
+    }
+
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {
         public MediaFile mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new MediaFile(
