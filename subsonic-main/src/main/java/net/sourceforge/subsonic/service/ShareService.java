@@ -31,7 +31,6 @@ import org.apache.commons.lang.RandomStringUtils;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.ShareDao;
-import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Share;
 import net.sourceforge.subsonic.domain.User;
 
@@ -48,7 +47,7 @@ public class ShareService {
     private ShareDao shareDao;
     private SecurityService securityService;
     private SettingsService settingsService;
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
 
     public List<Share> getAllShares() {
         return shareDao.getAllShares();
@@ -68,11 +67,11 @@ public class ShareService {
         return shareDao.getShareById(id);
     }
 
-    public List<MusicFile> getSharedFiles(int id) {
-        List<MusicFile> result = new ArrayList<MusicFile>();
+    public List<MediaFile> getSharedFiles(int id) {
+        List<MediaFile> result = new ArrayList<MediaFile>();
         for (String path : shareDao.getSharedFiles(id)) {
             try {
-                result.add(musicFileService.getMusicFile(path));
+                result.add(mediaFileService.getMediaFile(path));
             } catch (Exception x) {
                 // Ignored
             }
@@ -128,7 +127,7 @@ public class ShareService {
         this.settingsService = settingsService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }

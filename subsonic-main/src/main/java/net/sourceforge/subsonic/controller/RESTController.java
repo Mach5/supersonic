@@ -652,6 +652,10 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
 
+    private AttributeSet createAttributesForMediaFile(Player player, File coverArt, MediaFile mediaFile) throws IOException {
+        return createAttributesForMusicFile(player, coverArt, mediaFile.toMusicFile());
+    }
+
     private AttributeSet createAttributesForMusicFile(Player player, File coverArt, MusicFile musicFile) throws IOException {
         AttributeSet attributes = new AttributeSet();
         attributes.add("id", StringUtil.utf8HexEncode(musicFile.getPath()));
@@ -908,9 +912,9 @@ public class RESTController extends MultiActionController {
         for (Share share : shareService.getSharesForUser(user)) {
             builder.add("share", createAttributesForShare(share), false);
 
-            for (MusicFile musicFile : shareService.getSharedFiles(share.getId())) {
-                File coverArt = musicFileService.getCoverArt(musicFile.getParent());
-                AttributeSet attributes = createAttributesForMusicFile(player, coverArt, musicFile);
+            for (MediaFile mediaFile : shareService.getSharedFiles(share.getId())) {
+                File coverArt = mediaFileService.getCoverArt(mediaFile);
+                AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
                 builder.add("entry", attributes, true);
             }
 
@@ -958,9 +962,9 @@ public class RESTController extends MultiActionController {
             builder.add("shares", false);
             builder.add("share", createAttributesForShare(share), false);
 
-            for (MusicFile musicFile : shareService.getSharedFiles(share.getId())) {
-                File coverArt = musicFileService.getCoverArt(musicFile.getParent());
-                AttributeSet attributes = createAttributesForMusicFile(player, coverArt, musicFile);
+            for (MediaFile mediaFile : shareService.getSharedFiles(share.getId())) {
+                File coverArt = mediaFileService.getCoverArt(mediaFile);
+                AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
                 builder.add("entry", attributes, true);
             }
 

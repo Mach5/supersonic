@@ -158,6 +158,7 @@
         <property name="viewName" value="shareSettings"/>
         <property name="shareService" ref="shareService"/>
         <property name="securityService" ref="securityService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
      <bean id="musicFolderSettingsController" class="net.sourceforge.subsonic.controller.MusicFolderSettingsController">
         <property name="viewName" value="musicFolderSettings"/>

@@ -371,6 +371,8 @@ public class MediaFile {
             LOG.error("Error in isAlbum()", x);
         }
 
+        String album = metaData == null ? musicFile.getName() : metaData.getAlbum();
+
         return new MediaFile(0,
                 musicFile.getPath(),
                 mediaType,
@@ -378,7 +380,7 @@ public class MediaFile {
                 musicFile.isDirectory(),
                 isAlbum,
                 metaData == null ? null : metaData.getTitle(),
-                metaData == null ? null : metaData.getAlbum(),
+                album,
                 metaData == null ? null : metaData.getArtist(),
                 metaData == null ? null : metaData.getDiscNumber(),
                 metaData == null ? null : metaData.getTrackNumber(),

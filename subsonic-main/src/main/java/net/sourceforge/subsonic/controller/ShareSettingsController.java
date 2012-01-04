@@ -18,26 +18,24 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import java.io.IOException;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.Share;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.ShareService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.domain.Share;
-import net.sourceforge.subsonic.domain.User;
-import net.sourceforge.subsonic.service.SecurityService;
-import net.sourceforge.subsonic.service.ShareService;
 
 /**
  * Controller for the page used to administrate the set of shared media.
@@ -48,6 +46,7 @@ public class ShareSettingsController extends ParameterizableViewController {
 
     private ShareService shareService;
     private SecurityService securityService;
+    private MediaFileService mediaFileService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -70,6 +69,7 @@ public class ShareSettingsController extends ParameterizableViewController {
 
     /**
      * Determine if the given request represents a form submission.
+     *
      * @param request current HTTP request
      * @return if the request represents a form submission
      */
@@ -104,14 +104,10 @@ public class ShareSettingsController extends ParameterizableViewController {
         List<ShareInfo> result = new ArrayList<ShareInfo>();
         User user = securityService.getCurrentUser(request);
         for (Share share : shareService.getSharesForUser(user)) {
-            List<MusicFile> files = shareService.getSharedFiles(share.getId());
+            List<MediaFile> files = shareService.getSharedFiles(share.getId());
             if (!files.isEmpty()) {
-                MusicFile file = files.get(0);
-                try {
-                    result.add(new ShareInfo(share, file.isDirectory() ? file : file.getParent()));
-                } catch (IOException e) {
-                    // Ignored
-                }
+                MediaFile file = files.get(0);
+                result.add(new ShareInfo(share, file.isDirectory() ? file : mediaFileService.getParentOf(file)));
             }
         }
         return result;
@@ -141,11 +137,15 @@ public class ShareSettingsController extends ParameterizableViewController {
         this.shareService = shareService;
     }
 
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
+    }
+
     public static class ShareInfo {
         private final Share share;
-        private final MusicFile dir;
+        private final MediaFile dir;
 
-        public ShareInfo(Share share, MusicFile dir) {
+        public ShareInfo(Share share, MediaFile dir) {
             this.share = share;
             this.dir = dir;
         }
@@ -154,7 +154,7 @@ public class ShareSettingsController extends ParameterizableViewController {
             return share;
         }
 
-        public MusicFile getDir() {
+        public MediaFile getDir() {
             return dir;
         }
     }

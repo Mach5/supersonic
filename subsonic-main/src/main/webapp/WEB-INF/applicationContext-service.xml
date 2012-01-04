@@ -143,7 +143,7 @@
         <property name="shareDao" ref="shareDao"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
 
     <bean id="podcastService" class="net.sourceforge.subsonic.service.PodcastService" init-method="init">

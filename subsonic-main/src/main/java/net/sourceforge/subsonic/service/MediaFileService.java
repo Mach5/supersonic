@@ -240,6 +240,14 @@ public class MediaFileService {
         return settingsService.isFastCacheEnabled() && !searchService.isIndexBeingCreated();
     }
 
+    public File getCoverArt(MediaFile mediaFile) throws IOException {
+        File dir = mediaFile.getFile();
+        if (dir.isFile()) {
+            dir = dir.getParentFile();
+        }
+        return getCoverArt(dir);
+    }
+
     /**
      * Returns a cover art image for the given directory.
      */
