@@ -33,6 +33,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.service.MediaFileService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -97,6 +99,7 @@ public class RESTController extends MultiActionController {
     private SecurityService securityService;
     private PlayerService playerService;
     private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
     private TranscodingService transcodingService;
     private DownloadController downloadController;
     private CoverArtController coverArtController;
@@ -936,9 +939,9 @@ public class RESTController extends MultiActionController {
 
         try {
 
-            List<MusicFile> files = new ArrayList<MusicFile>();
+            List<MediaFile> files = new ArrayList<MediaFile>();
             for (String id : ServletRequestUtils.getRequiredStringParameters(request, "id")) {
-                MusicFile file = musicFileService.getMusicFile(StringUtil.utf8HexDecode(id));
+                MediaFile file = mediaFileService.getMediaFile(StringUtil.utf8HexDecode(id));
                 files.add(file);
             }
 
@@ -1477,6 +1480,10 @@ public class RESTController extends MultiActionController {
 
     public void setShareService(ShareService shareService) {
         this.shareService = shareService;
+    }
+
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public static enum ErrorCode {

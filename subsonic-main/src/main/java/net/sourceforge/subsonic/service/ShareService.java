@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import net.sourceforge.subsonic.domain.MediaFile;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.RandomStringUtils;
 
@@ -79,8 +80,7 @@ public class ShareService {
         return result;
     }
 
-
-    public Share createShare(HttpServletRequest request, List<MusicFile> files) throws Exception {
+    public Share createShare(HttpServletRequest request, List<MediaFile> files) throws Exception {
 
         Share share = new Share();
         share.setName(RandomStringUtils.random(5, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));
@@ -92,7 +92,7 @@ public class ShareService {
         share.setExpires(expires.getTime());
 
         shareDao.createShare(share);
-        for (MusicFile file : files) {
+        for (MediaFile file : files) {
             shareDao.createSharedFiles(share.getId(), file.getPath());
         }
         LOG.info("Created share '" + share.getName() + "' with " + files.size() + " file(s).");

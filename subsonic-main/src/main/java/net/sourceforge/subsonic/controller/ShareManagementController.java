@@ -29,6 +29,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.service.*;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
@@ -46,7 +47,7 @@ import net.sourceforge.subsonic.domain.Share;
  */
 public class ShareManagementController extends MultiActionController {
 
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
     private SettingsService settingsService;
     private ShareService shareService;
     private PlayerService playerService;
@@ -54,12 +55,12 @@ public class ShareManagementController extends MultiActionController {
 
     public ModelAndView createShare(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        List<MusicFile> files = getMusicFiles(request);
-        MusicFile dir = null;
+        List<MediaFile> files = getMediaFiles(request);
+        MediaFile dir = null;
         if (!files.isEmpty()) {
             dir = files.get(0);
             if (!dir.isAlbum()) {
-                dir = dir.getParent();
+                dir = mediaFileService.getParentOf(dir);
             }
         }
 
@@ -73,33 +74,38 @@ public class ShareManagementController extends MultiActionController {
         return new ModelAndView("createShare", "model", map);
     }
 
-    private List<MusicFile> getMusicFiles(HttpServletRequest request) throws IOException {
+    private List<MediaFile> getMediaFiles(HttpServletRequest request) throws IOException {
         String dir = request.getParameter("dir");
         String playerId = request.getParameter("player");
 
-        List<MusicFile> result = new ArrayList<MusicFile>();
+        List<MediaFile> result = new ArrayList<MediaFile>();
 
         if (dir != null) {
-            MusicFile album = musicFileService.getMusicFile(dir);
+            MediaFile album = mediaFileService.getMediaFile(dir);
             int[] indexes = ServletRequestUtils.getIntParameters(request, "i");
             if (indexes.length == 0) {
                 return Arrays.asList(album);
             }
-            List<MusicFile> children = album.getChildren(true, true, true);
+            List<MediaFile> children = mediaFileService.getChildrenOf(album, true, true, true);
             for (int index : indexes) {
                 result.add(children.get(index));
             }
         } else if (playerId != null) {
             Player player = playerService.getPlayerById(playerId);
             Playlist playlist = player.getPlaylist();
-            Collections.addAll(result, playlist.getFiles());
+
+            // TODO: Simplify once Playlist has been refactored.
+            MusicFile[] files = playlist.getFiles();
+            for (MusicFile file : files) {
+                result.add(mediaFileService.getMediaFile(file.getFile()));
+            }
         }
 
         return result;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public void setSettingsService(SettingsService settingsService) {

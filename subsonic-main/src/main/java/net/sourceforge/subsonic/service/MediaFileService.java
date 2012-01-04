@@ -102,6 +102,13 @@ public class MediaFileService {
         return getMediaFile(new File(pathName));
     }
 
+    public MediaFile getParentOf(MediaFile mediaFile) {
+        if (mediaFile.getParentPath() == null) {
+            return null;
+        }
+        return getMediaFile(mediaFile.getParentPath());
+    }
+
     /**
      * Returns all media files that are children of a given media file.
      *
@@ -290,7 +297,6 @@ public class MediaFileService {
     public void setMediaFileDao(MediaFileDao mediaFileDao) {
         this.mediaFileDao = mediaFileDao;
     }
-
 
     /**
      * Comparator for sorting media files.

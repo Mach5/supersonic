@@ -83,7 +83,7 @@
     </bean>
     <bean id="shareManagementController" class="net.sourceforge.subsonic.controller.ShareManagementController">
         <property name="settingsService" ref="settingsService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="shareService" ref="shareService"/>
         <property name="playerService" ref="playerService"/>
         <property name="securityService" ref="securityService"/>
@@ -347,6 +347,7 @@
         <property name="securityService" ref="securityService"/>
         <property name="playerService" ref="playerService"/>
         <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="statusService" ref="statusService"/>
         <property name="searchService" ref="searchService"/>

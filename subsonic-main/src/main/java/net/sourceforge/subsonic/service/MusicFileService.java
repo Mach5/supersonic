@@ -40,6 +40,7 @@ import java.util.List;
  *
  * @author Sindre Mehus
  */
+@Deprecated
 public class MusicFileService {
 
     private static final Logger LOG = Logger.getLogger(MusicFileService.class);
