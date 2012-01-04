@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.service.MediaFileService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.LongRange;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -78,6 +79,7 @@ public class StreamController implements Controller {
     private TranscodingService transcodingService;
     private AudioScrobblerService audioScrobblerService;
     private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
     private SearchService searchService;
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -175,7 +177,7 @@ public class StreamController implements Controller {
             status = statusService.createStreamStatus(player);
 
             in = new PlaylistInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, transcodingService,
-                    musicInfoService, audioScrobblerService, searchService);
+                    musicInfoService, audioScrobblerService, searchService, mediaFileService);
             OutputStream out = RangeOutputStream.wrap(response.getOutputStream(), range);
 
             // Enabled SHOUTcast, if requested.
@@ -410,5 +412,9 @@ public class StreamController implements Controller {
 
     public void setSearchService(SearchService searchService) {
         this.searchService = searchService;
+    }
+
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }

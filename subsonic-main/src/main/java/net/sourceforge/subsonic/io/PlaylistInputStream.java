@@ -21,6 +21,7 @@ package net.sourceforge.subsonic.io;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
@@ -52,14 +53,15 @@ public class PlaylistInputStream extends InputStream {
     private final SearchService searchService;
     private final TranscodingService transcodingService;
     private final MusicInfoService musicInfoService;
-
     private final AudioScrobblerService audioScrobblerService;
-    private MusicFile currentFile;
+    private final MediaFileService mediaFileService;
+    private MediaFile currentFile;
     private InputStream currentInputStream;
 
     public PlaylistInputStream(Player player, TransferStatus status, Integer maxBitRate, String preferredTargetFormat,
-            VideoTranscodingSettings videoTranscodingSettings, TranscodingService transcodingService,
-            MusicInfoService musicInfoService, AudioScrobblerService audioScrobblerService, SearchService searchService) {
+                               VideoTranscodingSettings videoTranscodingSettings, TranscodingService transcodingService,
+                               MusicInfoService musicInfoService, AudioScrobblerService audioScrobblerService,
+                               SearchService searchService, MediaFileService mediaFileService) {
         this.player = player;
         this.status = status;
         this.maxBitRate = maxBitRate;
@@ -69,11 +71,9 @@ public class PlaylistInputStream extends InputStream {
         this.musicInfoService = musicInfoService;
         this.audioScrobblerService = audioScrobblerService;
         this.searchService = searchService;
+        this.mediaFileService = mediaFileService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int read() throws IOException {
         byte[] b = new byte[1];
@@ -81,17 +81,11 @@ public class PlaylistInputStream extends InputStream {
         return n == -1 ? -1 : b[0];
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int read(byte[] b) throws IOException {
         return read(b, 0, b.length);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
         prepare();
@@ -120,7 +114,7 @@ public class PlaylistInputStream extends InputStream {
             populateRandomPlaylist(playlist);
         }
 
-        MusicFile file = playlist.getCurrentFile();
+        MediaFile file = playlist.getCurrentMediaFile();
         if (file == null) {
             close();
         } else if (!file.equals(currentFile)) {
@@ -128,10 +122,10 @@ public class PlaylistInputStream extends InputStream {
             LOG.info(player.getUsername() + " listening to \"" + FileUtil.getShortPath(file.getFile()) + "\"");
             updateStatistics(file);
             if (player.getClientId() == null) {  // Don't scrobble REST players.
-                audioScrobblerService.register(MediaFile.forMusicFile(file, null), player.getUsername(), false);
+                audioScrobblerService.register(file, player.getUsername(), false);
             }
 
-            TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
+            TranscodingService.Parameters parameters = transcodingService.getParameters(file.toMusicFile(), player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
             currentInputStream = transcodingService.getTranscodedInputStream(parameters);
             currentFile = file;
             status.setFile(currentFile.getFile());
@@ -145,20 +139,17 @@ public class PlaylistInputStream extends InputStream {
         LOG.info("Recreated random playlist with " + playlist.size() + " songs.");
     }
 
-    private void updateStatistics(MusicFile file) {
+    private void updateStatistics(MediaFile file) {
         try {
-            MusicFile folder = file.getParent();
+            MediaFile folder = mediaFileService.getParentOf(file);
             if (!folder.isRoot()) {
-                musicInfoService.incrementPlayCount(folder);
+                musicInfoService.incrementPlayCount(folder.toMusicFile());
             }
         } catch (Exception x) {
             LOG.warn("Failed to update statistics for " + file, x);
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void close() throws IOException {
         try {
@@ -167,7 +158,7 @@ public class PlaylistInputStream extends InputStream {
             }
         } finally {
             if (player.getClientId() == null) {  // Don't scrobble REST players.
-                audioScrobblerService.register(MediaFile.forMusicFile(currentFile, null), player.getUsername(), true);
+                audioScrobblerService.register(currentFile, player.getUsername(), true);
             }
             currentInputStream = null;
             currentFile = null;
