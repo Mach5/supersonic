@@ -20,7 +20,6 @@ package net.sourceforge.subsonic.service;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.Transcoding;
@@ -54,9 +53,10 @@ public class JukeboxService implements AudioPlayer.Listener {
 
     private Player player;
     private TransferStatus status;
-    private MusicFile currentPlayingFile;
+    private MediaFile currentPlayingFile;
     private float gain = 0.5f;
     private int offset;
+    private MediaFileService mediaFileService;
 
     /**
      * Updates the jukebox by starting or pausing playback on the local audio device.
@@ -73,7 +73,7 @@ public class JukeboxService implements AudioPlayer.Listener {
 
         if (player.getPlaylist().getStatus() == Playlist.Status.PLAYING) {
             this.player = player;
-            play(player.getPlaylist().getCurrentFile(), offset);
+            play(player.getPlaylist().getCurrentMediaFile(), offset);
         } else {
             if (audioPlayer != null) {
                 audioPlayer.pause();
@@ -81,7 +81,7 @@ public class JukeboxService implements AudioPlayer.Listener {
         }
     }
 
-    private synchronized void play(MusicFile file, int offset) {
+    private synchronized void play(MediaFile file, int offset) {
         InputStream in = null;
         try {
 
@@ -100,7 +100,7 @@ public class JukeboxService implements AudioPlayer.Listener {
                 }
 
                 if (file != null) {
-                    TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, new VideoTranscodingSettings(0, 0, offset));
+                    TranscodingService.Parameters parameters = new TranscodingService.Parameters(file.toMusicFile(), new VideoTranscodingSettings(0, 0, offset));
                     String command = settingsService.getJukeboxCommand();
                     parameters.setTranscoding(new Transcoding(null, null, null, null, command, null, null, false));
                     in = transcodingService.getTranscodedInputStream(parameters);
@@ -122,7 +122,7 @@ public class JukeboxService implements AudioPlayer.Listener {
     public synchronized void stateChanged(AudioPlayer audioPlayer, AudioPlayer.State state) {
         if (state == EOM) {
             player.getPlaylist().next();
-            play(player.getPlaylist().getCurrentFile(), 0);
+            play(player.getPlaylist().getCurrentMediaFile(), 0);
         }
     }
 
@@ -143,16 +143,16 @@ public class JukeboxService implements AudioPlayer.Listener {
         return player;
     }
 
-    private void onSongStart(MusicFile file) {
+    private void onSongStart(MediaFile file) {
         LOG.info(player.getUsername() + " starting jukebox for \"" + FileUtil.getShortPath(file.getFile()) + "\"");
         status = statusService.createStreamStatus(player);
         status.setFile(file.getFile());
-        status.addBytesTransfered(file.length());
+        status.addBytesTransfered(file.getFileSize());
         updateStatistics(file);
         scrobble(file, false);
     }
 
-    private void onSongEnd(MusicFile file) {
+    private void onSongEnd(MediaFile file) {
         LOG.info(player.getUsername() + " stopping jukebox for \"" + FileUtil.getShortPath(file.getFile()) + "\"");
         if (status != null) {
             statusService.removeStreamStatus(status);
@@ -160,20 +160,20 @@ public class JukeboxService implements AudioPlayer.Listener {
         scrobble(file, true);
     }
 
-    private void updateStatistics(MusicFile file) {
+    private void updateStatistics(MediaFile file) {
         try {
-            MusicFile folder = file.getParent();
+            MediaFile folder = mediaFileService.getParentOf(file);
             if (!folder.isRoot()) {
-                musicInfoService.incrementPlayCount(folder);
+                musicInfoService.incrementPlayCount(folder.toMusicFile());
             }
         } catch (Exception x) {
             LOG.warn("Failed to update statistics for " + file, x);
         }
     }
 
-    private void scrobble(MusicFile file, boolean submission) {
+    private void scrobble(MediaFile file, boolean submission) {
         if (player.getClientId() == null) {  // Don't scrobble REST players.
-            audioScrobblerService.register(MediaFile.forMusicFile(file, null), player.getUsername(), submission);
+            audioScrobblerService.register(file, player.getUsername(), submission);
         }
     }
 
@@ -206,5 +206,9 @@ public class JukeboxService implements AudioPlayer.Listener {
 
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
+    }
+
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }

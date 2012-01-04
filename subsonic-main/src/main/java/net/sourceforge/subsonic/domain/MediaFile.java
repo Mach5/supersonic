@@ -363,6 +363,16 @@ public class MediaFile {
         this.enabled = enabled;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof MediaFile && ((MediaFile) o).path.equals(path);
+    }
+
+    @Override
+    public int hashCode() {
+        return path.hashCode();
+    }
+
     public static MediaFile forMusicFile(MusicFile musicFile, String coverArtPath) {
 
         MediaType mediaType = null;
@@ -420,5 +430,9 @@ public class MediaFile {
 
     public File getCoverArtFile() {
         return coverArtFile;
+    }
+
+    public boolean isRoot() {
+        return parentPath == null;
     }
 }

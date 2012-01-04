@@ -75,6 +75,7 @@ public class Playlist {
      *
      * @return The current song in the playlist, or <code>null</code> if no current song exists.
      */
+    @Deprecated
     public synchronized MusicFile getCurrentFile() {
         if (index == -1 || index == 0 && size() == 0) {
             setStatus(Status.STOPPED);
@@ -90,6 +91,29 @@ public class Playlist {
             }
 
             return file;
+        }
+    }
+
+    /**
+     * Returns the current song in the playlist.
+     *
+     * @return The current song in the playlist, or <code>null</code> if no current song exists.
+     */
+    public synchronized MediaFile getCurrentMediaFile() {
+        if (index == -1 || index == 0 && size() == 0) {
+            setStatus(Status.STOPPED);
+            return null;
+        } else {
+            MusicFile file = files.get(index);
+
+            // Remove file from playlist if it doesn't exist.
+            if (!file.exists()) {
+                files.remove(index);
+                index = Math.max(0, Math.min(index, size() - 1));
+                return getCurrentMediaFile();
+            }
+
+            return MediaFile.forMusicFile(file, null);
         }
     }
 

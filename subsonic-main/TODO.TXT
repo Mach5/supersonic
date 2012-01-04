@@ -13,7 +13,7 @@ Make sure logic in MusicFile.getName() and getNameWithoutSuffix() is preserved i
 MediaFileService.getChildrenOf(): when to store children in database?
 Use long rather than Date in MediaFile?
 Remove id from MediaFile (not from table)
-
+Consolidate MusicInfoService
 
 DONE IN 4.7
 -----------------
