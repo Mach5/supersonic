@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import net.sourceforge.subsonic.domain.MediaFile;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -40,7 +41,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.util.StringUtil;
 
@@ -65,14 +65,14 @@ public class AudioScrobblerService {
     private SettingsService settingsService;
 
     /**
-     * Registers the given music file at www.last.fm. This method returns immediately, the actual registration is done
+     * Registers the given media file at www.last.fm. This method returns immediately, the actual registration is done
      * by a separate thread.
      *
-     * @param musicFile  The music file to register.
+     * @param mediaFile  The media file to register.
      * @param username   The user which played the music file.
      * @param submission Whether this is a submission or a now playing notification.
      */
-    public synchronized void register(MusicFile musicFile, String username, boolean submission) {
+    public synchronized void register(MediaFile mediaFile, String username, boolean submission) {
 
         if (thread == null) {
             thread = new RegistrationThread();
@@ -80,11 +80,11 @@ public class AudioScrobblerService {
         }
 
         if (queue.size() >= MAX_PENDING_REGISTRATION) {
-            LOG.warn("Last.fm scrobbler queue is full. Ignoring " + musicFile);
+            LOG.warn("Last.fm scrobbler queue is full. Ignoring " + mediaFile);
             return;
         }
 
-        RegistrationData registrationData = createRegistrationData(musicFile, username, submission);
+        RegistrationData registrationData = createRegistrationData(mediaFile, username, submission);
         if (registrationData == null) {
             return;
         }
@@ -99,14 +99,9 @@ public class AudioScrobblerService {
     /**
      * Returns registration details, or <code>null</code> if not eligible for registration.
      */
-    private RegistrationData createRegistrationData(MusicFile musicFile, String username, boolean submission) {
+    private RegistrationData createRegistrationData(MediaFile mediaFile, String username, boolean submission) {
 
-        if (musicFile == null || musicFile.isVideo()) {
-            return null;
-        }
-
-        MusicFile.MetaData metaData = musicFile.getMetaData();
-        if (metaData == null) {
+        if (mediaFile == null || mediaFile.isVideo()) {
             return null;
         }
 
@@ -129,10 +124,10 @@ public class AudioScrobblerService {
         RegistrationData reg = new RegistrationData();
         reg.username = userSettings.getLastFmUsername();
         reg.password = userSettings.getLastFmPassword();
-        reg.artist = metaData.getArtist();
-        reg.album = metaData.getAlbum();
-        reg.title = metaData.getTitle();
-        reg.duration = metaData.getDuration() == null ? 0 : metaData.getDuration();
+        reg.artist = mediaFile.getArtist();
+        reg.album = mediaFile.getAlbumName();
+        reg.title = mediaFile.getTitle();
+        reg.duration = mediaFile.getDurationSeconds() == null ? 0 : mediaFile.getDurationSeconds();
         reg.time = new Date(now);
         reg.submission = submission;
 

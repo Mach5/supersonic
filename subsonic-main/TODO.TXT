@@ -3,7 +3,7 @@ Only store recognized file types?
 Support per-artist cover art.
 Collapse media_type, is_album and is_directory
 Decide when to set "album" and "artist" for directories.
-Phase out MusicFile (usages: 420, 410, 398, 380, 372)
+Phase out MusicFile (usages: 420, 410, 398, 380, 372, 365)
 Start with something simple, then move on to MainController.
 Settings > Shared media is broken.
 MediaFileService.getCoverArt() should really not be used externally.

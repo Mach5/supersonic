@@ -834,7 +834,7 @@ public class RESTController extends MultiActionController {
             String path = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
             file = musicFileService.getMusicFile(path);
             boolean submission = ServletRequestUtils.getBooleanParameter(request, "submission", true);
-            audioScrobblerService.register(file, player.getUsername(), submission);
+            audioScrobblerService.register(MediaFile.forMusicFile(file, null), player.getUsername(), submission);
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
             error(request, response, ErrorCode.GENERIC, getErrorMessage(x));

@@ -19,6 +19,7 @@
 package net.sourceforge.subsonic.io;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.domain.MusicFile;
@@ -127,7 +128,7 @@ public class PlaylistInputStream extends InputStream {
             LOG.info(player.getUsername() + " listening to \"" + FileUtil.getShortPath(file.getFile()) + "\"");
             updateStatistics(file);
             if (player.getClientId() == null) {  // Don't scrobble REST players.
-                audioScrobblerService.register(file, player.getUsername(), false);
+                audioScrobblerService.register(MediaFile.forMusicFile(file, null), player.getUsername(), false);
             }
 
             TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
@@ -166,7 +167,7 @@ public class PlaylistInputStream extends InputStream {
             }
         } finally {
             if (player.getClientId() == null) {  // Don't scrobble REST players.
-                audioScrobblerService.register(currentFile, player.getUsername(), true);
+                audioScrobblerService.register(MediaFile.forMusicFile(currentFile, null), player.getUsername(), true);
             }
             currentInputStream = null;
             currentFile = null;

@@ -19,6 +19,7 @@
 package net.sourceforge.subsonic.service;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
@@ -172,7 +173,7 @@ public class JukeboxService implements AudioPlayer.Listener {
 
     private void scrobble(MusicFile file, boolean submission) {
         if (player.getClientId() == null) {  // Don't scrobble REST players.
-            audioScrobblerService.register(file, player.getUsername(), submission);
+            audioScrobblerService.register(MediaFile.forMusicFile(file, null), player.getUsername(), submission);
         }
     }
 
