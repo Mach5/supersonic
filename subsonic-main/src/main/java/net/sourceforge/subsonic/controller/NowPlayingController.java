@@ -18,23 +18,21 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.domain.TransferStatus;
+import net.sourceforge.subsonic.filter.ParameterDecodingFilter;
+import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.StatusService;
+import net.sourceforge.subsonic.util.StringUtil;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.view.RedirectView;
 
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.TransferStatus;
-import net.sourceforge.subsonic.filter.ParameterDecodingFilter;
-import net.sourceforge.subsonic.service.MusicFileService;
-import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.StatusService;
-import net.sourceforge.subsonic.util.StringUtil;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Controller for showing what's currently playing.
@@ -45,7 +43,7 @@ public class NowPlayingController extends AbstractController {
 
     private PlayerService playerService;
     private StatusService statusService;
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -53,12 +51,13 @@ public class NowPlayingController extends AbstractController {
         Player player = playerService.getPlayer(request, response);
         List<TransferStatus> statuses = statusService.getStreamStatusesForPlayer(player);
 
-        MusicFile current = statuses.isEmpty() ? null : musicFileService.getMusicFile(statuses.get(0).getFile());
+        MediaFile current = statuses.isEmpty() ? null : mediaFileService.getMediaFile(statuses.get(0).getFile());
+        MediaFile dir = current == null ? null : mediaFileService.getParentOf(current);
 
         String url;
-        if (current != null && !current.getParent().isRoot()) {
+        if (dir != null && !dir.isRoot()) {
             url = "main.view?path" + ParameterDecodingFilter.PARAM_SUFFIX + "=" +
-                    StringUtil.utf8HexEncode(current.getParent().getPath()) + "&updateNowPlaying=true";
+                    StringUtil.utf8HexEncode(dir.getPath()) + "&updateNowPlaying=true";
         } else {
             url = "home.view";
         }
@@ -74,7 +73,7 @@ public class NowPlayingController extends AbstractController {
         this.statusService = statusService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }
