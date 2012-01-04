@@ -72,7 +72,7 @@ public class MediaFileDao extends AbstractDao {
         String sql = "insert into media_file (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")";
         update(sql, null,
                 file.getPath(), file.getMediaType() == null ? null : file.getMediaType().name(), file.getFormat(), file.isDirectory(), file.isAlbum(),
-                file.getTitle(), file.getAlbum(), file.getArtist(), file.getDiscNumber(), file.getTrackNumber(),
+                file.getTitle(), file.getAlbumName(), file.getArtist(), file.getDiscNumber(), file.getTrackNumber(),
                 file.getYear(), file.getGenre(), file.getBitRate(), file.isVariableBitRate(), file.getDurationSeconds(),
                 file.getFileSize(), file.getWidth(), file.getHeight(), file.getCoverArtPath(), file.getParentPath(),
                 file.getPlayCount(), file.getLastPlayed(), file.getComment(), file.getCreated(), file.getLastModified(),

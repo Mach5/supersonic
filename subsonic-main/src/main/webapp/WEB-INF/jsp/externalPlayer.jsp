@@ -14,7 +14,7 @@
         <sub:param name="size" value="200"/>
     </sub:url>
 
-    <meta name="og:title" content="${fn:escapeXml(model.songs[0].metaData.artist)} &mdash; ${fn:escapeXml(model.songs[0].metaData.album)}"/>
+    <meta name="og:title" content="${fn:escapeXml(model.songs[0].artist)} &mdash; ${fn:escapeXml(model.songs[0].albumName)}"/>
     <meta name="og:type" content="album"/>
     <meta name="og:image" content="http://${model.redirectFrom}.subsonic.org${coverArtUrl}"/>
 
@@ -45,6 +45,7 @@
             var list = new Array();
 
         <c:forEach items="${model.songs}" var="song" varStatus="loopStatus">
+        <%--@elvariable id="song" type="net.sourceforge.subsonic.domain.MediaFile"--%>
         <sub:url value="/stream" var="streamUrl">
             <sub:param name="path" value="${song.path}"/>
             <sub:param name="player" value="${model.player}"/>
@@ -62,11 +63,11 @@
                 image: "${coverUrl}",
                 title: "${fn:escapeXml(song.title)}",
                 provider: "${song.video ? "video" : "sound"}",
-                description: "${fn:escapeXml(song.metaData.artist)}"
+                description: "${fn:escapeXml(song.artist)}"
             };
 
-        <c:if test="${not empty song.metaData.duration}">
-            list[${loopStatus.count-1}].duration = ${song.metaData.duration};
+        <c:if test="${not empty song.durationSeconds}">
+            list[${loopStatus.count-1}].duration = ${song.durationSeconds};
         </c:if>
 
         </c:forEach>
@@ -81,9 +82,9 @@
 <body class="mainframe bgcolor1" style="padding-top:2em" onload="init();">
 
 <div style="margin:auto;width:500px">
-    <h1 >${model.songs[0].metaData.artist}</h1>
+    <h1 >${model.songs[0].artist}</h1>
     <div style="float:left;padding-right:1.5em">
-        <h2 style="margin:0;">${model.songs[0].metaData.album}</h2>
+        <h2 style="margin:0;">${model.songs[0].albumName}</h2>
     </div>
     <div class="detail" style="float:right">Streaming by <a href="http://subsonic.org/" target="_blank"><b>Subsonic</b></a></div>
 

@@ -232,7 +232,7 @@ public class MediaFileService {
         String coverArtPath = null;
         try {
             if (musicFile.isAlbum()) {
-                File coverArt = getCoverArt(file);
+                File coverArt = findCoverArt(file);
                 if (coverArt != null) {
                     coverArtPath = coverArt.getPath();
                 }
@@ -248,18 +248,21 @@ public class MediaFileService {
         return settingsService.isFastCacheEnabled() && !searchService.isIndexBeingCreated();
     }
 
+    /**
+     * Returns a cover art image for the given media file.
+     */
     public File getCoverArt(MediaFile mediaFile) throws IOException {
-        File dir = mediaFile.getFile();
-        if (dir.isFile()) {
-            dir = dir.getParentFile();
+        if (mediaFile.getCoverArtFile() != null) {
+            return mediaFile.getCoverArtFile();
         }
-        return getCoverArt(dir);
+        MediaFile parent = getParentOf(mediaFile);
+        return parent == null ? null : parent.getCoverArtFile();
     }
 
     /**
-     * Returns a cover art image for the given directory.
+     * Finds a cover art image for the given directory, by looking for it on the disk.
      */
-    private File getCoverArt(File dir) throws IOException {
+    private File findCoverArt(File dir) throws IOException {
         File[] candidates = FileUtil.listFiles(dir, FileFileFilter.FILE);
 
         for (String mask : settingsService.getCoverArtFileTypesAsArray()) {

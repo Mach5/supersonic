@@ -18,6 +18,22 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.ShareDao;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.domain.Share;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
+import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,24 +41,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.RandomStringUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.dao.ShareDao;
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Share;
-import net.sourceforge.subsonic.domain.User;
-import net.sourceforge.subsonic.service.MusicFileService;
-import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.SecurityService;
-import net.sourceforge.subsonic.service.SettingsService;
 
 /**
  * Controller for the page used to play shared music (Twitter, Facebook etc).
@@ -54,11 +52,11 @@ public class ExternalPlayerController extends ParameterizableViewController {
     private static final Logger LOG = Logger.getLogger(ExternalPlayerController.class);
     private static final String GUEST_USERNAME = "guest";
 
-    private MusicFileService musicFileService;
     private SettingsService settingsService;
     private SecurityService securityService;
     private PlayerService playerService;
     private ShareDao shareDao;
+    private MediaFileService mediaFileService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -87,7 +85,7 @@ public class ExternalPlayerController extends ParameterizableViewController {
         share.setVisitCount(share.getVisitCount() + 1);
         shareDao.updateShare(share);
 
-        List<MusicFile> songs = getSongs(share);
+        List<MediaFile> songs = getSongs(share);
         List<File> coverArts = getCoverArts(songs);
 
         map.put("share", share);
@@ -105,15 +103,15 @@ public class ExternalPlayerController extends ParameterizableViewController {
         return result;
     }
 
-    private List<MusicFile> getSongs(Share share) throws IOException {
-        List<MusicFile> result = new ArrayList<MusicFile>();
+    private List<MediaFile> getSongs(Share share) throws IOException {
+        List<MediaFile> result = new ArrayList<MediaFile>();
 
         for (String path : shareDao.getSharedFiles(share.getId())) {
             try {
-                MusicFile file = musicFileService.getMusicFile(path);
-                if (file.exists()) {
+                MediaFile file = mediaFileService.getMediaFile(path);
+                if (file.getFile().exists()) {
                     if (file.isDirectory()) {
-                        result.addAll(file.getChildren(true, false, true));
+                        result.addAll(mediaFileService.getChildrenOf(file, true, false, true));
                     } else {
                         result.add(file);
                     }
@@ -125,10 +123,10 @@ public class ExternalPlayerController extends ParameterizableViewController {
         return result;
     }
 
-    private List<File> getCoverArts(List<MusicFile> songs) throws IOException {
+    private List<File> getCoverArts(List<MediaFile> songs) throws IOException {
         List<File> result = new ArrayList<File>();
-        for (MusicFile song : songs) {
-            result.add(musicFileService.getCoverArt(song.getParent()));
+        for (MediaFile song : songs) {
+            result.add(mediaFileService.getCoverArt(song));
         }
         return result;
     }
@@ -159,10 +157,6 @@ public class ExternalPlayerController extends ParameterizableViewController {
         return player;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
-
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
     }
@@ -177,5 +171,9 @@ public class ExternalPlayerController extends ParameterizableViewController {
 
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
+    }
+
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }

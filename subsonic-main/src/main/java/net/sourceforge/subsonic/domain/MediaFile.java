@@ -43,7 +43,7 @@ public class MediaFile {
     private boolean isDirectory;
     private boolean isAlbum;
     private String title;
-    private String album;
+    private String albumName;
     private String artist;
     private Integer discNumber;
     private Integer trackNumber;
@@ -56,6 +56,7 @@ public class MediaFile {
     private Integer width;
     private Integer height;
     private String coverArtPath;
+    private File coverArtFile;
     private String parentPath;
     private Integer playCount;
     private Date lastPlayed;
@@ -68,7 +69,7 @@ public class MediaFile {
     private File file;
 
     public MediaFile(int id, String path, MediaType mediaType, String format, boolean isDirectory, boolean isAlbum, String title,
-                     String album, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
+                     String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
                      boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
                      String parentPath, Integer playCount, Date lastPlayed, String comment, Date created, Date lastModified,
                      Date childrenLastUpdated, boolean enabled) {
@@ -79,7 +80,7 @@ public class MediaFile {
         this.isDirectory = isDirectory;
         this.isAlbum = isAlbum;
         this.title = title;
-        this.album = album;
+        this.albumName = albumName;
         this.artist = artist;
         this.discNumber = discNumber;
         this.trackNumber = trackNumber;
@@ -101,9 +102,10 @@ public class MediaFile {
         this.childrenLastUpdated = childrenLastUpdated;
         this.enabled = enabled;
         file = new File(path);
-
+        coverArtFile = coverArtPath == null ? null : new File(coverArtPath);
+        
         if (isAlbum) {
-            name = album;
+            name = albumName;
         } else if (isDirectory) {
             name = file.getName();
         } else {
@@ -138,6 +140,10 @@ public class MediaFile {
 
     public void setMediaType(MediaType mediaType) {
         this.mediaType = mediaType;
+    }
+
+    public boolean isVideo() {
+        return mediaType == MediaType.VIDEO;
     }
 
     public String getFormat() {
@@ -176,12 +182,12 @@ public class MediaFile {
         this.title = title;
     }
 
-    public String getAlbum() {
-        return album;
+    public String getAlbumName() {
+        return albumName;
     }
 
-    public void setAlbum(String album) {
-        this.album = album;
+    public void setAlbumName(String album) {
+        this.albumName = album;
     }
 
     public String getArtist() {
@@ -284,6 +290,7 @@ public class MediaFile {
     public void setCoverArtPath(String coverArtPath) {
         this.coverArtPath = coverArtPath;
     }
+
 
     public String getParentPath() {
         return parentPath;
@@ -409,5 +416,9 @@ public class MediaFile {
 
     public MusicFile toMusicFile() {
         return ServiceLocator.getMusicFileService().getMusicFile(path);
+    }
+
+    public File getCoverArtFile() {
+        return coverArtFile;
     }
 }

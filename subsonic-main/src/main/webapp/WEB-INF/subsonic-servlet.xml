@@ -308,7 +308,7 @@
     </bean>
     <bean id="externalPlayerController" class="net.sourceforge.subsonic.controller.ExternalPlayerController">
         <property name="viewName" value="externalPlayer"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
         <property name="playerService" ref="playerService"/>
