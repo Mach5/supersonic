@@ -21,6 +21,7 @@ package net.sourceforge.subsonic.service;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.controller.VideoPlayerController;
 import net.sourceforge.subsonic.dao.TranscodingDao;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.TranscodeScheme;
@@ -165,7 +166,7 @@ public class TranscodingService {
     }
 
     /**
-     * Creates parameters for a possibly transcoded or downsampled input stream for the given music file and player combination.
+     * Creates parameters for a possibly transcoded or downsampled input stream for the given media file and player combination.
      * <p/>
      * A transcoding is applied if it is applicable for the format of the given file, and is activated for the
      * given player.
@@ -175,32 +176,32 @@ public class TranscodingService {
      * <p/>
      * Otherwise, a normal input stream to the original file is returned.
      *
-     * @param musicFile                The music file.
+     * @param mediaFile                The media file.
      * @param player                   The player.
      * @param maxBitRate               Overrides the per-player and per-user bitrate limit. May be {@code null}.
      * @param preferredTargetFormat    Used to select among multiple applicable transcodings. May be {@code null}.
      * @param videoTranscodingSettings Parameters used when transcoding video. May be {@code null}.
      * @return Parameters to be used in the {@link #getTranscodedInputStream} method.
      */
-    public Parameters getParameters(MusicFile musicFile, Player player, Integer maxBitRate, String preferredTargetFormat,
+    public Parameters getParameters(MediaFile mediaFile, Player player, Integer maxBitRate, String preferredTargetFormat,
                                     VideoTranscodingSettings videoTranscodingSettings) {
 
-        Parameters parameters = new Parameters(musicFile, videoTranscodingSettings);
+        Parameters parameters = new Parameters(mediaFile, videoTranscodingSettings);
 
         TranscodeScheme transcodeScheme = getTranscodeScheme(player);
         if (maxBitRate == null && transcodeScheme != TranscodeScheme.OFF) {
             maxBitRate = transcodeScheme.getMaxBitRate();
         }
 
-        Transcoding transcoding = getTranscoding(musicFile, player, preferredTargetFormat);
+        Transcoding transcoding = getTranscoding(mediaFile.toMusicFile(), player, preferredTargetFormat);
         if (transcoding != null) {
             parameters.setTranscoding(transcoding);
             if (maxBitRate == null) {
-                maxBitRate = musicFile.isVideo() ? VideoPlayerController.DEFAULT_BIT_RATE: 128;
+                maxBitRate = mediaFile.isVideo() ? VideoPlayerController.DEFAULT_BIT_RATE: 128;
             }
         } else if (maxBitRate != null) {
-            boolean supported = isDownsamplingSupported(musicFile);
-            Integer bitRate = musicFile.getMetaData().getBitRate();
+            boolean supported = isDownsamplingSupported(mediaFile.toMusicFile());
+            Integer bitRate = mediaFile.getBitRate();
             if (supported && bitRate != null && bitRate > maxBitRate) {
                 parameters.setDownsample(true);
             }
@@ -237,10 +238,10 @@ public class TranscodingService {
             }
 
         } catch (Exception x) {
-            LOG.warn("Failed to transcode " + parameters.getMusicFile() + ". Using original.", x);
+            LOG.warn("Failed to transcode " + parameters.getMediaFile() + ". Using original.", x);
         }
 
-        return new FileInputStream(parameters.getMusicFile().getFile());
+        return new FileInputStream(parameters.getMediaFile().getFile());
     }
 
 
@@ -270,16 +271,16 @@ public class TranscodingService {
         Transcoding transcoding = parameters.getTranscoding();
         Integer maxBitRate = parameters.getMaxBitRate();
         VideoTranscodingSettings videoTranscodingSettings = parameters.getVideoTranscodingSettings();
-        MusicFile musicFile = parameters.getMusicFile();
+        MediaFile mediaFile = parameters.getMediaFile();
 
-        TranscodeInputStream in = createTranscodeInputStream(transcoding.getStep1(), maxBitRate, videoTranscodingSettings, musicFile, null);
+        TranscodeInputStream in = createTranscodeInputStream(transcoding.getStep1(), maxBitRate, videoTranscodingSettings, mediaFile, null);
 
         if (transcoding.getStep2() != null) {
-            in = createTranscodeInputStream(transcoding.getStep2(), maxBitRate, videoTranscodingSettings, musicFile, in);
+            in = createTranscodeInputStream(transcoding.getStep2(), maxBitRate, videoTranscodingSettings, mediaFile, in);
         }
 
         if (transcoding.getStep3() != null) {
-            in = createTranscodeInputStream(transcoding.getStep3(), maxBitRate, videoTranscodingSettings, musicFile, in);
+            in = createTranscodeInputStream(transcoding.getStep3(), maxBitRate, videoTranscodingSettings, mediaFile, in);
         }
 
         return in;
@@ -301,19 +302,19 @@ public class TranscodingService {
      * <li>Prepending the path of the transcoder directory if the transcoder is found there.</li>
      * </ul>
      *
+     *
      * @param command                  The command line string.
      * @param maxBitRate               The maximum bitrate to use. May not be {@code null}.
      * @param videoTranscodingSettings Parameters used when transcoding video. May be {@code null}.
-     * @param musicFile                The music file to use when replacing "%s" etc.
-     * @param in                       Data to feed to the process.  May be {@code null}.
-     * @return The newly created input stream.
+     * @param mediaFile
+     *@param in                       Data to feed to the process.  May be {@code null}.  @return The newly created input stream.
      */
     private TranscodeInputStream createTranscodeInputStream(String command, Integer maxBitRate,
-                                                            VideoTranscodingSettings videoTranscodingSettings, MusicFile musicFile, InputStream in) throws IOException {
+                                                            VideoTranscodingSettings videoTranscodingSettings, MediaFile mediaFile, InputStream in) throws IOException {
 
-        String title = musicFile.getMetaData().getTitle();
-        String album = musicFile.getMetaData().getAlbum();
-        String artist = musicFile.getMetaData().getArtist();
+        String title = mediaFile.getTitle();
+        String album = mediaFile.getAlbumName();
+        String artist = mediaFile.getArtist();
 
         if (title == null) {
             title = "Unknown Song";
@@ -357,8 +358,8 @@ public class TranscodingService {
 
                 // Work-around for filename character encoding problem on Windows.
                 // Create temporary file, and feed this to the transcoder.
-                String path = musicFile.getFile().getAbsolutePath();
-                if (Util.isWindows() && !musicFile.isVideo() && !StringUtils.isAsciiPrintable(path)) {
+                String path = mediaFile.getFile().getAbsolutePath();
+                if (Util.isWindows() && !mediaFile.isVideo() && !StringUtils.isAsciiPrintable(path)) {
                     tmpFile = File.createTempFile("subsonic", "." + FilenameUtils.getExtension(path));
                     tmpFile.deleteOnExit();
                     FileUtils.copyFile(new File(path), tmpFile);
@@ -415,7 +416,7 @@ public class TranscodingService {
     private InputStream createDownsampledInputStream(Parameters parameters) throws IOException {
         String command = settingsService.getDownsamplingCommand();
         return createTranscodeInputStream(command, parameters.getMaxBitRate(), parameters.getVideoTranscodingSettings(),
-                parameters.getMusicFile(), null);
+                parameters.getMediaFile(), null);
     }
 
     /**
@@ -482,13 +483,13 @@ public class TranscodingService {
 
     public static class Parameters {
         private boolean downsample;
-        private final MusicFile musicFile;
+        private final MediaFile mediaFile;
         private final VideoTranscodingSettings videoTranscodingSettings;
         private Integer maxBitRate;
         private Transcoding transcoding;
 
-        public Parameters(MusicFile musicFile, VideoTranscodingSettings videoTranscodingSettings) {
-            this.musicFile = musicFile;
+        public Parameters(MediaFile mediaFile, VideoTranscodingSettings videoTranscodingSettings) {
+            this.mediaFile = mediaFile;
             this.videoTranscodingSettings = videoTranscodingSettings;
         }
 
@@ -516,8 +517,8 @@ public class TranscodingService {
             return transcoding;
         }
 
-        public MusicFile getMusicFile() {
-            return musicFile;
+        public MediaFile getMediaFile() {
+            return mediaFile;
         }
 
         public Integer getMaxBitRate() {

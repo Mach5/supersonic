@@ -289,7 +289,6 @@
         <property name="statusService" ref="statusService"/>
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
-        <property name="musicFileService" ref="musicFileService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="musicInfoService" ref="musicInfoService"/>
         <property name="transcodingService" ref="transcodingService"/>

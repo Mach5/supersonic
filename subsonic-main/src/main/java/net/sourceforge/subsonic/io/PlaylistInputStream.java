@@ -125,7 +125,7 @@ public class PlaylistInputStream extends InputStream {
                 audioScrobblerService.register(file, player.getUsername(), false);
             }
 
-            TranscodingService.Parameters parameters = transcodingService.getParameters(file.toMusicFile(), player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
+            TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
             currentInputStream = transcodingService.getTranscodedInputStream(parameters);
             currentFile = file;
             status.setFile(currentFile.getFile());

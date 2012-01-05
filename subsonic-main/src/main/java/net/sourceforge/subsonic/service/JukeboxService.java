@@ -100,7 +100,7 @@ public class JukeboxService implements AudioPlayer.Listener {
                 }
 
                 if (file != null) {
-                    TranscodingService.Parameters parameters = new TranscodingService.Parameters(file.toMusicFile(), new VideoTranscodingSettings(0, 0, offset));
+                    TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, new VideoTranscodingSettings(0, 0, offset));
                     String command = settingsService.getJukeboxCommand();
                     parameters.setTranscoding(new Transcoding(null, null, null, null, command, null, null, false));
                     in = transcodingService.getTranscodedInputStream(parameters);
