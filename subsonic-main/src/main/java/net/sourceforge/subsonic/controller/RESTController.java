@@ -228,10 +228,10 @@ public class RESTController extends MultiActionController {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
 
-        MusicFile dir;
+        MediaFile dir;
         try {
             String path = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
-            dir = musicFileService.getMusicFile(path);
+            dir = mediaFileService.getMediaFile(path);
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
             error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
@@ -243,10 +243,10 @@ public class RESTController extends MultiActionController {
                 new Attribute("id", StringUtil.utf8HexEncode(dir.getPath())),
                 new Attribute("name", dir.getName()));
 
-        File coverArt = musicFileService.getCoverArt(dir);
+        File coverArt = mediaFileService.getCoverArt(dir);
 
-        for (MusicFile musicFile : dir.getChildren(true, true, true)) {
-            AttributeSet attributes = createAttributesForMusicFile(player, coverArt, musicFile);
+        for (MediaFile child : mediaFileService.getChildrenOf(dir, true, true, true)) {
+            AttributeSet attributes = createAttributesForMediaFile(player, coverArt, child);
             builder.add("child", attributes, true);
         }
         builder.endAll();
@@ -369,9 +369,9 @@ public class RESTController extends MultiActionController {
 
             builder.add("playlist", false, new Attribute("id", StringUtil.utf8HexEncode(playlist.getName())),
                     new Attribute("name", FilenameUtils.getBaseName(playlist.getName())));
-            for (MusicFile musicFile : playlist.getFiles()) {
-                File coverArt = musicFileService.getCoverArt(musicFile.getParent());
-                AttributeSet attributes = createAttributesForMusicFile(player, coverArt, musicFile);
+            for (MediaFile mediaFile : playlist.getMediaFiles()) {
+                File coverArt = mediaFileService.getCoverArt(mediaFile);
+                AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
                 builder.add("entry", attributes, true);
             }
             builder.endAll();
@@ -451,9 +451,9 @@ public class RESTController extends MultiActionController {
 
             if (returnPlaylist) {
                 builder.add("jukeboxPlaylist", attrs, false);
-                for (MusicFile musicFile : playlist.getFiles()) {
-                    File coverArt = musicFileService.getCoverArt(musicFile.getParent());
-                    AttributeSet attributes = createAttributesForMusicFile(player, coverArt, musicFile);
+                for (MediaFile mediaFile : playlist.getMediaFiles()) {
+                    File coverArt = mediaFileService.getCoverArt(mediaFile);
+                    AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
                     builder.add("entry", attributes, true);
                 }
             } else {
@@ -565,12 +565,12 @@ public class RESTController extends MultiActionController {
             }
 
             for (HomeController.Album album : albums) {
-                MusicFile musicFile = musicFileService.getMusicFile(album.getPath());
+                MediaFile mediaFile = mediaFileService.getMediaFile(album.getPath());
                 File coverArt = null;
                 if (album.getCoverArtPath() != null) {
                     coverArt = new File(album.getCoverArtPath());
                 }
-                AttributeSet attributes = createAttributesForMusicFile(player, coverArt, musicFile);
+                AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
                 builder.add("album", attributes, true);
             }
             builder.endAll();
@@ -631,12 +631,12 @@ public class RESTController extends MultiActionController {
                     continue;
                 }
 
-                MusicFile musicFile = musicFileService.getMusicFile(file);
-                File coverArt = musicFileService.getCoverArt(musicFile.getParent());
+                MediaFile mediaFile = mediaFileService.getMediaFile(file);
+                File coverArt = mediaFileService.getCoverArt(mediaFile);
 
                 long minutesAgo = status.getMillisSinceLastUpdate() / 1000L / 60L;
                 if (minutesAgo < 60) {
-                    AttributeSet attributes = createAttributesForMusicFile(player, coverArt, musicFile);
+                    AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
                     attributes.add("username", username);
                     attributes.add("playerId", player.getId());
                     if (player.getName() != null) {
@@ -656,6 +656,7 @@ public class RESTController extends MultiActionController {
         return createAttributesForMusicFile(player, coverArt, mediaFile.toMusicFile());
     }
 
+    @Deprecated
     private AttributeSet createAttributesForMusicFile(Player player, File coverArt, MusicFile musicFile) throws IOException {
         AttributeSet attributes = new AttributeSet();
         attributes.add("id", StringUtil.utf8HexEncode(musicFile.getPath()));
@@ -829,12 +830,11 @@ public class RESTController extends MultiActionController {
             return;
         }
 
-        MusicFile file;
         try {
             String path = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
-            file = musicFileService.getMusicFile(path);
+            MediaFile file = mediaFileService.getMediaFile(path);
             boolean submission = ServletRequestUtils.getBooleanParameter(request, "submission", true);
-            audioScrobblerService.register(MediaFile.forMusicFile(file, null), player.getUsername(), submission);
+            audioScrobblerService.register(file, player.getUsername(), submission);
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
             error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
@@ -873,10 +873,10 @@ public class RESTController extends MultiActionController {
 
                 String path = episode.getPath();
                 if (path != null) {
-                    MusicFile musicFile = musicFileService.getMusicFile(path);
-                    File coverArt = musicFileService.getCoverArt(musicFile.getParent());
-                    episodeAttrs.addAll(createAttributesForMusicFile(player, coverArt, musicFile));
-                    episodeAttrs.add("streamId", StringUtil.utf8HexEncode(musicFile.getPath()));
+                    MediaFile mediaFile = mediaFileService.getMediaFile(path);
+                    File coverArt = mediaFileService.getCoverArt(mediaFile);
+                    episodeAttrs.addAll(createAttributesForMediaFile(player, coverArt, mediaFile));
+                    episodeAttrs.add("streamId", StringUtil.utf8HexEncode(mediaFile.getPath()));
                 }
 
                 episodeAttrs.add("id", episode.getId());  // Overwrites the previous "id" attribute.
@@ -945,8 +945,7 @@ public class RESTController extends MultiActionController {
 
             List<MediaFile> files = new ArrayList<MediaFile>();
             for (String id : ServletRequestUtils.getRequiredStringParameters(request, "id")) {
-                MediaFile file = mediaFileService.getMediaFile(StringUtil.utf8HexDecode(id));
-                files.add(file);
+                files.add(mediaFileService.getMediaFile(StringUtil.utf8HexDecode(id)));
             }
 
             // TODO: Update api.jsp
@@ -1061,11 +1060,11 @@ public class RESTController extends MultiActionController {
 
         Map<String, Object> map = new HashMap<String, Object>();
         String path = request.getParameter("path");
-        MusicFile file = musicFileService.getMusicFile(path);
+        MediaFile file = mediaFileService.getMediaFile(path);
 
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
         timeOffset = Math.max(0, timeOffset);
-        Integer duration = file.getMetaData().getDuration();
+        Integer duration = file.getDurationSeconds();
         if (duration != null) {
             map.put("skipOffsets", VideoPlayerController.createSkipOffsets(duration));
             timeOffset = Math.min(duration, timeOffset);
