@@ -20,6 +20,8 @@ package net.sourceforge.subsonic.domain;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.ServiceLocator;
+import net.sourceforge.subsonic.service.metadata.MetaData;
+
 import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
@@ -418,7 +420,7 @@ public class MediaFile {
             mediaType = MediaType.AUDIO;  // TODO: is this correct?
         }
 
-        MusicFile.MetaData metaData = musicFile.getMetaData();
+        MetaData metaData = musicFile.getMetaData();
 
         boolean isAlbum = false;
 
@@ -428,7 +430,7 @@ public class MediaFile {
             LOG.error("Error in isAlbum()", x);
         }
 
-        String album = metaData == null ? musicFile.getName() : metaData.getAlbum();
+        String album = metaData == null ? musicFile.getName() : metaData.getAlbumName();
 
         return new MediaFile(0,
                 musicFile.getPath(),
@@ -441,11 +443,11 @@ public class MediaFile {
                 metaData == null ? null : metaData.getArtist(),
                 metaData == null ? null : metaData.getDiscNumber(),
                 metaData == null ? null : metaData.getTrackNumber(),
-                metaData == null ? null : metaData.getYearAsInteger(),
+                metaData == null ? null : metaData.getYear(),
                 metaData == null ? null : metaData.getGenre(),
                 metaData == null ? null : metaData.getBitRate(),
                 metaData != null && Boolean.TRUE.equals(metaData.getVariableBitRate()),
-                metaData == null ? null : metaData.getDuration(),
+                metaData == null ? null : metaData.getDurationSeconds(),
                 musicFile.isFile() ? musicFile.length() : null,
                 metaData == null ? null : metaData.getWidth(),
                 metaData == null ? null : metaData.getHeight(),

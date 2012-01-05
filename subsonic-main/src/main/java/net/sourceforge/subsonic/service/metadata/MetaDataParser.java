@@ -39,11 +39,11 @@ public abstract class MetaDataParser {
      * @param file The music file to parse.
      * @return Meta data for the file.
      */
-    public MusicFile.MetaData getMetaData(MusicFile file) {
+    public MetaData getMetaData(MusicFile file) {
 
-        MusicFile.MetaData metaData = getRawMetaData(file);
+        MetaData metaData = getRawMetaData(file);
         String artist = metaData.getArtist();
-        String album = metaData.getAlbum();
+        String album = metaData.getAlbumName();
         String title = metaData.getTitle();
 
         if (artist == null) {
@@ -58,7 +58,7 @@ public abstract class MetaDataParser {
 
         title = removeTrackNumberFromTitle(title, metaData.getTrackNumber());
         metaData.setArtist(artist);
-        metaData.setAlbum(album);
+        metaData.setAlbumName(album);
         metaData.setTitle(title);
 
         return metaData;
@@ -70,7 +70,7 @@ public abstract class MetaDataParser {
      * @param file The music file to parse.
      * @return Meta data for the file.
      */
-    public abstract MusicFile.MetaData getRawMetaData(MusicFile file);
+    public abstract MetaData getRawMetaData(MusicFile file);
 
     /**
      * Updates the given file with the given meta data.
@@ -78,7 +78,7 @@ public abstract class MetaDataParser {
      * @param file     The music file to update.
      * @param metaData The new meta data.
      */
-    public abstract void setMetaData(MusicFile file, MusicFile.MetaData metaData);
+    public abstract void setMetaData(MusicFile file, MetaData metaData);
 
     /**
      * Returns whether this parser is applicable to the given file.
@@ -98,7 +98,7 @@ public abstract class MetaDataParser {
     /**
      * Guesses the artist for the given music file.
      */
-    public String guessArtist(MusicFile file) {
+    protected String guessArtist(MusicFile file) {
         File parent = file.getFile().getParentFile();
         if (MusicFile.isRoot(parent)) {
             return "";
@@ -108,26 +108,26 @@ public abstract class MetaDataParser {
     }
 
     /**
+     * Guesses the album for the given music file.
+     */
+    protected String guessAlbum(MusicFile file) {
+        File parent = file.getFile().getParentFile();
+        String album = MusicFile.isRoot(parent) ? "" : parent.getName();
+        String artist = guessArtist(file);
+        return album.replace(artist + " - ", "");
+    }
+
+    /**
      * Returns meta-data containg file size and format.
      *
      * @param file The music file.
      * @return Meta-data containg file size and format.
      */
-    protected MusicFile.MetaData getBasicMetaData(MusicFile file) {
-        MusicFile.MetaData metaData = new MusicFile.MetaData();
+    protected MetaData getBasicMetaData(MusicFile file) {
+        MetaData metaData = new MetaData();
         metaData.setFileSize(FileUtil.length(file.getFile()));
         metaData.setFormat(file.getSuffix());
         return metaData;
-    }
-
-    /**
-     * Guesses the album for the given music file.
-     */
-    public String guessAlbum(MusicFile file) {
-        File parent = file.getFile().getParentFile();
-        String album = MusicFile.isRoot(parent) ? "" : parent.getName();
-        String artist = guessArtist(file);
-        return album.replace(artist + " - ", "");
     }
 
     /**

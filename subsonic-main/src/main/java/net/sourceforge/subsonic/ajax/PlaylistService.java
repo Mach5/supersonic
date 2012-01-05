@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.directwebremoting.WebContextFactory;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
@@ -40,6 +41,7 @@ import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.util.StringUtil;
 
 /**
@@ -315,7 +317,7 @@ public class PlaylistService {
         List<PlaylistInfo.Entry> entries = new ArrayList<PlaylistInfo.Entry>();
         Playlist playlist = player.getPlaylist();
         for (MusicFile file : playlist.getFiles()) {
-            MusicFile.MetaData metaData = file.getMetaData();
+            MediaFile mediaFile = MediaFile.forMusicFile(file, null);
             String albumUrl = url.replaceFirst("/dwr/.*", "/main.view?pathUtf8Hex=" +
                     StringUtil.utf8HexEncode(file.getParent().getPath()));
             String streamUrl = url.replaceFirst("/dwr/.*", "/stream?player=" + player.getId() + "&pathUtf8Hex=" +
@@ -329,10 +331,10 @@ public class PlaylistService {
             }
 
             String format = formatFormat(player, file);
-            entries.add(new PlaylistInfo.Entry(metaData.getTrackNumber(), metaData.getTitle(), metaData.getArtist(),
-                    metaData.getAlbum(), metaData.getGenre(), metaData.getYear(), formatBitRate(metaData),
-                    metaData.getDuration(), metaData.getDurationAsString(), format, formatContentType(format),
-                    formatFileSize(metaData.getFileSize(), locale), albumUrl, streamUrl));
+            entries.add(new PlaylistInfo.Entry(mediaFile.getTrackNumber(), mediaFile.getTitle(), mediaFile.getArtist(),
+                    mediaFile.getAlbumName(), mediaFile.getGenre(), mediaFile.getYear(), formatBitRate(mediaFile),
+                    mediaFile.getDurationSeconds(), mediaFile.getDurationString(), format, formatContentType(format),
+                    formatFileSize(mediaFile.getFileSize(), locale), albumUrl, streamUrl));
         }
         boolean isStopEnabled = playlist.getStatus() == Playlist.Status.PLAYING && !player.isExternalWithPlaylist();
         float gain = jukeboxService.getGain();
@@ -354,14 +356,14 @@ public class PlaylistService {
         return StringUtil.getMimeType(format);
     }
 
-    private String formatBitRate(MusicFile.MetaData metaData) {
-        if (metaData.getBitRate() == null) {
+    private String formatBitRate(MediaFile mediaFile) {
+        if (mediaFile.getBitRate() == null) {
             return null;
         }
-        if (Boolean.TRUE.equals(metaData.getVariableBitRate())) {
-            return metaData.getBitRate() + " Kbps vbr";
+        if (mediaFile.isVariableBitRate()) {
+            return mediaFile.getBitRate() + " Kbps vbr";
         }
-        return metaData.getBitRate() + " Kbps";
+        return mediaFile.getBitRate() + " Kbps";
     }
 
     private Player getCurrentPlayer(HttpServletRequest request, HttpServletResponse response) {

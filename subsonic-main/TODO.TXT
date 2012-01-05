@@ -1,9 +1,9 @@
 When scanning media library, don't visit excluded directories.
 Only store recognized file types?
 Support per-artist cover art.
-Collapse media_type, is_album and is_directory
+Collapse media_type, is_album and is_directory.  Create index.
 Decide when to set "album" and "artist" for directories.
-Phase out MusicFile (usages: 420, 410, 398, 380, 372, 365, 354, 340, 311, 262)
+Phase out MusicFile (usages: 420, 410, 398, 380, 372, 365, 354, 340, 311, 262, 253, 232)
 
 Root folder should have parent == null.
 Make sure logic in MusicFile.getName() and getNameWithoutSuffix() is preserved in "album", "title" etc.

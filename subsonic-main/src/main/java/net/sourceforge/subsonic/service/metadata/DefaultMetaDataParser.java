@@ -34,10 +34,10 @@ public class DefaultMetaDataParser extends MetaDataParser {
      * @param file The music file to parse.
      * @return Meta data for the file.
      */
-    public MusicFile.MetaData getRawMetaData(MusicFile file) {
-        MusicFile.MetaData metaData = getBasicMetaData(file);
+    public MetaData getRawMetaData(MusicFile file) {
+        MetaData metaData = getBasicMetaData(file);
         metaData.setArtist(guessArtist(file));
-        metaData.setAlbum(guessAlbum(file));
+        metaData.setAlbumName(guessAlbum(file));
         metaData.setTitle(guessTitle(file));
         return metaData;
     }
@@ -49,7 +49,7 @@ public class DefaultMetaDataParser extends MetaDataParser {
      * @param file     The music file to update.
      * @param metaData The new meta data.
      */
-    public void setMetaData(MusicFile file, MusicFile.MetaData metaData) {
+    public void setMetaData(MusicFile file, MetaData metaData) {
     }
 
     /**

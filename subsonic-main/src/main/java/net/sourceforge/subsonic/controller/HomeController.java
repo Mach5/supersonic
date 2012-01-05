@@ -207,7 +207,7 @@ public class HomeController extends ParameterizableViewController {
         }
 
         album.setArtist(file.getMetaData().getArtist());
-        album.setAlbumTitle(file.getMetaData().getAlbum());
+        album.setAlbumTitle(file.getMetaData().getAlbumName());
     }
 
     private void resolveCoverArt(Album album, MusicFile file) {

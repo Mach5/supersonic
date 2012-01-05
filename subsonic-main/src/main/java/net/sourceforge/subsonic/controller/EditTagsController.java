@@ -20,6 +20,7 @@ package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.domain.*;
 import net.sourceforge.subsonic.service.*;
+import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
 import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
@@ -48,9 +49,9 @@ public class EditTagsController extends ParameterizableViewController {
 
         Map<String, Object> map = new HashMap<String, Object>();
         if (!files.isEmpty()) {
-            MusicFile.MetaData metaData = files.get(0).getMetaData();
+            MetaData metaData = files.get(0).getMetaData();
             map.put("defaultArtist", metaData.getArtist());
-            map.put("defaultAlbum", metaData.getAlbum());
+            map.put("defaultAlbum", metaData.getAlbumName());
             map.put("defaultYear", metaData.getYear());
             map.put("defaultGenre", metaData.getGenre());
         }
@@ -70,7 +71,7 @@ public class EditTagsController extends ParameterizableViewController {
 
     private Song createSong(MusicFile file, int index) {
         MetaDataParser parser = metaDataParserFactory.getParser(file);
-        MusicFile.MetaData metaData = parser.getRawMetaData(file);
+        MetaData metaData = parser.getRawMetaData(file);
 
         Song song = new Song();
         song.setPath(file.getPath());
@@ -80,7 +81,7 @@ public class EditTagsController extends ParameterizableViewController {
         song.setTitle(metaData.getTitle());
         song.setSuggestedTitle(parser.guessTitle(file));
         song.setArtist(metaData.getArtist());
-        song.setAlbum(metaData.getAlbum());
+        song.setAlbum(metaData.getAlbumName());
         song.setYear(metaData.getYear());
         song.setGenre(metaData.getGenre());
         return song;
@@ -106,7 +107,7 @@ public class EditTagsController extends ParameterizableViewController {
         private String title;
         private String artist;
         private String album;
-        private String year;
+        private Integer year;
         private String genre;
 
         public String getPath() {
@@ -173,11 +174,11 @@ public class EditTagsController extends ParameterizableViewController {
             this.album = album;
         }
 
-        public String getYear() {
+        public Integer getYear() {
             return year;
         }
 
-        public void setYear(String year) {
+        public void setYear(Integer year) {
             this.year = year;
         }
 

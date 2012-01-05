@@ -38,6 +38,7 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.ServiceLocator;
 import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
 import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
 import net.sourceforge.subsonic.util.FileUtil;
@@ -59,7 +60,7 @@ public class MusicFile implements Serializable {
     private boolean isAlbum;
     private final boolean isVideo;
     private final long lastModified;
-    private final MetaData metaData;
+    private final net.sourceforge.subsonic.service.metadata.MetaData metaData;
     private final File[] children;
 
     /**
@@ -188,7 +189,7 @@ public class MusicFile implements Serializable {
      *         or <code>0L</code> if the file does not exist
      */
     public long length() {
-        return metaData == null ? 0L : metaData.fileSize;
+        return metaData == null ? 0L : metaData.getFileSize();
     }
 
     /**
@@ -258,7 +259,7 @@ public class MusicFile implements Serializable {
      *
      * @return Meta data (artist, album, title etc) for this music file.
      */
-    public MetaData getMetaData() {
+    public net.sourceforge.subsonic.service.metadata.MetaData getMetaData() {
         return metaData;
     }
 
@@ -510,6 +511,7 @@ public class MusicFile implements Serializable {
     /**
      * Contains meta-data (song title, artist, album etc) for a music file.
      */
+    @Deprecated
     public static class MetaData implements Serializable {
 
         private Integer discNumber;

@@ -26,6 +26,7 @@ import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
+import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.util.StringUtil;
 
@@ -725,7 +726,7 @@ public class SearchService {
             // Otherwise, construct meta data.
             Line line = new Line();
 
-            MusicFile.MetaData metaData = file.getMetaData();
+            MetaData metaData = file.getMetaData();
             line.isFile = file.isFile();
             line.isDirectory = file.isDirectory();
             if (line.isDirectory && !musicFolders.contains(file.getFile())) {
@@ -742,9 +743,9 @@ public class SearchService {
             if (line.isFile) {
                 line.length = file.length();
                 line.artist = StringUtils.upperCase(metaData.getArtist());
-                line.album = StringUtils.upperCase(metaData.getAlbum());
+                line.album = StringUtils.upperCase(metaData.getAlbumName());
                 line.title = StringUtils.upperCase(metaData.getTitle());
-                line.year = metaData.getYear();
+                line.year = metaData.getYear() == null ? null : metaData.getYear().toString();
                 line.genre = StringUtils.capitalize(StringUtils.lowerCase(metaData.getGenre()));
             } else if (line.isAlbum) {
                 resolveArtistAndAlbum(file, line);
@@ -769,7 +770,7 @@ public class SearchService {
                 }
             }
             line.artist = StringUtils.upperCase(file.getMetaData().getArtist());
-            line.album = StringUtils.upperCase(file.getMetaData().getAlbum());
+            line.album = StringUtils.upperCase(file.getMetaData().getAlbumName());
         }
 
         /**

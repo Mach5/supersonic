@@ -53,9 +53,9 @@ public class FFmpegParser extends MetaDataParser {
      * @return Meta data for the file.
      */
     @Override
-    public MusicFile.MetaData getRawMetaData(MusicFile file) {
+    public MetaData getRawMetaData(MusicFile file) {
 
-        MusicFile.MetaData metaData = getBasicMetaData(file);
+        MetaData metaData = getBasicMetaData(file);
 
         try {
 
@@ -86,7 +86,7 @@ public class FFmpegParser extends MetaDataParser {
                     int hours = Integer.parseInt(matcher.group(1));
                     int minutes = Integer.parseInt(matcher.group(2));
                     int seconds = Integer.parseInt(matcher.group(3));
-                    metaData.setDuration(hours * 3600 + minutes * 60 + seconds);
+                    metaData.setDurationSeconds(hours * 3600 + minutes * 60 + seconds);
                 }
 
                 matcher = BITRATE_PATTERN.matcher(line);
@@ -129,7 +129,7 @@ public class FFmpegParser extends MetaDataParser {
      * Not supported.
      */
     @Override
-    public void setMetaData(MusicFile file, MusicFile.MetaData metaData) {
+    public void setMetaData(MusicFile file, MetaData metaData) {
         throw new RuntimeException("setMetaData() not supported in " + getClass().getSimpleName());
     }
 

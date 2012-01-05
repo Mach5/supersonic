@@ -18,10 +18,11 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import junit.framework.*;
-import net.sourceforge.subsonic.domain.Playlist.*;
-
 import java.io.IOException;
+
+import junit.framework.TestCase;
+import net.sourceforge.subsonic.domain.Playlist.SortOrder;
+import net.sourceforge.subsonic.domain.Playlist.Status;
 
 /**
  * Unit test of {@link Playlist}.
@@ -212,10 +213,10 @@ public class PlaylistTestCase extends TestCase {
 
         // Order by album.
         playlist.sort(SortOrder.ALBUM);
-        assertEquals("Error in sort().", "Album A", playlist.getFile(0).getMetaData().getAlbum());
-        assertEquals("Error in sort().", "Album B", playlist.getFile(1).getMetaData().getAlbum());
-        assertEquals("Error in sort().", "Album C", playlist.getFile(2).getMetaData().getAlbum());
-        assertEquals("Error in sort().", "Album D", playlist.getFile(3).getMetaData().getAlbum());
+        assertEquals("Error in sort().", "Album A", playlist.getFile(0).getMetaData().getAlbumName());
+        assertEquals("Error in sort().", "Album B", playlist.getFile(1).getMetaData().getAlbumName());
+        assertEquals("Error in sort().", "Album C", playlist.getFile(2).getMetaData().getAlbumName());
+        assertEquals("Error in sort().", "Album D", playlist.getFile(3).getMetaData().getAlbumName());
         assertEquals("Error in sort().", new Integer(3), playlist.getCurrentFile().getMetaData().getTrackNumber());
     }
 
@@ -244,21 +245,22 @@ public class PlaylistTestCase extends TestCase {
     private static class TestMusicFile extends MusicFile {
 
         private String name;
-        private MetaData metaData;
+        private net.sourceforge.subsonic.service.metadata.MetaData metaData;
 
-        TestMusicFile() {}
+        TestMusicFile() {
+        }
 
         TestMusicFile(String name) {
             this.name = name;
         }
 
         TestMusicFile(Integer track, String artist, String album) {
-            metaData = new MetaData();
+            metaData = new net.sourceforge.subsonic.service.metadata.MetaData();
             if (track != null) {
                 metaData.setTrackNumber(track);
             }
             metaData.setArtist(artist);
-            metaData.setAlbum(album);
+            metaData.setAlbumName(album);
         }
 
         @Override
@@ -282,7 +284,7 @@ public class PlaylistTestCase extends TestCase {
         }
 
         @Override
-        public MetaData getMetaData() {
+        public net.sourceforge.subsonic.service.metadata.MetaData getMetaData() {
             return metaData;
         }
 

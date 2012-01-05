@@ -77,6 +77,7 @@ import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.service.LuceneSearchService;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
 import net.sourceforge.subsonic.service.PodcastService;
+import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.XMLBuilder;
 
@@ -683,10 +684,10 @@ public class RESTController extends MultiActionController {
         }
 
         if (musicFile.isFile()) {
-            MusicFile.MetaData metaData = musicFile.getMetaData();
-            attributes.add("album", metaData.getAlbum());
+            MetaData metaData = musicFile.getMetaData();
+            attributes.add("album", metaData.getAlbumName());
             attributes.add("artist", metaData.getArtist());
-            Integer duration = metaData.getDuration();
+            Integer duration = metaData.getDurationSeconds();
             if (duration != null) {
                 attributes.add("duration", duration);
             }
@@ -700,7 +701,7 @@ public class RESTController extends MultiActionController {
                 attributes.add("track", track);
             }
 
-            Integer year = metaData.getYearAsInteger();
+            Integer year = metaData.getYear();
             if (year != null) {
                 attributes.add("year", year);
             }

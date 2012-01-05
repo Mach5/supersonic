@@ -305,8 +305,8 @@ public class Playlist {
                         return artistA.compareTo(artistB);
 
                     case ALBUM:
-                        String albumA = StringUtils.trimToEmpty(a.getMetaData().getAlbum());
-                        String albumB = StringUtils.trimToEmpty(b.getMetaData().getAlbum());
+                        String albumA = StringUtils.trimToEmpty(a.getMetaData().getAlbumName());
+                        String albumB = StringUtils.trimToEmpty(b.getMetaData().getAlbumName());
                         return albumA.compareTo(albumB);
                     default:
                         return 0;

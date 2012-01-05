@@ -20,11 +20,11 @@ package net.sourceforge.subsonic.service;
 
 import junit.framework.*;
 import net.sourceforge.subsonic.domain.*;
+
 import org.apache.commons.lang.*;
 
 import java.io.*;
 import java.util.*;
-
 
 /**
  * Unit test of {@link SearchService}.
@@ -34,23 +34,23 @@ import java.util.*;
 public class SearchServiceTestCase extends TestCase {
 
     public void testLine() {
-        doTestLine("myArtist", "myAlbum", "myTitle", "myYear", "foo.mp3", "rock", 12345678, 2394872834L);
-        doTestLine("myArtist", "myAlbum", "myTitle", "",       "foo.mp3", "rock", 12345678, 2394872834L);
-        doTestLine("myArtist", "myAlbum", "myTitle", null,     "foo.mp3", "", 12345678, 2394872834L);
-        doTestLine("",         "myAlbum", "myTitle", null,     "foo.mp3", "", 12345678, 2394872834L);
-        doTestLine("",         "",        "myTitle", null,     "foo.mp3", "", 12345678, 2394872834L);
-        doTestLine("",         "",        "",        null,     "foo.mp3", "", 12345678, 2394872834L);
-        doTestLine("",         "",        "",        "",       "foo.mp3", "", 12345678, 2394872834L);
+        doTestLine("myArtist", "myAlbum", "myTitle", 2011, "foo.mp3", "rock", 12345678, 2394872834L);
+        doTestLine("myArtist", "myAlbum", "myTitle", null, "foo.mp3", "rock", 12345678, 2394872834L);
+        doTestLine("myArtist", "myAlbum", "myTitle", null, "foo.mp3", "", 12345678, 2394872834L);
+        doTestLine("",         "myAlbum", "myTitle", null, "foo.mp3", "", 12345678, 2394872834L);
+        doTestLine("",         "",        "myTitle", null, "foo.mp3", "", 12345678, 2394872834L);
+        doTestLine("",         "",        "",        null, "foo.mp3", "", 12345678, 2394872834L);
+        doTestLine("",         "",        "",        null, "foo.mp3", "", 12345678, 2394872834L);
     }
 
-    private void doTestLine(final String artist, final String album, final String title, final String year,
+    private void doTestLine(final String artist, final String album, final String title, final Integer year,
             final String path, final String genre, final long lastModified, final long length) {
 
         MusicFile file = new MusicFile() {
-            public synchronized MetaData getMetaData() {
-                MetaData metaData = new MetaData();
+            public synchronized net.sourceforge.subsonic.service.metadata.MetaData getMetaData() {
+                net.sourceforge.subsonic.service.metadata.MetaData metaData = new net.sourceforge.subsonic.service.metadata.MetaData();
                 metaData.setArtist(artist);
-                metaData.setAlbum(album);
+                metaData.setAlbumName(album);
                 metaData.setTitle(title);
                 metaData.setYear(year);
                 metaData.setGenre(genre);
@@ -74,7 +74,7 @@ public class SearchServiceTestCase extends TestCase {
         };
 
         SearchService.Line line = SearchService.Line.forFile(file, Collections.<File, SearchService.Line>emptyMap(), Collections.<File>emptySet());
-        String yearString = year == null ? "" : year;
+        String yearString = year == null ? "" : year.toString();
         String expected = 'F' + SearchService.Line.SEPARATOR +
                           lastModified + SearchService.Line.SEPARATOR +
                           lastModified + SearchService.Line.SEPARATOR +

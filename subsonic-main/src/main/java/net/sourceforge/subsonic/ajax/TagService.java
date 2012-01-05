@@ -19,6 +19,7 @@
 package net.sourceforge.subsonic.ajax;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
@@ -71,6 +72,15 @@ public class TagService {
             }
         }
 
+        Integer yearNumber = null;
+        if (year != null) {
+            try {
+                yearNumber = new Integer(year);
+            } catch (NumberFormatException x) {
+                LOG.warn("Illegal year: " + year, x);
+            }
+        }
+
         try {
 
             MusicFile file = musicFileService.getMusicFile(path);
@@ -80,22 +90,22 @@ public class TagService {
                 return "Tag editing of " + StringUtil.getSuffix(file.getName()) + " files is not supported.";
             }
 
-            MusicFile.MetaData existingMetaData = parser.getRawMetaData(file);
+            MetaData existingMetaData = parser.getRawMetaData(file);
 
             if (StringUtils.equals(artist, existingMetaData.getArtist()) &&
-                StringUtils.equals(album, existingMetaData.getAlbum()) &&
+                StringUtils.equals(album, existingMetaData.getAlbumName()) &&
                 StringUtils.equals(title, existingMetaData.getTitle()) &&
-                StringUtils.equals(year, existingMetaData.getYear()) &&
+                ObjectUtils.equals(yearNumber, existingMetaData.getYear()) &&
                 StringUtils.equals(genre, existingMetaData.getGenre()) &&
                 ObjectUtils.equals(trackNumber, existingMetaData.getTrackNumber())) {
                 return "SKIPPED";
             }
 
-            MusicFile.MetaData newMetaData = new MusicFile.MetaData();
+            MetaData newMetaData = new MetaData();
             newMetaData.setArtist(artist);
-            newMetaData.setAlbum(album);
+            newMetaData.setAlbumName(album);
             newMetaData.setTitle(title);
-            newMetaData.setYear(year);
+            newMetaData.setYear(yearNumber);
             newMetaData.setGenre(genre);
             newMetaData.setTrackNumber(trackNumber);
             parser.setMetaData(file, newMetaData);
