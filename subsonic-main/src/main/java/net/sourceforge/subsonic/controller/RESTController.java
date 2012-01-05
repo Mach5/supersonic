@@ -202,11 +202,11 @@ public class RESTController extends MultiActionController {
             builder.add("index", "name", entry.getKey().getIndex(), false);
 
             for (MusicIndex.Artist artist : entry.getValue()) {
-                for (MusicFile musicFile : artist.getMusicFiles()) {
-                    if (musicFile.isDirectory()) {
+                for (MediaFile mediaFile : artist.getMediaFiles()) {
+                    if (mediaFile.isDirectory()) {
                         builder.add("artist", true,
                                 new Attribute("name", artist.getName()),
-                                new Attribute("id", StringUtil.utf8HexEncode(musicFile.getPath())));
+                                new Attribute("id", StringUtil.utf8HexEncode(mediaFile.getPath())));
                     }
                 }
             }

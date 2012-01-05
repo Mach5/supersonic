@@ -120,15 +120,15 @@ public class MusicIndex implements Serializable {
 
         private final String name;
         private final String sortableName;
-        private final List<MusicFile> musicFiles = new ArrayList<MusicFile>();
+        private final List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
 
         public Artist(String name, String sortableName) {
             this.name = name;
             this.sortableName = sortableName;
         }
 
-        public void addMusicFile(MusicFile musicFile) {
-            musicFiles.add(musicFile);
+        public void addMediaFile(MediaFile mediaFile) {
+            mediaFiles.add(mediaFile);
         }
 
         public String getName() {
@@ -139,8 +139,8 @@ public class MusicIndex implements Serializable {
             return sortableName;
         }
 
-        public List<MusicFile> getMusicFiles() {
-            return musicFiles;
+        public List<MediaFile> getMediaFiles() {
+            return mediaFiles;
         }
 
         public int compareTo(Artist artist) {

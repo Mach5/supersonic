@@ -40,11 +40,11 @@
 
                 <c:otherwise>
                     <c:forEach items="${model.artists}" var="artist">
-                        <c:forEach items="${artist.musicFiles}" var="musicFile">
+                        <c:forEach items="${artist.musicFiles}" var="mediaFile">
                             <sub:url var="url" value="/wap/browse.view">
-                                <sub:param name="path" value="${musicFile.path}"/>
+                                <sub:param name="path" value="${mediaFile.path}"/>
                             </sub:url>
-                            <a href="${url}">${fn:escapeXml(musicFile.title)}</a>
+                            <a href="${url}">${fn:escapeXml(mediaFile.title)}</a>
                             <br/>
                         </c:forEach>
                     </c:forEach>

@@ -126,7 +126,7 @@
 
     <bean id="musicIndexService" class="net.sourceforge.subsonic.service.MusicIndexService">
         <property name="settingsService" ref="settingsService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
 
     <bean id="audioScrobblerService" class="net.sourceforge.subsonic.service.AudioScrobblerService">

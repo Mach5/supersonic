@@ -32,7 +32,7 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
 import net.sourceforge.subsonic.domain.MusicIndex.Artist;
@@ -45,7 +45,7 @@ import net.sourceforge.subsonic.domain.MusicIndex.Artist;
 public class MusicIndexService {
 
     private SettingsService settingsService;
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
 
     /**
      * Returns a map from music indexes to sets of artists that are direct children of the given music folders.
@@ -132,9 +132,9 @@ public class MusicIndexService {
 
         for (MusicFolder folder : folders) {
 
-            MusicFile parent = musicFileService.getMusicFile(folder.getPath());
-            List<MusicFile> children = parent.getChildren(false, true, true);
-            for (MusicFile child : children) {
+            MediaFile root = mediaFileService.getMediaFile(folder.getPath());
+            List<MediaFile> children = mediaFileService.getChildrenOf(root, false, true, true);
+            for (MediaFile child : children) {
                 if (shortcutSet.contains(child.getName())) {
                     continue;
                 }
@@ -145,7 +145,7 @@ public class MusicIndexService {
                     artist = new Artist(child.getName(), sortableName);
                     artistMap.put(sortableName, artist);
                 }
-                artist.addMusicFile(child);
+                artist.addMediaFile(child);
             }
         }
 
@@ -185,8 +185,8 @@ public class MusicIndexService {
         this.settingsService = settingsService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     private static class MusicIndexComparator implements Comparator<MusicIndex>, Serializable {
