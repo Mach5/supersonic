@@ -673,11 +673,12 @@ public class RESTController extends MultiActionController {
 
         String username = player.getUsername();
         if (username != null) {
-            Integer rating = musicInfoService.getRatingForUser(username, MediaFile.forMusicFile(musicFile, null));
+            MediaFile mediaFile = mediaFileService.getMediaFile(musicFile.getFile());
+            Integer rating = musicInfoService.getRatingForUser(username, mediaFile);
             if (rating != null) {
                 attributes.add("userRating", rating);
             }
-            Double avgRating = musicInfoService.getAverageRating(MediaFile.forMusicFile(musicFile, null));
+            Double avgRating = musicInfoService.getAverageRating(mediaFile);
             if (avgRating != null) {
                 attributes.add("averageRating", avgRating);
             }

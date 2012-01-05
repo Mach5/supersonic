@@ -5,9 +5,9 @@ Collapse media_type, is_album and is_directory.  Create index.
 Decide when to set "album" and "artist" for directories.
 Phase out MusicFile (usages: 420, 410, 398, 380, 372, 365, 354, 340, 311, 262, 253, 232)
 
+When changing tags, web page displays old data.
 Root folder should have parent == null.
 Make sure logic in MusicFile.getName() and getNameWithoutSuffix() is preserved in "album", "title" etc.
-MediaFileService.getChildrenOf(): when to store children in database?
 Use long rather than Date in MediaFile?
 Remove id from MediaFile (not from table)
 Consolidate MusicInfoService

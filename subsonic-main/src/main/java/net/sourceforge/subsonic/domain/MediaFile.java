@@ -411,6 +411,7 @@ public class MediaFile {
         return path.hashCode();
     }
 
+    @Deprecated
     public static MediaFile forMusicFile(MusicFile musicFile, String coverArtPath) {
 
         MediaType mediaType = null;
