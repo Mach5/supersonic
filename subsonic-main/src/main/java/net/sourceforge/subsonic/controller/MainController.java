@@ -110,8 +110,8 @@ public class MainController extends ParameterizableViewController {
         String comment = musicInfo == null ? null : musicInfo.getComment();
         Date lastPlayed = musicInfo == null ? null : musicInfo.getLastPlayed();
         String username = securityService.getCurrentUsername(request);
-        Integer userRating = musicInfoService.getRatingForUser(username, dir.toMusicFile());
-        Double averageRating = musicInfoService.getAverageRating(dir.toMusicFile());
+        Integer userRating = musicInfoService.getRatingForUser(username, dir);
+        Double averageRating = musicInfoService.getAverageRating(dir);
 
         if (userRating == null) {
             userRating = 0;

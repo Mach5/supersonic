@@ -19,7 +19,7 @@
 package net.sourceforge.subsonic.dao;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFileInfo;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
@@ -145,52 +145,52 @@ public class MusicFileInfoDao extends AbstractDao {
     }
 
     /**
-     * Sets the rating for a music file and a given user.
+     * Sets the rating for a media file and a given user.
      *
      * @param username  The user name.
-     * @param musicFile The music file.
+     * @param mediaFile The media file.
      * @param rating    The rating between 1 and 5, or <code>null</code> to remove the rating.
      */
-    public void setRatingForUser(String username, MusicFile musicFile, Integer rating) {
+    public void setRatingForUser(String username, MediaFile mediaFile, Integer rating) {
         if (rating != null && (rating < 1 || rating > 5)) {
             return;
         }
 
-        update("delete from user_rating where username=? and path=?", username, musicFile.getPath());
+        update("delete from user_rating where username=? and path=?", username, mediaFile.getPath());
         if (rating != null) {
-            update("insert into user_rating values(?, ?, ?)", username, musicFile.getPath(), rating);
+            update("insert into user_rating values(?, ?, ?)", username, mediaFile.getPath(), rating);
         }
 
         // Must create music_file_info row if not existing.
-        if (getMusicFileInfoForPath(musicFile.getPath()) == null) {
-            createMusicFileInfo(new MusicFileInfo(null, musicFile.getPath(), null, 0, null));
+        if (getMusicFileInfoForPath(mediaFile.getPath()) == null) {
+            createMusicFileInfo(new MusicFileInfo(null, mediaFile.getPath(), null, 0, null));
         }
     }
 
     /**
-     * Returns the average rating for the given music file.
+     * Returns the average rating for the given media file.
      *
-     * @param musicFile The music file.
+     * @param mediaFile The media file.
      * @return The average rating, or <code>null</code> if no ratings are set.
      */
-    public Double getAverageRating(MusicFile musicFile) {
+    public Double getAverageRating(MediaFile mediaFile) {
         try {
-            return (Double) getJdbcTemplate().queryForObject("select avg(rating) from user_rating where path=?", new Object[]{musicFile.getPath()}, Double.class);
+            return (Double) getJdbcTemplate().queryForObject("select avg(rating) from user_rating where path=?", new Object[]{mediaFile.getPath()}, Double.class);
         } catch (EmptyResultDataAccessException x) {
             return null;
         }
     }
 
     /**
-     * Returns the rating for the given user and music file.
+     * Returns the rating for the given user and media file.
      *
      * @param username  The user name.
-     * @param musicFile The music file.
+     * @param mediaFile The media file.
      * @return The rating, or <code>null</code> if no rating is set.
      */
-    public Integer getRatingForUser(String username, MusicFile musicFile) {
+    public Integer getRatingForUser(String username, MediaFile mediaFile) {
         try {
-            return getJdbcTemplate().queryForInt("select rating from user_rating where username=? and path=?", new Object[]{username, musicFile.getPath()});
+            return getJdbcTemplate().queryForInt("select rating from user_rating where username=? and path=?", new Object[]{username, mediaFile.getPath()});
         } catch (EmptyResultDataAccessException x) {
             return null;
         }

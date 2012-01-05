@@ -143,7 +143,7 @@ public class PlaylistInputStream extends InputStream {
         try {
             MediaFile folder = mediaFileService.getParentOf(file);
             if (!folder.isRoot()) {
-                musicInfoService.incrementPlayCount(folder.toMusicFile());
+                musicInfoService.incrementPlayCount(folder);
             }
         } catch (Exception x) {
             LOG.warn("Failed to update statistics for " + file, x);

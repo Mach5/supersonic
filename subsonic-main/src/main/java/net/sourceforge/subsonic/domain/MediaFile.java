@@ -111,7 +111,12 @@ public class MediaFile {
         } else {
             name = title;
         }
+    }
 
+    /**
+     * For testing only.
+     */
+    public MediaFile() {
     }
 
     public int getId() {

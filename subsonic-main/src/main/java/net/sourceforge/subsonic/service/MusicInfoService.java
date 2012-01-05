@@ -34,8 +34,8 @@ import java.io.File;
 public class MusicInfoService {
 
     private MusicFileInfoDao musicFileInfoDao;
-    private MusicFileService musicFileService;
     private SecurityService securityService;
+    private MediaFileService mediaFileService;
 
     /**
      * Returns music file info for the given path.
@@ -65,13 +65,13 @@ public class MusicInfoService {
      * @param count  Maximum number of files to return.
      * @return The highest rated music files.
      */
-    public List<MusicFile> getHighestRated(int offset, int count) {
+    public List<MediaFile> getHighestRated(int offset, int count) {
         List<String> highestRated = musicFileInfoDao.getHighestRated(offset, count);
-        List<MusicFile> result = new ArrayList<MusicFile>();
+        List<MediaFile> result = new ArrayList<MediaFile>();
         for (String path : highestRated) {
             File file = new File(path);
             if (FileUtil.exists(file) && securityService.isReadAllowed(file)) {
-                result.add(musicFileService.getMusicFile(path));
+                result.add(mediaFileService.getMediaFile(path));
             }
         }
         return result;
@@ -122,7 +122,7 @@ public class MusicInfoService {
      *
      * @param file The music file.
      */
-    public void incrementPlayCount(MusicFile file) {
+    public void incrementPlayCount(MediaFile file) {
         MusicFileInfo info = getMusicFileInfoForPath(file.getPath());
         if (info == null) {
             info = new MusicFileInfo(file.getPath());
@@ -140,43 +140,43 @@ public class MusicInfoService {
      * Sets the rating for a music file and a given user.
      *
      * @param username  The user name.
-     * @param musicFile The music file.
+     * @param mediaFile The music file.
      * @param rating    The rating between 1 and 5, or <code>null</code> to remove the rating.
      */
-    public void setRatingForUser(String username, MusicFile musicFile, Integer rating) {
-        musicFileInfoDao.setRatingForUser(username, musicFile, rating);
+    public void setRatingForUser(String username, MediaFile mediaFile, Integer rating) {
+        musicFileInfoDao.setRatingForUser(username, mediaFile, rating);
     }
 
     /**
      * Returns the average rating for the given music file.
      *
-     * @param musicFile The music file.
+     * @param mediaFile The music file.
      * @return The average rating, or <code>null</code> if no ratings are set.
      */
-    public Double getAverageRating(MusicFile musicFile) {
-        return musicFileInfoDao.getAverageRating(musicFile);
+    public Double getAverageRating(MediaFile mediaFile) {
+        return musicFileInfoDao.getAverageRating(mediaFile);
     }
 
     /**
      * Returns the rating for the given user and music file.
      *
      * @param username  The user name.
-     * @param musicFile The music file.
+     * @param mediaFile The music file.
      * @return The rating, or <code>null</code> if no rating is set.
      */
-    public Integer getRatingForUser(String username, MusicFile musicFile) {
-        return musicFileInfoDao.getRatingForUser(username, musicFile);
+    public Integer getRatingForUser(String username, MediaFile mediaFile) {
+        return musicFileInfoDao.getRatingForUser(username, mediaFile);
     }
 
     public void setMusicFileInfoDao(MusicFileInfoDao musicFileInfoDao) {
         this.musicFileInfoDao = musicFileInfoDao;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
-
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
+    }
+
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }

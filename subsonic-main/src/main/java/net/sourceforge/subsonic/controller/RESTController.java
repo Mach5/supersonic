@@ -672,11 +672,11 @@ public class RESTController extends MultiActionController {
 
         String username = player.getUsername();
         if (username != null) {
-            Integer rating = musicInfoService.getRatingForUser(username, musicFile);
+            Integer rating = musicInfoService.getRatingForUser(username, MediaFile.forMusicFile(musicFile, null));
             if (rating != null) {
                 attributes.add("userRating", rating);
             }
-            Double avgRating = musicInfoService.getAverageRating(musicFile);
+            Double avgRating = musicInfoService.getAverageRating(MediaFile.forMusicFile(musicFile, null));
             if (avgRating != null) {
                 attributes.add("averageRating", avgRating);
             }
@@ -1289,9 +1289,9 @@ public class RESTController extends MultiActionController {
             }
 
             String path = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
-            MusicFile musicFile = musicFileService.getMusicFile(path);
+            MediaFile mediaFile = mediaFileService.getMediaFile(path);
             String username = securityService.getCurrentUsername(request);
-            musicInfoService.setRatingForUser(username, musicFile, rating);
+            musicInfoService.setRatingForUser(username, mediaFile, rating);
 
             XMLBuilder builder = createXMLBuilder(request, response, true).endAll();
             response.getWriter().print(builder);

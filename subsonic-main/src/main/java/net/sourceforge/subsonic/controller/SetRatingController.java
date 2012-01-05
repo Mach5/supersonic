@@ -37,8 +37,8 @@ import javax.servlet.http.*;
 public class SetRatingController extends AbstractController {
 
     private MusicInfoService musicInfoService;
-    private MusicFileService musicFileService;
     private SecurityService securityService;
+    private MediaFileService mediaFileService;
 
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String path = request.getParameter("path");
@@ -47,9 +47,9 @@ public class SetRatingController extends AbstractController {
             rating = null;
         }
 
-        MusicFile musicFile = musicFileService.getMusicFile(path);
+        MediaFile mediaFile = mediaFileService.getMediaFile(path);
         String username = securityService.getCurrentUsername(request);
-        musicInfoService.setRatingForUser(username, musicFile, rating);
+        musicInfoService.setRatingForUser(username, mediaFile, rating);
 
         String url = "main.view?path" + ParameterDecodingFilter.PARAM_SUFFIX  + "=" + StringUtil.utf8HexEncode(path);
         return new ModelAndView(new RedirectView(url));
@@ -59,11 +59,11 @@ public class SetRatingController extends AbstractController {
         this.musicInfoService = musicInfoService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
-
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
+    }
+
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }

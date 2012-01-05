@@ -1,6 +1,6 @@
 package net.sourceforge.subsonic.dao;
 
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFileInfo;
 import net.sourceforge.subsonic.domain.User;
 import org.springframework.dao.DataAccessException;
@@ -61,11 +61,11 @@ public class MusicFileInfoDaoTestCase extends DaoTestCaseBase {
         musicFileInfoDao.createMusicFileInfo(new MusicFileInfo(null, "d", null, 0, new Date()));
         musicFileInfoDao.createMusicFileInfo(new MusicFileInfo(null, "e", null, 0, new Date()));
 
-        musicFileInfoDao.setRatingForUser("sindre", new MusicFile(new File("f")), 5);
-        musicFileInfoDao.setRatingForUser("sindre", new MusicFile(new File("b")), 4);
-        musicFileInfoDao.setRatingForUser("sindre", new MusicFile(new File("d")), 3);
-        musicFileInfoDao.setRatingForUser("sindre", new MusicFile(new File("a")), 2);
-        musicFileInfoDao.setRatingForUser("sindre", new MusicFile(new File("e")), 1);
+        musicFileInfoDao.setRatingForUser("sindre", new TestMediaFile("f"), 5);
+        musicFileInfoDao.setRatingForUser("sindre", new TestMediaFile("b"), 4);
+        musicFileInfoDao.setRatingForUser("sindre", new TestMediaFile("d"), 3);
+        musicFileInfoDao.setRatingForUser("sindre", new TestMediaFile("a"), 2);
+        musicFileInfoDao.setRatingForUser("sindre", new TestMediaFile("e"), 1);
 
         List<String> highestRated = musicFileInfoDao.getHighestRated(0, 0);
         assertEquals("Error in getHighestRated().", 0, highestRated.size());
@@ -222,7 +222,7 @@ public class MusicFileInfoDaoTestCase extends DaoTestCaseBase {
     }
 
     public void testRating() {
-        MusicFile musicFile = new MusicFile(new File("foo"));
+        MediaFile musicFile = new TestMediaFile("foo");
         assertNull("Error in getRatingForUser().", musicFileInfoDao.getRatingForUser("sindre", musicFile));
         assertNull("Error in getAverageRating().", musicFileInfoDao.getAverageRating(musicFile));
 
@@ -313,5 +313,10 @@ public class MusicFileInfoDaoTestCase extends DaoTestCaseBase {
         assertEquals("Wrong play count.", expected.getPlayCount(), actual.getPlayCount());
     }
 
+    private static class TestMediaFile extends MediaFile {
 
+        public TestMediaFile(String path) {
+            setPath(path);
+        }
+    }
 }

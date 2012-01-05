@@ -19,6 +19,7 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.MusicFileInfo;
 import net.sourceforge.subsonic.domain.User;
@@ -112,10 +113,10 @@ public class HomeController extends ParameterizableViewController {
 
     List<Album> getHighestRated(int offset, int count) {
         List<Album> result = new ArrayList<Album>();
-        for (MusicFile musicFile : musicInfoService.getHighestRated(offset, count)) {
-            Album album = createAlbum(musicFile);
+        for (MediaFile mediaFile : musicInfoService.getHighestRated(offset, count)) {
+            Album album = createAlbum(mediaFile.toMusicFile());
             if (album != null) {
-                album.setRating((int) Math.round(musicInfoService.getAverageRating(musicFile) * 10.0D));
+                album.setRating((int) Math.round(musicInfoService.getAverageRating(mediaFile) * 10.0D));
                 result.add(album);
             }
         }
