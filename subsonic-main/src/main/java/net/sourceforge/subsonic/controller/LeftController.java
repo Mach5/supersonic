@@ -18,30 +18,6 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.Cache;
-import net.sourceforge.subsonic.domain.CacheElement;
-import net.sourceforge.subsonic.domain.InternetRadio;
-import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.domain.MusicFolder;
-import net.sourceforge.subsonic.domain.MusicIndex;
-import net.sourceforge.subsonic.domain.UserSettings;
-import net.sourceforge.subsonic.service.MusicFileService;
-import net.sourceforge.subsonic.service.MusicIndexService;
-import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.SearchService;
-import net.sourceforge.subsonic.service.SecurityService;
-import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.StringUtil;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.LastModified;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-import org.springframework.web.servlet.support.RequestContextUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -53,6 +29,31 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.LastModified;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
+import org.springframework.web.servlet.support.RequestContextUtils;
+
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.Cache;
+import net.sourceforge.subsonic.domain.InternetRadio;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
+import net.sourceforge.subsonic.domain.MusicFolder;
+import net.sourceforge.subsonic.domain.MusicIndex;
+import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.MusicIndexService;
+import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.SearchService;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.util.FileUtil;
+import net.sourceforge.subsonic.util.StringUtil;
 
 /**
  * Controller for the left index frame.
@@ -66,7 +67,7 @@ public class LeftController extends ParameterizableViewController implements Las
     private SearchService searchService;
     private SettingsService settingsService;
     private SecurityService securityService;
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
     private MusicIndexService musicIndexService;
     private PlayerService playerService;
     private Cache musicFolderCache;
@@ -178,23 +179,23 @@ public class LeftController extends ParameterizableViewController implements Las
         return settingsService.getMusicFolderById(musicFolderId);
     }
 
-    protected List<MusicFile> getSingleSongs(List<MusicFolder> folders) throws IOException {
-        List<MusicFile> result = new ArrayList<MusicFile>();
+    protected List<MediaFile> getSingleSongs(List<MusicFolder> folders) throws IOException {
+        List<MediaFile> result = new ArrayList<MediaFile>();
         for (MusicFolder folder : folders) {
-            MusicFile parent = musicFileService.getMusicFile(folder.getPath());
-            result.addAll(parent.getChildren(true, false, true));
+            MediaFile parent = mediaFileService.getMediaFile(folder.getPath());
+            result.addAll(mediaFileService.getChildrenOf(parent, true, false, true));
         }
         return result;
     }
 
-    public List<MusicFile> getShortcuts(List<MusicFolder> musicFoldersToUse, String[] shortcuts) {
-        List<MusicFile> result = new ArrayList<MusicFile>();
+    public List<MediaFile> getShortcuts(List<MusicFolder> musicFoldersToUse, String[] shortcuts) {
+        List<MediaFile> result = new ArrayList<MediaFile>();
 
         for (String shortcut : shortcuts) {
             for (MusicFolder musicFolder : musicFoldersToUse) {
                 File file = new File(musicFolder.getPath(), shortcut);
                 if (FileUtil.exists(file)) {
-                    result.add(musicFileService.getMusicFile(file));
+                    result.add(mediaFileService.getMediaFile(file));
                 }
             }
         }
@@ -218,7 +219,7 @@ public class LeftController extends ParameterizableViewController implements Las
 
         if (entry == null || entry.lastModified < lastModified) {
             SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists = musicIndexService.getIndexedArtists(musicFoldersToUse);
-            List<MusicFile> singleSongs = getSingleSongs(musicFoldersToUse);
+            List<MediaFile> singleSongs = getSingleSongs(musicFoldersToUse);
             entry = new MusicFolderCacheEntry(indexedArtists, singleSongs, lastModified);
             musicFolderCache.put(key, entry);
         }
@@ -238,8 +239,8 @@ public class LeftController extends ParameterizableViewController implements Las
         this.securityService = securityService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public void setMusicIndexService(MusicIndexService musicIndexService) {
@@ -257,11 +258,11 @@ public class LeftController extends ParameterizableViewController implements Las
     public static class MusicFolderCacheEntry implements Serializable {
 
         private final SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists;
-        private final List<MusicFile> singleSongs;
+        private final List<MediaFile> singleSongs;
         private final long lastModified;
 
         public MusicFolderCacheEntry(SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists,
-                                     List<MusicFile> singleSongs, long lastModified) {
+                List<MediaFile> singleSongs, long lastModified) {
             this.indexedArtists = indexedArtists;
             this.singleSongs = singleSongs;
             this.lastModified = lastModified;
@@ -271,7 +272,7 @@ public class LeftController extends ParameterizableViewController implements Las
             return indexedArtists;
         }
 
-        public List<MusicFile> getSingleSongs() {
+        public List<MediaFile> getSingleSongs() {
             return singleSongs;
         }
 

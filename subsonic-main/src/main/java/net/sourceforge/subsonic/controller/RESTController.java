@@ -189,8 +189,8 @@ public class RESTController extends MultiActionController {
             }
         }
 
-        List<MusicFile> shortcuts = leftController.getShortcuts(musicFolders, settingsService.getShortcutsAsArray());
-        for (MusicFile shortcut : shortcuts) {
+        List<MediaFile> shortcuts = leftController.getShortcuts(musicFolders, settingsService.getShortcutsAsArray());
+        for (MediaFile shortcut : shortcuts) {
             builder.add("shortcut", true,
                     new Attribute("name", shortcut.getName()),
                     new Attribute("id", StringUtil.utf8HexEncode(shortcut.getPath())));
@@ -215,9 +215,9 @@ public class RESTController extends MultiActionController {
 
         // Add children
         Player player = playerService.getPlayer(request, response);
-        List<MusicFile> singleSongs = leftController.getSingleSongs(musicFolders);
-        for (MusicFile singleSong : singleSongs) {
-            builder.add("child", createAttributesForMusicFile(player, null, singleSong), true);
+        List<MediaFile> singleSongs = leftController.getSingleSongs(musicFolders);
+        for (MediaFile singleSong : singleSongs) {
+            builder.add("child", createAttributesForMediaFile(player, null, singleSong), true);
         }
 
         builder.endAll();
