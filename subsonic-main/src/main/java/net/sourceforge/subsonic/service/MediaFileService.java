@@ -23,11 +23,11 @@ import net.sf.ehcache.Element;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.util.FileUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.FileFileFilter;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,7 +177,7 @@ public class MediaFileService {
             storedChildrenMap.put(child.getPath(), child);
         }
 
-        List<File> children = listMediaFiles(parent);
+        List<File> children = listMediaFiles(parent.getFile());
 
         for (File child : children) {
             if (storedChildrenMap.remove(child.getPath()) == null) {
@@ -195,9 +196,9 @@ public class MediaFileService {
         mediaFileDao.createOrUpdateMediaFile(parent);
     }
 
-    private List<File> listMediaFiles(MediaFile parent) {
+    private List<File> listMediaFiles(File parent) {
         List<File> result = new ArrayList<File>();
-        for (File child : FileUtil.listFiles(parent.getFile())) {
+        for (File child : FileUtil.listFiles(parent)) {
             String suffix = FilenameUtils.getExtension(child.getName()).toLowerCase();
             if (!isExcluded(child) && (FileUtil.isDirectory(child) || isMusicFile(suffix) || isVideoFile(suffix))) {
                 result.add(child);
@@ -238,21 +239,41 @@ public class MediaFileService {
 
     private MediaFile createMediaFile(File file) {
 
-        MusicFile musicFile = new MusicFile(file);
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setPath(file.getPath());
+        mediaFile.setParentPath(file.getParent());
+        mediaFile.setFileSize(FileUtil.length(file));
+        mediaFile.setLastModified(new Date(FileUtil.lastModified(file)));
+        mediaFile.setDirectory(FileUtil.isDirectory(file));
 
-        String coverArtPath = null;
-        try {
-            if (musicFile.isAlbum()) {
-                File coverArt = findCoverArt(file);
-                if (coverArt != null) {
-                    coverArtPath = coverArt.getPath();
+        if (mediaFile.isFile()) {
+            mediaFile.setFormat(StringUtils.trimToNull(StringUtils.lowerCase(FilenameUtils.getExtension(mediaFile.getPath()))));
+        } else {
+
+            // Is this an album?
+            List<File> children = listMediaFiles(file);
+            for (File child : children) {
+                if (FileUtil.isFile(child)) {
+                    mediaFile.setAlbum(true);
+                    break;
                 }
             }
-        } catch (IOException x) {
-            LOG.error("Failed to create media file.", x);
         }
 
-        return MediaFile.forMusicFile(musicFile, coverArtPath);
+        if (mediaFile.isAlbum()) {
+            try {
+                File coverArt = findCoverArt(file);
+                if (coverArt != null) {
+                    mediaFile.setCoverArtPath(coverArt.getPath());
+                }
+            } catch (IOException x) {
+                LOG.error("Failed to find cover art.", x);
+            }
+        }
+
+        // TODO: metadata
+
+        return mediaFile;
     }
 
     private boolean useFastCache() {
@@ -288,9 +309,8 @@ public class MediaFileService {
         JaudiotaggerParser parser = new JaudiotaggerParser();
         for (File candidate : candidates) {
             MediaFile mediaFile = getMediaFile(candidate);
-            MusicFile musicFile = mediaFile.toMusicFile();
-            if (parser.isApplicable(musicFile)) {
-                if (parser.isImageAvailable(musicFile)) {
+            if (parser.isApplicable(mediaFile)) {
+                if (parser.isImageAvailable(mediaFile)) {
                     return candidate;
                 } else {
                     return null;

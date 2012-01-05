@@ -819,15 +819,6 @@ public class SearchService {
             Line line = Line.forFile(musicFile, oldIndex, musicFolders);
             writer.println(line);
 
-            // Get cover art in order to store it in the cache.
-            if (line.isAlbum) {
-                try {
-                    musicFileService.getCoverArt(musicFile);
-                } catch (IOException x) {
-                    // Ignored.
-                }
-            }
-
             scanCount++;
             if (scanCount % 250 == 0) {
                 LOG.info("Created search index with " + scanCount + " entries.");

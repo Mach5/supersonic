@@ -18,15 +18,15 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
-import junit.framework.*;
-import net.sourceforge.subsonic.domain.MusicFile;
+import junit.framework.TestCase;
+import net.sourceforge.subsonic.domain.MediaFile;
 
 /**
- * Unit test of {@link MusicFile.MetaData}.
+ * Unit test of {@link MediaFile}.
  *
  * @author Sindre Mehus
  */
-public class MetaDataTestCase extends TestCase {
+public class MediaFileTestCase extends TestCase {
 
     public void testGetDurationAsString() throws Exception {
         doTestGetDurationAsString(0, "0:00");
@@ -53,31 +53,8 @@ public class MetaDataTestCase extends TestCase {
     }
 
     private void doTestGetDurationAsString(int seconds, String expected) {
-        MusicFile.MetaData metaData = new MusicFile.MetaData();
-        metaData.setDuration(seconds);
-        assertEquals("Error in getDurationAsString().", expected, metaData.getDurationAsString());
-    }
-
-    public void testGetYearAsInteger() {
-        doTestGetYearAsInteger(null, null);
-        doTestGetYearAsInteger("", null);
-        doTestGetYearAsInteger(" ", null);
-        doTestGetYearAsInteger("    ", null);
-        doTestGetYearAsInteger("abc", null);
-        doTestGetYearAsInteger("abcd", null);
-        doTestGetYearAsInteger("abcde", null);
-        doTestGetYearAsInteger("12", null);
-        doTestGetYearAsInteger("123", null);
-        doTestGetYearAsInteger("1234", 1234);
-        doTestGetYearAsInteger("12345", 1234);
-        doTestGetYearAsInteger("2010-06-01", 2010);
-        doTestGetYearAsInteger("2010 06 01", 2010);
-        doTestGetYearAsInteger("2010abc", 2010);
-    }
-
-    private void doTestGetYearAsInteger(String yearString, Integer expected) {
-        MusicFile.MetaData metaData = new MusicFile.MetaData();
-        metaData.setYear(yearString);
-        assertEquals("Error in getYearAsInteger().", expected, metaData.getYearAsInteger());
+        MediaFile mediaFile = new MediaFile();
+        mediaFile.setDurationSeconds(seconds);
+        assertEquals("Error in getDurationString().", expected, mediaFile.getDurationString());
     }
 }

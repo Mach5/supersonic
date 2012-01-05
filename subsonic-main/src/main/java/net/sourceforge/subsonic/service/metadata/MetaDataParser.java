@@ -18,11 +18,12 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
-import net.sourceforge.subsonic.*;
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.util.FileUtil;
+import org.apache.commons.io.FilenameUtils;
 
-import java.io.*;
+import java.io.File;
 
 
 /**
@@ -39,7 +40,7 @@ public abstract class MetaDataParser {
      * @param file The music file to parse.
      * @return Meta data for the file.
      */
-    public MetaData getMetaData(MusicFile file) {
+    public MetaData getMetaData(MediaFile file) {
 
         MetaData metaData = getRawMetaData(file);
         String artist = metaData.getArtist();
@@ -70,7 +71,7 @@ public abstract class MetaDataParser {
      * @param file The music file to parse.
      * @return Meta data for the file.
      */
-    public abstract MetaData getRawMetaData(MusicFile file);
+    public abstract MetaData getRawMetaData(MediaFile file);
 
     /**
      * Updates the given file with the given meta data.
@@ -78,7 +79,7 @@ public abstract class MetaDataParser {
      * @param file     The music file to update.
      * @param metaData The new meta data.
      */
-    public abstract void setMetaData(MusicFile file, MetaData metaData);
+    public abstract void setMetaData(MediaFile file, MetaData metaData);
 
     /**
      * Returns whether this parser is applicable to the given file.
@@ -86,7 +87,7 @@ public abstract class MetaDataParser {
      * @param file The music file in question.
      * @return Whether this parser is applicable to the given file.
      */
-    public abstract boolean isApplicable(MusicFile file);
+    public abstract boolean isApplicable(MediaFile file);
 
     /**
      * Returns whether this parser supports tag editing (using the {@link #setMetaData} method).
@@ -98,8 +99,8 @@ public abstract class MetaDataParser {
     /**
      * Guesses the artist for the given music file.
      */
-    protected String guessArtist(MusicFile file) {
-        File parent = file.getFile().getParentFile();
+    protected String guessArtist(MediaFile file) {
+        File parent = file.getParentFile();
         if (MusicFile.isRoot(parent)) {
             return "";
         }
@@ -110,7 +111,7 @@ public abstract class MetaDataParser {
     /**
      * Guesses the album for the given music file.
      */
-    protected String guessAlbum(MusicFile file) {
+    protected String guessAlbum(MediaFile file) {
         File parent = file.getFile().getParentFile();
         String album = MusicFile.isRoot(parent) ? "" : parent.getName();
         String artist = guessArtist(file);
@@ -118,23 +119,10 @@ public abstract class MetaDataParser {
     }
 
     /**
-     * Returns meta-data containg file size and format.
-     *
-     * @param file The music file.
-     * @return Meta-data containg file size and format.
-     */
-    protected MetaData getBasicMetaData(MusicFile file) {
-        MetaData metaData = new MetaData();
-        metaData.setFileSize(FileUtil.length(file.getFile()));
-        metaData.setFormat(file.getSuffix());
-        return metaData;
-    }
-
-    /**
      * Guesses the title for the given music file.
      */
-    public String guessTitle(MusicFile file) {
-        return removeTrackNumberFromTitle(file.getNameWithoutSuffix(), null);
+    public String guessTitle(MediaFile file) {
+        return removeTrackNumberFromTitle(FilenameUtils.getBaseName(file.getPath()), null);
     }
 
     /**

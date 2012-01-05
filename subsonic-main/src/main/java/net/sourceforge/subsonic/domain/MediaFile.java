@@ -411,63 +411,6 @@ public class MediaFile {
         return path.hashCode();
     }
 
-    @Deprecated
-    public static MediaFile forMusicFile(MusicFile musicFile, String coverArtPath) {
-
-        MediaType mediaType = null;
-        if (musicFile.isVideo()) {
-            mediaType = MediaType.VIDEO;
-        } else if (musicFile.isFile()) {
-            mediaType = MediaType.AUDIO;  // TODO: is this correct?
-        }
-
-        MetaData metaData = musicFile.getMetaData();
-
-        boolean isAlbum = false;
-
-        try {
-            isAlbum = musicFile.isAlbum();
-        } catch (IOException x) {
-            LOG.error("Error in isAlbum()", x);
-        }
-
-        String album = metaData == null ? musicFile.getName() : metaData.getAlbumName();
-
-        return new MediaFile(0,
-                musicFile.getPath(),
-                mediaType,
-                musicFile.isFile() ? StringUtils.lowerCase(musicFile.getSuffix()) : null,
-                musicFile.isDirectory(),
-                isAlbum,
-                metaData == null ? null : metaData.getTitle(),
-                album,
-                metaData == null ? null : metaData.getArtist(),
-                metaData == null ? null : metaData.getDiscNumber(),
-                metaData == null ? null : metaData.getTrackNumber(),
-                metaData == null ? null : metaData.getYear(),
-                metaData == null ? null : metaData.getGenre(),
-                metaData == null ? null : metaData.getBitRate(),
-                metaData != null && Boolean.TRUE.equals(metaData.getVariableBitRate()),
-                metaData == null ? null : metaData.getDurationSeconds(),
-                musicFile.isFile() ? musicFile.length() : null,
-                metaData == null ? null : metaData.getWidth(),
-                metaData == null ? null : metaData.getHeight(),
-                coverArtPath,
-                musicFile.getFile().getParent(),
-                0,
-                null,
-                null,
-                new Date(),
-                new Date(musicFile.lastModified()),
-                new Date(0L),
-                true);
-    }
-
-    @Deprecated
-    public MusicFile toMusicFile() {
-        return ServiceLocator.getMusicFileService().getMusicFile(path);
-    }
-
     public File getCoverArtFile() {
         return coverArtFile;
     }

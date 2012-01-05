@@ -38,22 +38,21 @@ import java.util.*;
  */
 public class EditTagsController extends ParameterizableViewController {
 
-    private MusicFileService musicFileService;
     private MetaDataParserFactory metaDataParserFactory;
+    private MediaFileService mediaFileService;
 
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         String path = request.getParameter("path");
-        MusicFile dir = musicFileService.getMusicFile(path);
-        List<MusicFile> files = dir.getChildren(true, false, true);
+        MediaFile dir = mediaFileService.getMediaFile(path);
+        List<MediaFile> files = mediaFileService.getChildrenOf(dir, true, false, true);
 
         Map<String, Object> map = new HashMap<String, Object>();
         if (!files.isEmpty()) {
-            MetaData metaData = files.get(0).getMetaData();
-            map.put("defaultArtist", metaData.getArtist());
-            map.put("defaultAlbum", metaData.getAlbumName());
-            map.put("defaultYear", metaData.getYear());
-            map.put("defaultGenre", metaData.getGenre());
+            map.put("defaultArtist", files.get(0).getArtist());
+            map.put("defaultAlbum", files.get(0).getAlbumName());
+            map.put("defaultYear", files.get(0).getYear());
+            map.put("defaultGenre", files.get(0).getGenre());
         }
         map.put("allGenres", JaudiotaggerParser.getID3V1Genres());
 
@@ -69,7 +68,7 @@ public class EditTagsController extends ParameterizableViewController {
         return result;
     }
 
-    private Song createSong(MusicFile file, int index) {
+    private Song createSong(MediaFile file, int index) {
         MetaDataParser parser = metaDataParserFactory.getParser(file);
         MetaData metaData = parser.getRawMetaData(file);
 
@@ -87,12 +86,12 @@ public class EditTagsController extends ParameterizableViewController {
         return song;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
-
     public void setMetaDataParserFactory(MetaDataParserFactory metaDataParserFactory) {
         this.metaDataParserFactory = metaDataParserFactory;
+    }
+
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     /**

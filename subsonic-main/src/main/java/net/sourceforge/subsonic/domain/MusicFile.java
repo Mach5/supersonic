@@ -60,7 +60,7 @@ public class MusicFile implements Serializable {
     private boolean isAlbum;
     private final boolean isVideo;
     private final long lastModified;
-    private final net.sourceforge.subsonic.service.metadata.MetaData metaData;
+    private final net.sourceforge.subsonic.service.metadata.MetaData metaData = null;
     private final File[] children;
 
     /**
@@ -85,10 +85,6 @@ public class MusicFile implements Serializable {
         } catch (IOException e) {
             // Ignored
         }
-
-        MetaDataParserFactory factory = ServiceLocator.getMetaDataParserFactory();
-        MetaDataParser parser = factory == null ? null : factory.getParser(this);
-        metaData = parser == null ? null : parser.getMetaData(this);
     }
 
     /**
@@ -101,7 +97,6 @@ public class MusicFile implements Serializable {
         isAlbum = false;
         isVideo = false;
         lastModified = 0L;
-        metaData = null;
         children = null;
     }
 
@@ -189,7 +184,7 @@ public class MusicFile implements Serializable {
      *         or <code>0L</code> if the file does not exist
      */
     public long length() {
-        return metaData == null ? 0L : metaData.getFileSize();
+        return metaData == null ? 0L : file.length();
     }
 
     /**

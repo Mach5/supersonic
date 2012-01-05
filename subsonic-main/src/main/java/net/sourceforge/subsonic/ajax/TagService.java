@@ -19,11 +19,11 @@
 package net.sourceforge.subsonic.ajax;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
-import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
-import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.util.StringUtil;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
@@ -38,8 +38,8 @@ public class TagService {
 
     private static final Logger LOG = Logger.getLogger(TagService.class);
 
-    private MusicFileService musicFileService;
     private MetaDataParserFactory metaDataParserFactory;
+    private MediaFileService mediaFileService;
 
     /**
      * Updated tags for a given music file.
@@ -50,7 +50,7 @@ public class TagService {
      * @param album  The album name.
      * @param title  The song title.
      * @param year   The release year.
-     * @param genre   The musical genre.
+     * @param genre  The musical genre.
      * @return "UPDATED" if the new tags were updated, "SKIPPED" if no update was necessary.
      *         Otherwise the error message is returned.
      */
@@ -83,7 +83,7 @@ public class TagService {
 
         try {
 
-            MusicFile file = musicFileService.getMusicFile(path);
+            MediaFile file = mediaFileService.getMediaFile(path);
             MetaDataParser parser = metaDataParserFactory.getParser(file);
 
             if (!parser.isEditingSupported()) {
@@ -93,11 +93,11 @@ public class TagService {
             MetaData existingMetaData = parser.getRawMetaData(file);
 
             if (StringUtils.equals(artist, existingMetaData.getArtist()) &&
-                StringUtils.equals(album, existingMetaData.getAlbumName()) &&
-                StringUtils.equals(title, existingMetaData.getTitle()) &&
-                ObjectUtils.equals(yearNumber, existingMetaData.getYear()) &&
-                StringUtils.equals(genre, existingMetaData.getGenre()) &&
-                ObjectUtils.equals(trackNumber, existingMetaData.getTrackNumber())) {
+                    StringUtils.equals(album, existingMetaData.getAlbumName()) &&
+                    StringUtils.equals(title, existingMetaData.getTitle()) &&
+                    ObjectUtils.equals(yearNumber, existingMetaData.getYear()) &&
+                    StringUtils.equals(genre, existingMetaData.getGenre()) &&
+                    ObjectUtils.equals(trackNumber, existingMetaData.getTrackNumber())) {
                 return "SKIPPED";
             }
 
@@ -117,8 +117,8 @@ public class TagService {
         }
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public void setMetaDataParserFactory(MetaDataParserFactory metaDataParserFactory) {

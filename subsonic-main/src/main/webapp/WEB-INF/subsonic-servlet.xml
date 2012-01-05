@@ -255,7 +255,7 @@
     </bean>
     <bean id="editTagsController" class="net.sourceforge.subsonic.controller.EditTagsController">
         <property name="viewName" value="editTags"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="metaDataParserFactory" ref="metaDataParserFactory"/>
     </bean>
     <bean id="playlistController" class="net.sourceforge.subsonic.controller.PlaylistController">
@@ -266,7 +266,7 @@
     </bean>
     <bean id="coverArtController" class="net.sourceforge.subsonic.controller.CoverArtController">
         <property name="securityService" ref="securityService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
     <bean id="avatarController" class="net.sourceforge.subsonic.controller.AvatarController">
         <property name="settingsService" ref="settingsService"/>
@@ -341,7 +341,6 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
         <property name="playerService" ref="playerService"/>
-        <property name="musicFileService" ref="musicFileService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="statusService" ref="statusService"/>

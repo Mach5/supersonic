@@ -18,8 +18,8 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
-import junit.framework.*;
-import net.sourceforge.subsonic.domain.MusicFile;
+import junit.framework.TestCase;
+import net.sourceforge.subsonic.domain.MediaFile;
 
 /**
  * Unit test of {@link MetaDataParser}.
@@ -31,10 +31,20 @@ public class MetaDataParserTestCase extends TestCase {
     public void testRemoveTrackNumberFromTitle() throws Exception {
 
         MetaDataParser parser = new MetaDataParser() {
-            public MetaData getRawMetaData(MusicFile file) { return null; }
-            public void setMetaData(MusicFile file, MetaData metaData) {}
-            public boolean isEditingSupported() { return false; }
-            public boolean isApplicable(MusicFile file) { return false; }
+            public MetaData getRawMetaData(MediaFile file) {
+                return null;
+            }
+
+            public void setMetaData(MediaFile file, MetaData metaData) {
+            }
+
+            public boolean isEditingSupported() {
+                return false;
+            }
+
+            public boolean isApplicable(MediaFile file) {
+                return false;
+            }
         };
 
         assertEquals("", parser.removeTrackNumberFromTitle("", null));

@@ -23,17 +23,10 @@ import net.sf.ehcache.Element;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.Cache;
-import net.sourceforge.subsonic.domain.CacheElement;
-import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.util.FileUtil;
 
-import org.apache.commons.io.filefilter.FileFileFilter;
-
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Provides services for instantiating and caching music files and cover art.
@@ -90,26 +83,8 @@ public class MusicFileService {
         // Put in caches.
         musicFileMemoryCache.put(new Element(file, musicFile));
         musicFileDiskCache.put(file.getPath(), musicFile);
-        createMediaFile(musicFile);
 
         return musicFile;
-    }
-
-    private void createMediaFile(MusicFile musicFile) {
-        // TODO: handle existing file.
-        String coverArtPath = null;
-        try {
-            if (musicFile.isAlbum()) {
-                File coverArt = getCoverArt(musicFile);
-                if (coverArt != null) {
-                    coverArtPath = coverArt.getPath();
-                }
-            }
-
-            mediaFileDao.createOrUpdateMediaFile(MediaFile.forMusicFile(musicFile, coverArtPath));
-        } catch (IOException x) {
-            LOG.error("Failed to create media file.", x);
-        }
     }
 
     private boolean useFastCache() {
@@ -125,51 +100,6 @@ public class MusicFileService {
      */
     public MusicFile getMusicFile(String pathName) {
         return getMusicFile(new File(pathName));
-    }
-
-    /**
-     * Returns a cover art image for the given directory.
-     */
-    public File getCoverArt(MusicFile dir) throws IOException {
-
-        // Look in cache.
-        CacheElement element = coverArtCache.get(dir.getPath());
-        if (element != null) {
-
-            // Check if cache is up-to-date.
-            if (useFastCache() || element.getCreated() > FileUtil.lastModified(dir.getFile())) {
-                File file = (File) element.getValue();
-                return file.equals(NULL_FILE) ? null : file;
-            }
-        }
-
-        File coverArt = getBestCoverArt(dir.getChildrenFiles(FileFileFilter.FILE));
-        coverArtCache.put(dir.getPath(), coverArt == null ? NULL_FILE : coverArt);
-        return coverArt;
-    }
-
-    private File getBestCoverArt(List<File> candidates) {
-        for (String mask : settingsService.getCoverArtFileTypesAsArray()) {
-            for (File candidate : candidates) {
-                if (candidate.getName().toUpperCase().endsWith(mask.toUpperCase()) && !candidate.getName().startsWith(".")) {
-                    return candidate;
-                }
-            }
-        }
-
-        // Look for embedded images in audiofiles. (Only check first audio file encountered).
-        JaudiotaggerParser parser = new JaudiotaggerParser();
-        for (File candidate : candidates) {
-            MusicFile musicFile = getMusicFile(candidate);
-            if (parser.isApplicable(musicFile)) {
-                if (parser.isImageAvailable(musicFile)) {
-                    return candidate;
-                } else {
-                    return null;
-                }
-            }
-        }
-        return null;
     }
 
     /**

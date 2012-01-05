@@ -210,7 +210,7 @@
     </bean>
 
     <bean id="ajaxTagService" class="net.sourceforge.subsonic.ajax.TagService">
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="metaDataParserFactory" ref="metaDataParserFactory"/>
     </bean>
 

@@ -34,8 +34,6 @@ public class MetaData {
     private Integer bitRate;
     private Boolean variableBitRate;
     private Integer durationSeconds;
-    private String format;
-    private Long fileSize;
     private Integer width;
     private Integer height;
 
@@ -117,22 +115,6 @@ public class MetaData {
 
     public void setDurationSeconds(Integer durationSeconds) {
         this.durationSeconds = durationSeconds;
-    }
-
-    public String getFormat() {
-        return format;
-    }
-
-    public void setFormat(String format) {
-        this.format = format;
-    }
-
-    public Long getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(Long fileSize) {
-        this.fileSize = fileSize;
     }
 
     public Integer getWidth() {

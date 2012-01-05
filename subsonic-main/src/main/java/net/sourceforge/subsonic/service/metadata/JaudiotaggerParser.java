@@ -19,8 +19,7 @@
 package net.sourceforge.subsonic.service.metadata;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
-import org.apache.commons.io.FilenameUtils;
+import net.sourceforge.subsonic.domain.MediaFile;
 import org.apache.commons.lang.StringUtils;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -63,9 +62,9 @@ public class JaudiotaggerParser extends MetaDataParser {
      * @return Meta data for the file.
      */
     @Override
-    public MetaData getRawMetaData(MusicFile file) {
+    public MetaData getRawMetaData(MediaFile file) {
 
-        MetaData metaData = getBasicMetaData(file);
+        MetaData metaData = new MetaData();
 
         try {
             AudioFile audioFile = AudioFileIO.read(file.getFile());
@@ -176,13 +175,13 @@ public class JaudiotaggerParser extends MetaDataParser {
     }
 
     /**
-    * Updates the given file with the given meta data.
-    *
-    * @param file     The music file to update.
-    * @param metaData The new meta data.
-    */
+     * Updates the given file with the given meta data.
+     *
+     * @param file     The music file to update.
+     * @param metaData The new meta data.
+     */
     @Override
-    public void setMetaData(MusicFile file, MetaData metaData) {
+    public void setMetaData(MediaFile file, MetaData metaData) {
 
         try {
             AudioFile audioFile = AudioFileIO.read(file.getFile());
@@ -226,23 +225,23 @@ public class JaudiotaggerParser extends MetaDataParser {
      * @return Whether this parser is applicable to the given file.
      */
     @Override
-    public boolean isApplicable(MusicFile file) {
+    public boolean isApplicable(MediaFile file) {
         if (!file.isFile()) {
             return false;
         }
 
-        String extension = FilenameUtils.getExtension(file.getName()).toLowerCase();
+        String format = file.getFormat();
 
-        return extension.equals("mp3") ||
-               extension.equals("m4a") ||
-               extension.equals("aac") ||
-               extension.equals("ogg") ||
-               extension.equals("flac") ||
-               extension.equals("wav") ||
-               extension.equals("mpc") ||
-               extension.equals("mp+") ||
-               extension.equals("ape") ||
-               extension.equals("wma");
+        return format.equals("mp3") ||
+                format.equals("m4a") ||
+                format.equals("aac") ||
+                format.equals("ogg") ||
+                format.equals("flac") ||
+                format.equals("wav") ||
+                format.equals("mpc") ||
+                format.equals("mp+") ||
+                format.equals("ape") ||
+                format.equals("wma");
     }
 
     /**
@@ -251,7 +250,7 @@ public class JaudiotaggerParser extends MetaDataParser {
      * @param file The music file.
      * @return Whether cover art image data is available.
      */
-    public boolean isImageAvailable(MusicFile file) {
+    public boolean isImageAvailable(MediaFile file) {
         try {
             return getArtwork(file) != null;
         } catch (Throwable x) {
@@ -266,7 +265,7 @@ public class JaudiotaggerParser extends MetaDataParser {
      * @param file The music file.
      * @return The embedded cover art image data, or <code>null</code> if not available.
      */
-    public byte[] getImageData(MusicFile file) {
+    public byte[] getImageData(MediaFile file) {
         try {
             return getArtwork(file).getBinaryData();
         } catch (Throwable x) {
@@ -275,7 +274,7 @@ public class JaudiotaggerParser extends MetaDataParser {
         }
     }
 
-    private Artwork getArtwork(MusicFile file) throws Exception {
+    private Artwork getArtwork(MediaFile file) throws Exception {
         AudioFile audioFile = AudioFileIO.read(file.getFile());
         Tag tag = audioFile.getTag();
         return tag == null ? null : tag.getFirstArtwork();

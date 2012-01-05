@@ -18,10 +18,10 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
-import java.util.List;
-
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.service.ServiceLocator;
+
+import java.util.List;
 
 /**
  * Factory for creating meta-data parsers.
@@ -42,7 +42,7 @@ public class MetaDataParserFactory {
      * @param file The file in question.
      * @return An applicable parser, or <code>null</code> if no parser is found.
      */
-    public MetaDataParser getParser(MusicFile file) {
+    public MetaDataParser getParser(MediaFile file) {
         for (MetaDataParser parser : parsers) {
             if (parser.isApplicable(file)) {
                 return parser;
@@ -52,10 +52,10 @@ public class MetaDataParserFactory {
     }
 
     /**
-        * Register in service locator so that non-Spring objects can access me.
-        * This method is invoked automatically by Spring.
-        */
-       public void init() {
-           ServiceLocator.setMetaDataParserFactory(this);
-       }
+     * Register in service locator so that non-Spring objects can access me.
+     * This method is invoked automatically by Spring.
+     */
+    public void init() {
+        ServiceLocator.setMetaDataParserFactory(this);
+    }
 }

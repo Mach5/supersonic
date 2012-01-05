@@ -98,7 +98,6 @@ public class RESTController extends MultiActionController {
     private SettingsService settingsService;
     private SecurityService securityService;
     private PlayerService playerService;
-    private MusicFileService musicFileService;
     private MediaFileService mediaFileService;
     private TranscodingService transcodingService;
     private DownloadController downloadController;
@@ -1401,10 +1400,6 @@ public class RESTController extends MultiActionController {
 
     public void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
-    }
-
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
     }
 
     public void setTranscodingService(TranscodingService transcodingService) {

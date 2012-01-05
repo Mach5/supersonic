@@ -19,13 +19,12 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.service.MusicFileService;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.util.FileUtil;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -39,7 +38,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Controller which produces cover art images.
@@ -48,10 +53,10 @@ import java.io.*;
  */
 public class CoverArtController implements Controller, LastModified {
 
-    private SecurityService securityService;
-    private MusicFileService musicFileService;
-
     private static final Logger LOG = Logger.getLogger(CoverArtController.class);
+
+    private SecurityService securityService;
+    private MediaFileService mediaFileService;
 
     public long getLastModified(HttpServletRequest request) {
         String path = request.getParameter("path");
@@ -171,10 +176,10 @@ public class CoverArtController implements Controller, LastModified {
      * the embedded album art is returned.
      */
     private InputStream getImageInputStream(File file) throws IOException {
-        MusicFile musicFile = musicFileService.getMusicFile(file);
+        MediaFile mediaFile = mediaFileService.getMediaFile(file);
         JaudiotaggerParser parser = new JaudiotaggerParser();
-        if (parser.isApplicable(musicFile)) {
-            return new ByteArrayInputStream(parser.getImageData(musicFile));
+        if (parser.isApplicable(mediaFile)) {
+            return new ByteArrayInputStream(parser.getImageData(mediaFile));
         } else {
             return new FileInputStream(file);
         }
@@ -213,7 +218,7 @@ public class CoverArtController implements Controller, LastModified {
             BufferedImage temp = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
             Graphics2D g2 = temp.createGraphics();
             g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
             g2.drawImage(thumb, 0, 0, temp.getWidth(), temp.getHeight(), null);
             g2.dispose();
 
@@ -227,7 +232,7 @@ public class CoverArtController implements Controller, LastModified {
         this.securityService = securityService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }
