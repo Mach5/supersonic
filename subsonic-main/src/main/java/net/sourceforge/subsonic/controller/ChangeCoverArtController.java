@@ -18,15 +18,17 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.service.MusicFileService;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
+
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.service.MediaFileService;
 
 /**
  * Controller for saving playlists.
@@ -35,7 +37,7 @@ import java.util.Map;
  */
 public class ChangeCoverArtController extends ParameterizableViewController {
 
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -43,18 +45,16 @@ public class ChangeCoverArtController extends ParameterizableViewController {
         String path = request.getParameter("path");
         String artist = request.getParameter("artist");
         String album = request.getParameter("album");
-        MusicFile dir = musicFileService.getMusicFile(path);
+        MediaFile dir = mediaFileService.getMediaFile(path);
 
-        MusicFile child = dir.getFirstChild();
+        MediaFile child = mediaFileService.getFirstChildOf(dir);
         if (child != null) {
-            MusicFile.MetaData metaData = child.getMetaData();
             if (artist == null) {
-                artist = metaData.getArtist();
+                artist = child.getArtist();
             }
             if (album == null) {
-                album = metaData.getAlbum();
+                album = child.getAlbumName();
             }
-
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -68,7 +68,7 @@ public class ChangeCoverArtController extends ParameterizableViewController {
         return result;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }

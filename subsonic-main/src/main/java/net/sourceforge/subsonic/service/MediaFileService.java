@@ -109,11 +109,11 @@ public class MediaFileService {
         return getMediaFile(mediaFile.getParentPath());
     }
 
-    public List<MediaFile> getChildrenOf(String parentPath, boolean includeFiles, boolean includeDirectories, boolean sort) throws IOException {
+    public List<MediaFile> getChildrenOf(String parentPath, boolean includeFiles, boolean includeDirectories, boolean sort) {
         return getChildrenOf(new File(parentPath), includeFiles, includeDirectories, sort);
     }
 
-    public List<MediaFile> getChildrenOf(File parent, boolean includeFiles, boolean includeDirectories, boolean sort) throws IOException {
+    public List<MediaFile> getChildrenOf(File parent, boolean includeFiles, boolean includeDirectories, boolean sort) {
         return getChildrenOf(getMediaFile(parent), includeFiles, includeDirectories, sort);
     }
 
@@ -124,9 +124,8 @@ public class MediaFileService {
      * @param includeDirectories Whether directories should be included in the result.
      * @param sort               Whether to sort files in the same directory.
      * @return All children media files.
-     * @throws IOException If an I/O error occurs.
      */
-    public List<MediaFile> getChildrenOf(MediaFile parent, boolean includeFiles, boolean includeDirectories, boolean sort) throws IOException {
+    public List<MediaFile> getChildrenOf(MediaFile parent, boolean includeFiles, boolean includeDirectories, boolean sort) {
 
         if (!parent.isDirectory()) {
             return Collections.emptyList();
@@ -150,6 +149,17 @@ public class MediaFileService {
         }
 
         return result;
+    }
+
+    /**
+     * Returns the first direct child (excluding directories).
+     * This is a convenience method.
+     *
+     * @return The first child, or <code>null</code> if not found.
+     */
+    public MediaFile getFirstChildOf(MediaFile parent) {
+        List<MediaFile> children = getChildrenOf(parent, true, false, true);
+        return children.isEmpty() ? null : children.get(0);
     }
 
     private void updateChildren(MediaFile parent) {
