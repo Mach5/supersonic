@@ -495,7 +495,7 @@ public class RESTController extends MultiActionController {
 
             String[] ids = ServletRequestUtils.getStringParameters(request, "songId");
             for (String id : ids) {
-                playlist.addFiles(true, musicFileService.getMusicFile(StringUtil.utf8HexDecode(id)));
+                playlist.addFiles(true, mediaFileService.getMediaFile(StringUtil.utf8HexDecode(id)));
             }
             playlistService.savePlaylist(playlist);
 
@@ -600,9 +600,9 @@ public class RESTController extends MultiActionController {
             Integer musicFolderId = ServletRequestUtils.getIntParameter(request, "musicFolderId");
             RandomSearchCriteria criteria = new RandomSearchCriteria(size, genre, fromYear, toYear, musicFolderId);
 
-            for (MusicFile musicFile : searchService.getRandomSongs(criteria)) {
-                File coverArt = musicFileService.getCoverArt(musicFile.getParent());
-                AttributeSet attributes = createAttributesForMusicFile(player, coverArt, musicFile);
+            for (MediaFile mediaFile : searchService.getRandomSongs(criteria)) {
+                File coverArt = mediaFileService.getCoverArt(mediaFile);
+                AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
                 builder.add("song", attributes, true);
             }
             builder.endAll();

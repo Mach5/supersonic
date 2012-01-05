@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
@@ -73,8 +74,7 @@ public class RandomPlaylistController extends ParameterizableViewController {
         Playlist playlist = player.getPlaylist();
 
         RandomSearchCriteria criteria = new RandomSearchCriteria(size, genre, fromYear, toYear, musicFolderId);
-        List<MusicFile> randomFiles = searchService.getRandomSongs(criteria);
-        playlist.addFiles(false, randomFiles);
+        playlist.addFiles(false, searchService.getRandomSongs(criteria));
 
         if (request.getParameter("autoRandom") != null) {
             playlist.setRandomSearchCriteria(criteria);

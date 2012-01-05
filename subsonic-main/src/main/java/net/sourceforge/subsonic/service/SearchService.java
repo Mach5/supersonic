@@ -19,6 +19,7 @@
 package net.sourceforge.subsonic.service;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.MusicFileInfo;
@@ -81,6 +82,7 @@ public class SearchService {
     private MusicFileService musicFileService;
     private MusicInfoService musicInfoService;
     private LuceneSearchService luceneSearchService;
+    private MediaFileService mediaFileService;
 
     /**
      * Returns whether the search index exists.
@@ -312,9 +314,9 @@ public class SearchService {
      * @return Array of random songs.
      * @throws IOException If an I/O error occurs.
      */
-    public List<MusicFile> getRandomSongs(RandomSearchCriteria criteria) throws IOException {
+    public List<MediaFile> getRandomSongs(RandomSearchCriteria criteria) throws IOException {
         int count = criteria.getCount();
-        List<MusicFile> result = new ArrayList<MusicFile>(count);
+        List<MediaFile> result = new ArrayList<MediaFile>(count);
 
         if (!isIndexCreated() || isIndexBeingCreated()) {
             return result;
@@ -386,9 +388,9 @@ public class SearchService {
             File file = songs.get(n).file;
 
             if (FileUtil.exists(file) && securityService.isReadAllowed(file)) {
-                MusicFile musicFile = musicFileService.getMusicFile(file);
-                if (!result.contains(musicFile) && !musicFile.isVideo()) {
-                    result.add(musicFile);
+                MediaFile mediaFile = mediaFileService.getMediaFile(file);
+                if (!result.contains(mediaFile) && !mediaFile.isVideo()) {
+                    result.add(mediaFile);
 
                     // Enough songs found?
                     if (result.size() == count) {
@@ -645,6 +647,10 @@ public class SearchService {
 
     public void setLuceneSearchService(LuceneSearchService luceneSearchService) {
         this.luceneSearchService = luceneSearchService;
+    }
+
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     /**

@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.domain;
 
+import net.sourceforge.subsonic.util.FileUtil;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
@@ -34,7 +35,7 @@ import java.util.List;
  */
 public class Playlist {
 
-    private List<MusicFile> files = new ArrayList<MusicFile>();
+    private List<MediaFile> files = new ArrayList<MediaFile>();
     private boolean repeatEnabled;
     private String name = "(unnamed)";
     private Status status = Status.PLAYING;
@@ -49,7 +50,7 @@ public class Playlist {
     /**
      * Used for undo functionality.
      */
-    private List<MusicFile> filesBackup = new ArrayList<MusicFile>();
+    private List<MediaFile> filesBackup = new ArrayList<MediaFile>();
     private int indexBackup = 0;
 
     /**
@@ -75,16 +76,15 @@ public class Playlist {
      *
      * @return The current song in the playlist, or <code>null</code> if no current song exists.
      */
-    @Deprecated
-    public synchronized MusicFile getCurrentFile() {
+    public synchronized MediaFile getCurrentFile() {
         if (index == -1 || index == 0 && size() == 0) {
             setStatus(Status.STOPPED);
             return null;
         } else {
-            MusicFile file = files.get(index);
+            MediaFile file = files.get(index);
 
             // Remove file from playlist if it doesn't exist.
-            if (!file.exists()) {
+            if (!FileUtil.exists(file.getFile())) {
                 files.remove(index);
                 index = Math.max(0, Math.min(index, size() - 1));
                 return getCurrentFile();
@@ -99,22 +99,9 @@ public class Playlist {
      *
      * @return The current song in the playlist, or <code>null</code> if no current song exists.
      */
+    @Deprecated
     public synchronized MediaFile getCurrentMediaFile() {
-        if (index == -1 || index == 0 && size() == 0) {
-            setStatus(Status.STOPPED);
-            return null;
-        } else {
-            MusicFile file = files.get(index);
-
-            // Remove file from playlist if it doesn't exist.
-            if (!file.exists()) {
-                files.remove(index);
-                index = Math.max(0, Math.min(index, size() - 1));
-                return getCurrentMediaFile();
-            }
-
-            return MediaFile.forMusicFile(file, null);
-        }
+        return getCurrentFile();
     }
 
     /**
@@ -122,9 +109,8 @@ public class Playlist {
      *
      * @return All music files in the playlist.
      */
-    @Deprecated
-    public synchronized MusicFile[] getFiles() {
-        return files.toArray(new MusicFile[files.size()]);
+    public synchronized List<MediaFile> getFiles() {
+        return files;
     }
 
     /**
@@ -132,12 +118,9 @@ public class Playlist {
      *
      * @return All media files in the playlist.
      */
+    @Deprecated
     public synchronized List<MediaFile> getMediaFiles() {
-        List<MediaFile> result = new ArrayList<MediaFile>(files.size());
-        for (MusicFile file : files) {
-            result.add(MediaFile.forMusicFile(file, null));
-        }
-        return result;
+        return getFiles();
     }
 
     /**
@@ -147,7 +130,7 @@ public class Playlist {
      * @return The music file at the given index.
      * @throws IndexOutOfBoundsException If the index is out of range.
      */
-    public synchronized MusicFile getFile(int index) {
+    public synchronized MediaFile getFile(int index) {
         return files.get(index);
     }
 
@@ -158,8 +141,9 @@ public class Playlist {
      * @return The media file at the given index.
      * @throws IndexOutOfBoundsException If the index is out of range.
      */
+    @Deprecated
     public synchronized MediaFile getMediaFile(int index) {
-        return MediaFile.forMusicFile(files.get(index), null);
+        return getFile(index);
     }
 
     /**
@@ -213,21 +197,20 @@ public class Playlist {
     }
 
     /**
-     * Adds one or more music file to the playlist.  If a given file is a directory, all its children
-     * will be added recursively.
+     * Adds one or more music file to the playlist.
      *
      * @param append     Whether existing songs in the playlist should be kept.
-     * @param musicFiles The music files to add.
+     * @param mediaFiles The music files to add.
      * @throws IOException If an I/O error occurs.
      */
-    public synchronized void addFiles(boolean append, Iterable<MusicFile> musicFiles) throws IOException {
+    public synchronized void addFiles(boolean append, Iterable<MediaFile> mediaFiles) throws IOException {
         makeBackup();
         if (!append) {
             index = 0;
             files.clear();
         }
-        for (MusicFile musicFile : musicFiles) {
-            files.addAll(musicFile.getDescendants(false, true));
+        for (MediaFile mediaFile : mediaFiles) {
+            files.add(mediaFile);
         }
         setStatus(Status.PLAYING);
     }
@@ -235,8 +218,8 @@ public class Playlist {
     /**
      * Convenience method, equivalent to {@link #addFiles(boolean, Iterable)}.
      */
-    public synchronized void addFiles(boolean append, MusicFile... musicFiles) throws IOException {
-        addFiles(append, Arrays.asList(musicFiles));
+    public synchronized void addFiles(boolean append, MediaFile... mediaFiles) throws IOException {
+        addFiles(append, Arrays.asList(mediaFiles));
     }
 
     /**
@@ -271,7 +254,7 @@ public class Playlist {
      */
     public synchronized void shuffle() {
         makeBackup();
-        MusicFile currentFile = getCurrentFile();
+        MediaFile currentFile = getCurrentFile();
         Collections.shuffle(files);
         if (currentFile != null) {
             index = files.indexOf(currentFile);
@@ -283,14 +266,14 @@ public class Playlist {
      */
     public synchronized void sort(final SortOrder sortOrder) {
         makeBackup();
-        MusicFile currentFile = getCurrentFile();
+        MediaFile currentFile = getCurrentFile();
 
-        Comparator<MusicFile> comparator = new Comparator<MusicFile>() {
-            public int compare(MusicFile a, MusicFile b) {
+        Comparator<MediaFile> comparator = new Comparator<MediaFile>() {
+            public int compare(MediaFile a, MediaFile b) {
                 switch (sortOrder) {
                     case TRACK:
-                        Integer trackA = a.getMetaData().getTrackNumber();
-                        Integer trackB = b.getMetaData().getTrackNumber();
+                        Integer trackA = a.getTrackNumber();
+                        Integer trackB = b.getTrackNumber();
                         if (trackA == null) {
                             trackA = 0;
                         }
@@ -300,13 +283,13 @@ public class Playlist {
                         return trackA.compareTo(trackB);
 
                     case ARTIST:
-                        String artistA = StringUtils.trimToEmpty(a.getMetaData().getArtist());
-                        String artistB = StringUtils.trimToEmpty(b.getMetaData().getArtist());
+                        String artistA = StringUtils.trimToEmpty(a.getArtist());
+                        String artistB = StringUtils.trimToEmpty(b.getArtist());
                         return artistA.compareTo(artistB);
 
                     case ALBUM:
-                        String albumA = StringUtils.trimToEmpty(a.getMetaData().getAlbumName());
-                        String albumB = StringUtils.trimToEmpty(b.getMetaData().getAlbumName());
+                        String albumA = StringUtils.trimToEmpty(a.getAlbumName());
+                        String albumB = StringUtils.trimToEmpty(b.getAlbumName());
                         return albumA.compareTo(albumB);
                     default:
                         return 0;
@@ -380,7 +363,7 @@ public class Playlist {
      * Revert the last operation.
      */
     public synchronized void undo() {
-        List<MusicFile> filesTmp = new ArrayList<MusicFile>(files);
+        List<MediaFile> filesTmp = new ArrayList<MediaFile>(files);
         int indexTmp = index;
 
         index = indexBackup;
@@ -436,14 +419,14 @@ public class Playlist {
      */
     public synchronized long length() {
         long length = 0;
-        for (MusicFile musicFile : files) {
-            length += musicFile.length();
+        for (MediaFile mediaFile : files) {
+            length += mediaFile.getFileSize();
         }
         return length;
     }
 
     private void makeBackup() {
-        filesBackup = new ArrayList<MusicFile>(files);
+        filesBackup = new ArrayList<MediaFile>(files);
         indexBackup = index;
     }
 

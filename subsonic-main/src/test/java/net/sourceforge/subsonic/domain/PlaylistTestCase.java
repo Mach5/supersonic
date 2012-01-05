@@ -35,7 +35,7 @@ public class PlaylistTestCase extends TestCase {
         Playlist playlist = new Playlist();
         assertEquals(0, playlist.size());
         assertTrue(playlist.isEmpty());
-        assertEquals(0, playlist.getFiles().length);
+        assertEquals(0, playlist.getFiles().size());
         assertNull(playlist.getCurrentFile());
     }
 
@@ -46,7 +46,7 @@ public class PlaylistTestCase extends TestCase {
         playlist.setStatus(Status.STOPPED);
         assertEquals(Status.STOPPED, playlist.getStatus());
 
-        playlist.addFiles(true, new TestMusicFile());
+        playlist.addFiles(true, new TestMediaFile());
         assertEquals(Status.PLAYING, playlist.getStatus());
 
         playlist.clear();
@@ -152,10 +152,10 @@ public class PlaylistTestCase extends TestCase {
     public void testAppend() throws Exception {
         Playlist playlist = createPlaylist(1, "A", "B", "C");
 
-        playlist.addFiles(true, new TestMusicFile("D"));
+        playlist.addFiles(true, new TestMediaFile("D"));
         assertPlaylistEquals(playlist, 1, "A", "B", "C", "D");
 
-        playlist.addFiles(false, new TestMusicFile("E"));
+        playlist.addFiles(false, new TestMediaFile("E"));
         assertPlaylistEquals(playlist, 0, "E");
     }
 
@@ -173,7 +173,7 @@ public class PlaylistTestCase extends TestCase {
         playlist.undo();
         assertPlaylistEquals(playlist, 0, "A", "B", "C");
 
-        playlist.addFiles(true, new TestMusicFile());
+        playlist.addFiles(true, new TestMediaFile());
         playlist.undo();
         assertPlaylistEquals(playlist, 0, "A", "B", "C");
 
@@ -188,42 +188,42 @@ public class PlaylistTestCase extends TestCase {
 
     public void testOrder() throws IOException {
         Playlist playlist = new Playlist();
-        playlist.addFiles(true, new TestMusicFile(2, "Artist A", "Album B"));
-        playlist.addFiles(true, new TestMusicFile(1, "Artist C", "Album C"));
-        playlist.addFiles(true, new TestMusicFile(3, "Artist B", "Album A"));
-        playlist.addFiles(true, new TestMusicFile(null, "Artist D", "Album D"));
+        playlist.addFiles(true, new TestMediaFile(2, "Artist A", "Album B"));
+        playlist.addFiles(true, new TestMediaFile(1, "Artist C", "Album C"));
+        playlist.addFiles(true, new TestMediaFile(3, "Artist B", "Album A"));
+        playlist.addFiles(true, new TestMediaFile(null, "Artist D", "Album D"));
         playlist.setIndex(2);
-        assertEquals("Error in sort.", new Integer(3), playlist.getCurrentFile().getMetaData().getTrackNumber());
+        assertEquals("Error in sort.", new Integer(3), playlist.getCurrentFile().getTrackNumber());
 
         // Order by track.
         playlist.sort(SortOrder.TRACK);
-        assertEquals("Error in sort().", null, playlist.getFile(0).getMetaData().getTrackNumber());
-        assertEquals("Error in sort().", new Integer(1), playlist.getFile(1).getMetaData().getTrackNumber());
-        assertEquals("Error in sort().", new Integer(2), playlist.getFile(2).getMetaData().getTrackNumber());
-        assertEquals("Error in sort().", new Integer(3), playlist.getFile(3).getMetaData().getTrackNumber());
-        assertEquals("Error in sort().", new Integer(3), playlist.getCurrentFile().getMetaData().getTrackNumber());
+        assertEquals("Error in sort().", null, playlist.getFile(0).getTrackNumber());
+        assertEquals("Error in sort().", new Integer(1), playlist.getFile(1).getTrackNumber());
+        assertEquals("Error in sort().", new Integer(2), playlist.getFile(2).getTrackNumber());
+        assertEquals("Error in sort().", new Integer(3), playlist.getFile(3).getTrackNumber());
+        assertEquals("Error in sort().", new Integer(3), playlist.getCurrentFile().getTrackNumber());
 
         // Order by artist.
         playlist.sort(SortOrder.ARTIST);
-        assertEquals("Error in sort().", "Artist A", playlist.getFile(0).getMetaData().getArtist());
-        assertEquals("Error in sort().", "Artist B", playlist.getFile(1).getMetaData().getArtist());
-        assertEquals("Error in sort().", "Artist C", playlist.getFile(2).getMetaData().getArtist());
-        assertEquals("Error in sort().", "Artist D", playlist.getFile(3).getMetaData().getArtist());
-        assertEquals("Error in sort().", new Integer(3), playlist.getCurrentFile().getMetaData().getTrackNumber());
+        assertEquals("Error in sort().", "Artist A", playlist.getFile(0).getArtist());
+        assertEquals("Error in sort().", "Artist B", playlist.getFile(1).getArtist());
+        assertEquals("Error in sort().", "Artist C", playlist.getFile(2).getArtist());
+        assertEquals("Error in sort().", "Artist D", playlist.getFile(3).getArtist());
+        assertEquals("Error in sort().", new Integer(3), playlist.getCurrentFile().getTrackNumber());
 
         // Order by album.
         playlist.sort(SortOrder.ALBUM);
-        assertEquals("Error in sort().", "Album A", playlist.getFile(0).getMetaData().getAlbumName());
-        assertEquals("Error in sort().", "Album B", playlist.getFile(1).getMetaData().getAlbumName());
-        assertEquals("Error in sort().", "Album C", playlist.getFile(2).getMetaData().getAlbumName());
-        assertEquals("Error in sort().", "Album D", playlist.getFile(3).getMetaData().getAlbumName());
-        assertEquals("Error in sort().", new Integer(3), playlist.getCurrentFile().getMetaData().getTrackNumber());
+        assertEquals("Error in sort().", "Album A", playlist.getFile(0).getAlbumName());
+        assertEquals("Error in sort().", "Album B", playlist.getFile(1).getAlbumName());
+        assertEquals("Error in sort().", "Album C", playlist.getFile(2).getAlbumName());
+        assertEquals("Error in sort().", "Album D", playlist.getFile(3).getAlbumName());
+        assertEquals("Error in sort().", new Integer(3), playlist.getCurrentFile().getTrackNumber());
     }
 
     private void assertPlaylistEquals(Playlist playlist, int index, String... songs) {
         assertEquals(songs.length, playlist.size());
         for (int i = 0; i < songs.length; i++) {
-            assertEquals(songs[i], playlist.getFiles()[i].getName());
+            assertEquals(songs[i], playlist.getFiles().get(i).getName());
         }
 
         if (index == -1) {
@@ -236,25 +236,25 @@ public class PlaylistTestCase extends TestCase {
     private Playlist createPlaylist(int index, String... songs) throws Exception {
         Playlist playlist = new Playlist();
         for (String song : songs) {
-            playlist.addFiles(true, new TestMusicFile(song));
+            playlist.addFiles(true, new TestMediaFile(song));
         }
         playlist.setIndex(index);
         return playlist;
     }
 
-    private static class TestMusicFile extends MusicFile {
+    private static class TestMediaFile extends MediaFile {
 
         private String name;
         private net.sourceforge.subsonic.service.metadata.MetaData metaData;
 
-        TestMusicFile() {
+        TestMediaFile() {
         }
 
-        TestMusicFile(String name) {
+        TestMediaFile(String name) {
             this.name = name;
         }
 
-        TestMusicFile(Integer track, String artist, String album) {
+        TestMediaFile(Integer track, String artist, String album) {
             metaData = new net.sourceforge.subsonic.service.metadata.MetaData();
             if (track != null) {
                 metaData.setTrackNumber(track);
@@ -268,10 +268,10 @@ public class PlaylistTestCase extends TestCase {
             return name;
         }
 
-        @Override
-        public boolean exists() {
-            return true;
-        }
+//        @Override
+//        public boolean exists() {
+//            return true;
+//        }
 
         @Override
         public boolean isFile() {
@@ -283,10 +283,10 @@ public class PlaylistTestCase extends TestCase {
             return false;
         }
 
-        @Override
-        public net.sourceforge.subsonic.service.metadata.MetaData getMetaData() {
-            return metaData;
-        }
+//        @Override
+//        public net.sourceforge.subsonic.service.metadata.MetaData getMetaData() {
+//            return metaData;
+//        }
 
         @Override
         public boolean equals(Object o) {

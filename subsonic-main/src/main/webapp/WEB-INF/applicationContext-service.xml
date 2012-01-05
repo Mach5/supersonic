@@ -89,6 +89,7 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
         <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="musicInfoService" ref="musicInfoService"/>
         <property name="luceneSearchService" ref="luceneSearchService"/>
     </bean>
@@ -111,7 +112,7 @@
     <bean id="playlistService" class="net.sourceforge.subsonic.service.PlaylistService">
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
 
     <bean id="versionService" class="net.sourceforge.subsonic.service.VersionService"/>
@@ -195,7 +196,7 @@
 
     <bean id="ajaxPlaylistService" class="net.sourceforge.subsonic.ajax.PlaylistService">
         <property name="playerService" ref="playerService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="jukeboxService" ref="jukeboxService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="settingsService" ref="settingsService"/>

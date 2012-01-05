@@ -32,6 +32,7 @@ import org.apache.commons.io.filefilter.FileFileFilter;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -229,7 +230,7 @@ public class MediaFileService {
      * @param file The child file in question.
      * @return Whether the child file is excluded.
      */
-    private  boolean isExcluded(File file) {
+    private boolean isExcluded(File file) {
 
         // Exclude all hidden files starting with a "." or "@eaDir" (thumbnail dir created on Synology devices).
         return file.getName().startsWith(".") || file.getName().startsWith("@eaDir");
@@ -325,6 +326,31 @@ public class MediaFileService {
 
     public void setMediaFileDao(MediaFileDao mediaFileDao) {
         this.mediaFileDao = mediaFileDao;
+    }
+
+    /**
+     * Returns all media files that are children, grand-children etc of a given media file.
+     * Directories are not included in the result.
+     *
+     * @param sort Whether to sort files in the same directory.
+     * @return All descendant music files.
+     */
+    public List<MediaFile> getDescendantsOf(MediaFile ancestor, boolean sort) {
+
+        if (ancestor.isFile()) {
+            return Arrays.asList(ancestor);
+        }
+
+        List<MediaFile> result = new ArrayList<MediaFile>();
+
+        for (MediaFile child : getChildrenOf(ancestor, true, true, sort)) {
+            if (child.isDirectory()) {
+                result.addAll(getDescendantsOf(child, sort));
+            } else {
+                result.add(child);
+            }
+        }
+        return result;
     }
 
     /**

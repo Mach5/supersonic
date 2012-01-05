@@ -114,7 +114,7 @@
         <property name="securityService" ref="securityService"/>
         <property name="playlistService" ref="playlistService"/>
         <property name="playerService" ref="playerService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
     <bean id="savePlaylistController" class="net.sourceforge.subsonic.controller.SavePlaylistController">
         <property name="commandName" value="command"/>

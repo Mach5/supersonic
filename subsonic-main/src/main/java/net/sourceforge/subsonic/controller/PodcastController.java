@@ -99,7 +99,7 @@ public class PodcastController extends ParameterizableViewController {
         if (playlist.isEmpty()) {
             return null;
         }
-        return playlist.getFile(0).getSuffix();
+        return playlist.getFile(0).getFormat();
     }
 
     public void setPlaylistService(PlaylistService playlistService) {

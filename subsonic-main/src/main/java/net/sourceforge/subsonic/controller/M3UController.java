@@ -106,7 +106,7 @@ public class M3UController implements Controller {
 
     private String getSuffix(Player player) {
         Playlist playlist = player.getPlaylist();
-        return playlist.isEmpty() ? null : transcodingService.getSuffix(player, playlist.getFile(0), null);
+        return playlist.isEmpty() ? null : transcodingService.getSuffix(player, playlist.getFile(0).toMusicFile(), null);
     }
 
     public void setPlayerService(PlayerService playerService) {

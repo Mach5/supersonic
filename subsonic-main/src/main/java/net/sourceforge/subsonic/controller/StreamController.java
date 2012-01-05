@@ -128,7 +128,7 @@ public class StreamController implements Controller {
             if (isSingleFile) {
                 Playlist playlist = new Playlist();
                 MediaFile file = mediaFileService.getMediaFile(path);
-                playlist.addFiles(true, file.toMusicFile());
+                playlist.addFiles(true, file);
                 player.setPlaylist(playlist);
 
                 if (!file.isVideo()) {

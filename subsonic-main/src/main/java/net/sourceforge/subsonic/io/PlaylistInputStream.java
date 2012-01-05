@@ -133,9 +133,8 @@ public class PlaylistInputStream extends InputStream {
     }
 
     private void populateRandomPlaylist(Playlist playlist) throws IOException {
-        List<MusicFile> files = searchService.getRandomSongs(playlist.getRandomSearchCriteria());
+        List<MediaFile> files = searchService.getRandomSongs(playlist.getRandomSearchCriteria());
         playlist.addFiles(false, files);
-
         LOG.info("Recreated random playlist with " + playlist.size() + " songs.");
     }
 

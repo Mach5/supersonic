@@ -29,19 +29,17 @@ import java.util.Arrays;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.service.MediaFileService;
 import org.directwebremoting.WebContextFactory;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.JukeboxService;
-import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.util.StringUtil;
 
 /**
@@ -53,10 +51,10 @@ import net.sourceforge.subsonic.util.StringUtil;
 public class PlaylistService {
 
     private PlayerService playerService;
-    private MusicFileService musicFileService;
     private JukeboxService jukeboxService;
     private TranscodingService transcodingService;
     private SettingsService settingsService;
+    private MediaFileService mediaFileService;
 
     /**
      * Returns the playlist for the player of the current user.
@@ -112,8 +110,8 @@ public class PlaylistService {
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
 
         Player player = getCurrentPlayer(request, response);
-        MusicFile file = musicFileService.getMusicFile(path);
-        List<MusicFile> files = file.getDescendants(false, true);
+        MediaFile file = mediaFileService.getMediaFile(path);
+        List<MediaFile> files = mediaFileService.getDescendantsOf(file, true);
         if (player.isWeb()) {
             removeVideoFiles(files);
         }
@@ -126,8 +124,8 @@ public class PlaylistService {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
 
-        MusicFile file = musicFileService.getMusicFile(path);
-        List<MusicFile> randomFiles = getRandomChildren(file, count);
+        MediaFile file = mediaFileService.getMediaFile(path);
+        List<MediaFile> randomFiles = getRandomChildren(file, count);
         Player player = getCurrentPlayer(request, response);
         player.getPlaylist().addFiles(false, randomFiles);
         player.getPlaylist().setRandomSearchCriteria(null);
@@ -142,9 +140,10 @@ public class PlaylistService {
 
     public PlaylistInfo doAdd(HttpServletRequest request, HttpServletResponse response, List<String> paths) throws Exception {
         Player player = getCurrentPlayer(request, response);
-        List<MusicFile> files = new ArrayList<MusicFile>(paths.size());
+        List<MediaFile> files = new ArrayList<MediaFile>(paths.size());
         for (String path : paths) {
-            files.addAll(musicFileService.getMusicFile(path).getDescendants(false, true));
+            MediaFile ancestor = mediaFileService.getMediaFile(path);
+            files.addAll(mediaFileService.getDescendantsOf(ancestor, true));
         }
         if (player.isWeb()) {
             removeVideoFiles(files);
@@ -157,13 +156,13 @@ public class PlaylistService {
     public PlaylistInfo doSet(HttpServletRequest request, HttpServletResponse response, List<String> paths) throws Exception {
         Player player = getCurrentPlayer(request, response);
         Playlist playlist = player.getPlaylist();
-        MusicFile currentFile = playlist.getCurrentFile();
+        MediaFile currentFile = playlist.getCurrentFile();
         Playlist.Status status = playlist.getStatus();
 
         playlist.clear();
         PlaylistInfo result = doAdd(request, response, paths);
 
-        int index = currentFile == null ? -1 : Arrays.asList(playlist.getFiles()).indexOf(currentFile);
+        int index = currentFile == null ? -1 : playlist.getFiles().indexOf(currentFile);
         playlist.setIndex(index);
         playlist.setStatus(status);
         return result;
@@ -277,8 +276,8 @@ public class PlaylistService {
         jukeboxService.setGain(gain);
     }
 
-    private List<MusicFile> getRandomChildren(MusicFile file, int count) throws IOException {
-        List<MusicFile> children = file.getDescendants(false, false);
+    private List<MediaFile> getRandomChildren(MediaFile file, int count) throws IOException {
+        List<MediaFile> children = mediaFileService.getDescendantsOf(file, false);
         removeVideoFiles(children);
 
         if (children.isEmpty()) {
@@ -288,10 +287,10 @@ public class PlaylistService {
         return children.subList(0, Math.min(count, children.size()));
     }
 
-    private void removeVideoFiles(List<MusicFile> files) {
-        Iterator<MusicFile> iterator = files.iterator();
+    private void removeVideoFiles(List<MediaFile> files) {
+        Iterator<MediaFile> iterator = files.iterator();
         while (iterator.hasNext()) {
-            MusicFile file = iterator.next();
+            MediaFile file = iterator.next();
             if (file.isVideo()) {
                 iterator.remove();
             }
@@ -316,10 +315,9 @@ public class PlaylistService {
 
         List<PlaylistInfo.Entry> entries = new ArrayList<PlaylistInfo.Entry>();
         Playlist playlist = player.getPlaylist();
-        for (MusicFile file : playlist.getFiles()) {
-            MediaFile mediaFile = MediaFile.forMusicFile(file, null);
+        for (MediaFile file : playlist.getFiles()) {
             String albumUrl = url.replaceFirst("/dwr/.*", "/main.view?pathUtf8Hex=" +
-                    StringUtil.utf8HexEncode(file.getParent().getPath()));
+                    StringUtil.utf8HexEncode(file.getParentPath()));
             String streamUrl = url.replaceFirst("/dwr/.*", "/stream?player=" + player.getId() + "&pathUtf8Hex=" +
                                                            StringUtil.utf8HexEncode(file.getPath()));
 
@@ -331,10 +329,10 @@ public class PlaylistService {
             }
 
             String format = formatFormat(player, file);
-            entries.add(new PlaylistInfo.Entry(mediaFile.getTrackNumber(), mediaFile.getTitle(), mediaFile.getArtist(),
-                    mediaFile.getAlbumName(), mediaFile.getGenre(), mediaFile.getYear(), formatBitRate(mediaFile),
-                    mediaFile.getDurationSeconds(), mediaFile.getDurationString(), format, formatContentType(format),
-                    formatFileSize(mediaFile.getFileSize(), locale), albumUrl, streamUrl));
+            entries.add(new PlaylistInfo.Entry(file.getTrackNumber(), file.getTitle(), file.getArtist(),
+                    file.getAlbumName(), file.getGenre(), file.getYear(), formatBitRate(file),
+                    file.getDurationSeconds(), file.getDurationString(), format, formatContentType(format),
+                    formatFileSize(file.getFileSize(), locale), albumUrl, streamUrl));
         }
         boolean isStopEnabled = playlist.getStatus() == Playlist.Status.PLAYING && !player.isExternalWithPlaylist();
         float gain = jukeboxService.getGain();
@@ -348,8 +346,8 @@ public class PlaylistService {
         return StringUtil.formatBytes(fileSize, locale);
     }
 
-    private String formatFormat(Player player, MusicFile file) {
-        return transcodingService.getSuffix(player, file, null);
+    private String formatFormat(Player player, MediaFile file) {
+        return transcodingService.getSuffix(player, file.toMusicFile(), null);
     }
 
     private String formatContentType(String format) {
@@ -374,8 +372,8 @@ public class PlaylistService {
         this.playerService = playerService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public void setJukeboxService(JukeboxService jukeboxService) {
