@@ -284,7 +284,7 @@ public class SearchService {
         if (!isIndexCreated() || isIndexBeingCreated()) {
             SearchResult empty = new SearchResult();
             empty.setOffset(criteria.getOffset());
-            empty.setMusicFiles(Collections.<MusicFile>emptyList());
+            empty.setMediaFiles(Collections.<MediaFile>emptyList());
             return empty;
         }
 

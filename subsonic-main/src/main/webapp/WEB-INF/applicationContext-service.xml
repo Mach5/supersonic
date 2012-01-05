@@ -95,7 +95,7 @@
     </bean>
 
     <bean id="luceneSearchService" class="net.sourceforge.subsonic.service.LuceneSearchService">
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
 
     <bean id="networkService" class="net.sourceforge.subsonic.service.NetworkService" init-method="init">

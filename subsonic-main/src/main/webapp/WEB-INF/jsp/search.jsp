@@ -92,11 +92,11 @@
                 </c:import>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-left:0.25em;padding-right:1.25em">
-                    <a href="${mainUrl}">${match.firstChild.metaData.album}</a>
+                    <a href="${mainUrl}">${match.albumName}</a>
                 </td>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-right:0.25em">
-                    <span class="detail">${match.firstChild.metaData.artist}</span>
+                    <span class="detail">${match.artist}</span>
                 </td>
             </tr>
 
@@ -114,7 +114,7 @@
         <c:forEach items="${command.songs}" var="match" varStatus="loopStatus">
 
             <sub:url value="/main.view" var="mainUrl">
-                <sub:param name="path" value="${match.parent.path}"/>
+                <sub:param name="path" value="${match.parentPath}"/>
             </sub:url>
 
             <tr class="songRow" ${loopStatus.count > 15 ? "style='display:none'" : ""}>
@@ -128,15 +128,15 @@
                 </c:import>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-left:0.25em;padding-right:1.25em">
-                        ${match.metaData.title}
+                        ${match.title}
                 </td>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-right:1.25em">
-                    <a href="${mainUrl}"><span class="detail">${match.metaData.album}</span></a>
+                    <a href="${mainUrl}"><span class="detail">${match.albumName}</span></a>
                 </td>
 
                 <td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-right:0.25em">
-                    <span class="detail">${match.metaData.artist}</span>
+                    <span class="detail">${match.artist}</span>
                 </td>
             </tr>
 

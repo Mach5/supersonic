@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sourceforge.subsonic.domain.MediaFile;
 import org.apache.lucene.analysis.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.LowerCaseFilter;
@@ -49,7 +50,6 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
 import net.sourceforge.subsonic.util.FileUtil;
@@ -73,7 +73,7 @@ public class LuceneSearchService {
     private static final String FIELD_ARTIST = "artist";
     private static final Version LUCENE_VERSION = Version.LUCENE_30;
 
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
 
     public LuceneSearchService() {
         removeLocks();
@@ -102,11 +102,11 @@ public class LuceneSearchService {
 
     public SearchResult search(SearchCriteria criteria, IndexType indexType) {
         SearchResult result = new SearchResult();
-        List<MusicFile> musicFiles = new ArrayList<MusicFile>();
+        List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
         int offset = criteria.getOffset();
         int count = criteria.getCount();
         result.setOffset(offset);
-        result.setMusicFiles(musicFiles);
+        result.setMediaFiles(mediaFiles);
 
         IndexReader reader = null;
         try {
@@ -124,7 +124,7 @@ public class LuceneSearchService {
             int end = Math.min(start + count, topDocs.totalHits);
             for (int i = start; i < end; i++) {
                 Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
-                musicFiles.add(musicFileService.getMusicFile(doc.getField(FIELD_PATH).stringValue()));
+                mediaFiles.add(mediaFileService.getMediaFile(doc.getField(FIELD_PATH).stringValue()));
             }
 
         } catch (Throwable x) {
@@ -170,8 +170,8 @@ public class LuceneSearchService {
         }
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
     public static enum IndexType {

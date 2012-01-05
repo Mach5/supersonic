@@ -31,9 +31,9 @@ import java.util.*;
 public class SearchCommand {
 
     private String query;
-    private List<MusicFile> artists;
-    private List<MusicFile> albums;
-    private List<MusicFile> songs;
+    private List<MediaFile> artists;
+    private List<MediaFile> albums;
+    private List<MediaFile> songs;
     private boolean isIndexBeingCreated;
     private User user;
     private boolean partyModeEnabled;
@@ -55,27 +55,27 @@ public class SearchCommand {
         isIndexBeingCreated = indexBeingCreated;
     }
 
-    public List<MusicFile> getArtists() {
+    public List<MediaFile> getArtists() {
         return artists;
     }
 
-    public void setArtists(List<MusicFile> artists) {
+    public void setArtists(List<MediaFile> artists) {
         this.artists = artists;
     }
 
-    public List<MusicFile> getAlbums() {
+    public List<MediaFile> getAlbums() {
         return albums;
     }
 
-    public void setAlbums(List<MusicFile> albums) {
+    public void setAlbums(List<MediaFile> albums) {
         this.albums = albums;
     }
 
-    public List<MusicFile> getSongs() {
+    public List<MediaFile> getSongs() {
         return songs;
     }
 
-    public void setSongs(List<MusicFile> songs) {
+    public void setSongs(List<MediaFile> songs) {
         this.songs = songs;
     }
 
@@ -104,20 +104,20 @@ public class SearchCommand {
     }
 
     public static class Match {
-        private MusicFile musicFile;
+        private MediaFile mediaFile;
         private String title;
         private String album;
         private String artist;
 
-        public Match(MusicFile musicFile, String title, String album, String artist) {
-            this.musicFile = musicFile;
+        public Match(MediaFile mediaFile, String title, String album, String artist) {
+            this.mediaFile = mediaFile;
             this.title = title;
             this.album = album;
             this.artist = artist;
         }
 
-        public MusicFile getMusicFile() {
-            return musicFile;
+        public MediaFile getMediaFile() {
+            return mediaFile;
         }
 
         public String getTitle() {

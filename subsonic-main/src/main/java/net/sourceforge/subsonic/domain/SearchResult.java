@@ -19,7 +19,6 @@
 package net.sourceforge.subsonic.domain;
 
 import java.util.List;
-import java.util.ArrayList;
 
 import net.sourceforge.subsonic.service.SearchService;
 
@@ -31,16 +30,16 @@ import net.sourceforge.subsonic.service.SearchService;
  */
 public class SearchResult {
 
-    private List<MusicFile> musicFiles;
+    private List<MediaFile> mediaFiles;
     private int offset;
     private int totalHits;
 
-    public List<MusicFile> getMusicFiles() {
-        return musicFiles;
+    public List<MediaFile> getMediaFiles() {
+        return mediaFiles;
     }
 
-    public void setMusicFiles(List<MusicFile> musicFiles) {
-        this.musicFiles = musicFiles;
+    public void setMediaFiles(List<MediaFile> mediaFiles) {
+        this.mediaFiles = mediaFiles;
     }
 
     public int getOffset() {

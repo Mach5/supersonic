@@ -79,13 +79,13 @@ public class SearchController extends SimpleFormController {
                 criteria.setQuery(any);
 
                 SearchResult artists = searchService.search(criteria, LuceneSearchService.IndexType.ARTIST);
-                command.setArtists(artists.getMusicFiles());
+                command.setArtists(artists.getMediaFiles());
 
                 SearchResult albums = searchService.search(criteria, LuceneSearchService.IndexType.ALBUM);
-                command.setAlbums(albums.getMusicFiles());
+                command.setAlbums(albums.getMediaFiles());
 
                 SearchResult songs = searchService.search(criteria, LuceneSearchService.IndexType.SONG);
-                command.setSongs(songs.getMusicFiles());
+                command.setSongs(songs.getMediaFiles());
 
                 command.setPlayer(playerService.getPlayer(request, response));
             }

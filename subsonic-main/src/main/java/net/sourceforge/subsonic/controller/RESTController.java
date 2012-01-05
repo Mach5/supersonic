@@ -289,9 +289,9 @@ public class RESTController extends MultiActionController {
                 new Attribute("offset", result.getOffset()),
                 new Attribute("totalHits", result.getTotalHits()));
 
-        for (MusicFile musicFile : result.getMusicFiles()) {
-            File coverArt = musicFileService.getCoverArt(musicFile.getParent());
-            AttributeSet attributes = createAttributesForMusicFile(player, coverArt, musicFile);
+        for (MediaFile mediaFile : result.getMediaFiles()) {
+            File coverArt = mediaFileService.getCoverArt(mediaFile);
+            AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
             builder.add("match", attributes, true);
         }
         builder.endAll();
@@ -311,26 +311,26 @@ public class RESTController extends MultiActionController {
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "artistCount", 20));
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "artistOffset", 0));
         SearchResult artists = searchService.search(criteria, LuceneSearchService.IndexType.ARTIST);
-        for (MusicFile musicFile : artists.getMusicFiles()) {
+        for (MediaFile mediaFile : artists.getMediaFiles()) {
             builder.add("artist", true,
-                    new Attribute("name", musicFile.getName()),
-                    new Attribute("id", StringUtil.utf8HexEncode(musicFile.getPath())));
+                    new Attribute("name", mediaFile.getName()),
+                    new Attribute("id", StringUtil.utf8HexEncode(mediaFile.getPath())));
         }
 
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "albumCount", 20));
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "albumOffset", 0));
         SearchResult albums = searchService.search(criteria, LuceneSearchService.IndexType.ALBUM);
-        for (MusicFile musicFile : albums.getMusicFiles()) {
-            AttributeSet attributes = createAttributesForMusicFile(player, null, musicFile);
+        for (MediaFile mediaFile : albums.getMediaFiles()) {
+            AttributeSet attributes = createAttributesForMediaFile(player, null, mediaFile);
             builder.add("album", attributes, true);
         }
 
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "songCount", 20));
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "songOffset", 0));
         SearchResult songs = searchService.search(criteria, LuceneSearchService.IndexType.SONG);
-        for (MusicFile musicFile : songs.getMusicFiles()) {
-            File coverArt = musicFileService.getCoverArt(musicFile.getParent());
-            AttributeSet attributes = createAttributesForMusicFile(player, coverArt, musicFile);
+        for (MediaFile mediaFile : songs.getMediaFiles()) {
+            File coverArt = mediaFileService.getCoverArt(mediaFile);
+            AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
             builder.add("song", attributes, true);
         }
 
@@ -653,27 +653,22 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
 
-    private AttributeSet createAttributesForMediaFile(Player player, File coverArt, MediaFile mediaFile) throws IOException {
-        return createAttributesForMusicFile(player, coverArt, mediaFile.toMusicFile());
-    }
-
-    @Deprecated
-    private AttributeSet createAttributesForMusicFile(Player player, File coverArt, MusicFile musicFile) throws IOException {
+    private AttributeSet createAttributesForMediaFile(Player player, File coverArt, MediaFile mediaFile) {
+        MediaFile parent = mediaFileService.getParentOf(mediaFile);
         AttributeSet attributes = new AttributeSet();
-        attributes.add("id", StringUtil.utf8HexEncode(musicFile.getPath()));
+        attributes.add("id", StringUtil.utf8HexEncode(mediaFile.getPath()));
         try {
-            if (!musicFile.getParent().isRoot()) {
-                attributes.add("parent", StringUtil.utf8HexEncode(musicFile.getParent().getPath()));
+            if (!parent.isRoot()) {
+                attributes.add("parent", StringUtil.utf8HexEncode(parent.getPath()));
             }
         } catch (SecurityException x) {
             // Ignored.
         }
-        attributes.add("title", musicFile.getTitle());
-        attributes.add("isDir", musicFile.isDirectory());
+        attributes.add("title", mediaFile.getTitle());
+        attributes.add("isDir", mediaFile.isDirectory());
 
         String username = player.getUsername();
         if (username != null) {
-            MediaFile mediaFile = mediaFileService.getMediaFile(musicFile.getFile());
             Integer rating = musicInfoService.getRatingForUser(username, mediaFile);
             if (rating != null) {
                 attributes.add("userRating", rating);
@@ -684,63 +679,62 @@ public class RESTController extends MultiActionController {
             }
         }
 
-        if (musicFile.isFile()) {
-            MetaData metaData = musicFile.getMetaData();
-            attributes.add("album", metaData.getAlbumName());
-            attributes.add("artist", metaData.getArtist());
-            Integer duration = metaData.getDurationSeconds();
+        if (mediaFile.isFile()) {
+            attributes.add("album", mediaFile.getAlbumName());
+            attributes.add("artist", mediaFile.getArtist());
+            Integer duration = mediaFile.getDurationSeconds();
             if (duration != null) {
                 attributes.add("duration", duration);
             }
-            Integer bitRate = metaData.getBitRate();
+            Integer bitRate = mediaFile.getBitRate();
             if (bitRate != null) {
                 attributes.add("bitRate", bitRate);
             }
 
-            Integer track = metaData.getTrackNumber();
+            Integer track = mediaFile.getTrackNumber();
             if (track != null) {
                 attributes.add("track", track);
             }
 
-            Integer year = metaData.getYear();
+            Integer year = mediaFile.getYear();
             if (year != null) {
                 attributes.add("year", year);
             }
 
-            String genre = metaData.getGenre();
+            String genre = mediaFile.getGenre();
             if (genre != null) {
                 attributes.add("genre", genre);
             }
 
-            attributes.add("size", musicFile.length());
-            String suffix = musicFile.getSuffix();
+            attributes.add("size", mediaFile.getFileSize());
+            String suffix = mediaFile.getFormat();
             attributes.add("suffix", suffix);
             attributes.add("contentType", StringUtil.getMimeType(suffix));
-            attributes.add("isVideo", musicFile.isVideo());
+            attributes.add("isVideo", mediaFile.isVideo());
 
             if (coverArt != null) {
                 attributes.add("coverArt", StringUtil.utf8HexEncode(coverArt.getPath()));
             }
 
-            if (transcodingService.isTranscodingRequired(musicFile, player)) {
-                String transcodedSuffix = transcodingService.getSuffix(player, musicFile, null);
+            if (transcodingService.isTranscodingRequired(mediaFile.toMusicFile(), player)) {
+                String transcodedSuffix = transcodingService.getSuffix(player, mediaFile.toMusicFile(), null);
                 attributes.add("transcodedSuffix", transcodedSuffix);
                 attributes.add("transcodedContentType", StringUtil.getMimeType(transcodedSuffix));
             }
 
-            String path = getRelativePath(musicFile);
+            String path = getRelativePath(mediaFile);
             if (path != null) {
                 attributes.add("path", path);
             }
 
         } else {
 
-            File childCoverArt = musicFileService.getCoverArt(musicFile);
+            File childCoverArt = mediaFileService.getCoverArt(mediaFile);
             if (childCoverArt != null) {
                 attributes.add("coverArt", StringUtil.utf8HexEncode(childCoverArt.getPath()));
             }
 
-            String artist = resolveArtist(musicFile);
+            String artist = resolveArtist(mediaFile);
             if (artist != null) {
                 attributes.add("artist", artist);
             }
@@ -749,20 +743,19 @@ public class RESTController extends MultiActionController {
         return attributes;
     }
 
-    private String resolveArtist(MusicFile file) throws IOException {
+    private String resolveArtist(MediaFile file) {
 
         // If directory, find artist from metadata in child.
         if (file.isDirectory()) {
-            file = file.getFirstChild();
+            file = mediaFileService.getFirstChildOf(file);
             if (file == null) {
                 return null;
             }
         }
-        return file.getMetaData().getArtist();
+        return file.getArtist();
     }
 
-
-    private String getRelativePath(MusicFile musicFile) {
+    private String getRelativePath(MediaFile musicFile) {
 
         String filePath = musicFile.getPath();
 

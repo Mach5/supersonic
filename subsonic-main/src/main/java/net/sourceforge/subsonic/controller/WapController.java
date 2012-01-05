@@ -34,7 +34,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
 import net.sourceforge.subsonic.domain.Player;
@@ -45,7 +44,6 @@ import net.sourceforge.subsonic.domain.SearchResult;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.service.LuceneSearchService;
 import net.sourceforge.subsonic.service.MediaFileService;
-import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.MusicIndexService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
@@ -213,14 +211,14 @@ public class WapController extends MultiActionController {
         return settings(request, response);
     }
 
-    private List<MusicFile> search(String query) throws IOException {
+    private List<MediaFile> search(String query) throws IOException {
         SearchCriteria criteria = new SearchCriteria();
         criteria.setQuery(query);
         criteria.setOffset(0);
         criteria.setCount(50);
 
         SearchResult result = searchService.search(criteria, LuceneSearchService.IndexType.SONG);
-        return result.getMusicFiles();
+        return result.getMediaFiles();
     }
 
     public void setSettingsService(SettingsService settingsService) {
