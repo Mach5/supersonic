@@ -47,7 +47,6 @@ import net.sourceforge.subsonic.ajax.ChatService;
 import net.sourceforge.subsonic.ajax.LyricsInfo;
 import net.sourceforge.subsonic.ajax.LyricsService;
 import net.sourceforge.subsonic.command.UserSettingsCommand;
-import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
 import net.sourceforge.subsonic.domain.Player;
@@ -716,8 +715,8 @@ public class RESTController extends MultiActionController {
                 attributes.add("coverArt", StringUtil.utf8HexEncode(coverArt.getPath()));
             }
 
-            if (transcodingService.isTranscodingRequired(mediaFile.toMusicFile(), player)) {
-                String transcodedSuffix = transcodingService.getSuffix(player, mediaFile.toMusicFile(), null);
+            if (transcodingService.isTranscodingRequired(mediaFile, player)) {
+                String transcodedSuffix = transcodingService.getSuffix(player, mediaFile, null);
                 attributes.add("transcodedSuffix", transcodedSuffix);
                 attributes.add("transcodedContentType", StringUtil.getMimeType(transcodedSuffix));
             }

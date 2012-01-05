@@ -85,7 +85,7 @@ public class M3UController implements Controller {
                 duration = -1;
             }
             out.println("#EXTINF:" + duration + "," + mediaFile.getArtist() + " - " + mediaFile.getTitle());
-            out.println(url + "player=" + player.getId() + "&pathUtf8Hex=" + StringUtil.utf8HexEncode(mediaFile.getPath()) + "&suffix=." + transcodingService.getSuffix(player, mediaFile.toMusicFile(), null));
+            out.println(url + "player=" + player.getId() + "&pathUtf8Hex=" + StringUtil.utf8HexEncode(mediaFile.getPath()) + "&suffix=." + transcodingService.getSuffix(player, mediaFile, null));
         }
     }
 
@@ -106,7 +106,7 @@ public class M3UController implements Controller {
 
     private String getSuffix(Player player) {
         Playlist playlist = player.getPlaylist();
-        return playlist.isEmpty() ? null : transcodingService.getSuffix(player, playlist.getFile(0).toMusicFile(), null);
+        return playlist.isEmpty() ? null : transcodingService.getSuffix(player, playlist.getFile(0), null);
     }
 
     public void setPlayerService(PlayerService playerService) {

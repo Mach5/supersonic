@@ -21,7 +21,7 @@ package net.sourceforge.subsonic.domain;
 import java.util.Date;
 
 /**
- * Contains information about a {@link MusicFile}, including user rating and comments, as well
+ * Contains information about a {@link MediaFile}, including user rating and comments, as well
  * as details about how often and how recent the file has been played.
  *
  * @author Sindre Mehus

@@ -22,7 +22,6 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.controller.VideoPlayerController;
 import net.sourceforge.subsonic.dao.TranscodingDao;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.TranscodeScheme;
 import net.sourceforge.subsonic.domain.Transcoding;
@@ -141,28 +140,28 @@ public class TranscodingService {
     }
 
     /**
-     * Returns whether transcoding is required for the given music file and player combination.
+     * Returns whether transcoding is required for the given media file and player combination.
      *
-     * @param musicFile The music file.
+     * @param mediaFile The media file.
      * @param player    The player.
      * @return Whether transcoding  will be performed if invoking the
      *         {@link #getTranscodedInputStream} method with the same arguments.
      */
-    public boolean isTranscodingRequired(MusicFile musicFile, Player player) {
-        return getTranscoding(musicFile, player, null) != null;
+    public boolean isTranscodingRequired(MediaFile mediaFile, Player player) {
+        return getTranscoding(mediaFile, player, null) != null;
     }
 
     /**
-     * Returns the suffix for the given player and music file, taking transcodings into account.
+     * Returns the suffix for the given player and media file, taking transcodings into account.
      *
      * @param player                The player in question.
-     * @param file                  The music player.
+     * @param file                  The media file.
      * @param preferredTargetFormat Used to select among multiple applicable transcodings. May be {@code null}.
      * @return The file suffix, e.g., "mp3".
      */
-    public String getSuffix(Player player, MusicFile file, String preferredTargetFormat) {
+    public String getSuffix(Player player, MediaFile file, String preferredTargetFormat) {
         Transcoding transcoding = getTranscoding(file, player, preferredTargetFormat);
-        return transcoding != null ? transcoding.getTargetFormat() : file.getSuffix();
+        return transcoding != null ? transcoding.getTargetFormat() : file.getFormat();
     }
 
     /**
@@ -193,14 +192,14 @@ public class TranscodingService {
             maxBitRate = transcodeScheme.getMaxBitRate();
         }
 
-        Transcoding transcoding = getTranscoding(mediaFile.toMusicFile(), player, preferredTargetFormat);
+        Transcoding transcoding = getTranscoding(mediaFile, player, preferredTargetFormat);
         if (transcoding != null) {
             parameters.setTranscoding(transcoding);
             if (maxBitRate == null) {
-                maxBitRate = mediaFile.isVideo() ? VideoPlayerController.DEFAULT_BIT_RATE: 128;
+                maxBitRate = mediaFile.isVideo() ? VideoPlayerController.DEFAULT_BIT_RATE : 128;
             }
         } else if (maxBitRate != null) {
-            boolean supported = isDownsamplingSupported(mediaFile.toMusicFile());
+            boolean supported = isDownsamplingSupported(mediaFile);
             Integer bitRate = mediaFile.getBitRate();
             if (supported && bitRate != null && bitRate > maxBitRate) {
                 parameters.setDownsample(true);
@@ -302,12 +301,11 @@ public class TranscodingService {
      * <li>Prepending the path of the transcoder directory if the transcoder is found there.</li>
      * </ul>
      *
-     *
      * @param command                  The command line string.
      * @param maxBitRate               The maximum bitrate to use. May not be {@code null}.
      * @param videoTranscodingSettings Parameters used when transcoding video. May be {@code null}.
-     * @param mediaFile
-     *@param in                       Data to feed to the process.  May be {@code null}.  @return The newly created input stream.
+     * @param mediaFile                The media file.
+     * @param in                       Data to feed to the process.  May be {@code null}.  @return The newly created input stream.
      */
     private TranscodeInputStream createTranscodeInputStream(String command, Integer maxBitRate,
                                                             VideoTranscodingSettings videoTranscodingSettings, MediaFile mediaFile, InputStream in) throws IOException {
@@ -379,10 +377,10 @@ public class TranscodingService {
      * Returns an applicable transcoding for the given file and player, or <code>null</code> if no
      * transcoding should be done.
      */
-    private Transcoding getTranscoding(MusicFile musicFile, Player player, String preferredTargetFormat) {
+    private Transcoding getTranscoding(MediaFile mediaFile, Player player, String preferredTargetFormat) {
 
         List<Transcoding> applicableTranscodings = new LinkedList<Transcoding>();
-        String suffix = musicFile.getSuffix();
+        String suffix = mediaFile.getFormat();
 
         for (Transcoding transcoding : getTranscodingsForPlayer(player)) {
             for (String sourceFormat : transcoding.getSourceFormatsAsArray()) {
@@ -422,12 +420,12 @@ public class TranscodingService {
     /**
      * Returns whether downsampling is supported (i.e., whether LAME is installed or not.)
      *
-     * @param musicFile If not null, returns whether downsampling is supported for this file.
+     * @param mediaFile If not null, returns whether downsampling is supported for this file.
      * @return Whether downsampling is supported.
      */
-    public boolean isDownsamplingSupported(MusicFile musicFile) {
-        if (musicFile != null) {
-            boolean isMp3 = "mp3".equalsIgnoreCase(musicFile.getSuffix());
+    public boolean isDownsamplingSupported(MediaFile mediaFile) {
+        if (mediaFile != null) {
+            boolean isMp3 = "mp3".equalsIgnoreCase(mediaFile.getFormat());
             if (!isMp3) {
                 return false;
             }

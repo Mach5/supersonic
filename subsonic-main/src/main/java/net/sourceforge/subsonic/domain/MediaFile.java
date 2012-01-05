@@ -463,6 +463,7 @@ public class MediaFile {
                 true);
     }
 
+    @Deprecated
     public MusicFile toMusicFile() {
         return ServiceLocator.getMusicFileService().getMusicFile(path);
     }

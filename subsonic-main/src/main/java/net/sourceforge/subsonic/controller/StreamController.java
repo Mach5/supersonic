@@ -153,7 +153,7 @@ public class StreamController implements Controller {
                     Util.setContentLength(response, fileLength);
                 }
 
-                String transcodedSuffix = transcodingService.getSuffix(player, file.toMusicFile(), preferredTargetFormat);
+                String transcodedSuffix = transcodingService.getSuffix(player, file, preferredTargetFormat);
                 response.setContentType(StringUtil.getMimeType(transcodedSuffix));
 
                 if (file.isVideo()) {
