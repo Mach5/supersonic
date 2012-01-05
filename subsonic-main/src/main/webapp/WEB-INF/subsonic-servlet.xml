@@ -334,9 +334,8 @@
         <property name="playlistService" ref="playlistService"/>
         <property name="searchService" ref="searchService"/>
         <property name="securityService" ref="securityService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="musicIndexService" ref="musicIndexService"/>
-        <property name="versionService" ref="versionService"/>
     </bean>
     <bean id="restController" class="net.sourceforge.subsonic.controller.RESTController">
         <property name="settingsService" ref="settingsService"/>

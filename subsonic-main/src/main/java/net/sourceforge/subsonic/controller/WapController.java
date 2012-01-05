@@ -33,15 +33,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.RandomSearchCriteria;
-import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.service.LuceneSearchService;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.MusicIndexService;
 import net.sourceforge.subsonic.service.PlayerService;
@@ -49,9 +52,6 @@ import net.sourceforge.subsonic.service.PlaylistService;
 import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.service.VersionService;
-import net.sourceforge.subsonic.service.LuceneSearchService;
-import net.sourceforge.subsonic.util.StringUtil;
 
 /**
  * Multi-controller used for wap pages.
@@ -65,9 +65,8 @@ public class WapController extends MultiActionController {
     private PlaylistService playlistService;
     private SearchService searchService;
     private SecurityService securityService;
-    private MusicFileService musicFileService;
     private MusicIndexService musicIndexService;
-    private VersionService versionService;
+    private MediaFileService mediaFileService;
 
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return wap(request, response);
@@ -105,14 +104,14 @@ public class WapController extends MultiActionController {
 
     public ModelAndView browse(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String path = request.getParameter("path");
-        MusicFile parent = musicFileService.getMusicFile(path);
+        MediaFile parent = mediaFileService.getMediaFile(path);
 
         // Create array of file(s) to display.
-        List<MusicFile> children;
+        List<MediaFile> children;
         if (parent.isDirectory()) {
-            children = parent.getChildren(true, true, true);
+            children = mediaFileService.getChildrenOf(parent, true, true, true);
         } else {
-            children = new ArrayList<MusicFile>();
+            children = new ArrayList<MediaFile>();
             children.add(parent);
         }
 
@@ -144,11 +143,11 @@ public class WapController extends MultiActionController {
             map.put("playlist", playlist);
 
             if (request.getParameter("play") != null) {
-                MusicFile file = musicFileService.getMusicFile(request.getParameter("play"));
-                playlist.addFiles(false, file);
+                MediaFile file = mediaFileService.getMediaFile(request.getParameter("play"));
+                playlist.addFiles(false, file.toMusicFile());
             } else if (request.getParameter("add") != null) {
-                MusicFile file = musicFileService.getMusicFile(request.getParameter("add"));
-                playlist.addFiles(true, file);
+                MediaFile file = mediaFileService.getMediaFile(request.getParameter("add"));
+                playlist.addFiles(true, file.toMusicFile());
             } else if (request.getParameter("skip") != null) {
                 playlist.setIndex(Integer.parseInt(request.getParameter("skip")));
             } else if (request.getParameter("clear") != null) {
@@ -224,18 +223,6 @@ public class WapController extends MultiActionController {
         return result.getMusicFiles();
     }
 
-    private String getBaseUrl(HttpServletRequest request) {
-        String baseUrl = request.getRequestURL().toString();
-        baseUrl = baseUrl.replaceFirst("/wap.*", "/");
-
-        // Rewrite URLs in case we're behind a proxy.
-        if (settingsService.isRewriteUrlEnabled()) {
-            String referer = request.getHeader("referer");
-            baseUrl = StringUtil.rewriteUrl(baseUrl, referer);
-        }
-        return baseUrl;
-    }
-
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
     }
@@ -256,15 +243,11 @@ public class WapController extends MultiActionController {
         this.securityService = securityService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
-
     public void setMusicIndexService(MusicIndexService musicIndexService) {
         this.musicIndexService = musicIndexService;
     }
 
-    public void setVersionService(VersionService versionService) {
-        this.versionService = versionService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }
