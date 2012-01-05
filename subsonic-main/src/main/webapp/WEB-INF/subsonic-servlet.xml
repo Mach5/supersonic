@@ -250,7 +250,7 @@
         <property name="musicInfoService" ref="musicInfoService"/>
         <property name="searchService" ref="searchService"/>
         <property name="settingsService" ref="settingsService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="securityService" ref="securityService"/>
     </bean>
     <bean id="editTagsController" class="net.sourceforge.subsonic.controller.EditTagsController">

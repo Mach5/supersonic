@@ -262,7 +262,7 @@ public class MediaFileService {
     /**
      * Returns a cover art image for the given media file.
      */
-    public File getCoverArt(MediaFile mediaFile) throws IOException {
+    public File getCoverArt(MediaFile mediaFile) {
         if (mediaFile.getCoverArtFile() != null) {
             return mediaFile.getCoverArtFile();
         }

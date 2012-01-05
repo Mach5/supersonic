@@ -3,7 +3,7 @@ Only store recognized file types?
 Support per-artist cover art.
 Collapse media_type, is_album and is_directory.  Create index.
 Decide when to set "album" and "artist" for directories.
-Phase out MusicFile (usages: 420, 410, 398, 380, 372, 365, 354, 340, 311, 262, 253, 232)
+Phase out MusicFile (usages: 420, 410, 398, 380, 372, 365, 354, 340, 311, 262, 253, 232, 141)
 
 When changing tags, web page displays old data.
 Root folder should have parent == null.

@@ -428,8 +428,8 @@ public class SearchService {
      * @return Array of random albums.
      * @throws IOException If an I/O error occurs.
      */
-    public List<MusicFile> getRandomAlbums(int count) throws IOException {
-        List<MusicFile> result = new ArrayList<MusicFile>(count);
+    public List<MediaFile> getRandomAlbums(int count) throws IOException {
+        List<MediaFile> result = new ArrayList<MediaFile>(count);
 
         if (!isIndexCreated() || isIndexBeingCreated()) {
             return result;
@@ -448,7 +448,7 @@ public class SearchService {
             File file = cachedSongs.get(n).file;
 
             if (FileUtil.exists(file) && securityService.isReadAllowed(file)) {
-                MusicFile album = musicFileService.getMusicFile(file.getParentFile());
+                MediaFile album = mediaFileService.getMediaFile(file.getParentFile());
                 if (!album.isRoot() && !result.contains(album)) {
                     result.add(album);
 
@@ -471,8 +471,8 @@ public class SearchService {
      * @return Array of new music files.
      * @throws IOException If an I/O error occurs.
      */
-    public List<MusicFile> getNewestAlbums(int offset, int count) throws IOException {
-        List<MusicFile> result = new ArrayList<MusicFile>(count);
+    public List<MediaFile> getNewestAlbums(int offset, int count) throws IOException {
+        List<MediaFile> result = new ArrayList<MediaFile>(count);
 
         if (!isIndexCreated() || isIndexBeingCreated()) {
             return result;
@@ -488,28 +488,13 @@ public class SearchService {
             }
             if (FileUtil.exists(line.file) && securityService.isReadAllowed(line.file)) {
                 if (n >= offset) {
-                    result.add(musicFileService.getMusicFile(line.file));
+                    result.add(mediaFileService.getMediaFile(line.file));
                 }
                 n++;
             }
         }
 
         return result;
-    }
-
-    /**
-     * Returns the creation date for the given file.
-     *
-     * @param musicFile The file in question.
-     * @return The creation date, or {@code null} if not found.
-     */
-    public Date getCreationDate(MusicFile musicFile) throws IOException {
-        if (!isIndexCreated() || isIndexBeingCreated()) {
-            return null;
-        }
-
-        Line line = getIndex().get(musicFile.getFile());
-        return line == null ? null : new Date(line.created);
     }
 
     /**

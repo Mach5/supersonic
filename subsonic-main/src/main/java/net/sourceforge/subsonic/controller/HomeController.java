@@ -20,10 +20,9 @@ package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.domain.MusicFileInfo;
 import net.sourceforge.subsonic.domain.User;
-import net.sourceforge.subsonic.service.MusicFileService;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.MusicInfoService;
 import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
@@ -51,16 +50,16 @@ public class HomeController extends ParameterizableViewController {
 
     private static final Logger LOG = Logger.getLogger(HomeController.class);
 
-    private static final int DEFAULT_LIST_SIZE    =   10;
-    private static final int MAX_LIST_SIZE        =  500;
-    private static final int DEFAULT_LIST_OFFSET  =    0;
-    private static final int MAX_LIST_OFFSET      = 5000;
+    private static final int DEFAULT_LIST_SIZE = 10;
+    private static final int MAX_LIST_SIZE = 500;
+    private static final int DEFAULT_LIST_OFFSET = 0;
+    private static final int MAX_LIST_OFFSET = 5000;
 
     private SettingsService settingsService;
     private SearchService searchService;
     private MusicInfoService musicInfoService;
-    private MusicFileService musicFileService;
     private SecurityService securityService;
+    private MediaFileService mediaFileService;
 
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -114,7 +113,7 @@ public class HomeController extends ParameterizableViewController {
     List<Album> getHighestRated(int offset, int count) {
         List<Album> result = new ArrayList<Album>();
         for (MediaFile mediaFile : musicInfoService.getHighestRated(offset, count)) {
-            Album album = createAlbum(mediaFile.toMusicFile());
+            Album album = createAlbum(mediaFile);
             if (album != null) {
                 album.setRating((int) Math.round(musicInfoService.getAverageRating(mediaFile) * 10.0D));
                 result.add(album);
@@ -149,12 +148,12 @@ public class HomeController extends ParameterizableViewController {
 
     List<Album> getNewest(int offset, int count) throws IOException {
         List<Album> result = new ArrayList<Album>();
-        for (MusicFile file : searchService.getNewestAlbums(offset, count)) {
+        for (MediaFile file : searchService.getNewestAlbums(offset, count)) {
             Album album = createAlbum(file);
             if (album != null) {
-                Date created = searchService.getCreationDate(file);
+                Date created = file.getCreated();
                 if (created == null) {
-                    created = new Date(file.lastModified());
+                    created = file.getLastModified();
                 }
                 album.setCreated(created);
                 result.add(album);
@@ -165,7 +164,7 @@ public class HomeController extends ParameterizableViewController {
 
     List<Album> getRandom(int count) throws IOException {
         List<Album> result = new ArrayList<Album>();
-        for (MusicFile file : searchService.getRandomAlbums(count)) {
+        for (MediaFile file : searchService.getRandomAlbums(count)) {
             Album album = createAlbum(file);
             if (album != null) {
                 result.add(album);
@@ -174,7 +173,7 @@ public class HomeController extends ParameterizableViewController {
         return result;
     }
 
-    private Album createAlbum(MusicFile file) {
+    private Album createAlbum(MediaFile file) {
         Album album = new Album();
         album.setPath(file.getPath());
         try {
@@ -189,42 +188,31 @@ public class HomeController extends ParameterizableViewController {
 
     private Album createAlbum(MusicFileInfo info) {
         try {
-            return createAlbum(musicFileService.getMusicFile(info.getPath()));
+            return createAlbum(mediaFileService.getMediaFile(info.getPath()));
         } catch (Exception x) {
             LOG.warn("Failed to create albumTitle list entry for " + info.getPath(), x);
             return null;
         }
     }
 
-    private void resolveArtistAndAlbumTitle(Album album, MusicFile file) throws IOException {
+    private void resolveArtistAndAlbumTitle(Album album, MediaFile file) throws IOException {
 
         // If directory, find  title and artist from metadata in child.
         if (file.isDirectory()) {
-            file = file.getFirstChild();
+            file = mediaFileService.getFirstChildOf(file);
             if (file == null) {
                 return;
             }
         }
 
-        album.setArtist(file.getMetaData().getArtist());
-        album.setAlbumTitle(file.getMetaData().getAlbumName());
+        album.setArtist(file.getArtist());
+        album.setAlbumTitle(file.getAlbumName());
     }
 
-    private void resolveCoverArt(Album album, MusicFile file) {
-        try {
-            if (file.isFile()) {
-                file = file.getParent();
-            }
-
-            if (file.isRoot()) {
-                return;
-            }
-            File coverArt = musicFileService.getCoverArt(file);
-            if (coverArt != null) {
-                album.setCoverArtPath(coverArt.getPath());
-            }
-        } catch (IOException x) {
-            LOG.warn("Failed to resolve cover art for " + file, x);
+    private void resolveCoverArt(Album album, MediaFile file) {
+        File coverArt = mediaFileService.getCoverArt(file);
+        if (coverArt != null) {
+            album.setCoverArtPath(coverArt.getPath());
         }
     }
 
@@ -240,12 +228,12 @@ public class HomeController extends ParameterizableViewController {
         this.musicInfoService = musicInfoService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
-
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
+    }
+
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 
 
