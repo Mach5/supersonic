@@ -18,11 +18,10 @@
  */
 package net.sourceforge.subsonic.ajax;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.service.MusicFileService;
-import net.sourceforge.subsonic.service.SecurityService;
-import net.sourceforge.subsonic.util.StringUtil;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -30,9 +29,11 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.util.StringUtil;
 
 /**
  * Provides AJAX-enabled services for changing cover art images.
@@ -46,7 +47,7 @@ public class CoverArtService {
     private static final Logger LOG = Logger.getLogger(CoverArtService.class);
 
     private SecurityService securityService;
-    private MusicFileService musicFileService;
+    private MediaFileService mediaFileService;
 
     /**
      * Downloads and saves the cover art at the given URL.
@@ -99,8 +100,8 @@ public class CoverArtService {
 
             // Rename existing cover file if new cover file is not the preferred.
             try {
-                MusicFile musicFile = musicFileService.getMusicFile(path);
-                File coverFile = musicFileService.getCoverArt(musicFile);
+                MediaFile mediaFile = mediaFileService.getMediaFile(path);
+                File coverFile = mediaFileService.getCoverArt(mediaFile);
                 if (coverFile != null) {
                     if (!newCoverFile.equals(coverFile)) {
                         coverFile.renameTo(new File(coverFile.getCanonicalPath() + ".old"));
@@ -134,7 +135,7 @@ public class CoverArtService {
         this.securityService = securityService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }

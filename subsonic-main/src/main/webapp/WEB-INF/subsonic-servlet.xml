@@ -127,7 +127,7 @@
     </bean>
     <bean id="changeCoverArtController" class="net.sourceforge.subsonic.controller.ChangeCoverArtController">
         <property name="viewName" value="changeCoverArt"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
     <bean id="nowPlayingController" class="net.sourceforge.subsonic.controller.NowPlayingController">
         <property name="playerService" ref="playerService"/>

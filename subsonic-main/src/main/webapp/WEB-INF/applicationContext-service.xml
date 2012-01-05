@@ -205,7 +205,7 @@
 
     <bean id="ajaxCoverArtService" class="net.sourceforge.subsonic.ajax.CoverArtService">
         <property name="securityService" ref="securityService"/>
-        <property name="musicFileService" ref="musicFileService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
 
     <bean id="ajaxTagService" class="net.sourceforge.subsonic.ajax.TagService">
