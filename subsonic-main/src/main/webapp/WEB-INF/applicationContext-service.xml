@@ -141,7 +141,7 @@
         <property name="podcastDao" ref="podcastDao"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
-        <property name="musicInfoService" ref="musicInfoService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
 
     <bean id="adService" class="net.sourceforge.subsonic.service.AdService">

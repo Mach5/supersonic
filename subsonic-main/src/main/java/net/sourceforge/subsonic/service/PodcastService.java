@@ -38,6 +38,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
+import net.sourceforge.subsonic.domain.MediaFile;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -53,7 +54,6 @@ import org.jdom.input.SAXBuilder;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.PodcastDao;
-import net.sourceforge.subsonic.domain.MusicFileInfo;
 import net.sourceforge.subsonic.domain.PodcastChannel;
 import net.sourceforge.subsonic.domain.PodcastEpisode;
 import net.sourceforge.subsonic.domain.PodcastStatus;
@@ -80,7 +80,7 @@ public class PodcastService {
     private PodcastDao podcastDao;
     private SettingsService settingsService;
     private SecurityService securityService;
-    private MusicInfoService musicInfoService;
+    private MediaFileService mediaFileService;
 
     public PodcastService() {
         ThreadFactory threadFactory = new ThreadFactory() {
@@ -496,14 +496,10 @@ public class PodcastService {
             if (!ok) {
                 throw new RuntimeException("Failed to create directory " + channelDir);
             }
-            MusicFileInfo info = musicInfoService.getMusicFileInfoForPath(channelDir.getPath());
-            if (info == null) {
-                musicInfoService.createMusicFileInfo(new MusicFileInfo(channelDir.getPath()));
-                info = musicInfoService.getMusicFileInfoForPath(channelDir.getPath());
-            }
-            info.setEnabled(true);
-            info.setComment(channel.getDescription());
-            musicInfoService.updateMusicFileInfo(info);
+
+            MediaFile mediaFile = mediaFileService.getMediaFile(channelDir);
+            mediaFile.setComment(channel.getDescription());
+            mediaFileService.updateMediaFile(mediaFile);
         }
 
         String filename = StringUtil.getUrlFile(episode.getUrl());
@@ -585,7 +581,7 @@ public class PodcastService {
         this.securityService = securityService;
     }
 
-    public void setMusicInfoService(MusicInfoService musicInfoService) {
-        this.musicInfoService = musicInfoService;
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }
