@@ -63,7 +63,6 @@ import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.domain.PodcastChannel;
 import net.sourceforge.subsonic.domain.PodcastEpisode;
 import net.sourceforge.subsonic.service.JukeboxService;
-import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.MusicInfoService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
@@ -76,7 +75,6 @@ import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.service.LuceneSearchService;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
 import net.sourceforge.subsonic.service.PodcastService;
-import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.XMLBuilder;
 

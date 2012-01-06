@@ -89,7 +89,6 @@
     <bean id="searchService" class="net.sourceforge.subsonic.service.SearchService" init-method="schedule" depends-on="metaDataParserFactory">
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
-        <property name="musicFileService" ref="musicFileService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="musicInfoService" ref="musicInfoService"/>
         <property name="luceneSearchService" ref="luceneSearchService"/>

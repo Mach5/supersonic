@@ -270,17 +270,6 @@ public class MusicFile implements Serializable {
     }
 
     /**
-     * Returns the parent music file.
-     *
-     * @return The parent music file, or <code>null</code> if no parent exists.
-     * @throws IOException If an I/O error occurs.
-     */
-    public MusicFile getParent() throws IOException {
-        File parent = file.getParentFile();
-        return parent == null ? null : createMusicFile(parent);
-    }
-
-    /**
      * If this is a directory, return all contained files, otherwise {@code null}.
      */
     public List<File> getChildrenFiles(FileFilter filter) {

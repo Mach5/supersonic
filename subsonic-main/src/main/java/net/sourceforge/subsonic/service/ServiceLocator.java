@@ -27,6 +27,7 @@ import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
  *
  * @author Sindre Mehus
  */
+@Deprecated
 public class ServiceLocator {
 
     private static SettingsService settingsService;
@@ -51,10 +52,6 @@ public class ServiceLocator {
 
     public static void setMusicFileService(MusicFileService musicFileService) {
         ServiceLocator.musicFileService = musicFileService;
-    }
-
-    public static MetaDataParserFactory getMetaDataParserFactory() {
-        return metaDataParserFactory;
     }
 
     public static void setMetaDataParserFactory(MetaDataParserFactory metaDataParserFactory) {

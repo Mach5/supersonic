@@ -18,23 +18,6 @@
  */
 package net.sourceforge.subsonic.service;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
-import net.sourceforge.subsonic.domain.MusicFile;
-import net.sourceforge.subsonic.domain.MusicFileInfo;
-import net.sourceforge.subsonic.domain.MusicFolder;
-import net.sourceforge.subsonic.domain.RandomSearchCriteria;
-import net.sourceforge.subsonic.domain.SearchCriteria;
-import net.sourceforge.subsonic.domain.SearchResult;
-import net.sourceforge.subsonic.service.metadata.MetaData;
-import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.StringUtil;
-
-import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.*;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -56,6 +39,22 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.TreeSet;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
+import net.sourceforge.subsonic.domain.MusicFileInfo;
+import net.sourceforge.subsonic.domain.MusicFolder;
+import net.sourceforge.subsonic.domain.RandomSearchCriteria;
+import net.sourceforge.subsonic.domain.SearchCriteria;
+import net.sourceforge.subsonic.domain.SearchResult;
+import net.sourceforge.subsonic.util.FileUtil;
+import net.sourceforge.subsonic.util.StringUtil;
+
+import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.*;
 
 /**
  * Provides services for searching for music.
@@ -79,7 +78,6 @@ public class SearchService {
     private Timer timer;
     private SettingsService settingsService;
     private SecurityService securityService;
-    private MusicFileService musicFileService;
     private MusicInfoService musicInfoService;
     private LuceneSearchService luceneSearchService;
     private MediaFileService mediaFileService;
@@ -148,8 +146,8 @@ public class SearchService {
 
             // Read entire music directory.
             for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
-                MusicFile root = musicFileService.getMusicFile(musicFolder.getPath());
-                root.accept(scanner);
+                MediaFile root = mediaFileService.getMediaFile(musicFolder.getPath());
+                scanner.scan(root);
             }
 
             // Clear memory cache.
@@ -274,7 +272,7 @@ public class SearchService {
     /**
      * Search for music files fulfilling the given search criteria.
      *
-     * @param criteria The search criteria.
+     * @param criteria  The search criteria.
      * @param indexType The search index to use.
      * @return The search result.
      * @throws IOException If an I/O error occurs.
@@ -622,10 +620,6 @@ public class SearchService {
         this.securityService = securityService;
     }
 
-    public void setMusicFileService(MusicFileService musicFileService) {
-        this.musicFileService = musicFileService;
-    }
-
     public void setMusicInfoService(MusicInfoService musicInfoService) {
         this.musicInfoService = musicInfoService;
     }
@@ -705,19 +699,18 @@ public class SearchService {
          * @param musicFolders The set of configured music folders.
          * @return A line instance representing the given music file.
          */
-        public static Line forFile(MusicFile file, Map<File, Line> index, Set<File> musicFolders) {
+        public static Line forFile(MediaFile file, Map<File, Line> index, Set<File> musicFolders) {
             // Look in existing index first.
             Line existingLine = index.get(file.getFile());
 
             // Found up-to-date line?
-            if (existingLine != null && file.lastModified() == existingLine.lastModified) {
+            if (existingLine != null && file.getLastModified().getTime() == existingLine.lastModified) {
                 return existingLine;
             }
 
             // Otherwise, construct meta data.
             Line line = new Line();
 
-            MetaData metaData = file.getMetaData();
             line.isFile = file.isFile();
             line.isDirectory = file.isDirectory();
             if (line.isDirectory && !musicFolders.contains(file.getFile())) {
@@ -728,18 +721,18 @@ public class SearchService {
                 }
                 line.isArtist = !line.isAlbum;
             }
-            line.lastModified = file.lastModified();
+            line.lastModified = file.getLastModified().getTime();
             line.created = existingLine != null ? existingLine.created : line.lastModified;
             line.file = file.getFile();
             if (line.isFile) {
-                line.length = file.length();
-                line.artist = StringUtils.upperCase(metaData.getArtist());
-                line.album = StringUtils.upperCase(metaData.getAlbumName());
-                line.title = StringUtils.upperCase(metaData.getTitle());
-                line.year = metaData.getYear() == null ? null : metaData.getYear().toString();
-                line.genre = StringUtils.capitalize(StringUtils.lowerCase(metaData.getGenre()));
+                line.length = file.getFileSize();
+                line.artist = StringUtils.upperCase(file.getArtist());
+                line.album = StringUtils.upperCase(file.getAlbumName());
+                line.title = StringUtils.upperCase(file.getTitle());
+                line.year = file.getYear() == null ? null : file.getYear().toString();
+                line.genre = StringUtils.capitalize(StringUtils.lowerCase(file.getGenre()));
             } else if (line.isAlbum) {
-                resolveArtistAndAlbum(file, line);
+//                resolveArtistAndAlbum(file, line);
             } else if (line.isArtist) {
                 line.artist = StringUtils.upperCase(file.getName());
             }
@@ -747,22 +740,22 @@ public class SearchService {
             return line;
         }
 
-        private static void resolveArtistAndAlbum(MusicFile file, Line line) {
-
-            // If directory, find artist from metadata in child.
-            if (file.isDirectory()) {
-                try {
-                    file = file.getFirstChild();
-                } catch (IOException e) {
-                    return;
-                }
-                if (file == null) {
-                    return;
-                }
-            }
-            line.artist = StringUtils.upperCase(file.getMetaData().getArtist());
-            line.album = StringUtils.upperCase(file.getMetaData().getAlbumName());
-        }
+//        private static void resolveArtistAndAlbum(MediaFile file, Line line) {
+//
+//            // If directory, find artist from metadata in child.
+//            if (file.isDirectory()) {
+//                try {
+//                    file = file.getFirstChild();
+//                } catch (IOException e) {
+//                    return;
+//                }
+//                if (file == null) {
+//                    return;
+//                }
+//            }
+//            line.artist = StringUtils.upperCase(file.getMetaData().getArtist());
+//            line.album = StringUtils.upperCase(file.getMetaData().getAlbumName());
+//        }
 
         /**
          * Returns the content of this line as a string.
@@ -799,7 +792,7 @@ public class SearchService {
 
     private int scanCount;
 
-    private class Scanner implements MusicFile.Visitor {
+    private class Scanner {
         private final PrintWriter writer;
         private final Map<File, Line> oldIndex;
         private final Set<File> musicFolders;
@@ -814,23 +807,21 @@ public class SearchService {
             scanCount = 0;
         }
 
-        public void visit(MusicFile musicFile) {
-
-            Line line = Line.forFile(musicFile, oldIndex, musicFolders);
+        public void scan(MediaFile file) {
+            Line line = Line.forFile(file, oldIndex, musicFolders);
             writer.println(line);
 
             scanCount++;
             if (scanCount % 250 == 0) {
                 LOG.info("Created search index with " + scanCount + " entries.");
             }
-        }
 
-        public boolean includeDirectories() {
-            return true;
-        }
-
-        public boolean sorted() {
-            return false;
+            for (MediaFile child : mediaFileService.getChildrenOf(file, true, false, false)) {
+                scan(child);
+            }
+            for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false)) {
+                scan(child);
+            }
         }
     }
 }
