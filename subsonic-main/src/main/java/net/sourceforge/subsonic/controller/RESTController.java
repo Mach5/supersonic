@@ -366,7 +366,11 @@ public class RESTController extends MultiActionController {
 
             builder.add("playlist", false, new Attribute("id", StringUtil.utf8HexEncode(playlist.getName())),
                     new Attribute("name", FilenameUtils.getBaseName(playlist.getName())));
-            for (MediaFile mediaFile : playlist.getMediaFiles()) {
+            List<MediaFile> result;
+            synchronized (playlist) {
+                result = playlist.getFiles();
+            }
+            for (MediaFile mediaFile : result) {
                 File coverArt = mediaFileService.getCoverArt(mediaFile);
                 AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
                 builder.add("entry", attributes, true);
@@ -448,7 +452,11 @@ public class RESTController extends MultiActionController {
 
             if (returnPlaylist) {
                 builder.add("jukeboxPlaylist", attrs, false);
-                for (MediaFile mediaFile : playlist.getMediaFiles()) {
+                List<MediaFile> result;
+                synchronized (playlist) {
+                    result = playlist.getFiles();
+                }
+                for (MediaFile mediaFile : result) {
                     File coverArt = mediaFileService.getCoverArt(mediaFile);
                     AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
                     builder.add("entry", attributes, true);

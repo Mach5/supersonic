@@ -72,7 +72,11 @@ public class JukeboxService implements AudioPlayer.Listener {
 
         if (player.getPlaylist().getStatus() == Playlist.Status.PLAYING) {
             this.player = player;
-            play(player.getPlaylist().getCurrentMediaFile(), offset);
+            MediaFile result;
+            synchronized (player.getPlaylist()) {
+                result = player.getPlaylist().getCurrentFile();
+            }
+            play(result, offset);
         } else {
             if (audioPlayer != null) {
                 audioPlayer.pause();
@@ -121,7 +125,11 @@ public class JukeboxService implements AudioPlayer.Listener {
     public synchronized void stateChanged(AudioPlayer audioPlayer, AudioPlayer.State state) {
         if (state == EOM) {
             player.getPlaylist().next();
-            play(player.getPlaylist().getCurrentMediaFile(), 0);
+            MediaFile result;
+            synchronized (player.getPlaylist()) {
+                result = player.getPlaylist().getCurrentFile();
+            }
+            play(result, 0);
         }
     }
 

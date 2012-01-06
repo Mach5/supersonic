@@ -95,32 +95,12 @@ public class Playlist {
     }
 
     /**
-     * Returns the current song in the playlist.
-     *
-     * @return The current song in the playlist, or <code>null</code> if no current song exists.
-     */
-    @Deprecated
-    public synchronized MediaFile getCurrentMediaFile() {
-        return getCurrentFile();
-    }
-
-    /**
      * Returns all music files in the playlist.
      *
      * @return All music files in the playlist.
      */
     public synchronized List<MediaFile> getFiles() {
         return files;
-    }
-
-    /**
-     * Returns all media files in the playlist.
-     *
-     * @return All media files in the playlist.
-     */
-    @Deprecated
-    public synchronized List<MediaFile> getMediaFiles() {
-        return getFiles();
     }
 
     /**
@@ -132,18 +112,6 @@ public class Playlist {
      */
     public synchronized MediaFile getFile(int index) {
         return files.get(index);
-    }
-
-    /**
-     * Returns the media file at the given index.
-     *
-     * @param index The index.
-     * @return The media file at the given index.
-     * @throws IndexOutOfBoundsException If the index is out of range.
-     */
-    @Deprecated
-    public synchronized MediaFile getMediaFile(int index) {
-        return getFile(index);
     }
 
     /**

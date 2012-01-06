@@ -21,7 +21,6 @@ package net.sourceforge.subsonic.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +91,11 @@ public class ShareManagementController extends MultiActionController {
         } else if (playerId != null) {
             Player player = playerService.getPlayerById(playerId);
             Playlist playlist = player.getPlaylist();
-            result = playlist.getMediaFiles();
+            List<MediaFile> result1;
+            synchronized (playlist) {
+                result1 = playlist.getFiles();
+            }
+            result = result1;
         }
 
         return result;

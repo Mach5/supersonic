@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * Controller which produces the M3U playlist.
@@ -79,7 +80,11 @@ public class M3UController implements Controller {
 
     private void createClientSidePlaylist(PrintWriter out, Player player, String url) throws Exception {
         out.println("#EXTM3U");
-        for (MediaFile mediaFile : player.getPlaylist().getMediaFiles()) {
+        List<MediaFile> result;
+        synchronized (player.getPlaylist()) {
+            result = player.getPlaylist().getFiles();
+        }
+        for (MediaFile mediaFile : result) {
             Integer duration = mediaFile.getDurationSeconds();
             if (duration == null) {
                 duration = -1;

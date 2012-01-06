@@ -134,7 +134,11 @@ public class ShoutCastOutputStream extends OutputStream {
     private void writeMetaData() throws IOException {
         String streamTitle = StringUtils.trimToEmpty(settingsService.getWelcomeTitle());
 
-        MediaFile mediaFile = playlist.getCurrentMediaFile();
+        MediaFile result;
+        synchronized (playlist) {
+            result = playlist.getCurrentFile();
+        }
+        MediaFile mediaFile = result;
         if (mediaFile != null) {
             streamTitle = mediaFile.getArtist() + " - " + mediaFile.getTitle();
         }

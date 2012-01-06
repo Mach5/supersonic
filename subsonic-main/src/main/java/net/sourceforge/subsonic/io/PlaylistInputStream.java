@@ -109,7 +109,11 @@ public class PlaylistInputStream extends InputStream {
             populateRandomPlaylist(playlist);
         }
 
-        MediaFile file = playlist.getCurrentMediaFile();
+        MediaFile result;
+        synchronized (playlist) {
+            result = playlist.getCurrentFile();
+        }
+        MediaFile file = result;
         if (file == null) {
             close();
         } else if (!file.equals(currentFile)) {

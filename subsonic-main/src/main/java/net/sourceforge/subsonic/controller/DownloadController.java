@@ -261,11 +261,19 @@ public class DownloadController implements Controller, LastModified {
 
         List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
         if (indexes == null) {
-            mediaFiles.addAll(playlist.getMediaFiles());
+            List<MediaFile> result;
+            synchronized (playlist) {
+                result = playlist.getFiles();
+            }
+            mediaFiles.addAll(result);
         } else {
             for (int index : indexes) {
                 try {
-                    mediaFiles.add(playlist.getMediaFile(index));
+                    MediaFile result;
+                    synchronized (playlist) {
+                        result = playlist.getFile(index);
+                    }
+                    mediaFiles.add(result);
                 } catch (IndexOutOfBoundsException x) { /* Ignored */}
             }
         }
