@@ -46,7 +46,6 @@ import org.apache.commons.lang.StringUtils;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
-import net.sourceforge.subsonic.domain.MusicFileInfo;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.domain.SearchCriteria;
@@ -77,7 +76,6 @@ public class SearchService {
     private Timer timer;
     private SettingsService settingsService;
     private SecurityService securityService;
-    private MusicInfoService musicInfoService;
     private LuceneSearchService luceneSearchService;
     private MediaFileService mediaFileService;
 
@@ -160,9 +158,6 @@ public class SearchService {
                 getIndex();
             }
 
-            // Now, clean up music_file_info table.
-            cleanMusicFileInfo();
-
             // Update Lucene search index.
             LOG.info("Updating Lucene search index.");
             luceneSearchService.createIndex(SONG, cachedSongs);
@@ -179,43 +174,6 @@ public class SearchService {
         } finally {
             creatingIndex = false;
             IOUtils.closeQuietly(writer);
-        }
-    }
-
-    private void cleanMusicFileInfo() {
-
-        // Create sorted set of albums.
-        SortedSet<String> albums = new TreeSet<String>();
-        for (Line line : cachedAlbums) {
-            albums.add(line.file.getPath());
-        }
-
-        // Page through music_file_info table.
-        int offset = 0;
-        int count = 100;
-        while (true) {
-            List<MusicFileInfo> infos = musicInfoService.getAllMusicFileInfos(offset, count);
-            if (infos.isEmpty()) {
-                break;
-            }
-            offset += infos.size();
-
-            for (MusicFileInfo info : infos) {
-
-                // Disable row if album does not exist on disk any more.
-                if (info.isEnabled() && !albums.contains(info.getPath())) {
-                    info.setEnabled(false);
-                    musicInfoService.updateMusicFileInfo(info);
-                    LOG.debug("Logically deleting info for album " + info.getPath() + ". Not found on disk.");
-                }
-
-                // Enable row if album has reoccurred on disk.
-                else if (!info.isEnabled() && albums.contains(info.getPath())) {
-                    info.setEnabled(true);
-                    musicInfoService.updateMusicFileInfo(info);
-                    LOG.debug("Logically undeleting info for album " + info.getPath() + ". Found on disk.");
-                }
-            }
         }
     }
 
@@ -594,10 +552,6 @@ public class SearchService {
 
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
-    }
-
-    public void setMusicInfoService(MusicInfoService musicInfoService) {
-        this.musicInfoService = musicInfoService;
     }
 
     public void setLuceneSearchService(LuceneSearchService luceneSearchService) {

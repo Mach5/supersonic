@@ -48,7 +48,6 @@ import net.sourceforge.subsonic.io.PlaylistInputStream;
 import net.sourceforge.subsonic.io.RangeOutputStream;
 import net.sourceforge.subsonic.io.ShoutCastOutputStream;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
-import net.sourceforge.subsonic.service.MusicInfoService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
 import net.sourceforge.subsonic.service.SearchService;
@@ -73,7 +72,6 @@ public class StreamController implements Controller {
     private PlayerService playerService;
     private PlaylistService playlistService;
     private SecurityService securityService;
-    private MusicInfoService musicInfoService;
     private SettingsService settingsService;
     private TranscodingService transcodingService;
     private AudioScrobblerService audioScrobblerService;
@@ -175,7 +173,7 @@ public class StreamController implements Controller {
             status = statusService.createStreamStatus(player);
 
             in = new PlaylistInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, transcodingService,
-                    musicInfoService, audioScrobblerService, searchService, mediaFileService);
+                    audioScrobblerService, searchService, mediaFileService);
             OutputStream out = RangeOutputStream.wrap(response.getOutputStream(), range);
 
             // Enabled SHOUTcast, if requested.
@@ -386,10 +384,6 @@ public class StreamController implements Controller {
 
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
-    }
-
-    public void setMusicInfoService(MusicInfoService musicInfoService) {
-        this.musicInfoService = musicInfoService;
     }
 
     public void setSettingsService(SettingsService settingsService) {

@@ -80,7 +80,6 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
-        <property name="musicInfoService" ref="musicInfoService"/>
         <property name="luceneSearchService" ref="luceneSearchService"/>
     </bean>
 

@@ -27,7 +27,6 @@ import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
-import net.sourceforge.subsonic.service.MusicInfoService;
 import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.service.SearchService;
 
@@ -51,7 +50,6 @@ public class PlaylistInputStream extends InputStream {
     private final VideoTranscodingSettings videoTranscodingSettings;
     private final SearchService searchService;
     private final TranscodingService transcodingService;
-    private final MusicInfoService musicInfoService;
     private final AudioScrobblerService audioScrobblerService;
     private final MediaFileService mediaFileService;
     private MediaFile currentFile;
@@ -59,15 +57,13 @@ public class PlaylistInputStream extends InputStream {
 
     public PlaylistInputStream(Player player, TransferStatus status, Integer maxBitRate, String preferredTargetFormat,
                                VideoTranscodingSettings videoTranscodingSettings, TranscodingService transcodingService,
-                               MusicInfoService musicInfoService, AudioScrobblerService audioScrobblerService,
-                               SearchService searchService, MediaFileService mediaFileService) {
+                               AudioScrobblerService audioScrobblerService, SearchService searchService, MediaFileService mediaFileService) {
         this.player = player;
         this.status = status;
         this.maxBitRate = maxBitRate;
         this.preferredTargetFormat = preferredTargetFormat;
         this.videoTranscodingSettings = videoTranscodingSettings;
         this.transcodingService = transcodingService;
-        this.musicInfoService = musicInfoService;
         this.audioScrobblerService = audioScrobblerService;
         this.searchService = searchService;
         this.mediaFileService = mediaFileService;
