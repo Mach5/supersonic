@@ -412,6 +412,10 @@ public class MediaFileService {
         this.metaDataParserFactory = metaDataParserFactory;
     }
 
+    public void updateMediaFile(MediaFile mediaFile) {
+        mediaFileDao.createOrUpdateMediaFile(mediaFile);
+    }
+
     /**
      * Comparator for sorting media files.
      */

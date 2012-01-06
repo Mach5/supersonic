@@ -79,7 +79,7 @@
         <property name="podcastService" ref="podcastService"/>
     </bean>
     <bean id="setMusicFileInfoController" class="net.sourceforge.subsonic.controller.SetMusicFileInfoController">
-        <property name="musicInfoService" ref="musicInfoService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
     <bean id="shareManagementController" class="net.sourceforge.subsonic.controller.ShareManagementController">
         <property name="settingsService" ref="settingsService"/>
