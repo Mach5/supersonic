@@ -260,6 +260,7 @@ public class MediaFileService {
         mediaFile.setParentPath(file.getParent());
         mediaFile.setFileSize(FileUtil.length(file));
         mediaFile.setLastModified(new Date(FileUtil.lastModified(file)));
+        mediaFile.setPlayCount(0);
         mediaFile.setChildrenLastUpdated(new Date(0));
         mediaFile.setCreated(new Date());
         mediaFile.setEnabled(true);

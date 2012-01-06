@@ -63,7 +63,7 @@ public class Schema47 extends Schema {
                     "height int," +
                     "cover_art_path varchar," +
                     "parent_path varchar not null," +
-                    "play_count int," +
+                    "play_count int not null," +
                     "last_played datetime," +
                     "comment varchar," +
                     "created datetime not null," +

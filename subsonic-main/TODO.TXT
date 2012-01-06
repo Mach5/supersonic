@@ -20,6 +20,7 @@ Rewrite SearchService.
 Rewrite Lucene integration.
 Revisit LeftController caching
 Measure time for media scanning, clean and incremental.
+Rewrite MusicFileInfo
 
 DONE IN 4.7
 -----------------

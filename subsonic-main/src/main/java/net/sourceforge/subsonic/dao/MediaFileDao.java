@@ -113,7 +113,7 @@ public class MediaFileDao extends AbstractDao {
                     rs.getInt(19) == 0 ? null : rs.getInt(19),
                     rs.getString(20),
                     rs.getString(21),
-                    rs.getInt(22) == 0 ? null : rs.getInt(22),
+                    rs.getInt(22),
                     rs.getTimestamp(23),
                     rs.getString(24),
                     rs.getTimestamp(25),

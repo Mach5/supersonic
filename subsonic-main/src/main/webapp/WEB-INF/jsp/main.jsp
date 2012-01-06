@@ -192,23 +192,23 @@
         </c:if>
     </div>
     <div class="detail" style="padding-top:0.2em">
-        <fmt:message key="main.playcount"><fmt:param value="${model.playCount}"/></fmt:message>
-        <c:if test="${not empty model.lastPlayed}">
+        <fmt:message key="main.playcount"><fmt:param value="${model.dir.playCount}"/></fmt:message>
+        <c:if test="${not empty model.dir.lastPlayed}">
             <fmt:message key="main.lastplayed">
-                <fmt:param><fmt:formatDate type="date" dateStyle="long" value="${model.lastPlayed}"/></fmt:param>
+                <fmt:param><fmt:formatDate type="date" dateStyle="long" value="${model.dir.lastPlayed}"/></fmt:param>
             </fmt:message>
         </c:if>
     </div>
 
 </c:if>
 
-<div id="comment" class="albumComment"><sub:wiki text="${model.comment}"/></div>
+<div id="comment" class="albumComment"><sub:wiki text="${model.dir.comment}"/></div>
 
 <div id="commentForm" style="display:none">
     <form method="post" action="setMusicFileInfo.view">
         <input type="hidden" name="action" value="comment">
         <input type="hidden" name="path" value="${model.dir.path}">
-        <textarea name="comment" rows="6" cols="70">${model.comment}</textarea>
+        <textarea name="comment" rows="6" cols="70">${model.dir.comment}</textarea>
         <input type="submit" value="<fmt:message key="common.save"/>">
     </form>
     <fmt:message key="main.wiki"/>

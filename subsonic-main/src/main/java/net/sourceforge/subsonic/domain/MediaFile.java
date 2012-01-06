@@ -56,7 +56,7 @@ public class MediaFile {
     private Integer height;
     private String coverArtPath;
     private String parentPath;
-    private Integer playCount;
+    private int playCount;
     private Date lastPlayed;
     private String comment;
     private Date created;
@@ -67,7 +67,7 @@ public class MediaFile {
     public MediaFile(int id, String path, MediaType mediaType, String format, boolean isDirectory, boolean isAlbum, String title,
             String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
             boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
-            String parentPath, Integer playCount, Date lastPlayed, String comment, Date created, Date lastModified,
+            String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date lastModified,
             Date childrenLastUpdated, boolean enabled) {
         this.id = id;
         this.path = path;
@@ -335,11 +335,11 @@ public class MediaFile {
         return getFile().getParentFile();
     }
 
-    public Integer getPlayCount() {
+    public int getPlayCount() {
         return playCount;
     }
 
-    public void setPlayCount(Integer playCount) {
+    public void setPlayCount(int playCount) {
         this.playCount = playCount;
     }
 

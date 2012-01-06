@@ -31,6 +31,7 @@ import java.io.File;
  *
  * @author Sindre Mehus
  */
+@Deprecated
 public class MusicInfoService {
 
     private MusicFileInfoDao musicFileInfoDao;

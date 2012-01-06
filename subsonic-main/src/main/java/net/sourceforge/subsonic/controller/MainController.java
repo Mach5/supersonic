@@ -20,7 +20,6 @@ package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.domain.CoverArtScheme;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MusicFileInfo;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.AdService;
@@ -105,10 +104,6 @@ public class MainController extends ParameterizableViewController {
             // Happens if Podcast directory is outside music folder.
         }
 
-        MusicFileInfo musicInfo = musicInfoService.getMusicFileInfoForPath(dir.getPath());
-        int playCount = musicInfo == null ? 0 : musicInfo.getPlayCount();
-        String comment = musicInfo == null ? null : musicInfo.getComment();
-        Date lastPlayed = musicInfo == null ? null : musicInfo.getLastPlayed();
         String username = securityService.getCurrentUsername(request);
         Integer userRating = musicInfoService.getRatingForUser(username, dir);
         Double averageRating = musicInfoService.getAverageRating(dir);
@@ -123,9 +118,6 @@ public class MainController extends ParameterizableViewController {
 
         map.put("userRating", 10 * userRating);
         map.put("averageRating", Math.round(10.0D * averageRating));
-        map.put("playCount", playCount);
-        map.put("comment", comment);
-        map.put("lastPlayed", lastPlayed);
 
         CoverArtScheme scheme = player.getCoverArtScheme();
         if (scheme != CoverArtScheme.OFF) {

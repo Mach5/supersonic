@@ -26,6 +26,7 @@ import java.util.Date;
  *
  * @author Sindre Mehus
  */
+@Deprecated
 public class MusicFileInfo {
     private Integer id;
     private String path;
