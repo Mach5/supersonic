@@ -243,11 +243,16 @@ public class MediaFileService {
 
     private MediaFile createMediaFile(File file) {
 
+        // TODO: Set root and mediaType.
+
         MediaFile mediaFile = new MediaFile();
         mediaFile.setPath(file.getPath());
         mediaFile.setParentPath(file.getParent());
         mediaFile.setFileSize(FileUtil.length(file));
         mediaFile.setLastModified(new Date(FileUtil.lastModified(file)));
+        mediaFile.setChildrenLastUpdated(new Date(0));
+        mediaFile.setCreated(new Date());
+        mediaFile.setEnabled(true);
         mediaFile.setDirectory(FileUtil.isDirectory(file));
 
         if (mediaFile.isFile()) {

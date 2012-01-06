@@ -18,15 +18,12 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.service.ServiceLocator;
-import net.sourceforge.subsonic.service.metadata.MetaData;
-
-import org.apache.commons.lang.StringUtils;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
+
+import org.apache.commons.io.FilenameUtils;
+
+import net.sourceforge.subsonic.Logger;
 
 /**
  * A media file (audio, video or directory) with an assortment of its meta data.
@@ -58,7 +55,6 @@ public class MediaFile {
     private Integer width;
     private Integer height;
     private String coverArtPath;
-    private File coverArtFile;
     private String parentPath;
     private Integer playCount;
     private Date lastPlayed;
@@ -67,14 +63,12 @@ public class MediaFile {
     private Date lastModified;
     private Date childrenLastUpdated;
     private boolean enabled;
-    private String name;
-    private File file;
 
     public MediaFile(int id, String path, MediaType mediaType, String format, boolean isDirectory, boolean isAlbum, String title,
-                     String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
-                     boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
-                     String parentPath, Integer playCount, Date lastPlayed, String comment, Date created, Date lastModified,
-                     Date childrenLastUpdated, boolean enabled) {
+            String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
+            boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
+            String parentPath, Integer playCount, Date lastPlayed, String comment, Date created, Date lastModified,
+            Date childrenLastUpdated, boolean enabled) {
         this.id = id;
         this.path = path;
         this.mediaType = mediaType;
@@ -103,16 +97,6 @@ public class MediaFile {
         this.lastModified = lastModified;
         this.childrenLastUpdated = childrenLastUpdated;
         this.enabled = enabled;
-        file = new File(path);
-        coverArtFile = coverArtPath == null ? null : new File(coverArtPath);
-        
-        if (isAlbum) {
-            name = albumName;
-        } else if (isDirectory) {
-            name = file.getName();
-        } else {
-            name = title;
-        }
     }
 
     /**
@@ -138,7 +122,8 @@ public class MediaFile {
     }
 
     public File getFile() {
-        return file;
+        // TODO: Optimize
+        return new File(path);
     }
 
     public MediaType getMediaType() {
@@ -206,9 +191,17 @@ public class MediaFile {
     }
 
     public String getName() {
-        return name;
-    }
+        // TODO: Optimize
+        if (isAlbum && albumName != null) {
+            return albumName;
+        }
 
+        if (isFile() && title != null) {
+            return title;
+        }
+
+        return FilenameUtils.getBaseName(path);
+    }
 
     public Integer getDiscNumber() {
         return discNumber;
@@ -339,7 +332,7 @@ public class MediaFile {
     }
 
     public File getParentFile() {
-        return file.getParentFile();
+        return getFile().getParentFile();
     }
 
     public Integer getPlayCount() {
@@ -412,7 +405,8 @@ public class MediaFile {
     }
 
     public File getCoverArtFile() {
-        return coverArtFile;
+        // TODO: Optimize
+        return coverArtPath == null ? null : new File(coverArtPath);
     }
 
     public boolean isRoot() {
