@@ -32,7 +32,7 @@ public class MetaData {
     private String genre;
     private Integer year;
     private Integer bitRate;
-    private Boolean variableBitRate;
+    private boolean variableBitRate;
     private Integer durationSeconds;
     private Integer width;
     private Integer height;
@@ -101,11 +101,11 @@ public class MetaData {
         this.bitRate = bitRate;
     }
 
-    public Boolean getVariableBitRate() {
+    public boolean getVariableBitRate() {
         return variableBitRate;
     }
 
-    public void setVariableBitRate(Boolean variableBitRate) {
+    public void setVariableBitRate(boolean variableBitRate) {
         this.variableBitRate = variableBitRate;
     }
 

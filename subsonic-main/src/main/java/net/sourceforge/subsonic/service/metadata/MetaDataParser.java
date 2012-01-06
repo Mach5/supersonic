@@ -38,7 +38,7 @@ public abstract class MetaDataParser {
      * Parses meta data for the given music file.
      *
      * @param file The music file to parse.
-     * @return Meta data for the file.
+     * @return Meta data for the file, never null.
      */
     public MetaData getMetaData(MediaFile file) {
 

@@ -59,6 +59,7 @@
         <property name="searchService" ref="searchService"/>
         <property name="mediaFileMemoryCache" ref="mediaFileMemoryCache"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
+        <property name="metaDataParserFactory" ref="metaDataParserFactory"/>
     </bean>
 
     <bean id="musicFileService" class="net.sourceforge.subsonic.service.MusicFileService" init-method="init">

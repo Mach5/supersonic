@@ -13,6 +13,7 @@ Remove id from MediaFile (not from table)
 Consolidate MusicInfoService
 Make sure that artist/album (for songs and albums) are displayed in search results.
 MediaFile.format should always be lowercase.
+MediaFile.name can't be set in the constructor
 
 DONE IN 4.7
 -----------------
