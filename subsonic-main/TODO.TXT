@@ -12,8 +12,10 @@ Use long rather than Date in MediaFile?
 Remove id from MediaFile (not from table)
 Consolidate MusicInfoService
 Make sure that artist/album (for songs and albums) are displayed in search results.
-MediaFile.format should always be lowercase.
-MediaFile.name can't be set in the constructor
+Optimize MediaFile getters.
+Remove obsolete caches
+Remove ServiceLocator
+Revisit MetaDataParser.isRoot()
 
 DONE IN 4.7
 -----------------

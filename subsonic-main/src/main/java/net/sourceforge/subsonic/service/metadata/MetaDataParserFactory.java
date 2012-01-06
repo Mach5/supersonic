@@ -56,6 +56,6 @@ public class MetaDataParserFactory {
      * This method is invoked automatically by Spring.
      */
     public void init() {
-        ServiceLocator.setMetaDataParserFactory(this);
+        // TODO: remove
     }
 }

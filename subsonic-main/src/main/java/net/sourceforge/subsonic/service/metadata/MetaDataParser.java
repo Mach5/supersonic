@@ -20,10 +20,14 @@ package net.sourceforge.subsonic.service.metadata;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.domain.MusicFolder;
+import net.sourceforge.subsonic.service.ServiceLocator;
+import net.sourceforge.subsonic.service.SettingsService;
+
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
+import java.util.List;
 
 
 /**
@@ -101,11 +105,11 @@ public abstract class MetaDataParser {
      */
     protected String guessArtist(MediaFile file) {
         File parent = file.getParentFile();
-        if (MusicFile.isRoot(parent)) {
+        if (isRoot(parent)) {
             return "";
         }
         File grandParent = parent.getParentFile();
-        return MusicFile.isRoot(grandParent) ? "" : grandParent.getName();
+        return isRoot(grandParent) ? "" : grandParent.getName();
     }
 
     /**
@@ -113,7 +117,7 @@ public abstract class MetaDataParser {
      */
     protected String guessAlbum(MediaFile file) {
         File parent = file.getFile().getParentFile();
-        String album = MusicFile.isRoot(parent) ? "" : parent.getName();
+        String album = isRoot(parent) ? "" : parent.getName();
         String artist = guessArtist(file);
         return album.replace(artist + " - ", "");
     }
@@ -123,6 +127,17 @@ public abstract class MetaDataParser {
      */
     public String guessTitle(MediaFile file) {
         return removeTrackNumberFromTitle(FilenameUtils.getBaseName(file.getPath()), null);
+    }
+
+    private boolean isRoot(File file) {
+        SettingsService settings = ServiceLocator.getSettingsService();
+        List<MusicFolder> folders = settings.getAllMusicFolders(false, true);
+        for (MusicFolder folder : folders) {
+            if (file.equals(folder.getPath())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
