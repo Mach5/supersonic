@@ -85,7 +85,7 @@ public class MusicFileInfoDao extends AbstractDao {
                      "group by path " +
                      "order by avg(rating) desc " +
                      " limit " + count + " offset " + offset;
-        return getJdbcTemplate().queryForList(sql, String.class);
+        return queryForString(sql);
     }
 
     /**

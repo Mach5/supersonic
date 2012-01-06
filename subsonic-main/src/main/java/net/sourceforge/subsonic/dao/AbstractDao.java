@@ -40,14 +40,14 @@ public class AbstractDao {
 
     protected String questionMarks(String columns) {
         int count = columns.split(", ").length;
-        StringBuffer buf = new StringBuffer();
+        StringBuilder builder = new StringBuilder();
         for (int i = 0; i < count; i++) {
-            buf.append('?');
+            builder.append('?');
             if (i < count - 1) {
-                buf.append(", ");
+                builder.append(", ");
             }
         }
-        return buf.toString();
+        return builder.toString();
     }
 
     protected int update(String sql, Object... args) {
@@ -56,6 +56,10 @@ public class AbstractDao {
 
     protected <T> List<T> query(String sql, RowMapper rowMapper, Object... args) {
         return getJdbcTemplate().query(sql, args, rowMapper);
+    }
+
+    protected List<String> queryForString(String sql) {
+        return getJdbcTemplate().queryForList(sql, String.class);
     }
 
     protected <T> T queryOne(String sql, RowMapper rowMapper, Object... args) {

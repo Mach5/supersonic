@@ -71,7 +71,6 @@ public class SearchService {
     private List<Line> cachedSongs;
     private List<Line> cachedArtists;
     private SortedSet<Line> cachedAlbums;  // Sorted chronologically.
-    private SortedSet<String> cachedGenres;
     private MediaLibraryStatistics statistics;
 
     private boolean creatingIndex;
@@ -157,7 +156,6 @@ public class SearchService {
                 cachedIndex = null;
                 cachedSongs = null;
                 cachedAlbums = null;
-                cachedGenres = null;
                 statistics = null;
                 getIndex();
             }
@@ -402,24 +400,6 @@ public class SearchService {
     }
 
     /**
-     * Returns all genres in the music collection.
-     *
-     * @return Sorted set of genres.
-     * @throws IOException If an I/O error occurs.
-     */
-    public Set<String> getGenres() throws IOException {
-
-        if (!isIndexCreated() || isIndexBeingCreated()) {
-            return Collections.emptySet();
-        }
-
-        // Ensure that index is read to memory.
-        getIndex();
-
-        return Collections.unmodifiableSortedSet(cachedGenres);
-    }
-
-    /**
      * Returns a number of random albums.
      *
      * @param count Maximum number of albums to return.
@@ -520,7 +500,6 @@ public class SearchService {
 
         cachedSongs = new ArrayList<Line>();
         cachedArtists = new ArrayList<Line>();
-        cachedGenres = new TreeSet<String>();
         cachedAlbums = new TreeSet<Line>(new Comparator<Line>() {
             public int compare(Line line1, Line line2) {
                 if (line2.created < line1.created) {
@@ -556,9 +535,6 @@ public class SearchService {
                         artists.add(line.artist);
                         albums.add(line.album);
                         cachedSongs.add(line);
-                        if (line.genre != null) {
-                            cachedGenres.add(line.genre);
-                        }
                     }
 
                 } catch (Exception x) {

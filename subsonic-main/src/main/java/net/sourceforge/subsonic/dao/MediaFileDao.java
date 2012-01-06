@@ -26,6 +26,7 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Provides database services for media files.
@@ -82,6 +83,10 @@ public class MediaFileDao extends AbstractDao {
 
     public void deleteMediaFile(String path) {
         update("delete from media_file where path=?", path);
+    }
+
+    public List<String> getGenres() {
+        return queryForString("select distinct genre from media_file where genre is not null order by genre");
     }
 
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {

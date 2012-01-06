@@ -47,7 +47,7 @@
         <property name="viewName" value="more"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="securityService" ref="securityService"/>
-        <property name="searchService" ref="searchService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="playerService" ref="playerService"/>
     </bean>
     <bean id="uploadController" class="net.sourceforge.subsonic.controller.UploadController">

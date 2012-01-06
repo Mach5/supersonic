@@ -42,6 +42,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Provides services for instantiating and caching media files and cover art.
@@ -166,6 +167,15 @@ public class MediaFileService {
     public MediaFile getFirstChildOf(MediaFile parent) {
         List<MediaFile> children = getChildrenOf(parent, true, false, true);
         return children.isEmpty() ? null : children.get(0);
+    }
+
+    /**
+     * Returns all genres in the music collection.
+     *
+     * @return Sorted list of genres.
+     */
+    public List<String> getGenres() {
+        return mediaFileDao.getGenres();
     }
 
     private void updateChildren(MediaFile parent) {
