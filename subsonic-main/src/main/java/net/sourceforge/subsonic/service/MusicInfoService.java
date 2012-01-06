@@ -39,15 +39,6 @@ public class MusicInfoService {
     private MediaFileService mediaFileService;
 
     /**
-     * Returns music file info for the given path.
-     *
-     * @return Music file info for the given path, or <code>null</code> if not found.
-     */
-    public MusicFileInfo getMusicFileInfoForPath(String path) {
-        return musicFileInfoDao.getMusicFileInfoForPath(path);
-    }
-
-    /**
      * Returns all music file infos with respect to the given row offset and count.
      * Disabled instances are also returned.
      *
@@ -101,40 +92,12 @@ public class MusicInfoService {
     }
 
     /**
-     * Creates a new music file info.
-     *
-     * @param info The music file info to create.
-     */
-    public void createMusicFileInfo(MusicFileInfo info) {
-        musicFileInfoDao.createMusicFileInfo(info);
-    }
-
-    /**
      * Updates the given music file info.
      *
      * @param info The music file info to update.
      */
     public void updateMusicFileInfo(MusicFileInfo info) {
         musicFileInfoDao.updateMusicFileInfo(info);
-    }
-
-    /**
-     * Increments the play count and last played date for the given music file.
-     *
-     * @param file The music file.
-     */
-    public void incrementPlayCount(MediaFile file) {
-        MusicFileInfo info = getMusicFileInfoForPath(file.getPath());
-        if (info == null) {
-            info = new MusicFileInfo(file.getPath());
-            info.setLastPlayed(new Date());
-            info.setPlayCount(1);
-            createMusicFileInfo(info);
-        } else {
-            info.setLastPlayed(new Date());
-            info.setPlayCount(info.getPlayCount() + 1);
-            updateMusicFileInfo(info);
-        }
     }
 
     /**

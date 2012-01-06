@@ -23,6 +23,7 @@ import net.sf.ehcache.Element;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MusicFileInfo;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
@@ -414,6 +415,23 @@ public class MediaFileService {
 
     public void updateMediaFile(MediaFile mediaFile) {
         mediaFileDao.createOrUpdateMediaFile(mediaFile);
+    }
+
+    /**
+     * Increments the play count and last played date for the given media file and its
+     * directory.
+     */
+    public void incrementPlayCount(MediaFile file) {
+        file.setLastPlayed(new Date());
+        file.setPlayCount(file.getPlayCount() + 1);
+        updateMediaFile(file);
+
+        MediaFile parent = getParentOf(file);
+        if (!parent.isRoot()) {
+            parent.setLastPlayed(new Date());
+            parent.setPlayCount(parent.getPlayCount() + 1);
+            updateMediaFile(parent);
+        }
     }
 
     /**

@@ -18,6 +18,26 @@
  */
 package net.sourceforge.subsonic.service;
 
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.PodcastDao;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.PodcastChannel;
+import net.sourceforge.subsonic.domain.PodcastEpisode;
+import net.sourceforge.subsonic.domain.PodcastStatus;
+import net.sourceforge.subsonic.util.StringUtil;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.HttpConnectionParams;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.input.SAXBuilder;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -38,27 +58,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import net.sourceforge.subsonic.domain.MediaFile;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.HttpResponse;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.jdom.input.SAXBuilder;
-
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.dao.PodcastDao;
-import net.sourceforge.subsonic.domain.PodcastChannel;
-import net.sourceforge.subsonic.domain.PodcastEpisode;
-import net.sourceforge.subsonic.domain.PodcastStatus;
-import net.sourceforge.subsonic.util.StringUtil;
-
 /**
  * Provides services for Podcast reception.
  *
@@ -68,10 +67,10 @@ public class PodcastService {
 
     private static final Logger LOG = Logger.getLogger(PodcastService.class);
     private static final DateFormat[] RSS_DATE_FORMATS = {new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US),
-                                                          new SimpleDateFormat("dd MMM yyyy HH:mm:ss Z", Locale.US)};
+            new SimpleDateFormat("dd MMM yyyy HH:mm:ss Z", Locale.US)};
 
     private static final Namespace[] ITUNES_NAMESPACES = {Namespace.getNamespace("http://www.itunes.com/DTDs/Podcast-1.0.dtd"),
-                                                          Namespace.getNamespace("http://www.itunes.com/dtds/podcast-1.0.dtd")};
+            Namespace.getNamespace("http://www.itunes.com/dtds/podcast-1.0.dtd")};
 
     private final ExecutorService refreshExecutor;
     private final ExecutorService downloadExecutor;

@@ -119,7 +119,7 @@ public class PlaylistInputStream extends InputStream {
         } else if (!file.equals(currentFile)) {
             close();
             LOG.info(player.getUsername() + " listening to \"" + FileUtil.getShortPath(file.getFile()) + "\"");
-            updateStatistics(file);
+            mediaFileService.incrementPlayCount(file);
             if (player.getClientId() == null) {  // Don't scrobble REST players.
                 audioScrobblerService.register(file, player.getUsername(), false);
             }
@@ -135,17 +135,6 @@ public class PlaylistInputStream extends InputStream {
         List<MediaFile> files = searchService.getRandomSongs(playlist.getRandomSearchCriteria());
         playlist.addFiles(false, files);
         LOG.info("Recreated random playlist with " + playlist.size() + " songs.");
-    }
-
-    private void updateStatistics(MediaFile file) {
-        try {
-            MediaFile folder = mediaFileService.getParentOf(file);
-            if (!folder.isRoot()) {
-                musicInfoService.incrementPlayCount(folder);
-            }
-        } catch (Exception x) {
-            LOG.warn("Failed to update statistics for " + file, x);
-        }
     }
 
     @Override

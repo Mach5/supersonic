@@ -48,7 +48,6 @@ public class JukeboxService implements AudioPlayer.Listener {
     private AudioScrobblerService audioScrobblerService;
     private StatusService statusService;
     private SettingsService settingsService;
-    private MusicInfoService musicInfoService;
     private SecurityService securityService;
 
     private Player player;
@@ -148,7 +147,7 @@ public class JukeboxService implements AudioPlayer.Listener {
         status = statusService.createStreamStatus(player);
         status.setFile(file.getFile());
         status.addBytesTransfered(file.getFileSize());
-        updateStatistics(file);
+        mediaFileService.incrementPlayCount(file);
         scrobble(file, false);
     }
 
@@ -158,17 +157,6 @@ public class JukeboxService implements AudioPlayer.Listener {
             statusService.removeStreamStatus(status);
         }
         scrobble(file, true);
-    }
-
-    private void updateStatistics(MediaFile file) {
-        try {
-            MediaFile folder = mediaFileService.getParentOf(file);
-            if (!folder.isRoot()) {
-                musicInfoService.incrementPlayCount(folder);
-            }
-        } catch (Exception x) {
-            LOG.warn("Failed to update statistics for " + file, x);
-        }
     }
 
     private void scrobble(MediaFile file, boolean submission) {
@@ -194,10 +182,6 @@ public class JukeboxService implements AudioPlayer.Listener {
 
     public void setStatusService(StatusService statusService) {
         this.statusService = statusService;
-    }
-
-    public void setMusicInfoService(MusicInfoService musicInfoService) {
-        this.musicInfoService = musicInfoService;
     }
 
     public void setSettingsService(SettingsService settingsService) {
