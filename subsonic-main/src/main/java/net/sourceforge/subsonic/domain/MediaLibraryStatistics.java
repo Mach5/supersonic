@@ -30,12 +30,14 @@ public class MediaLibraryStatistics {
     private int albumCount;
     private int songCount;
     private long totalLengthInBytes;
+    private long totalDurationInSeconds;
 
-    public MediaLibraryStatistics(int artistCount, int albumCount, int songCount, long totalLengthInBytes) {
+    public MediaLibraryStatistics(int artistCount, int albumCount, int songCount, long totalLengthInBytes, long totalDurationInSeconds) {
         this.artistCount = artistCount;
         this.albumCount = albumCount;
         this.songCount = songCount;
         this.totalLengthInBytes = totalLengthInBytes;
+        this.totalDurationInSeconds = totalDurationInSeconds;
     }
 
     public int getArtistCount() {
@@ -52,5 +54,9 @@ public class MediaLibraryStatistics {
 
     public long getTotalLengthInBytes() {
         return totalLengthInBytes;
+    }
+
+    public long getTotalDurationInSeconds() {
+        return totalDurationInSeconds;
     }
 }

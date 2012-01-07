@@ -39,6 +39,7 @@ import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import net.sourceforge.subsonic.dao.MediaFileDao;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -62,7 +63,6 @@ public class SearchService {
     private static final Logger LOG = Logger.getLogger(SearchService.class);
 
     private Map<File, Line> cachedIndex;
-    private List<Line> cachedSongs;
     private SortedSet<Line> cachedAlbums;  // Sorted chronologically.
     private MediaLibraryStatistics statistics;
 
@@ -72,6 +72,7 @@ public class SearchService {
     private SecurityService securityService;
     private LuceneSearchService luceneSearchService;
     private MediaFileService mediaFileService;
+    private MediaFileDao mediaFileDao;
 
     /**
      * Returns whether the search index exists.
@@ -146,15 +147,16 @@ public class SearchService {
             writer.close();
             synchronized (this) {
                 cachedIndex = null;
-                cachedSongs = null;
                 cachedAlbums = null;
-                statistics = null;
                 getIndex();
             }
 
             // Update Lucene search index.
             LOG.info("Updating Lucene search index.");
             luceneSearchService.updateIndexes();
+
+            // Update statistics
+            statistics = mediaFileDao.getStatistics();
 
             LOG.info("Created search index with " + scanCount + " entries.");
 
@@ -164,6 +166,11 @@ public class SearchService {
             creatingIndex = false;
             IOUtils.closeQuietly(writer);
         }
+    }
+
+    public void init() {
+        statistics = mediaFileDao.getStatistics();
+        schedule();
     }
 
     /**
@@ -238,15 +245,8 @@ public class SearchService {
      * Returns media library statistics, including the number of artists, albums and songs.
      *
      * @return Media library statistics.
-     * @throws IOException If an I/O error occurs.
      */
-    public MediaLibraryStatistics getStatistics() throws IOException {
-        if (!isIndexCreated() || isIndexBeingCreated()) {
-            return null;
-        }
-
-        // Ensure that index is read to memory.
-        getIndex();
+    public MediaLibraryStatistics getStatistics() {
         return statistics;
     }
 
@@ -300,14 +300,6 @@ public class SearchService {
         }
 
         cachedIndex = new TreeMap<File, Line>();
-
-        // Statistics.
-        int songCount = 0;
-        long totalLength = 0;
-        Set<String> artists = new HashSet<String>();
-        Set<String> albums = new HashSet<String>();
-
-        cachedSongs = new ArrayList<Line>();
         cachedAlbums = new TreeSet<Line>(new Comparator<Line>() {
             public int compare(Line line1, Line line2) {
                 if (line2.created < line1.created) {
@@ -335,14 +327,7 @@ public class SearchService {
 
                     if (line.isAlbum) {
                         cachedAlbums.add(line);
-                    } else if (line.isFile) {
-                        songCount++;
-                        totalLength += line.length;
-                        artists.add(line.artist);
-                        albums.add(line.album);
-                        cachedSongs.add(line);
                     }
-
                 } catch (Exception x) {
                     LOG.error("An error occurred while reading index entry '" + s + "'.", x);
                 }
@@ -350,8 +335,6 @@ public class SearchService {
         } finally {
             reader.close();
         }
-
-        statistics = new MediaLibraryStatistics(artists.size(), albums.size(), songCount, totalLength);
 
         return cachedIndex;
     }
@@ -408,6 +391,10 @@ public class SearchService {
 
     public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
+    }
+
+    public void setMediaFileDao(MediaFileDao mediaFileDao) {
+        this.mediaFileDao = mediaFileDao;
     }
 
     /**

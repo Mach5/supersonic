@@ -20,6 +20,7 @@ package net.sourceforge.subsonic.dao;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import net.sourceforge.subsonic.domain.MediaType;
 import net.sourceforge.subsonic.util.Util;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
@@ -97,8 +98,8 @@ public class MediaFileDao extends AbstractDao {
     }
 
     public MediaFile getRandomAlbum() {
-        Integer min = queryForInt("select min(id) from media_file");
-        Integer max = queryForInt("select max(id) from media_file");
+        Integer min = queryForInt("select min(id) from media_file", 0);
+        Integer max = queryForInt("select max(id) from media_file", 0);
         if (min == null || max == null) {
             return null;
         }
@@ -106,8 +107,8 @@ public class MediaFileDao extends AbstractDao {
     }
 
     public MediaFile getRandomSong(Integer fromYear, Integer toYear, String genre, String musicFolderPath) {
-        Integer min = queryForInt("select min(id) from media_file");
-        Integer max = queryForInt("select max(id) from media_file");
+        Integer min = queryForInt("select min(id) from media_file", 0);
+        Integer max = queryForInt("select max(id) from media_file", 0);
         if (min == null || max == null) {
             return null;
         }
@@ -128,8 +129,21 @@ public class MediaFileDao extends AbstractDao {
         }
 
         return queryOne("select " + COLUMNS + " from media_file where " + whereClause + " limit 1", rowMapper);
+    }
 
+    /**
+     * Returns media library statistics, including the number of artists, albums and songs.
+     *
+     * @return Media library statistics.
+     */
+    public MediaLibraryStatistics getStatistics() {
+        int artistCount = queryForInt("select count(distinct artist) from media_file", 0);
+        int albumCount = queryForInt("select count(distinct album) from media_file", 0);
+        int songCount = queryForInt("select count(id) from media_file where not is_directory", 0);
+        long totalLengthInBytes = queryForLong("select sum(file_size) from media_file", 0L);
+        long totalDurationInSeconds = queryForLong("select sum(duration_seconds) from media_file", 0L);
 
+        return new MediaLibraryStatistics(artistCount, albumCount, songCount, totalLengthInBytes, totalDurationInSeconds);
     }
 
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {

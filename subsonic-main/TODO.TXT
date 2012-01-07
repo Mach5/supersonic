@@ -25,7 +25,7 @@ Use MediaFile.enabled
 MediaFileService: Determine when to check if files exists.
 Root should not be album.
 Test performance of MusicFileDao.
-
+Use MediaLibraryStatistics.totalDuration
 
 DONE IN 4.7
 -----------------
