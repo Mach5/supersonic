@@ -21,12 +21,12 @@ package net.sourceforge.subsonic.dao;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaType;
+import net.sourceforge.subsonic.util.Util;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Provides database services for media files.
@@ -39,7 +39,6 @@ public class MediaFileDao extends AbstractDao {
     private static final String COLUMNS = "id, path, media_type, format, is_directory, is_album, title, album, artist, disc_number, " +
             "track_number, year, genre, bit_rate, variable_bit_rate, duration_seconds, file_size, width, height, cover_art_path, " +
             "parent_path, play_count, last_played, comment, created, last_modified, children_last_updated, enabled";
-    private static final Random RANDOM = new Random(System.currentTimeMillis());
 
     private final MediaFileMapper rowMapper = new MediaFileMapper();
 
@@ -98,8 +97,39 @@ public class MediaFileDao extends AbstractDao {
     }
 
     public MediaFile getRandomAlbum() {
-        int n = queryForInt("select count(*) from media_file where is_album");
-        return queryOne("select " + COLUMNS + " from media_file where is_album order by id limit 1 offset ?", rowMapper, RANDOM.nextInt(n));
+        Integer min = queryForInt("select min(id) from media_file");
+        Integer max = queryForInt("select max(id) from media_file");
+        if (min == null || max == null) {
+            return null;
+        }
+        return queryOne("select " + COLUMNS + " from media_file where is_album and id > ? limit 1", rowMapper, Util.randomInt(min, max));
+    }
+
+    public MediaFile getRandomSong(Integer fromYear, Integer toYear, String genre, String musicFolderPath) {
+        Integer min = queryForInt("select min(id) from media_file");
+        Integer max = queryForInt("select max(id) from media_file");
+        if (min == null || max == null) {
+            return null;
+        }
+
+        StringBuilder whereClause = new StringBuilder("not is_directory and id > ").append(Util.randomInt(min, max));
+
+        if (fromYear != null) {
+            whereClause.append(" and year >= ").append(fromYear);
+        }
+        if (toYear != null) {
+            whereClause.append(" and year <= ").append(toYear);
+        }
+        if (genre != null) {
+            whereClause.append(" and genre = '").append(genre).append("'");
+        }
+        if (musicFolderPath != null) {
+            whereClause.append(" and path like '").append(musicFolderPath).append("%'");
+        }
+
+        return queryOne("select " + COLUMNS + " from media_file where " + whereClause + " limit 1", rowMapper);
+
+
     }
 
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {

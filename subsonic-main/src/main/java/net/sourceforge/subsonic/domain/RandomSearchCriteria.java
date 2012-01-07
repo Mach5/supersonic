@@ -18,13 +18,11 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import net.sourceforge.subsonic.service.SearchService;
-
 /**
  * Defines criteria used when generating random playlists.
  *
  * @author Sindre Mehus
- * @see SearchService#getRandomSongs
+ * @see net.sourceforge.subsonic.service.MediaFileService#getRandomSongs
  */
 public class RandomSearchCriteria {
     private final int count;

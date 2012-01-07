@@ -173,7 +173,7 @@ public class StreamController implements Controller {
             status = statusService.createStreamStatus(player);
 
             in = new PlaylistInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, transcodingService,
-                    audioScrobblerService, searchService, mediaFileService);
+                    audioScrobblerService, mediaFileService);
             OutputStream out = RangeOutputStream.wrap(response.getOutputStream(), range);
 
             // Enabled SHOUTcast, if requested.

@@ -604,7 +604,7 @@ public class RESTController extends MultiActionController {
             Integer musicFolderId = ServletRequestUtils.getIntParameter(request, "musicFolderId");
             RandomSearchCriteria criteria = new RandomSearchCriteria(size, genre, fromYear, toYear, musicFolderId);
 
-            for (MediaFile mediaFile : searchService.getRandomSongs(criteria)) {
+            for (MediaFile mediaFile : mediaFileService.getRandomSongs(criteria)) {
                 File coverArt = mediaFileService.getCoverArt(mediaFile);
                 AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
                 builder.add("song", attributes, true);

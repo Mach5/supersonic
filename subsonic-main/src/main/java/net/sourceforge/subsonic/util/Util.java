@@ -26,6 +26,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.Inet4Address;
 import java.util.Enumeration;
+import java.util.Random;
 
 /**
  * Miscellaneous general utility methods.
@@ -35,6 +36,7 @@ import java.util.Enumeration;
 public final class Util {
 
     private static final Logger LOG = Logger.getLogger(Util.class);
+    private static final Random RANDOM = new Random(System.currentTimeMillis());
 
     /**
      * Disallow external instantiation.
@@ -113,5 +115,10 @@ public final class Util {
         }
 
         return "127.0.0.1";
+    }
+
+    public static int randomInt(int min, int max) {
+        return min + RANDOM.nextInt(max - min);
+
     }
 }

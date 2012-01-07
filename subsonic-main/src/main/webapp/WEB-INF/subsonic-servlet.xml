@@ -96,7 +96,7 @@
     <bean id="randomPlaylistController" class="net.sourceforge.subsonic.controller.RandomPlaylistController">
         <property name="viewName" value="reload"/>
         <property name="playerService" ref="playerService"/>
-        <property name="searchService" ref="searchService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="reloadFrames">
             <list>
                 <bean class="net.sourceforge.subsonic.controller.ReloadFrame">

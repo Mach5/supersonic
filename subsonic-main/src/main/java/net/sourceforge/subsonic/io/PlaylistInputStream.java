@@ -28,7 +28,6 @@ import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
 import net.sourceforge.subsonic.service.TranscodingService;
-import net.sourceforge.subsonic.service.SearchService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +47,6 @@ public class PlaylistInputStream extends InputStream {
     private final Integer maxBitRate;
     private final String preferredTargetFormat;
     private final VideoTranscodingSettings videoTranscodingSettings;
-    private final SearchService searchService;
     private final TranscodingService transcodingService;
     private final AudioScrobblerService audioScrobblerService;
     private final MediaFileService mediaFileService;
@@ -57,7 +55,7 @@ public class PlaylistInputStream extends InputStream {
 
     public PlaylistInputStream(Player player, TransferStatus status, Integer maxBitRate, String preferredTargetFormat,
                                VideoTranscodingSettings videoTranscodingSettings, TranscodingService transcodingService,
-                               AudioScrobblerService audioScrobblerService, SearchService searchService, MediaFileService mediaFileService) {
+                               AudioScrobblerService audioScrobblerService, MediaFileService mediaFileService) {
         this.player = player;
         this.status = status;
         this.maxBitRate = maxBitRate;
@@ -65,7 +63,6 @@ public class PlaylistInputStream extends InputStream {
         this.videoTranscodingSettings = videoTranscodingSettings;
         this.transcodingService = transcodingService;
         this.audioScrobblerService = audioScrobblerService;
-        this.searchService = searchService;
         this.mediaFileService = mediaFileService;
     }
 
@@ -132,7 +129,7 @@ public class PlaylistInputStream extends InputStream {
     }
 
     private void populateRandomPlaylist(Playlist playlist) throws IOException {
-        List<MediaFile> files = searchService.getRandomSongs(playlist.getRandomSearchCriteria());
+        List<MediaFile> files = mediaFileService.getRandomSongs(playlist.getRandomSearchCriteria());
         playlist.addFiles(false, files);
         LOG.info("Recreated random playlist with " + playlist.size() + " songs.");
     }

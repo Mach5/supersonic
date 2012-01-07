@@ -23,6 +23,8 @@ import net.sf.ehcache.Element;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MusicFolder;
+import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
@@ -196,13 +198,47 @@ public class MediaFileService {
                     result.add(album);
 
                     // Enough items found?
-                    if (result.size() == count) {
+                    if (result.size() >= count) {
                         break;
                     }
                 }
             }
         }
         return result;
+    }
+
+    /**
+     * Returns a number of random songs.
+     *
+     * @param criteria Search criteria.
+     * @return List of random songs.
+     */
+    public List<MediaFile> getRandomSongs(RandomSearchCriteria criteria) {
+        List<MediaFile> result = new ArrayList<MediaFile>();
+
+        String musicFolderPath = null;
+        if (criteria.getMusicFolderId() != null) {
+            MusicFolder musicFolder = settingsService.getMusicFolderById(criteria.getMusicFolderId());
+            musicFolderPath = musicFolder.getPath().getPath() + File.separator;
+        }
+
+        // Note: To avoid duplicates, we iterate over more than the requested number of items.
+        for (int i = 0; i < criteria.getCount() * 5; i++) {
+
+            MediaFile song = mediaFileDao.getRandomSong(criteria.getFromYear(), criteria.getToYear(), criteria.getGenre(), musicFolderPath);
+            if (song != null && securityService.isReadAllowed(song.getFile())) {
+                if (!result.contains(song)) {
+                    result.add(song);
+
+                    // Enough items found?
+                    if (result.size() >= criteria.getCount()) {
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
+
     }
 
     private void updateChildren(MediaFile parent) {

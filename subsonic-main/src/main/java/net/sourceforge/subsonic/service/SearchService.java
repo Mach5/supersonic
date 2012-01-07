@@ -32,7 +32,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.Timer;
@@ -47,7 +46,6 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import net.sourceforge.subsonic.domain.MusicFolder;
-import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
 import net.sourceforge.subsonic.util.FileUtil;
@@ -61,7 +59,6 @@ import net.sourceforge.subsonic.util.StringUtil;
 public class SearchService {
 
     private static final int INDEX_VERSION = 14;
-    private static final Random RANDOM = new Random(System.currentTimeMillis());
     private static final Logger LOG = Logger.getLogger(SearchService.class);
 
     private Map<File, Line> cachedIndex;
@@ -251,102 +248,6 @@ public class SearchService {
         // Ensure that index is read to memory.
         getIndex();
         return statistics;
-    }
-
-    /**
-     * Returns a number of random songs.
-     *
-     * @param criteria Search criteria.
-     * @return Array of random songs.
-     * @throws IOException If an I/O error occurs.
-     */
-    public List<MediaFile> getRandomSongs(RandomSearchCriteria criteria) throws IOException {
-        int count = criteria.getCount();
-        List<MediaFile> result = new ArrayList<MediaFile>(count);
-
-        if (!isIndexCreated() || isIndexBeingCreated()) {
-            return result;
-        }
-
-        // Ensure that index is read to memory.
-        getIndex();
-
-        if (cachedSongs == null || cachedSongs.isEmpty()) {
-            return result;
-        }
-
-        String genre = criteria.getGenre();
-        Integer fromYear = criteria.getFromYear();
-        Integer toYear = criteria.getToYear();
-        String musicFolderPath = null;
-        if (criteria.getMusicFolderId() != null) {
-            MusicFolder musicFolder = settingsService.getMusicFolderById(criteria.getMusicFolderId());
-            musicFolderPath = musicFolder.getPath().getPath().toUpperCase() + File.separator;
-        }
-
-        // Filter by genre, year and music folder.
-        List<Line> songs = new ArrayList<Line>(cachedSongs.size());
-        String fromYearString = fromYear == null ? null : String.valueOf(fromYear);
-        String toYearString = toYear == null ? null : String.valueOf(toYear);
-
-        for (Line song : cachedSongs) {
-
-            // Skip if wrong genre.
-            if (genre != null && !genre.equalsIgnoreCase(song.genre)) {
-                continue;
-            }
-
-            // Skip podcasts if no genre is given.
-            if (genre == null && "podcast".equalsIgnoreCase(song.genre)) {
-                continue;
-            }
-
-            // Skip if wrong year.
-            if (fromYearString != null) {
-                if (song.year == null || song.year.compareTo(fromYearString) < 0) {
-                    continue;
-                }
-            }
-            if (toYearString != null) {
-                if (song.year == null || song.year.compareTo(toYearString) > 0) {
-                    continue;
-                }
-            }
-
-            // Skip if wrong music folder.
-            if (musicFolderPath != null) {
-                String filePath = song.file.getPath().toUpperCase();
-                if (!filePath.startsWith(musicFolderPath)) {
-                    continue;
-                }
-            }
-
-            songs.add(song);
-        }
-
-        if (songs.isEmpty()) {
-            return result;
-        }
-
-        // Note: To avoid duplicates, we iterate over more than the requested number of songs.
-        for (int i = 0; i < count * 10; i++) {
-            int n = RANDOM.nextInt(songs.size());
-            File file = songs.get(n).file;
-
-            if (FileUtil.exists(file) && securityService.isReadAllowed(file)) {
-                MediaFile mediaFile = mediaFileService.getMediaFile(file);
-                if (!result.contains(mediaFile) && !mediaFile.isVideo()) {
-                    result.add(mediaFile);
-
-                    // Enough songs found?
-                    if (result.size() == count) {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return result;
     }
 
     /**
