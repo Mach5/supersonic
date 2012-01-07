@@ -18,39 +18,24 @@
  */
 package net.sourceforge.subsonic.service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
-import net.sourceforge.subsonic.dao.MediaFileDao;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
 import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.StringUtil;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Provides services for searching for music.
@@ -62,113 +47,19 @@ public class SearchService {
     private static final int INDEX_VERSION = 14;
     private static final Logger LOG = Logger.getLogger(SearchService.class);
 
-    private Map<File, Line> cachedIndex;
-    private SortedSet<Line> cachedAlbums;  // Sorted chronologically.
     private MediaLibraryStatistics statistics;
 
     private boolean creatingIndex;
     private Timer timer;
     private SettingsService settingsService;
-    private SecurityService securityService;
     private LuceneSearchService luceneSearchService;
     private MediaFileService mediaFileService;
     private MediaFileDao mediaFileDao;
+    private int scanCount;
 
-    /**
-     * Returns whether the search index exists.
-     *
-     * @return Whether the search index exists.
-     */
-    private synchronized boolean isIndexCreated() {
-        return getIndexFile().exists();
-    }
-
-    /**
-     * Returns whether the search index is currently being created.
-     *
-     * @return Whether the search index is currently being created.
-     */
-    public synchronized boolean isIndexBeingCreated() {
-        return creatingIndex;
-    }
-
-    /**
-     * Returns the number of files scanned so far.
-     */
-    public int getScanCount() {
-        return scanCount;
-    }
-
-    /**
-     * Generates the search index.  If the index already exists it will be
-     * overwritten.  The index is created asynchronously, i.e., this method returns
-     * before the index is created.
-     */
-    public synchronized void createIndex() {
-        if (isIndexBeingCreated()) {
-            return;
-        }
-        creatingIndex = true;
-
-        Thread thread = new Thread("Search Index Generator") {
-            @Override
-            public void run() {
-                doCreateIndex();
-            }
-        };
-
-        thread.setPriority(Thread.MIN_PRIORITY);
-        thread.start();
-    }
-
-    private void doCreateIndex() {
-        deleteOldIndexFiles();
-        LOG.info("Starting to create search index.");
-        PrintWriter writer = null;
-
-        try {
-
-            // Get existing index.
-            Map<File, Line> oldIndex = getIndex();
-
-            writer = new PrintWriter(getIndexFile(), StringUtil.ENCODING_UTF8);
-
-            // Create a scanner for visiting all music files.
-            Scanner scanner = new Scanner(writer, oldIndex, settingsService.getAllMusicFolders());
-
-            // Read entire music directory.
-            for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
-                MediaFile root = mediaFileService.getMediaFile(musicFolder.getPath());
-                scanner.scan(root);
-            }
-
-            // Clear memory cache.
-            writer.flush();
-            writer.close();
-            synchronized (this) {
-                cachedIndex = null;
-                cachedAlbums = null;
-                getIndex();
-            }
-
-            // Update Lucene search index.
-            LOG.info("Updating Lucene search index.");
-            luceneSearchService.updateIndexes();
-
-            // Update statistics
-            statistics = mediaFileDao.getStatistics();
-
-            LOG.info("Created search index with " + scanCount + " entries.");
-
-        } catch (Exception x) {
-            LOG.error("Failed to create search index.", x);
-        } finally {
-            creatingIndex = false;
-            IOUtils.closeQuietly(writer);
-        }
-    }
 
     public void init() {
+        deleteOldIndexFiles();
         statistics = mediaFileDao.getStatistics();
         schedule();
     }
@@ -222,6 +113,96 @@ public class SearchService {
     }
 
     /**
+     * Returns whether the search index exists.
+     *
+     * @return Whether the search index exists.
+     */
+    @Deprecated
+    private synchronized boolean isIndexCreated() {
+        return getIndexFile().exists();
+    }
+
+    /**
+     * Returns whether the search index is currently being created.
+     *
+     * @return Whether the search index is currently being created.
+     */
+    public synchronized boolean isIndexBeingCreated() {
+        return creatingIndex;
+    }
+
+    /**
+     * Returns the number of files scanned so far.
+     */
+    public int getScanCount() {
+        return scanCount;
+    }
+
+    /**
+     * Generates the search index.  If the index already exists it will be
+     * overwritten.  The index is created asynchronously, i.e., this method returns
+     * before the index is created.
+     */
+    public synchronized void createIndex() {
+        if (isIndexBeingCreated()) {
+            return;
+        }
+        creatingIndex = true;
+
+        Thread thread = new Thread("Search Index Generator") {
+            @Override
+            public void run() {
+                doCreateIndex();
+            }
+        };
+
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
+    }
+
+    private void doCreateIndex() {
+        LOG.info("Starting to create search index.");
+
+        try {
+
+            // Read entire music directory.
+            scanCount = 0;
+            for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
+                MediaFile root = mediaFileService.getMediaFile(musicFolder.getPath());
+                scan(root);
+            }
+
+            // Update Lucene search index.
+            LOG.info("Updating Lucene search index.");
+            luceneSearchService.updateIndexes();
+
+            // Update statistics
+            statistics = mediaFileDao.getStatistics();
+
+            LOG.info("Created search index with " + scanCount + " entries.");
+
+        } catch (Exception x) {
+            LOG.error("Failed to create search index.", x);
+        } finally {
+            creatingIndex = false;
+        }
+    }
+
+    private void scan(MediaFile file) {
+        scanCount++;
+        if (scanCount % 250 == 0) {
+            LOG.info("Created search index with " + scanCount + " entries.");
+        }
+
+        for (MediaFile child : mediaFileService.getChildrenOf(file, true, false, false)) {
+            scan(child);
+        }
+        for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false)) {
+            scan(child);
+        }
+    }
+
+    /**
      * Search for music files fulfilling the given search criteria.
      *
      * @param criteria  The search criteria.
@@ -258,85 +239,31 @@ public class SearchService {
      * @return Array of new music files.
      * @throws IOException If an I/O error occurs.
      */
+    @Deprecated
     public List<MediaFile> getNewestAlbums(int offset, int count) throws IOException {
         List<MediaFile> result = new ArrayList<MediaFile>(count);
 
-        if (!isIndexCreated() || isIndexBeingCreated()) {
-            return result;
-        }
-
-        // Ensure that index is read to memory.
-        getIndex();
-
-        int n = 0;
-        for (Line line : cachedAlbums) {
-            if (n == count + offset) {
-                break;
-            }
-            if (FileUtil.exists(line.file) && securityService.isReadAllowed(line.file)) {
-                if (n >= offset) {
-                    result.add(mediaFileService.getMediaFile(line.file));
-                }
-                n++;
-            }
-        }
-
+//        if (!isIndexCreated() || isIndexBeingCreated()) {
+//            return result;
+//        }
+//
+//        // Ensure that index is read to memory.
+//        getIndex();
+//
+//        int n = 0;
+//        for (Line line : cachedAlbums) {
+//            if (n == count + offset) {
+//                break;
+//            }
+//            if (FileUtil.exists(line.file) && securityService.isReadAllowed(line.file)) {
+//                if (n >= offset) {
+//                    result.add(mediaFileService.getMediaFile(line.file));
+//                }
+//                n++;
+//            }
+//        }
+//
         return result;
-    }
-
-    /**
-     * Returns the search index as a map from files to {@link Line} instances.
-     *
-     * @return The search index.
-     * @throws IOException If an I/O error occurs.
-     */
-    private synchronized Map<File, Line> getIndex() throws IOException {
-        if (!isIndexCreated()) {
-            return new TreeMap<File, Line>();
-        }
-
-        if (cachedIndex != null) {
-            return cachedIndex;
-        }
-
-        cachedIndex = new TreeMap<File, Line>();
-        cachedAlbums = new TreeSet<Line>(new Comparator<Line>() {
-            public int compare(Line line1, Line line2) {
-                if (line2.created < line1.created) {
-                    return -1;
-                }
-                if (line1.created < line2.created) {
-                    return 1;
-                }
-                return 0;
-            }
-        });
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(getIndexFile()), StringUtil.ENCODING_UTF8));
-
-        // TODO: Calculate artist/album count from cachedArtists/cachedAlbums.
-
-        try {
-
-            for (String s = reader.readLine(); s != null; s = reader.readLine()) {
-
-                try {
-
-                    Line line = Line.parse(s);
-                    cachedIndex.put(line.file, line);
-
-                    if (line.isAlbum) {
-                        cachedAlbums.add(line);
-                    }
-                } catch (Exception x) {
-                    LOG.error("An error occurred while reading index entry '" + s + "'.", x);
-                }
-            }
-        } finally {
-            reader.close();
-        }
-
-        return cachedIndex;
     }
 
     /**
@@ -381,10 +308,6 @@ public class SearchService {
         this.settingsService = settingsService;
     }
 
-    public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
-    }
-
     public void setLuceneSearchService(LuceneSearchService luceneSearchService) {
         this.luceneSearchService = luceneSearchService;
     }
@@ -395,198 +318,5 @@ public class SearchService {
 
     public void setMediaFileDao(MediaFileDao mediaFileDao) {
         this.mediaFileDao = mediaFileDao;
-    }
-
-    /**
-     * Contains the content of a single line in the index file.
-     */
-    static class Line {
-
-        /**
-         * Column separator.
-         */
-        static final String SEPARATOR = " ixYxi ";
-
-        // TODO: Replace isFile, isAlbum, isDirectory with one char.
-
-        public boolean isFile;
-        public boolean isAlbum;
-        private boolean isArtist;
-        private boolean isDirectory;
-        public long created;
-        private long lastModified;
-        public File file;
-        private long length;
-        public String artist;
-        public String album;
-        public String title;
-        private String year;
-        private String genre;
-
-        private Line() {
-        }
-
-        /**
-         * Creates a line instance by parsing the given string.
-         *
-         * @param s The string to parse.
-         * @return The line created by parsing the string.
-         */
-        public static Line parse(String s) {
-            Line line = new Line();
-
-            String[] tokens = s.split(SEPARATOR, -1);
-            line.isFile = "F".equals(tokens[0]);
-            line.isArtist = "R".equals(tokens[0]);
-            line.isAlbum = "A".equals(tokens[0]);
-            line.isDirectory = "D".equals(tokens[0]);
-            line.created = Long.parseLong(tokens[1]);
-            line.lastModified = Long.parseLong(tokens[2]);
-            line.file = new File(tokens[3]);
-            line.artist = tokens[5].length() == 0 ? null : tokens[5];
-            line.album = tokens[6].length() == 0 ? null : tokens[6];
-            if (line.isFile) {
-                line.length = Long.parseLong(tokens[4]);
-                line.title = tokens[7].length() == 0 ? null : tokens[7];
-                line.year = tokens[8].length() == 0 ? null : tokens[8];
-                line.genre = tokens[9].length() == 0 ? null : tokens[9];
-            }
-
-            return line;
-        }
-
-        /**
-         * Creates a line instance representing the given music file.
-         *
-         * @param file         The music file.
-         * @param index        The existing search index. Used to avoid parsing metadata if the file has not changed
-         *                     since the last time the search index was created.
-         * @param musicFolders The set of configured music folders.
-         * @return A line instance representing the given music file.
-         */
-        public static Line forFile(MediaFile file, Map<File, Line> index, Set<File> musicFolders) {
-            // Look in existing index first.
-            Line existingLine = index.get(file.getFile());
-
-            // Found up-to-date line?
-            if (existingLine != null && file.getLastModified().getTime() == existingLine.lastModified) {
-                return existingLine;
-            }
-
-            // Otherwise, construct meta data.
-            Line line = new Line();
-
-            line.isFile = file.isFile();
-            line.isDirectory = file.isDirectory();
-            if (line.isDirectory && !musicFolders.contains(file.getFile())) {
-                try {
-                    line.isAlbum = file.isAlbum();
-                } catch (Exception x) {
-                    LOG.warn("Failed to determine if " + file + " is an album.", x);
-                }
-                line.isArtist = !line.isAlbum;
-            }
-            line.lastModified = file.getLastModified().getTime();
-            line.created = existingLine != null ? existingLine.created : line.lastModified;
-            line.file = file.getFile();
-            if (line.isFile) {
-                line.length = file.getFileSize();
-                line.artist = StringUtils.upperCase(file.getArtist());
-                line.album = StringUtils.upperCase(file.getAlbumName());
-                line.title = StringUtils.upperCase(file.getTitle());
-                line.year = file.getYear() == null ? null : file.getYear().toString();
-                line.genre = StringUtils.capitalize(StringUtils.lowerCase(file.getGenre()));
-            } else if (line.isAlbum) {
-//                resolveArtistAndAlbum(file, line);
-            } else if (line.isArtist) {
-                line.artist = StringUtils.upperCase(file.getName());
-            }
-
-            return line;
-        }
-
-//        private static void resolveArtistAndAlbum(MediaFile file, Line line) {
-//
-//            // If directory, find artist from metadata in child.
-//            if (file.isDirectory()) {
-//                try {
-//                    file = file.getFirstChild();
-//                } catch (IOException e) {
-//                    return;
-//                }
-//                if (file == null) {
-//                    return;
-//                }
-//            }
-//            line.artist = StringUtils.upperCase(file.getMetaData().getArtist());
-//            line.album = StringUtils.upperCase(file.getMetaData().getAlbumName());
-//        }
-
-        /**
-         * Returns the content of this line as a string.
-         *
-         * @return The content of this line as a string.
-         */
-        @Override
-        public String toString() {
-            StringBuilder buf = new StringBuilder(256);
-
-            if (isFile) {
-                buf.append('F').append(SEPARATOR);
-            } else if (isAlbum) {
-                buf.append('A').append(SEPARATOR);
-            } else if (isArtist) {
-                buf.append('R').append(SEPARATOR);
-            } else {
-                buf.append('D').append(SEPARATOR);
-            }
-
-            buf.append(created).append(SEPARATOR);
-            buf.append(lastModified).append(SEPARATOR);
-            buf.append(file.getPath()).append(SEPARATOR);
-            buf.append(length).append(SEPARATOR);
-            buf.append(artist == null ? "" : artist).append(SEPARATOR);
-            buf.append(album == null ? "" : album).append(SEPARATOR);
-            buf.append(title == null ? "" : title).append(SEPARATOR);
-            buf.append(year == null ? "" : year).append(SEPARATOR);
-            buf.append(genre == null ? "" : genre);
-
-            return buf.toString();
-        }
-    }
-
-    private int scanCount;
-
-    private class Scanner {
-        private final PrintWriter writer;
-        private final Map<File, Line> oldIndex;
-        private final Set<File> musicFolders;
-
-        Scanner(PrintWriter writer, Map<File, Line> oldIndex, List<MusicFolder> musicFolders) {
-            this.writer = writer;
-            this.oldIndex = oldIndex;
-            this.musicFolders = new HashSet<File>();
-            for (MusicFolder musicFolder : musicFolders) {
-                this.musicFolders.add(musicFolder.getPath());
-            }
-            scanCount = 0;
-        }
-
-        public void scan(MediaFile file) {
-            Line line = Line.forFile(file, oldIndex, musicFolders);
-            writer.println(line);
-
-            scanCount++;
-            if (scanCount % 250 == 0) {
-                LOG.info("Created search index with " + scanCount + " entries.");
-            }
-
-            for (MediaFile child : mediaFileService.getChildrenOf(file, true, false, false)) {
-                scan(child);
-            }
-            for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false)) {
-                scan(child);
-            }
-        }
     }
 }

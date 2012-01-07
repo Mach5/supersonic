@@ -78,7 +78,6 @@
 
     <bean id="searchService" class="net.sourceforge.subsonic.service.SearchService" init-method="init" depends-on="metaDataParserFactory">
         <property name="settingsService" ref="settingsService"/>
-        <property name="securityService" ref="securityService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
         <property name="luceneSearchService" ref="luceneSearchService"/>
