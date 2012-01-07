@@ -53,8 +53,6 @@ import net.sourceforge.subsonic.domain.SearchResult;
 import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.util.StringUtil;
 
-import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.*;
-
 /**
  * Provides services for searching for music.
  *
@@ -68,7 +66,6 @@ public class SearchService {
 
     private Map<File, Line> cachedIndex;
     private List<Line> cachedSongs;
-    private List<Line> cachedArtists;
     private SortedSet<Line> cachedAlbums;  // Sorted chronologically.
     private MediaLibraryStatistics statistics;
 
@@ -160,12 +157,7 @@ public class SearchService {
 
             // Update Lucene search index.
             LOG.info("Updating Lucene search index.");
-            luceneSearchService.createIndex(SONG, cachedSongs);
-            luceneSearchService.createIndex(ALBUM, cachedAlbums);
-            luceneSearchService.createIndex(ARTIST, cachedArtists);
-
-            // Don't need this any longer.
-            cachedArtists.clear();
+            luceneSearchService.updateIndexes();
 
             LOG.info("Created search index with " + scanCount + " entries.");
 
@@ -457,7 +449,6 @@ public class SearchService {
         Set<String> albums = new HashSet<String>();
 
         cachedSongs = new ArrayList<Line>();
-        cachedArtists = new ArrayList<Line>();
         cachedAlbums = new TreeSet<Line>(new Comparator<Line>() {
             public int compare(Line line1, Line line2) {
                 if (line2.created < line1.created) {
@@ -485,8 +476,6 @@ public class SearchService {
 
                     if (line.isAlbum) {
                         cachedAlbums.add(line);
-                    } else if (line.isArtist) {
-                        cachedArtists.add(line);
                     } else if (line.isFile) {
                         songCount++;
                         totalLength += line.length;

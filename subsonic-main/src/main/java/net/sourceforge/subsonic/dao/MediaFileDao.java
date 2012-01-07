@@ -53,6 +53,13 @@ public class MediaFileDao extends AbstractDao {
     }
 
     /**
+     * Returns a subset of all media files.
+     */
+    public List<MediaFile> getMediaFiles(int offset, int size) {
+        return query("select " + COLUMNS + " from media_file order by id limit ? offset ?", rowMapper, size, offset);
+    }
+
+    /**
      * Returns the media file that are direct children of the given path.
      *
      * @param path The path.

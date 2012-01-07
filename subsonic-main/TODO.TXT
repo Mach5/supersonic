@@ -21,6 +21,7 @@ Rewrite Lucene integration.
 Revisit LeftController caching
 Measure time for media scanning, clean and incremental.
 Rewrite MusicFileInfo
+Use MediaFile.enabled
 
 DONE IN 4.7
 -----------------

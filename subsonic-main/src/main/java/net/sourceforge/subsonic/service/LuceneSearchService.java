@@ -22,11 +22,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.MediaFile;
 import org.apache.lucene.analysis.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.Analyzer;
@@ -54,7 +54,9 @@ import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
 import net.sourceforge.subsonic.util.FileUtil;
 
-import static net.sourceforge.subsonic.service.SearchService.Line;
+import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.ALBUM;
+import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.ARTIST;
+import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.SONG;
 
 /**
  * Performs Lucene-based searching and indexing.
@@ -74,29 +76,57 @@ public class LuceneSearchService {
     private static final Version LUCENE_VERSION = Version.LUCENE_30;
 
     private MediaFileService mediaFileService;
+    private MediaFileDao mediaFileDao;
 
     public LuceneSearchService() {
         removeLocks();
     }
 
     /**
-     * Creates a search index of the given type.
-     *
-     * @param indexType The index type.
-     * @param lines     List of artists, albums or songs.
+     * Updates the
      */
-    public void createIndex(IndexType indexType, Collection<SearchService.Line> lines) {
-        IndexWriter writer = null;
+    public synchronized void updateIndexes() {
+
+        IndexWriter artistWriter = null;
+        IndexWriter albumWriter = null;
+        IndexWriter songWriter = null;
         try {
-            writer = createIndexWriter(indexType);
-            for (SearchService.Line line : lines) {
-                writer.addDocument(indexType.createDocument(line));
+            artistWriter = createIndexWriter(ARTIST);
+            albumWriter = createIndexWriter(ALBUM);
+            songWriter = createIndexWriter(SONG);
+
+            // Page through all media files.
+            int offset = 0;
+            final int size = 100;
+
+            while (true) {
+                List<MediaFile> mediaFiles = mediaFileDao.getMediaFiles(offset, size);
+                if (mediaFiles.isEmpty()) {
+                    break;
+                }
+                offset += mediaFiles.size();
+
+                for (MediaFile mediaFile : mediaFiles) {
+                    if (mediaFile.isFile()) {
+                        songWriter.addDocument(SONG.createDocument(mediaFile));
+                    } else if (mediaFile.isAlbum()) {
+                        albumWriter.addDocument(ALBUM.createDocument(mediaFile));
+                    } else {
+                        artistWriter.addDocument(ARTIST.createDocument(mediaFile));
+                    }
+                }
             }
-            writer.optimize();
+
+            artistWriter.optimize();
+            albumWriter.optimize();
+            songWriter.optimize();
+
         } catch (Throwable x) {
             LOG.error("Failed to create Lucene search index.", x);
         } finally {
-            FileUtil.closeQuietly(writer);
+            FileUtil.closeQuietly(artistWriter);
+            FileUtil.closeQuietly(albumWriter);
+            FileUtil.closeQuietly(songWriter);
         }
     }
 
@@ -174,20 +204,24 @@ public class LuceneSearchService {
         this.mediaFileService = mediaFileService;
     }
 
+    public void setMediaFileDao(MediaFileDao mediaFileDao) {
+        this.mediaFileDao = mediaFileDao;
+    }
+
     public static enum IndexType {
 
         SONG(new String[]{FIELD_TITLE, FIELD_ARTIST}, FIELD_TITLE) {
 
             @Override
-            public Document createDocument(Line line) {
+            public Document createDocument(MediaFile mediaFile) {
                 Document doc = new Document();
-                doc.add(new Field(FIELD_PATH, line.file.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
+                doc.add(new Field(FIELD_PATH, mediaFile.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
 
-                if (line.artist != null) {
-                    doc.add(new Field(FIELD_ARTIST, line.artist, Field.Store.YES, Field.Index.ANALYZED));
+                if (mediaFile.getArtist() != null) {
+                    doc.add(new Field(FIELD_ARTIST, mediaFile.getArtist(), Field.Store.YES, Field.Index.ANALYZED));
                 }
-                if (line.title != null) {
-                    doc.add(new Field(FIELD_TITLE, line.title, Field.Store.YES, Field.Index.ANALYZED));
+                if (mediaFile.getTitle() != null) {
+                    doc.add(new Field(FIELD_TITLE, mediaFile.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
                 }
 
                 return doc;
@@ -197,15 +231,15 @@ public class LuceneSearchService {
         ALBUM(new String[]{FIELD_ALBUM, FIELD_ARTIST}, FIELD_ALBUM) {
 
             @Override
-            public Document createDocument(Line line) {
+            public Document createDocument(MediaFile mediaFile) {
                 Document doc = new Document();
-                doc.add(new Field(FIELD_PATH, line.file.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
+                doc.add(new Field(FIELD_PATH, mediaFile.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
 
-                if (line.artist != null) {
-                    doc.add(new Field(FIELD_ARTIST, line.artist, Field.Store.YES, Field.Index.ANALYZED));
+                if (mediaFile.getArtist() != null) {
+                    doc.add(new Field(FIELD_ARTIST, mediaFile.getArtist(), Field.Store.YES, Field.Index.ANALYZED));
                 }
-                if (line.album != null) {
-                    doc.add(new Field(FIELD_ALBUM, line.album, Field.Store.YES, Field.Index.ANALYZED));
+                if (mediaFile.getAlbumName() != null) {
+                    doc.add(new Field(FIELD_ALBUM, mediaFile.getAlbumName(), Field.Store.YES, Field.Index.ANALYZED));
                 }
 
                 return doc;
@@ -215,12 +249,12 @@ public class LuceneSearchService {
         ARTIST(new String[]{FIELD_ARTIST}, null) {
 
             @Override
-            public Document createDocument(Line line) {
+            public Document createDocument(MediaFile mediaFile) {
                 Document doc = new Document();
-                doc.add(new Field(FIELD_PATH, line.file.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
+                doc.add(new Field(FIELD_PATH, mediaFile.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
 
-                if (line.artist != null) {
-                    doc.add(new Field(FIELD_ARTIST, line.artist, Field.Store.YES, Field.Index.ANALYZED));
+                if (mediaFile.getArtist() != null) {
+                    doc.add(new Field(FIELD_ARTIST, mediaFile.getArtist(), Field.Store.YES, Field.Index.ANALYZED));
                 }
 
                 return doc;
@@ -242,7 +276,7 @@ public class LuceneSearchService {
             return fields;
         }
 
-        public abstract Document createDocument(Line line);
+        public abstract Document createDocument(MediaFile mediaFile);
 
         public Map<String, Float> getBoosts() {
             return boosts;

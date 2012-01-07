@@ -85,6 +85,7 @@
 
     <bean id="luceneSearchService" class="net.sourceforge.subsonic.service.LuceneSearchService">
         <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="mediaFileDao" ref="mediaFileDao"/>
     </bean>
 
     <bean id="networkService" class="net.sourceforge.subsonic.service.NetworkService" init-method="init">
