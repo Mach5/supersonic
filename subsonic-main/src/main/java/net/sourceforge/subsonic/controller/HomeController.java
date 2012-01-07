@@ -164,7 +164,7 @@ public class HomeController extends ParameterizableViewController {
 
     List<Album> getRandom(int count) throws IOException {
         List<Album> result = new ArrayList<Album>();
-        for (MediaFile file : searchService.getRandomAlbums(count)) {
+        for (MediaFile file : mediaFileService.getRandomAlbums(count)) {
             Album album = createAlbum(file);
             if (album != null) {
                 result.add(album);

@@ -23,7 +23,6 @@ import net.sf.ehcache.Element;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MusicFileInfo;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
@@ -43,7 +42,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Provides services for instantiating and caching media files and cover art.
@@ -177,6 +175,34 @@ public class MediaFileService {
      */
     public List<String> getGenres() {
         return mediaFileDao.getGenres();
+    }
+
+
+    /**
+     * Returns a number of random albums.
+     *
+     * @param count Maximum number of albums to return.
+     * @return List of random albums.
+     */
+    public List<MediaFile> getRandomAlbums(int count) {
+        List<MediaFile> result = new ArrayList<MediaFile>(count);
+
+        // Note: To avoid duplicates, we iterate over more than the requested number of items.
+        for (int i = 0; i < count * 5; i++) {
+
+            MediaFile album = mediaFileDao.getRandomAlbum();
+            if (album != null && securityService.isReadAllowed(album.getFile())) {
+                if (!result.contains(album)) {
+                    result.add(album);
+
+                    // Enough items found?
+                    if (result.size() == count) {
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     private void updateChildren(MediaFile parent) {

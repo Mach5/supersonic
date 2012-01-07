@@ -350,48 +350,6 @@ public class SearchService {
     }
 
     /**
-     * Returns a number of random albums.
-     *
-     * @param count Maximum number of albums to return.
-     * @return Array of random albums.
-     * @throws IOException If an I/O error occurs.
-     */
-    public List<MediaFile> getRandomAlbums(int count) throws IOException {
-        List<MediaFile> result = new ArrayList<MediaFile>(count);
-
-        if (!isIndexCreated() || isIndexBeingCreated()) {
-            return result;
-        }
-
-        // Ensure that index is read to memory.
-        getIndex();
-
-        if (cachedSongs == null || cachedSongs.isEmpty()) {
-            return result;
-        }
-
-        // Note: To avoid duplicates, we iterate over more than the requested number of items.
-        for (int i = 0; i < count * 20; i++) {
-            int n = RANDOM.nextInt(cachedSongs.size());
-            File file = cachedSongs.get(n).file;
-
-            if (FileUtil.exists(file) && securityService.isReadAllowed(file)) {
-                MediaFile album = mediaFileService.getMediaFile(file.getParentFile());
-                if (!album.isRoot() && !result.contains(album)) {
-                    result.add(album);
-
-                    // Enough items found?
-                    if (result.size() == count) {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return result;
-    }
-
-    /**
      * Returns a number of least recently modified music files. Only directories (albums) are returned.
      *
      * @param offset Number of music files to skip.

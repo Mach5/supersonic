@@ -26,7 +26,7 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Set;
+import java.util.Random;
 
 /**
  * Provides database services for media files.
@@ -39,6 +39,7 @@ public class MediaFileDao extends AbstractDao {
     private static final String COLUMNS = "id, path, media_type, format, is_directory, is_album, title, album, artist, disc_number, " +
             "track_number, year, genre, bit_rate, variable_bit_rate, duration_seconds, file_size, width, height, cover_art_path, " +
             "parent_path, play_count, last_played, comment, created, last_modified, children_last_updated, enabled";
+    private static final Random RANDOM = new Random(System.currentTimeMillis());
 
     private final MediaFileMapper rowMapper = new MediaFileMapper();
 
@@ -94,6 +95,11 @@ public class MediaFileDao extends AbstractDao {
 
     public List<String> getGenres() {
         return queryForString("select distinct genre from media_file where genre is not null order by genre");
+    }
+
+    public MediaFile getRandomAlbum() {
+        int n = queryForInt("select count(*) from media_file where is_album");
+        return queryOne("select " + COLUMNS + " from media_file where is_album order by id limit 1 offset ?", rowMapper, RANDOM.nextInt(n));
     }
 
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {

@@ -22,6 +22,10 @@ Revisit LeftController caching
 Measure time for media scanning, clean and incremental.
 Rewrite MusicFileInfo
 Use MediaFile.enabled
+MediaFileService: Determine when to check if files exists.
+Root should not be album.
+Test performance of MusicFileDao.
+
 
 DONE IN 4.7
 -----------------

@@ -62,6 +62,11 @@ public class AbstractDao {
         return getJdbcTemplate().queryForList(sql, String.class);
     }
 
+    protected Integer queryForInt(String sql) {
+        List<Integer> result = getJdbcTemplate().queryForList(sql, Integer.class);
+        return result.isEmpty() ? null : result.get(0);
+    }
+
     protected <T> T queryOne(String sql, RowMapper rowMapper, Object... args) {
         List<T> result = query(sql, rowMapper, args);
         return result.isEmpty() ? null : result.get(0);
