@@ -364,6 +364,23 @@ public class MediaFileService {
 
         if (mediaFile.isFile()) {
             mediaFile.setFormat(StringUtils.trimToNull(StringUtils.lowerCase(FilenameUtils.getExtension(mediaFile.getPath()))));
+            MetaDataParser parser = metaDataParserFactory.getParser(mediaFile);
+            if (parser != null) {
+                MetaData metaData = parser.getMetaData(mediaFile);
+                mediaFile.setArtist(metaData.getArtist());
+                mediaFile.setAlbumName(metaData.getAlbumName());
+                mediaFile.setTitle(metaData.getTitle());
+                mediaFile.setDiscNumber(metaData.getDiscNumber());
+                mediaFile.setTrackNumber(metaData.getTrackNumber());
+                mediaFile.setGenre(metaData.getGenre());
+                mediaFile.setYear(metaData.getYear());
+                mediaFile.setDurationSeconds(metaData.getDurationSeconds());
+                mediaFile.setBitRate(metaData.getBitRate());
+                mediaFile.setVariableBitRate(metaData.getVariableBitRate());
+                mediaFile.setHeight(metaData.getHeight());
+                mediaFile.setWidth(metaData.getWidth());
+            }
+
         } else {
 
             // Is this an album?
@@ -387,22 +404,6 @@ public class MediaFileService {
             }
         }
 
-        MetaDataParser parser = metaDataParserFactory.getParser(mediaFile);
-        if (parser != null) {
-            MetaData metaData = parser.getMetaData(mediaFile);
-            mediaFile.setArtist(metaData.getArtist());
-            mediaFile.setAlbumName(metaData.getAlbumName());
-            mediaFile.setTitle(metaData.getTitle());
-            mediaFile.setDiscNumber(metaData.getDiscNumber());
-            mediaFile.setTrackNumber(metaData.getTrackNumber());
-            mediaFile.setGenre(metaData.getGenre());
-            mediaFile.setYear(metaData.getYear());
-            mediaFile.setDurationSeconds(metaData.getDurationSeconds());
-            mediaFile.setBitRate(metaData.getBitRate());
-            mediaFile.setVariableBitRate(metaData.getVariableBitRate());
-            mediaFile.setHeight(metaData.getHeight());
-            mediaFile.setWidth(metaData.getWidth());
-        }
 
         return mediaFile;
     }
