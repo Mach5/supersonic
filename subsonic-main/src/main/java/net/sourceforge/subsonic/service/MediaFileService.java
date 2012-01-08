@@ -241,6 +241,28 @@ public class MediaFileService {
 
     }
 
+    /**
+     * Returns the most frequently played albums.
+     *
+     * @param offset Number of files to skip.
+     * @param count  Maximum number of elements to return.
+     * @return The most frequently played albums.
+     */
+    public List<MediaFile> getMostFrequentlyPlayedAlbums(int offset, int count) {
+        return mediaFileDao.getMostFrequentlyPlayedAlbums(offset, count);
+    }
+
+    /**
+     * Returns the most recently played albums.
+     *
+     * @param offset Number of files to skip.
+     * @param count  Maximum number of elements to return.
+     * @return The most recently played albums.
+     */
+    public List<MediaFile> getMostRecentlyPlayedAlbums(int offset, int count) {
+        return mediaFileDao.getMostRecentlyPlayedAlbums(offset, count);
+    }
+
     private void updateChildren(MediaFile parent) {
 
         // Check timestamps.

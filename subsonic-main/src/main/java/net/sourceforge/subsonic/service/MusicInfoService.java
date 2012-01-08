@@ -26,8 +26,7 @@ import java.util.*;
 import java.io.File;
 
 /**
- * Provides services for user rating and comments, as well
- * as details about how often and how recent albums have been played.
+ * Provides services for user ratings.
  *
  * @author Sindre Mehus
  */
@@ -55,28 +54,6 @@ public class MusicInfoService {
             }
         }
         return result;
-    }
-
-    /**
-     * Returns info for the most frequently played music files.
-     *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
-     * @return Info for the most frequently played music files.
-     */
-    public List<MusicFileInfo> getMostFrequentlyPlayed(int offset, int count) {
-        return musicFileInfoDao.getMostFrequentlyPlayed(offset, count);
-    }
-
-    /**
-     * Returns info for the most recently played music files.
-     *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
-     * @return Info for the most recently played music files.
-     */
-    public List<MusicFileInfo> getMostRecentlyPlayed(int offset, int count) {
-        return musicFileInfoDao.getMostRecentlyPlayed(offset, count);
     }
 
     /**

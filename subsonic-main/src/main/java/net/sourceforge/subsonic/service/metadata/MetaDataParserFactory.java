@@ -19,7 +19,6 @@
 package net.sourceforge.subsonic.service.metadata;
 
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.service.ServiceLocator;
 
 import java.util.List;
 

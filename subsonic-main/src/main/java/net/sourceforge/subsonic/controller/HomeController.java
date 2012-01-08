@@ -124,10 +124,10 @@ public class HomeController extends ParameterizableViewController {
 
     List<Album> getMostFrequent(int offset, int count) {
         List<Album> result = new ArrayList<Album>();
-        for (MusicFileInfo info : musicInfoService.getMostFrequentlyPlayed(offset, count)) {
-            Album album = createAlbum(info);
+        for (MediaFile mediaFile : mediaFileService.getMostFrequentlyPlayedAlbums(offset, count)) {
+            Album album = createAlbum(mediaFile);
             if (album != null) {
-                album.setPlayCount(info.getPlayCount());
+                album.setPlayCount(mediaFile.getPlayCount());
                 result.add(album);
             }
         }
@@ -136,10 +136,10 @@ public class HomeController extends ParameterizableViewController {
 
     List<Album> getMostRecent(int offset, int count) {
         List<Album> result = new ArrayList<Album>();
-        for (MusicFileInfo info : musicInfoService.getMostRecentlyPlayed(offset, count)) {
-            Album album = createAlbum(info);
+        for (MediaFile mediaFile : mediaFileService.getMostRecentlyPlayedAlbums(offset, count)) {
+            Album album = createAlbum(mediaFile);
             if (album != null) {
-                album.setLastPlayed(info.getLastPlayed());
+                album.setLastPlayed(mediaFile.getLastPlayed());
                 result.add(album);
             }
         }

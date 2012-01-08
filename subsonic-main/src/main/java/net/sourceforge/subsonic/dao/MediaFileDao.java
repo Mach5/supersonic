@@ -132,6 +132,28 @@ public class MediaFileDao extends AbstractDao {
     }
 
     /**
+     * Returns the most frequently played albums.
+     *
+     * @param offset Number of files to skip.
+     * @param count  Maximum number of elements to return.
+     * @return The most frequently played albums.
+     */
+    public List<MediaFile> getMostFrequentlyPlayedAlbums(int offset, int count) {
+        return query("select " + COLUMNS + " from media_file where is_album order by play_count desc limit ? offset ?", rowMapper, count, offset);
+    }
+
+    /**
+     * Returns the most recently played albums.
+     *
+     * @param offset Number of files to skip.
+     * @param count  Maximum number of elements to return.
+     * @return The most recently played albums.
+     */
+    public List<MediaFile> getMostRecentlyPlayedAlbums(int offset, int count) {
+        return query("select " + COLUMNS + " from media_file where is_album order by last_played desc limit ? offset ?", rowMapper, count, offset);
+    }
+
+    /**
      * Returns media library statistics, including the number of artists, albums and songs.
      *
      * @return Media library statistics.
