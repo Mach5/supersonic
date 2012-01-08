@@ -18,17 +18,16 @@ Remove ServiceLocator
 Revisit MetaDataParser.isRoot()
 Revisit LeftController caching
 Measure time for media scanning, clean and incremental.
-Rewrite MusicFileInfo
 Use MediaFile.enabled
 MediaFileService: Determine when to check if files exists.
 Root should not be album.
 Test performance of MusicFileDao.
 Use MediaLibraryStatistics.totalDuration
-Maintain created date when updating a media_file
 Test searching etc before search index is created.
 Test searching while createing lucene index
 Cleanup SearchService.
 Final Frontier album throws exception.
+Remove artist name from album name (Poetry for the Poisoned)
 
 DONE IN 4.7
 -----------------

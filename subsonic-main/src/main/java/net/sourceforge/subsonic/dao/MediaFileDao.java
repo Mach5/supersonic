@@ -76,17 +76,54 @@ public class MediaFileDao extends AbstractDao {
      * @param file The media file to create.
      */
     public void createOrUpdateMediaFile(MediaFile file) {
-        update("delete from media_file where path=?", file.getPath());
+        String sql = "update media_file set " +
+                "media_type=?," +
+                "format=?," +
+                "is_directory=?," +
+                "is_album=?," +
+                "title=?," +
+                "album=?," +
+                "artist=?," +
+                "disc_number=?," +
+                "track_number=?," +
+                "year=?," +
+                "genre=?," +
+                "bit_rate=?," +
+                "variable_bit_rate=?," +
+                "duration_seconds=?," +
+                "file_size=?," +
+                "width=?," +
+                "height=?," +
+                "cover_art_path=?," +
+                "parent_path=?," +
+                "play_count=?," +
+                "last_played=?," +
+                "comment=?," +
+                "last_modified=?," +
+                "children_last_updated=?," +
+                "enabled=? " +
+                "where path=?";
 
-        String sql = "insert into media_file (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")";
-        update(sql, null,
-                file.getPath(), file.getMediaType() == null ? null : file.getMediaType().name(), file.getFormat(), file.isDirectory(), file.isAlbum(),
+        int n = update(sql,
+                file.getMediaType() == null ? null : file.getMediaType().name(), file.getFormat(), file.isDirectory(), file.isAlbum(),
                 file.getTitle(), file.getAlbumName(), file.getArtist(), file.getDiscNumber(), file.getTrackNumber(),
                 file.getYear(), file.getGenre(), file.getBitRate(), file.isVariableBitRate(), file.getDurationSeconds(),
                 file.getFileSize(), file.getWidth(), file.getHeight(), file.getCoverArtPath(), file.getParentPath(),
-                file.getPlayCount(), file.getLastPlayed(), file.getComment(), file.getCreated(), file.getLastModified(),
-                file.getChildrenLastUpdated(), file.isEnabled());
-        LOG.debug("Created/updated media_file for " + file.getPath());
+                file.getPlayCount(), file.getLastPlayed(), file.getComment(), file.getLastModified(),
+                file.getChildrenLastUpdated(), file.isEnabled(), file.getPath());
+
+        if (n > 0) {
+            LOG.debug("Updated media_file for " + file.getPath());
+        } else {
+            update("insert into media_file (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")", null,
+                    file.getPath(), file.getMediaType() == null ? null : file.getMediaType().name(), file.getFormat(), file.isDirectory(), file.isAlbum(),
+                    file.getTitle(), file.getAlbumName(), file.getArtist(), file.getDiscNumber(), file.getTrackNumber(),
+                    file.getYear(), file.getGenre(), file.getBitRate(), file.isVariableBitRate(), file.getDurationSeconds(),
+                    file.getFileSize(), file.getWidth(), file.getHeight(), file.getCoverArtPath(), file.getParentPath(),
+                    file.getPlayCount(), file.getLastPlayed(), file.getComment(), file.getCreated(), file.getLastModified(),
+                    file.getChildrenLastUpdated(), file.isEnabled());
+            LOG.debug("Created media_file for " + file.getPath());
+        }
     }
 
     public void deleteMediaFile(String path) {
