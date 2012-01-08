@@ -31,9 +31,9 @@ import java.io.File;
  * @author Sindre Mehus
  */
 @Deprecated
-public class MusicInfoService {
+public class RatingService {
 
-    private MusicFileInfoDao musicFileInfoDao;
+    private RatingDao ratingDao;
     private SecurityService securityService;
     private MediaFileService mediaFileService;
 
@@ -45,7 +45,7 @@ public class MusicInfoService {
      * @return The highest rated music files.
      */
     public List<MediaFile> getHighestRated(int offset, int count) {
-        List<String> highestRated = musicFileInfoDao.getHighestRated(offset, count);
+        List<String> highestRated = ratingDao.getHighestRated(offset, count);
         List<MediaFile> result = new ArrayList<MediaFile>();
         for (String path : highestRated) {
             File file = new File(path);
@@ -64,7 +64,7 @@ public class MusicInfoService {
      * @param rating    The rating between 1 and 5, or <code>null</code> to remove the rating.
      */
     public void setRatingForUser(String username, MediaFile mediaFile, Integer rating) {
-        musicFileInfoDao.setRatingForUser(username, mediaFile, rating);
+        ratingDao.setRatingForUser(username, mediaFile, rating);
     }
 
     /**
@@ -74,7 +74,7 @@ public class MusicInfoService {
      * @return The average rating, or <code>null</code> if no ratings are set.
      */
     public Double getAverageRating(MediaFile mediaFile) {
-        return musicFileInfoDao.getAverageRating(mediaFile);
+        return ratingDao.getAverageRating(mediaFile);
     }
 
     /**
@@ -85,11 +85,11 @@ public class MusicInfoService {
      * @return The rating, or <code>null</code> if no rating is set.
      */
     public Integer getRatingForUser(String username, MediaFile mediaFile) {
-        return musicFileInfoDao.getRatingForUser(username, mediaFile);
+        return ratingDao.getRatingForUser(username, mediaFile);
     }
 
-    public void setMusicFileInfoDao(MusicFileInfoDao musicFileInfoDao) {
-        this.musicFileInfoDao = musicFileInfoDao;
+    public void setRatingDao(RatingDao ratingDao) {
+        this.ratingDao = ratingDao;
     }
 
     public void setSecurityService(SecurityService securityService) {

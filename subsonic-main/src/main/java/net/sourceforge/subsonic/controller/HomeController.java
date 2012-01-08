@@ -20,10 +20,9 @@ package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MusicFileInfo;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.service.MediaFileService;
-import net.sourceforge.subsonic.service.MusicInfoService;
+import net.sourceforge.subsonic.service.RatingService;
 import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
@@ -57,7 +56,7 @@ public class HomeController extends ParameterizableViewController {
 
     private SettingsService settingsService;
     private SearchService searchService;
-    private MusicInfoService musicInfoService;
+    private RatingService ratingService;
     private SecurityService securityService;
     private MediaFileService mediaFileService;
 
@@ -112,10 +111,10 @@ public class HomeController extends ParameterizableViewController {
 
     List<Album> getHighestRated(int offset, int count) {
         List<Album> result = new ArrayList<Album>();
-        for (MediaFile mediaFile : musicInfoService.getHighestRated(offset, count)) {
+        for (MediaFile mediaFile : ratingService.getHighestRated(offset, count)) {
             Album album = createAlbum(mediaFile);
             if (album != null) {
-                album.setRating((int) Math.round(musicInfoService.getAverageRating(mediaFile) * 10.0D));
+                album.setRating((int) Math.round(ratingService.getAverageRating(mediaFile) * 10.0D));
                 result.add(album);
             }
         }
@@ -186,15 +185,6 @@ public class HomeController extends ParameterizableViewController {
         return album;
     }
 
-    private Album createAlbum(MusicFileInfo info) {
-        try {
-            return createAlbum(mediaFileService.getMediaFile(info.getPath()));
-        } catch (Exception x) {
-            LOG.warn("Failed to create albumTitle list entry for " + info.getPath(), x);
-            return null;
-        }
-    }
-
     private void resolveArtistAndAlbumTitle(Album album, MediaFile file) throws IOException {
 
         // If directory, find  title and artist from metadata in child.
@@ -224,8 +214,8 @@ public class HomeController extends ParameterizableViewController {
         this.searchService = searchService;
     }
 
-    public void setMusicInfoService(MusicInfoService musicInfoService) {
-        this.musicInfoService = musicInfoService;
+    public void setRatingService(RatingService ratingService) {
+        this.ratingService = ratingService;
     }
 
     public void setSecurityService(SecurityService securityService) {

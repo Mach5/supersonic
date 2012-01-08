@@ -24,7 +24,7 @@ import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.AdService;
 import net.sourceforge.subsonic.service.MediaFileService;
-import net.sourceforge.subsonic.service.MusicInfoService;
+import net.sourceforge.subsonic.service.RatingService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
@@ -38,7 +38,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -56,7 +55,7 @@ public class MainController extends ParameterizableViewController {
     private SecurityService securityService;
     private PlayerService playerService;
     private SettingsService settingsService;
-    private MusicInfoService musicInfoService;
+    private RatingService ratingService;
     private MediaFileService mediaFileService;
     private AdService adService;
 
@@ -105,8 +104,8 @@ public class MainController extends ParameterizableViewController {
         }
 
         String username = securityService.getCurrentUsername(request);
-        Integer userRating = musicInfoService.getRatingForUser(username, dir);
-        Double averageRating = musicInfoService.getAverageRating(dir);
+        Integer userRating = ratingService.getRatingForUser(username, dir);
+        Double averageRating = ratingService.getAverageRating(dir);
 
         if (userRating == null) {
             userRating = 0;
@@ -260,8 +259,8 @@ public class MainController extends ParameterizableViewController {
         this.settingsService = settingsService;
     }
 
-    public void setMusicInfoService(MusicInfoService musicInfoService) {
-        this.musicInfoService = musicInfoService;
+    public void setRatingService(RatingService ratingService) {
+        this.ratingService = ratingService;
     }
 
     public void setAdService(AdService adService) {

@@ -19,25 +19,17 @@
 package net.sourceforge.subsonic.dao;
 
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MusicFileInfo;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
- * Provides database services for music file info.
+ * Provides database services for ratings.
  *
  * @author Sindre Mehus
  */
-public class MusicFileInfoDao extends AbstractDao {
-
-    private static final String COLUMNS = "id, path, comment, play_count, last_played, enabled";
-    private MusicFileInfoRowMapper rowMapper = new MusicFileInfoRowMapper();
+public class RatingDao extends AbstractDao {
 
     /**
      * Returns paths for the highest rated music files.
@@ -56,42 +48,6 @@ public class MusicFileInfoDao extends AbstractDao {
                 "order by avg(rating) desc " +
                 " limit " + count + " offset " + offset;
         return queryForString(sql);
-    }
-
-    /**
-     * Returns info for the most frequently played music files.
-     *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
-     * @return Info for the most frequently played music files.
-     */
-    public List<MusicFileInfo> getMostFrequentlyPlayed(int offset, int count) {
-        if (count < 1) {
-            return Collections.emptyList();
-        }
-
-        String sql = "select " + COLUMNS + " from music_file_info " +
-                "where play_count > 0 and enabled=true " +
-                "order by play_count desc limit " + count + " offset " + offset;
-        return query(sql, rowMapper);
-    }
-
-    /**
-     * Returns info for the most recently played music files.
-     *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
-     * @return Info for the most recently played music files.
-     */
-    public List<MusicFileInfo> getMostRecentlyPlayed(int offset, int count) {
-        if (count < 1) {
-            return Collections.emptyList();
-        }
-
-        String sql = "select " + COLUMNS + " from music_file_info " +
-                "where last_played is not null and enabled=true " +
-                "order by last_played desc limit " + count + " offset " + offset;
-        return query(sql, rowMapper);
     }
 
     /**
@@ -140,12 +96,4 @@ public class MusicFileInfoDao extends AbstractDao {
             return null;
         }
     }
-
-
-    private static class MusicFileInfoRowMapper implements ParameterizedRowMapper<MusicFileInfo> {
-        public MusicFileInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new MusicFileInfo(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getTimestamp(5), rs.getBoolean(6));
-        }
-    }
-
 }

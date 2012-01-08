@@ -36,7 +36,7 @@ import javax.servlet.http.*;
  */
 public class SetRatingController extends AbstractController {
 
-    private MusicInfoService musicInfoService;
+    private RatingService ratingService;
     private SecurityService securityService;
     private MediaFileService mediaFileService;
 
@@ -49,14 +49,14 @@ public class SetRatingController extends AbstractController {
 
         MediaFile mediaFile = mediaFileService.getMediaFile(path);
         String username = securityService.getCurrentUsername(request);
-        musicInfoService.setRatingForUser(username, mediaFile, rating);
+        ratingService.setRatingForUser(username, mediaFile, rating);
 
         String url = "main.view?path" + ParameterDecodingFilter.PARAM_SUFFIX  + "=" + StringUtil.utf8HexEncode(path);
         return new ModelAndView(new RedirectView(url));
     }
 
-    public void setMusicInfoService(MusicInfoService musicInfoService) {
-        this.musicInfoService = musicInfoService;
+    public void setRatingService(RatingService ratingService) {
+        this.ratingService = ratingService;
     }
 
     public void setSecurityService(SecurityService securityService) {

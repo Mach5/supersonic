@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.RatingService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -63,7 +64,6 @@ import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.domain.PodcastChannel;
 import net.sourceforge.subsonic.domain.PodcastEpisode;
 import net.sourceforge.subsonic.service.JukeboxService;
-import net.sourceforge.subsonic.service.MusicInfoService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
 import net.sourceforge.subsonic.service.SearchService;
@@ -114,7 +114,7 @@ public class RESTController extends MultiActionController {
     private JukeboxService jukeboxService;
     private AudioScrobblerService audioScrobblerService;
     private PodcastService podcastService;
-    private MusicInfoService musicInfoService;
+    private RatingService ratingService;
 
     public void ping(HttpServletRequest request, HttpServletResponse response) throws Exception {
         XMLBuilder builder = createXMLBuilder(request, response, true).endAll();
@@ -673,11 +673,11 @@ public class RESTController extends MultiActionController {
 
         String username = player.getUsername();
         if (username != null) {
-            Integer rating = musicInfoService.getRatingForUser(username, mediaFile);
+            Integer rating = ratingService.getRatingForUser(username, mediaFile);
             if (rating != null) {
                 attributes.add("userRating", rating);
             }
-            Double avgRating = musicInfoService.getAverageRating(mediaFile);
+            Double avgRating = ratingService.getAverageRating(mediaFile);
             if (avgRating != null) {
                 attributes.add("averageRating", avgRating);
             }
@@ -1290,7 +1290,7 @@ public class RESTController extends MultiActionController {
             String path = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
             MediaFile mediaFile = mediaFileService.getMediaFile(path);
             String username = securityService.getCurrentUsername(request);
-            musicInfoService.setRatingForUser(username, mediaFile, rating);
+            ratingService.setRatingForUser(username, mediaFile, rating);
 
             XMLBuilder builder = createXMLBuilder(request, response, true).endAll();
             response.getWriter().print(builder);
@@ -1472,8 +1472,8 @@ public class RESTController extends MultiActionController {
         this.podcastService = podcastService;
     }
 
-    public void setMusicInfoService(MusicInfoService musicInfoService) {
-        this.musicInfoService = musicInfoService;
+    public void setRatingService(RatingService ratingService) {
+        this.ratingService = ratingService;
     }
 
     public void setShareService(ShareService shareService) {
