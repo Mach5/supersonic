@@ -147,7 +147,7 @@ public class HomeController extends ParameterizableViewController {
 
     List<Album> getNewest(int offset, int count) throws IOException {
         List<Album> result = new ArrayList<Album>();
-        for (MediaFile file : searchService.getNewestAlbums(offset, count)) {
+        for (MediaFile file : mediaFileService.getNewestAlbums(offset, count)) {
             Album album = createAlbum(file);
             if (album != null) {
                 Date created = file.getCreated();

@@ -154,6 +154,17 @@ public class MediaFileDao extends AbstractDao {
     }
 
     /**
+     * Returns the most recently added albums.
+     *
+     * @param offset Number of files to skip.
+     * @param count  Maximum number of elements to return.
+     * @return The most recently added albums.
+     */
+    public List<MediaFile> getNewestAlbums(int offset, int count) {
+        return query("select " + COLUMNS + " from media_file where is_album order by created desc limit ? offset ?", rowMapper, count, offset);
+    }
+
+    /**
      * Returns media library statistics, including the number of artists, albums and songs.
      *
      * @return Media library statistics.

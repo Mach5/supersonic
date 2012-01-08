@@ -29,11 +29,9 @@ import net.sourceforge.subsonic.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -229,41 +227,6 @@ public class SearchService {
      */
     public MediaLibraryStatistics getStatistics() {
         return statistics;
-    }
-
-    /**
-     * Returns a number of least recently modified music files. Only directories (albums) are returned.
-     *
-     * @param offset Number of music files to skip.
-     * @param count  Maximum number of music files to return.
-     * @return Array of new music files.
-     * @throws IOException If an I/O error occurs.
-     */
-    @Deprecated
-    public List<MediaFile> getNewestAlbums(int offset, int count) throws IOException {
-        List<MediaFile> result = new ArrayList<MediaFile>(count);
-
-//        if (!isIndexCreated() || isIndexBeingCreated()) {
-//            return result;
-//        }
-//
-//        // Ensure that index is read to memory.
-//        getIndex();
-//
-//        int n = 0;
-//        for (Line line : cachedAlbums) {
-//            if (n == count + offset) {
-//                break;
-//            }
-//            if (FileUtil.exists(line.file) && securityService.isReadAllowed(line.file)) {
-//                if (n >= offset) {
-//                    result.add(mediaFileService.getMediaFile(line.file));
-//                }
-//                n++;
-//            }
-//        }
-//
-        return result;
     }
 
     /**

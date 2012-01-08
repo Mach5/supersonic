@@ -16,7 +16,6 @@ Optimize MediaFile getters.
 Remove obsolete caches
 Remove ServiceLocator
 Revisit MetaDataParser.isRoot()
-Rewrite Lucene integration.
 Revisit LeftController caching
 Measure time for media scanning, clean and incremental.
 Rewrite MusicFileInfo
@@ -28,7 +27,6 @@ Use MediaLibraryStatistics.totalDuration
 Maintain created date when updating a media_file
 Test searching etc before search index is created.
 Test searching while createing lucene index
-SearchService.getNewestAlbums()
 Cleanup SearchService.
 Final Frontier album throws exception.
 
