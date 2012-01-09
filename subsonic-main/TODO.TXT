@@ -1,13 +1,14 @@
 
 Use MediaLibraryStatistics.totalDuration
+When changing tags, web page displays old data.
+Decide when to set "album" and "artist" for directories.
+  Make sure that artist/album (for songs and albums) are displayed in search results.
+  Remove artist name from album name (Poetry for the Poisoned)
 -
 Support per-artist cover art.
 Revisit MetaDataParser.isRoot()
-Decide when to set "album" and "artist" for directories.
-When changing tags, web page displays old data.
 Use long rather than Date in MediaFile?
 Remove id from MediaFile (not from table)
-Make sure that artist/album (for songs and albums) are displayed in search results.
 Optimize MediaFile getters.
 Remove obsolete caches
 Remove ServiceLocator
@@ -20,7 +21,6 @@ Test searching etc before search index is created.
 Test searching while createing lucene index
 Cleanup SearchService.
 Final Frontier album throws exception.
-Remove artist name from album name (Poetry for the Poisoned)
 Change Settings > Search/Caching.
 
 DONE IN 4.7
