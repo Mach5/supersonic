@@ -72,7 +72,7 @@ public class MainController extends ParameterizableViewController {
         }
 
         // Redirect if root directory.
-        if (dir.isRoot()) {
+        if (mediaFileService.isRoot(dir)) {
             return new ModelAndView(new RedirectView("home.view?"));
         }
 
@@ -98,7 +98,7 @@ public class MainController extends ParameterizableViewController {
         try {
             MediaFile parent = mediaFileService.getParentOf(dir);
             map.put("parent", parent);
-            map.put("navigateUpAllowed", !parent.isRoot());
+            map.put("navigateUpAllowed", !mediaFileService.isRoot(parent));
         } catch (SecurityException x) {
             // Happens if Podcast directory is outside music folder.
         }
@@ -197,7 +197,7 @@ public class MainController extends ParameterizableViewController {
 
         try {
             MediaFile parent = mediaFileService.getParentOf(dir);
-            while (parent != null && !parent.isRoot()) {
+            while (parent != null && !mediaFileService.isRoot(parent)) {
                 result.addFirst(parent);
                 parent = mediaFileService.getParentOf(parent);
             }
@@ -210,7 +210,7 @@ public class MainController extends ParameterizableViewController {
     private void setPreviousAndNextAlbums(MediaFile dir, Map<String, Object> map) throws IOException {
         MediaFile parent = mediaFileService.getParentOf(dir);
 
-        if (dir.isAlbum() && !parent.isRoot()) {
+        if (dir.isAlbum() && !mediaFileService.isRoot(parent)) {
             List<MediaFile> sieblings = mediaFileService.getChildrenOf(parent, false, true, true);
 
             int index = sieblings.indexOf(dir);

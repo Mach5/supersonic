@@ -1,12 +1,7 @@
-
-Create caches in SettingsService, for the different string array types.
-Set MediaFile.root.
-  Root folder should have parent == null.
-  Revisit MetaDataParser.isRoot()
-  Root should not be album.
 Error when changing tags, and setting year to null.
 -
 Support per-artist cover art.
+Revisit MetaDataParser.isRoot()
 Decide when to set "album" and "artist" for directories.
 When changing tags, web page displays old data.
 Use long rather than Date in MediaFile?

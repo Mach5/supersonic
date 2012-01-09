@@ -55,7 +55,7 @@ public class NowPlayingController extends AbstractController {
         MediaFile dir = current == null ? null : mediaFileService.getParentOf(current);
 
         String url;
-        if (dir != null && !dir.isRoot()) {
+        if (dir != null && !mediaFileService.isRoot(dir)) {
             url = "main.view?path" + ParameterDecodingFilter.PARAM_SUFFIX + "=" +
                     StringUtil.utf8HexEncode(dir.getPath()) + "&updateNowPlaying=true";
         } else {

@@ -174,6 +174,20 @@ public class MediaFileService {
     }
 
     /**
+     * Returns whether the given file is the root of a media folder.
+     *
+     * @see MusicFolder
+     */
+    public boolean isRoot(MediaFile mediaFile) {
+        for (MusicFolder musicFolder : settingsService.getAllMusicFolders(false, true)) {
+            if (mediaFile.getPath().equals(musicFolder.getPath().getPath())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Returns all genres in the music collection.
      *
      * @return Sorted list of genres.
@@ -352,9 +366,6 @@ public class MediaFileService {
     }
 
     private MediaFile createMediaFile(File file) {
-
-        // TODO: Set root.
-
         MediaFile mediaFile = new MediaFile();
         mediaFile.setPath(file.getPath());
         mediaFile.setParentPath(file.getParent());
@@ -391,11 +402,13 @@ public class MediaFileService {
         } else {
 
             // Is this an album?
-            List<File> children = listMediaFiles(file);
-            for (File child : children) {
-                if (FileUtil.isFile(child)) {
-                    mediaFile.setMediaType(MediaType.ALBUM);
-                    break;
+            if (!isRoot(mediaFile)) {
+                List<File> children = listMediaFiles(file);
+                for (File child : children) {
+                    if (FileUtil.isFile(child)) {
+                        mediaFile.setMediaType(MediaType.ALBUM);
+                        break;
+                    }
                 }
             }
         }
@@ -521,7 +534,7 @@ public class MediaFileService {
         updateMediaFile(file);
 
         MediaFile parent = getParentOf(file);
-        if (!parent.isRoot()) {
+        if (!isRoot(parent)) {
             parent.setLastPlayed(new Date());
             parent.setPlayCount(parent.getPlayCount() + 1);
             updateMediaFile(parent);

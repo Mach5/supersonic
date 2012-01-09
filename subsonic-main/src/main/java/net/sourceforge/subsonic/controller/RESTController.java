@@ -662,7 +662,7 @@ public class RESTController extends MultiActionController {
         AttributeSet attributes = new AttributeSet();
         attributes.add("id", StringUtil.utf8HexEncode(mediaFile.getPath()));
         try {
-            if (!parent.isRoot()) {
+            if (!mediaFileService.isRoot(parent)) {
                 attributes.add("parent", StringUtil.utf8HexEncode(parent.getPath()));
             }
         } catch (SecurityException x) {

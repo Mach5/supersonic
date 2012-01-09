@@ -393,7 +393,8 @@ public class MediaFile {
         return coverArtPath == null ? null : new File(coverArtPath);
     }
 
-    public boolean isRoot() {
-        return parentPath == null;
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "[" + path + "]";
     }
 }

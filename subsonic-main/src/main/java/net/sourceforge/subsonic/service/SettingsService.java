@@ -199,6 +199,8 @@ public class SettingsService {
     private String[] cachedCoverArtFileTypesArray;
     private String[] cachedMusicFileTypesArray;
     private String[] cachedVideoFileTypesArray;
+    private List<MusicFolder> cachedMusicFolders;
+    
     private static File subsonicHome;
 
     private boolean licenseValidated = true;
@@ -917,9 +919,12 @@ public class SettingsService {
      * @return Possibly empty list of all music folders.
      */
     public List<MusicFolder> getAllMusicFolders(boolean includeDisabled, boolean includeNonExisting) {
-        List<MusicFolder> all = musicFolderDao.getAllMusicFolders();
-        List<MusicFolder> result = new ArrayList<MusicFolder>(all.size());
-        for (MusicFolder folder : all) {
+        if (cachedMusicFolders == null) {
+            cachedMusicFolders = musicFolderDao.getAllMusicFolders();
+        }
+        
+        List<MusicFolder> result = new ArrayList<MusicFolder>(cachedMusicFolders.size());
+        for (MusicFolder folder : cachedMusicFolders) {
             if ((includeDisabled || folder.isEnabled()) && (includeNonExisting || FileUtil.exists(folder.getPath()))) {
                 result.add(folder);
             }
@@ -950,6 +955,7 @@ public class SettingsService {
      */
     public void createMusicFolder(MusicFolder musicFolder) {
         musicFolderDao.createMusicFolder(musicFolder);
+        cachedMusicFolders = null; 
     }
 
     /**
@@ -959,6 +965,7 @@ public class SettingsService {
      */
     public void deleteMusicFolder(Integer id) {
         musicFolderDao.deleteMusicFolder(id);
+        cachedMusicFolders = null; 
     }
 
     /**
@@ -968,6 +975,7 @@ public class SettingsService {
      */
     public void updateMusicFolder(MusicFolder musicFolder) {
         musicFolderDao.updateMusicFolder(musicFolder);
+        cachedMusicFolders = null; 
     }
 
     /**
