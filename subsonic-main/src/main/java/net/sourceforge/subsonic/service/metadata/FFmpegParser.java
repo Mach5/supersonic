@@ -21,11 +21,13 @@ package net.sourceforge.subsonic.service.metadata;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.io.InputStreamReaderThread;
+import net.sourceforge.subsonic.service.ServiceLocator;
 import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.util.StringUtil;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.ServiceLoader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -150,8 +152,15 @@ public class FFmpegParser extends MetaDataParser {
      * @return Whether this parser is applicable to the given file.
      */
     @Override
-    public boolean isApplicable(MediaFile file) {
-        return file.isVideo();
+    public boolean isApplicable(File file) {
+        String format = StringUtil.getSuffix(file.getName()).toLowerCase();
+
+        for (String s : ServiceLocator.getSettingsService().getVideoFileTypesAsArray()) {
+            if (format.equals(s)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setTranscodingService(TranscodingService transcodingService) {

@@ -18,16 +18,15 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
-import net.sourceforge.subsonic.Logger;
+import java.io.File;
+import java.util.List;
+
+import org.apache.commons.io.FilenameUtils;
+
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.service.ServiceLocator;
 import net.sourceforge.subsonic.service.SettingsService;
-
-import org.apache.commons.io.FilenameUtils;
-
-import java.io.File;
-import java.util.List;
 
 
 /**
@@ -36,7 +35,6 @@ import java.util.List;
  * @author Sindre Mehus
  */
 public abstract class MetaDataParser {
-    private static final Logger LOG = Logger.getLogger(MetaDataParser.class);
 
     /**
      * Parses meta data for the given music file.
@@ -88,10 +86,10 @@ public abstract class MetaDataParser {
     /**
      * Returns whether this parser is applicable to the given file.
      *
-     * @param file The music file in question.
+     * @param file The file in question.
      * @return Whether this parser is applicable to the given file.
      */
-    public abstract boolean isApplicable(MediaFile file);
+    public abstract boolean isApplicable(File file);
 
     /**
      * Returns whether this parser supports tag editing (using the {@link #setMetaData} method).

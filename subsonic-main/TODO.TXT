@@ -1,6 +1,4 @@
 
-When scanning media library, don't visit excluded directories.
-Only store recognized file types?
 Support per-artist cover art.
 Decide when to set "album" and "artist" for directories.
 Error when changing tags, and setting year to null.
@@ -27,6 +25,7 @@ Cleanup SearchService.
 Final Frontier album throws exception.
 Remove artist name from album name (Poetry for the Poisoned)
 Don't include albums that have never been played in "Most played" and "Recently played"
+Optimize FFmpegParser.isApplicable()
 
 DONE IN 4.7
 -----------------

@@ -83,6 +83,7 @@ public class MediaFileService {
             throw new SecurityException("Access denied to file " + file);
         }
 
+        // Secondly, look in database.
         cachedMediaFile = mediaFileDao.getMediaFile(file.getPath());
         if (cachedMediaFile != null) {
             if (useFastCache() || cachedMediaFile.getLastModified().getTime() >= FileUtil.lastModified(file)) {
@@ -91,9 +92,10 @@ public class MediaFileService {
             }
         }
 
+        // Not found, must read from disk.
         MediaFile mediaFile = createMediaFile(file);
 
-        // Put in caches.
+        // Put in cache and database.
         mediaFileMemoryCache.put(new Element(file, mediaFile));
         mediaFileDao.createOrUpdateMediaFile(mediaFile);
 
@@ -345,12 +347,13 @@ public class MediaFileService {
     private boolean isExcluded(File file) {
 
         // Exclude all hidden files starting with a "." or "@eaDir" (thumbnail dir created on Synology devices).
-        return file.getName().startsWith(".") || file.getName().startsWith("@eaDir");
+        String name = file.getName();
+        return name.startsWith(".") || name.startsWith("@eaDir") || name.equals("Thumbs.db");
     }
 
     private MediaFile createMediaFile(File file) {
 
-        // TODO: Set root and mediaType.
+        // TODO: Set root.
 
         MediaFile mediaFile = new MediaFile();
         mediaFile.setPath(file.getPath());
@@ -368,7 +371,7 @@ public class MediaFileService {
             mediaFile.setFileSize(FileUtil.length(file));
             mediaFile.setMediaType(isMusicFile(format) ? MediaType.AUDIO : MediaType.VIDEO);
 
-            MetaDataParser parser = metaDataParserFactory.getParser(mediaFile);
+            MetaDataParser parser = metaDataParserFactory.getParser(file);
             if (parser != null) {
                 MetaData metaData = parser.getMetaData(mediaFile);
                 mediaFile.setArtist(metaData.getArtist());
@@ -444,9 +447,8 @@ public class MediaFileService {
         // Look for embedded images in audiofiles. (Only check first audio file encountered).
         JaudiotaggerParser parser = new JaudiotaggerParser();
         for (File candidate : candidates) {
-            MediaFile mediaFile = getMediaFile(candidate);
-            if (parser.isApplicable(mediaFile)) {
-                if (parser.isImageAvailable(mediaFile)) {
+            if (parser.isApplicable(candidate)) {
+                if (parser.isImageAvailable(getMediaFile(candidate))) {
                     return candidate;
                 } else {
                     return null;
@@ -454,14 +456,6 @@ public class MediaFileService {
             }
         }
         return null;
-    }
-
-    /**
-     * Register in service locator so that non-Spring objects can access me.
-     * This method is invoked automatically by Spring.
-     */
-    public void init() {
-        // TODO: Remove
     }
 
     public void setSecurityService(SecurityService securityService) {

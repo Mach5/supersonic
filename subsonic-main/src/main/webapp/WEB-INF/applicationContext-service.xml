@@ -53,7 +53,7 @@
 
     <!-- Services -->
 
-    <bean id="mediaFileService" class="net.sourceforge.subsonic.service.MediaFileService" init-method="init">
+    <bean id="mediaFileService" class="net.sourceforge.subsonic.service.MediaFileService">
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="searchService" ref="searchService"/>

@@ -176,9 +176,9 @@ public class CoverArtController implements Controller, LastModified {
      * the embedded album art is returned.
      */
     private InputStream getImageInputStream(File file) throws IOException {
-        MediaFile mediaFile = mediaFileService.getMediaFile(file);
         JaudiotaggerParser parser = new JaudiotaggerParser();
-        if (parser.isApplicable(mediaFile)) {
+        if (parser.isApplicable(file)) {
+            MediaFile mediaFile = mediaFileService.getMediaFile(file);
             return new ByteArrayInputStream(parser.getImageData(mediaFile));
         } else {
             return new FileInputStream(file);

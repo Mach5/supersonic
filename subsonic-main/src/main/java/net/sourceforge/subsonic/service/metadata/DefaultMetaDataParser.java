@@ -18,6 +18,8 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
+import java.io.File;
+
 import net.sourceforge.subsonic.domain.MediaFile;
 
 /**
@@ -66,7 +68,7 @@ public class DefaultMetaDataParser extends MetaDataParser {
      * @param file The music file in question.
      * @return Whether this parser is applicable to the given file.
      */
-    public boolean isApplicable(MediaFile file) {
+    public boolean isApplicable(File file) {
         return file.isFile();
     }
 }

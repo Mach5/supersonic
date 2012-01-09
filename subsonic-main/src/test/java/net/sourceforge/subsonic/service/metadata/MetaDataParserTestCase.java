@@ -18,6 +18,8 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
+import java.io.File;
+
 import junit.framework.TestCase;
 import net.sourceforge.subsonic.domain.MediaFile;
 
@@ -42,7 +44,7 @@ public class MetaDataParserTestCase extends TestCase {
                 return false;
             }
 
-            public boolean isApplicable(MediaFile file) {
+            public boolean isApplicable(File file) {
                 return false;
             }
         };

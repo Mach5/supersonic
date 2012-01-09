@@ -20,6 +20,7 @@ package net.sourceforge.subsonic.service.metadata;
 
 import net.sourceforge.subsonic.domain.MediaFile;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -36,12 +37,12 @@ public class MetaDataParserFactory {
     }
 
     /**
-     * Returns a meta-data parser for the given music file.
+     * Returns a meta-data parser for the given file.
      *
      * @param file The file in question.
      * @return An applicable parser, or <code>null</code> if no parser is found.
      */
-    public MetaDataParser getParser(MediaFile file) {
+    public MetaDataParser getParser(File file) {
         for (MetaDataParser parser : parsers) {
             if (parser.isApplicable(file)) {
                 return parser;

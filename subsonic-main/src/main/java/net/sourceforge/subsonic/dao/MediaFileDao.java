@@ -75,7 +75,7 @@ public class MediaFileDao extends AbstractDao {
      *
      * @param file The media file to create.
      */
-    public void createOrUpdateMediaFile(MediaFile file) {
+    public synchronized void createOrUpdateMediaFile(MediaFile file) {
         String sql = "update media_file set " +
                 "type=?," +
                 "format=?," +

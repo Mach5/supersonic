@@ -84,7 +84,7 @@ public class TagService {
         try {
 
             MediaFile file = mediaFileService.getMediaFile(path);
-            MetaDataParser parser = metaDataParserFactory.getParser(file);
+            MetaDataParser parser = metaDataParserFactory.getParser(file.getFile());
 
             if (!parser.isEditingSupported()) {
                 return "Tag editing of " + StringUtil.getSuffix(file.getName()) + " files is not supported.";

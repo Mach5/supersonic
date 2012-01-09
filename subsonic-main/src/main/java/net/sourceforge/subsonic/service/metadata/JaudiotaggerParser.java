@@ -20,6 +20,8 @@ package net.sourceforge.subsonic.service.metadata;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.util.StringUtil;
+
 import org.apache.commons.lang.StringUtils;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -29,6 +31,7 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.datatype.Artwork;
 import org.jaudiotagger.tag.reference.GenreTypes;
 
+import java.io.File;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.LogManager;
@@ -225,12 +228,12 @@ public class JaudiotaggerParser extends MetaDataParser {
      * @return Whether this parser is applicable to the given file.
      */
     @Override
-    public boolean isApplicable(MediaFile file) {
+    public boolean isApplicable(File file) {
         if (!file.isFile()) {
             return false;
         }
 
-        String format = file.getFormat();
+        String format = StringUtil.getSuffix(file.getName()).toLowerCase();
 
         return format.equals("mp3") ||
                 format.equals("m4a") ||
