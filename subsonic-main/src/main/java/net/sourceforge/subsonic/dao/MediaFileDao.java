@@ -173,7 +173,8 @@ public class MediaFileDao extends AbstractDao {
      * @return The most frequently played albums.
      */
     public List<MediaFile> getMostFrequentlyPlayedAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where type='ALBUM' order by play_count desc limit ? offset ?", rowMapper, count, offset);
+        return query("select " + COLUMNS + " from media_file where type='ALBUM' and play_count > 0 " +
+                "order by play_count desc limit ? offset ?", rowMapper, count, offset);
     }
 
     /**
@@ -184,7 +185,8 @@ public class MediaFileDao extends AbstractDao {
      * @return The most recently played albums.
      */
     public List<MediaFile> getMostRecentlyPlayedAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where type='ALBUM' order by last_played desc limit ? offset ?", rowMapper, count, offset);
+        return query("select " + COLUMNS + " from media_file where type='ALBUM' and last_played is not null " +
+                "order by last_played desc limit ? offset ?", rowMapper, count, offset);
     }
 
     /**

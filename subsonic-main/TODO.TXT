@@ -1,5 +1,4 @@
 
-Don't include albums that have never been played in "Most played" and "Recently played"
 Create caches in SettingsService, for the different string array types.
 Set MediaFile.root.
   Root folder should have parent == null.
