@@ -27,6 +27,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -106,7 +107,7 @@ public class AvatarUploadController extends ParameterizableViewController {
             }
             int width = image.getWidth();
             int height = image.getHeight();
-            String mimeType = StringUtil.getMimeType(StringUtil.getSuffix(fileName));
+            String mimeType = StringUtil.getMimeType(FilenameUtils.getExtension(fileName));
 
             // Scale down image if necessary.
             if (width > MAX_AVATAR_SIZE || height > MAX_AVATAR_SIZE) {

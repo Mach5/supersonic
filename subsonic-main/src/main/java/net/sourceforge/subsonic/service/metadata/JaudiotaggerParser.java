@@ -20,8 +20,8 @@ package net.sourceforge.subsonic.service.metadata;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.util.StringUtil;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -233,7 +233,7 @@ public class JaudiotaggerParser extends MetaDataParser {
             return false;
         }
 
-        String format = StringUtil.getSuffix(file.getName()).toLowerCase();
+        String format = FilenameUtils.getExtension(file.getName()).toLowerCase();
 
         return format.equals("mp3") ||
                 format.equals("m4a") ||

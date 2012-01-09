@@ -153,6 +153,7 @@ Enable fast scrolling of playlists, search results and songs.
 
 TODO IN ANDROID 3.4
 --------------------
+Maintain track order for offline files.
 Check for lingering .partial files.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 Don't pause on incoming call if RC.

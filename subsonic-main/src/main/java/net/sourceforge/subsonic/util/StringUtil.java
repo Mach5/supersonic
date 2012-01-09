@@ -41,6 +41,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.LongRange;
@@ -144,18 +145,6 @@ public final class StringUtil {
         synchronized (ISO_8601_DATE_FORMAT) {
             return ISO_8601_DATE_FORMAT.format(date);
         }
-    }
-
-    /**
-     * Returns the suffix (the substring after the last dot) of the given string. The dot
-     * is included in the returned suffix.
-     *
-     * @param s The string in question.
-     * @return The suffix, or an empty string if no suffix is found.
-     */
-    public static String getSuffix(String s) {
-        int index = s.lastIndexOf('.');
-        return index == -1 ? "" : s.substring(index);
     }
 
     /**

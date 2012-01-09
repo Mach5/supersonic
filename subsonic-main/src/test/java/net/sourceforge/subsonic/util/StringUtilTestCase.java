@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 import java.util.Locale;
 import java.util.Arrays;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.math.LongRange;
 
 /**
@@ -38,15 +39,6 @@ public class StringUtilTestCase extends TestCase {
         assertEquals(" ", StringUtil.toHtml(" "));
         assertEquals("q &amp; a", StringUtil.toHtml("q & a"));
         assertEquals("q &amp; a &lt;&gt; b", StringUtil.toHtml("q & a <> b"));
-    }
-
-    public void testGetSuffix() {
-        assertEquals("Error in getSuffix().", ".mp3", StringUtil.getSuffix("foo.mp3"));
-        assertEquals("Error in getSuffix().", ".mp3", StringUtil.getSuffix(".mp3"));
-        assertEquals("Error in getSuffix().", ".mp3", StringUtil.getSuffix("foo.bar.mp3"));
-        assertEquals("Error in getSuffix().", ".mp3", StringUtil.getSuffix("foo..mp3"));
-        assertEquals("Error in getSuffix().", "", StringUtil.getSuffix("foo"));
-        assertEquals("Error in getSuffix().", "", StringUtil.getSuffix(""));
     }
 
     public void testRemoveSuffix() {

@@ -24,10 +24,10 @@ import net.sourceforge.subsonic.io.InputStreamReaderThread;
 import net.sourceforge.subsonic.service.ServiceLocator;
 import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.util.StringUtil;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ServiceLoader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -153,7 +153,7 @@ public class FFmpegParser extends MetaDataParser {
      */
     @Override
     public boolean isApplicable(File file) {
-        String format = StringUtil.getSuffix(file.getName()).toLowerCase();
+        String format = FilenameUtils.getExtension(file.getName()).toLowerCase();
 
         for (String s : ServiceLocator.getSettingsService().getVideoFileTypesAsArray()) {
             if (format.equals(s)) {

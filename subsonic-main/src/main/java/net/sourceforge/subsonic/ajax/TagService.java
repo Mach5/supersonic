@@ -24,7 +24,7 @@ import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
 import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
-import net.sourceforge.subsonic.util.StringUtil;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -87,7 +87,7 @@ public class TagService {
             MetaDataParser parser = metaDataParserFactory.getParser(file.getFile());
 
             if (!parser.isEditingSupported()) {
-                return "Tag editing of " + StringUtil.getSuffix(file.getName()) + " files is not supported.";
+                return "Tag editing of " + FilenameUtils.getExtension(file.getName()) + " files is not supported.";
             }
 
             MetaData existingMetaData = parser.getRawMetaData(file);
