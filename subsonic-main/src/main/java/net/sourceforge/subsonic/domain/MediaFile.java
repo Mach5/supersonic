@@ -23,8 +23,6 @@ import java.util.Date;
 
 import org.apache.commons.io.FilenameUtils;
 
-import net.sourceforge.subsonic.Logger;
-
 /**
  * A media file (audio, video or directory) with an assortment of its meta data.
  *
@@ -33,14 +31,10 @@ import net.sourceforge.subsonic.Logger;
  */
 public class MediaFile {
 
-    private static final Logger LOG = Logger.getLogger(MediaFile.class);
-
     private int id;
     private String path;
     private MediaType mediaType;
     private String format;
-    private boolean isDirectory;
-    private boolean isAlbum;
     private String title;
     private String albumName;
     private String artist;
@@ -64,7 +58,7 @@ public class MediaFile {
     private Date childrenLastUpdated;
     private boolean enabled;
 
-    public MediaFile(int id, String path, MediaType mediaType, String format, boolean isDirectory, boolean isAlbum, String title,
+    public MediaFile(int id, String path, MediaType mediaType, String format, String title,
             String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
             boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
             String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date lastModified,
@@ -73,8 +67,6 @@ public class MediaFile {
         this.path = path;
         this.mediaType = mediaType;
         this.format = format;
-        this.isDirectory = isDirectory;
-        this.isAlbum = isAlbum;
         this.title = title;
         this.albumName = albumName;
         this.artist = artist;
@@ -147,23 +139,15 @@ public class MediaFile {
     }
 
     public boolean isDirectory() {
-        return isDirectory;
-    }
-
-    public void setDirectory(boolean directory) {
-        isDirectory = directory;
+        return !isFile();
     }
 
     public boolean isFile() {
-        return !isDirectory;
+        return mediaType == MediaType.AUDIO || mediaType == MediaType.VIDEO;
     }
 
     public boolean isAlbum() {
-        return isAlbum;
-    }
-
-    public void setAlbum(boolean album) {
-        isAlbum = album;
+        return mediaType == MediaType.ALBUM;
     }
 
     public String getTitle() {
@@ -192,7 +176,7 @@ public class MediaFile {
 
     public String getName() {
         // TODO: Optimize
-        if (isAlbum && albumName != null) {
+        if (isAlbum() && albumName != null) {
             return albumName;
         }
 

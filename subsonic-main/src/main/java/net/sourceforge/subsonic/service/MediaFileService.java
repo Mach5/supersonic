@@ -23,6 +23,7 @@ import net.sf.ehcache.Element;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MediaType;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
@@ -354,16 +355,19 @@ public class MediaFileService {
         MediaFile mediaFile = new MediaFile();
         mediaFile.setPath(file.getPath());
         mediaFile.setParentPath(file.getParent());
-        mediaFile.setFileSize(FileUtil.length(file));
         mediaFile.setLastModified(new Date(FileUtil.lastModified(file)));
         mediaFile.setPlayCount(0);
         mediaFile.setChildrenLastUpdated(new Date(0));
         mediaFile.setCreated(new Date());
         mediaFile.setEnabled(true);
-        mediaFile.setDirectory(FileUtil.isDirectory(file));
+        mediaFile.setMediaType(MediaType.DIRECTORY);
 
-        if (mediaFile.isFile()) {
-            mediaFile.setFormat(StringUtils.trimToNull(StringUtils.lowerCase(FilenameUtils.getExtension(mediaFile.getPath()))));
+        if (file.isFile()) {
+            String format = StringUtils.trimToNull(StringUtils.lowerCase(FilenameUtils.getExtension(mediaFile.getPath())));
+            mediaFile.setFormat(format);
+            mediaFile.setFileSize(FileUtil.length(file));
+            mediaFile.setMediaType(isMusicFile(format) ? MediaType.AUDIO : MediaType.VIDEO);
+
             MetaDataParser parser = metaDataParserFactory.getParser(mediaFile);
             if (parser != null) {
                 MetaData metaData = parser.getMetaData(mediaFile);
@@ -387,7 +391,7 @@ public class MediaFileService {
             List<File> children = listMediaFiles(file);
             for (File child : children) {
                 if (FileUtil.isFile(child)) {
-                    mediaFile.setAlbum(true);
+                    mediaFile.setMediaType(MediaType.ALBUM);
                     break;
                 }
             }

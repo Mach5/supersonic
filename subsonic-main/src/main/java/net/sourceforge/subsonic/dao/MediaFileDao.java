@@ -37,7 +37,7 @@ import java.util.List;
 public class MediaFileDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(MediaFileDao.class);
-    private static final String COLUMNS = "id, path, media_type, format, is_directory, is_album, title, album, artist, disc_number, " +
+    private static final String COLUMNS = "id, path, type, format, title, album, artist, disc_number, " +
             "track_number, year, genre, bit_rate, variable_bit_rate, duration_seconds, file_size, width, height, cover_art_path, " +
             "parent_path, play_count, last_played, comment, created, last_modified, children_last_updated, enabled";
 
@@ -77,10 +77,8 @@ public class MediaFileDao extends AbstractDao {
      */
     public void createOrUpdateMediaFile(MediaFile file) {
         String sql = "update media_file set " +
-                "media_type=?," +
+                "type=?," +
                 "format=?," +
-                "is_directory=?," +
-                "is_album=?," +
                 "title=?," +
                 "album=?," +
                 "artist=?," +
@@ -105,22 +103,21 @@ public class MediaFileDao extends AbstractDao {
                 "where path=?";
 
         int n = update(sql,
-                file.getMediaType() == null ? null : file.getMediaType().name(), file.getFormat(), file.isDirectory(), file.isAlbum(),
-                file.getTitle(), file.getAlbumName(), file.getArtist(), file.getDiscNumber(), file.getTrackNumber(),
-                file.getYear(), file.getGenre(), file.getBitRate(), file.isVariableBitRate(), file.getDurationSeconds(),
-                file.getFileSize(), file.getWidth(), file.getHeight(), file.getCoverArtPath(), file.getParentPath(),
-                file.getPlayCount(), file.getLastPlayed(), file.getComment(), file.getLastModified(),
-                file.getChildrenLastUpdated(), file.isEnabled(), file.getPath());
+                file.getMediaType().name(), file.getFormat(), file.getTitle(), file.getAlbumName(), file.getArtist(),
+                file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
+                file.isVariableBitRate(), file.getDurationSeconds(), file.getFileSize(), file.getWidth(), file.getHeight(),
+                file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
+                file.getLastModified(), file.getChildrenLastUpdated(), file.isEnabled(), file.getPath());
 
         if (n > 0) {
             LOG.debug("Updated media_file for " + file.getPath());
         } else {
             update("insert into media_file (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")", null,
-                    file.getPath(), file.getMediaType() == null ? null : file.getMediaType().name(), file.getFormat(), file.isDirectory(), file.isAlbum(),
-                    file.getTitle(), file.getAlbumName(), file.getArtist(), file.getDiscNumber(), file.getTrackNumber(),
-                    file.getYear(), file.getGenre(), file.getBitRate(), file.isVariableBitRate(), file.getDurationSeconds(),
-                    file.getFileSize(), file.getWidth(), file.getHeight(), file.getCoverArtPath(), file.getParentPath(),
-                    file.getPlayCount(), file.getLastPlayed(), file.getComment(), file.getCreated(), file.getLastModified(),
+                    file.getPath(), file.getMediaType().name(), file.getFormat(), file.getTitle(), file.getAlbumName(), file.getArtist(),
+                    file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
+                    file.isVariableBitRate(), file.getDurationSeconds(), file.getFileSize(), file.getWidth(), file.getHeight(),
+                    file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
+                    file.getCreated(), file.getLastModified(),
                     file.getChildrenLastUpdated(), file.isEnabled());
             LOG.debug("Created media_file for " + file.getPath());
         }
@@ -140,7 +137,7 @@ public class MediaFileDao extends AbstractDao {
         if (min == null || max == null) {
             return null;
         }
-        return queryOne("select " + COLUMNS + " from media_file where is_album and id > ? limit 1", rowMapper, Util.randomInt(min, max));
+        return queryOne("select " + COLUMNS + " from media_file where type='ALBUM' and id > ? limit 1", rowMapper, Util.randomInt(min, max));
     }
 
     public MediaFile getRandomSong(Integer fromYear, Integer toYear, String genre, String musicFolderPath) {
@@ -150,7 +147,7 @@ public class MediaFileDao extends AbstractDao {
             return null;
         }
 
-        StringBuilder whereClause = new StringBuilder("not is_directory and id > ").append(Util.randomInt(min, max));
+        StringBuilder whereClause = new StringBuilder("type in ('AUDIO', 'VIDEO') and id > ").append(Util.randomInt(min, max));
 
         if (fromYear != null) {
             whereClause.append(" and year >= ").append(fromYear);
@@ -176,7 +173,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The most frequently played albums.
      */
     public List<MediaFile> getMostFrequentlyPlayedAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where is_album order by play_count desc limit ? offset ?", rowMapper, count, offset);
+        return query("select " + COLUMNS + " from media_file where type='ALBUM' order by play_count desc limit ? offset ?", rowMapper, count, offset);
     }
 
     /**
@@ -187,7 +184,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The most recently played albums.
      */
     public List<MediaFile> getMostRecentlyPlayedAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where is_album order by last_played desc limit ? offset ?", rowMapper, count, offset);
+        return query("select " + COLUMNS + " from media_file where type='ALBUM' order by last_played desc limit ? offset ?", rowMapper, count, offset);
     }
 
     /**
@@ -198,7 +195,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The most recently added albums.
      */
     public List<MediaFile> getNewestAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where is_album order by created desc limit ? offset ?", rowMapper, count, offset);
+        return query("select " + COLUMNS + " from media_file where type='ALBUM' order by created desc limit ? offset ?", rowMapper, count, offset);
     }
 
     /**
@@ -209,7 +206,7 @@ public class MediaFileDao extends AbstractDao {
     public MediaLibraryStatistics getStatistics() {
         int artistCount = queryForInt("select count(distinct artist) from media_file", 0);
         int albumCount = queryForInt("select count(distinct album) from media_file", 0);
-        int songCount = queryForInt("select count(id) from media_file where not is_directory", 0);
+        int songCount = queryForInt("select count(id) from media_file where type in ('AUDIO', 'VIDEO')", 0);
         long totalLengthInBytes = queryForLong("select sum(file_size) from media_file", 0L);
         long totalDurationInSeconds = queryForLong("select sum(duration_seconds) from media_file", 0L);
 
@@ -221,32 +218,30 @@ public class MediaFileDao extends AbstractDao {
             return new MediaFile(
                     rs.getInt(1),
                     rs.getString(2),
-                    rs.getString(3) == null ? null : MediaType.valueOf(rs.getString(3)),
+                    MediaType.valueOf(rs.getString(3)),
                     rs.getString(4),
-                    rs.getBoolean(5),
-                    rs.getBoolean(6),
+                    rs.getString(5),
+                    rs.getString(6),
                     rs.getString(7),
-                    rs.getString(8),
-                    rs.getString(9),
+                    rs.getInt(8) == 0 ? null : rs.getInt(8),
+                    rs.getInt(9) == 0 ? null : rs.getInt(9),
                     rs.getInt(10) == 0 ? null : rs.getInt(10),
-                    rs.getInt(11) == 0 ? null : rs.getInt(11),
+                    rs.getString(11),
                     rs.getInt(12) == 0 ? null : rs.getInt(12),
-                    rs.getString(13),
+                    rs.getBoolean(13),
                     rs.getInt(14) == 0 ? null : rs.getInt(14),
-                    rs.getBoolean(15),
+                    rs.getLong(15) == 0 ? null : rs.getLong(15),
                     rs.getInt(16) == 0 ? null : rs.getInt(16),
-                    rs.getLong(17) == 0 ? null : rs.getLong(17),
-                    rs.getInt(18) == 0 ? null : rs.getInt(18),
-                    rs.getInt(19) == 0 ? null : rs.getInt(19),
-                    rs.getString(20),
-                    rs.getString(21),
-                    rs.getInt(22),
+                    rs.getInt(17) == 0 ? null : rs.getInt(17),
+                    rs.getString(18),
+                    rs.getString(19),
+                    rs.getInt(20),
+                    rs.getTimestamp(21),
+                    rs.getString(22),
                     rs.getTimestamp(23),
-                    rs.getString(24),
+                    rs.getTimestamp(24),
                     rs.getTimestamp(25),
-                    rs.getTimestamp(26),
-                    rs.getTimestamp(27),
-                    rs.getBoolean(28));
+                    rs.getBoolean(26));
         }
     }
 }

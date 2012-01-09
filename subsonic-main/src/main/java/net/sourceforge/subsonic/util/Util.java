@@ -118,6 +118,9 @@ public final class Util {
     }
 
     public static int randomInt(int min, int max) {
+        if (min >= max) {
+            return 0;
+        }
         return min + RANDOM.nextInt(max - min);
 
     }

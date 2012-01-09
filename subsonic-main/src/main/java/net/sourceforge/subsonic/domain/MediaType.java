@@ -6,5 +6,7 @@ package net.sourceforge.subsonic.domain;
  */
 public enum MediaType {
     AUDIO,
-    VIDEO
+    VIDEO,
+    DIRECTORY,
+    ALBUM
 }

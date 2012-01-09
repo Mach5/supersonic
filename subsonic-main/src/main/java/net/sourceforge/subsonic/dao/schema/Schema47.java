@@ -44,10 +44,8 @@ public class Schema47 extends Schema {
             template.execute("create table media_file (" +
                     "id identity," +
                     "path varchar not null," +
-                    "media_type varchar," +
+                    "type varchar not null," +
                     "format varchar," +
-                    "is_directory boolean not null," +
-                    "is_album boolean not null," +
                     "title varchar," +
                     "album varchar," +
                     "artist varchar," +
@@ -73,7 +71,7 @@ public class Schema47 extends Schema {
                     "unique (path))");
 
             template.execute("create index idx_media_file_path on media_file(path)");
-            template.execute("create index idx_media_file_is_album on media_file(is_album)");
+            template.execute("create index idx_media_file_type on media_file(type)");
             template.execute("create index idx_media_file_album on media_file(album)");
             template.execute("create index idx_media_file_artist on media_file(artist)");
             template.execute("create index idx_media_file_year on media_file(year)");
