@@ -1,4 +1,5 @@
-Error when changing tags, and setting year to null.
+
+Use MediaLibraryStatistics.totalDuration
 -
 Support per-artist cover art.
 Revisit MetaDataParser.isRoot()
@@ -10,18 +11,16 @@ Make sure that artist/album (for songs and albums) are displayed in search resul
 Optimize MediaFile getters.
 Remove obsolete caches
 Remove ServiceLocator
-Revisit LeftController caching
+Revisit LeftController caching. Shouldn't persist MediaFile binary.
 Measure time for media scanning, clean and incremental.
 Use MediaFile.enabled
 MediaFileService: Determine when to check if files exists.
 Test performance of MusicFileDao.
-Use MediaLibraryStatistics.totalDuration
 Test searching etc before search index is created.
 Test searching while createing lucene index
 Cleanup SearchService.
 Final Frontier album throws exception.
 Remove artist name from album name (Poetry for the Poisoned)
-Optimize FFmpegParser.isApplicable()
 Change Settings > Search/Caching.
 
 DONE IN 4.7

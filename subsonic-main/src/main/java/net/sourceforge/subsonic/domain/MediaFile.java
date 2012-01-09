@@ -395,6 +395,6 @@ public class MediaFile {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + "[" + path + "]";
+        return getName();
     }
 }
