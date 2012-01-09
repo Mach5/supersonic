@@ -1,22 +1,25 @@
 
+Don't include albums that have never been played in "Most played" and "Recently played"
+Create caches in SettingsService, for the different string array types.
+Set MediaFile.root.
+  Root folder should have parent == null.
+  Revisit MetaDataParser.isRoot()
+  Root should not be album.
+Error when changing tags, and setting year to null.
+-
 Support per-artist cover art.
 Decide when to set "album" and "artist" for directories.
-Error when changing tags, and setting year to null.
 When changing tags, web page displays old data.
-Set MediaFile.root.
-Root folder should have parent == null.
 Use long rather than Date in MediaFile?
 Remove id from MediaFile (not from table)
 Make sure that artist/album (for songs and albums) are displayed in search results.
 Optimize MediaFile getters.
 Remove obsolete caches
 Remove ServiceLocator
-Revisit MetaDataParser.isRoot()
 Revisit LeftController caching
 Measure time for media scanning, clean and incremental.
 Use MediaFile.enabled
 MediaFileService: Determine when to check if files exists.
-Root should not be album.
 Test performance of MusicFileDao.
 Use MediaLibraryStatistics.totalDuration
 Test searching etc before search index is created.
@@ -24,8 +27,8 @@ Test searching while createing lucene index
 Cleanup SearchService.
 Final Frontier album throws exception.
 Remove artist name from album name (Poetry for the Poisoned)
-Don't include albums that have never been played in "Most played" and "Recently played"
 Optimize FFmpegParser.isApplicable()
+Change Settings > Search/Caching.
 
 DONE IN 4.7
 -----------------
