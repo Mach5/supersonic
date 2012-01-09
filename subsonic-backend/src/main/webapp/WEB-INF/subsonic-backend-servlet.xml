@@ -29,6 +29,7 @@
             <props>
                 <prop key="/backend/version.view">multiController</prop>
                 <prop key="/backend/db.view">multiController</prop>
+                <prop key="/backend/payment.view">multiController</prop>
                 <prop key="/backend/sendMail.view">multiController</prop>
                 <prop key="/backend/requestLicense.view">multiController</prop>
                 <prop key="/backend/validateLicense.view">multiController</prop>

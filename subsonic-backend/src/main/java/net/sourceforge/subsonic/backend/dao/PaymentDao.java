@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.simple.ParameterizedSingleColumnRowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -93,10 +94,14 @@ public class PaymentDao extends AbstractDao {
         LOG.info("Updated " + payment);
     }
 
+    public int getPaymentAmount(Date from, Date to) {
+        String sql = "select sum(payment_amount) from payment where created between ? and ?";
+        return queryForInt(sql, 0, from, to);
+    }
+
     public boolean isBlacklisted(String email) {
         String sql = "select 1 from blacklist where email=?";
         return queryOne(sql, listRowMapper, StringUtils.lowerCase(email)) != null;
-
     }
 
     public boolean isWhitelisted(String email) {

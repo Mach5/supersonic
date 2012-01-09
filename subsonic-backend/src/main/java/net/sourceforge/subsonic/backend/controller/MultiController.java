@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.backend.controller;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,6 +35,7 @@ import net.sourceforge.subsonic.backend.service.LicenseGenerator;
 import net.sourceforge.subsonic.backend.service.WhitelistGenerator;
 import org.apache.log4j.Logger;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -116,15 +118,13 @@ public class MultiController extends MultiActionController {
 
     public ModelAndView db(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        String password = ServletRequestUtils.getRequiredStringParameter(request, "p");
-        if (!password.equals(Util.getPassword("backendpwd.txt"))) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+        if (!authenticate(request, response)) {
             return null;
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
 
-        map.put("p", password);
+        map.put("p", request.getParameter("p"));
         String query = request.getParameter("query");
         if (query != null) {
             map.put("query", query);
@@ -138,6 +138,45 @@ public class MultiController extends MultiActionController {
         }
 
         return new ModelAndView("backend/db", "model", map);
+    }
+
+    public ModelAndView payment(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        if (!authenticate(request, response)) {
+            return null;
+        }
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        Calendar startOfToday = Calendar.getInstance();
+        startOfToday.set(Calendar.HOUR_OF_DAY, 0);
+        startOfToday.set(Calendar.MINUTE, 0);
+        startOfToday.set(Calendar.SECOND, 0);
+        startOfToday.set(Calendar.MILLISECOND, 0);
+
+        Calendar endOfToday = Calendar.getInstance();
+        endOfToday.setTime(startOfToday.getTime());
+        endOfToday.add(Calendar.DATE, 1);
+
+        Calendar startOfYesterday = Calendar.getInstance();
+        startOfYesterday.setTime(startOfToday.getTime());
+        startOfYesterday.add(Calendar.DATE, -1);
+
+        Calendar startOfMonth = Calendar.getInstance();
+        startOfMonth.setTime(startOfToday.getTime());
+        startOfMonth.set(Calendar.DATE, 1);
+
+        int sumToday = paymentDao.getPaymentAmount(startOfToday.getTime(), endOfToday.getTime());
+        int sumYesterday = paymentDao.getPaymentAmount(startOfYesterday.getTime(), startOfToday.getTime());
+        int sumMonth = paymentDao.getPaymentAmount(startOfMonth.getTime(), endOfToday.getTime());
+        int dayAverageThisMonth = sumMonth / startOfToday.get(Calendar.DATE);
+
+        map.put("sumToday", sumToday);
+        map.put("sumYesterday", sumYesterday);
+        map.put("sumMonth", sumMonth);
+        map.put("dayAverageThisMonth", dayAverageThisMonth);
+
+        return new ModelAndView("backend/payment", "model", map);
     }
 
     public ModelAndView requestLicense(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -158,10 +197,7 @@ public class MultiController extends MultiActionController {
     }
 
     public ModelAndView whitelist(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        String password = ServletRequestUtils.getRequiredStringParameter(request, "p");
-        if (!password.equals(Util.getPassword("backendpwd.txt"))) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+        if (!authenticate(request, response)) {
             return null;
         }
 
@@ -174,6 +210,15 @@ public class MultiController extends MultiActionController {
         }
         whitelistGenerator.generate(newerThan);
         return null;
+    }
+
+    private boolean authenticate(HttpServletRequest request, HttpServletResponse response) throws ServletRequestBindingException, IOException {
+        String password = ServletRequestUtils.getRequiredStringParameter(request, "p");
+        if (!password.equals(Util.getPassword("backendpwd.txt"))) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return false;
+        }
+        return true;
     }
 
     private boolean isLicenseValid(String email, Long date) {

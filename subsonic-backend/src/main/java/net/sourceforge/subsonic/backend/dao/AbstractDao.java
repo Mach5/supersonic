@@ -46,6 +46,11 @@ public class AbstractDao {
         return result.isEmpty() ? null : result.get(0);
     }
 
+    protected Integer queryForInt(String sql, Integer defaultValue, Object... args) {
+        List<Integer> result = getJdbcTemplate().queryForList(sql, args, Integer.class);
+        return result.isEmpty() ? defaultValue : result.get(0) == null ? defaultValue : result.get(0);
+    }
+
     public void setDaoHelper(DaoHelper daoHelper) {
         this.daoHelper = daoHelper;
     }
