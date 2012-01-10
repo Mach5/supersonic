@@ -1,23 +1,25 @@
 
 When changing tags, web page displays old data.
 Remove artist name from album name (Poetry for the Poisoned)
+Use long rather than Date in MediaFile?
 -
+Change Settings > Search/Caching.
+  Move to Settings > Media folders.
+  MediaFileService: Determine when to check if files exists.
 Support per-artist cover art.
 Revisit MetaDataParser.isRoot()
-Use long rather than Date in MediaFile?
+Check file I/O.
 Optimize MediaFile getters.
 Remove obsolete caches
 Remove ServiceLocator
 Revisit LeftController caching. Shouldn't persist MediaFile binary.
 Measure time for media scanning, clean and incremental.
 Use MediaFile.enabled
-MediaFileService: Determine when to check if files exists.
 Test performance of MusicFileDao.
 Test searching etc before search index is created.
 Test searching while createing lucene index
 Cleanup SearchService.
 Final Frontier album throws exception.
-Change Settings > Search/Caching.
 
 DONE IN 4.7
 -----------------
