@@ -1,5 +1,4 @@
 
-Use MediaLibraryStatistics.totalDuration
 When changing tags, web page displays old data.
 Decide when to set "album" and "artist" for directories.
   Make sure that artist/album (for songs and albums) are displayed in search results.
@@ -68,6 +67,8 @@ java.lang.NullPointerException
 Lots of exists() when playing a song.
 
 Make it possible to suppress content length estimation.
+minisub
+  http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
   http://forum.subsonic.org/forum/viewtopic.php?f=3&t=3270&p=34114#p34114
@@ -89,8 +90,6 @@ Rename "offsetSeconds" to "timeOffset" in StreamController, and update API doc.
 Add "byteOffset" parameter as well.
 Add rating attributes to <directory> in getMusicDirectory.
 Update description of Thumper.
-minisub
-  http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
 Subsonic Chumby
   http://www.activeobjects.no/subsonic/forum/viewtopic.php?t=7154
   http://forum.chumby.com/viewtopic.php?id=6733

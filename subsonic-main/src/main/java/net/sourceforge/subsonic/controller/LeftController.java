@@ -141,7 +141,7 @@ public class LeftController extends ParameterizableViewController implements Las
         if (statistics != null) {
             map.put("statistics", statistics);
             long bytes = statistics.getTotalLengthInBytes();
-            long hours = bytes * 8 / 1024 / 150 / 3600;
+            long hours = statistics.getTotalDurationInSeconds() / 3600L;
             map.put("hours", hours);
             map.put("bytes", StringUtil.formatBytes(bytes, locale));
         }
