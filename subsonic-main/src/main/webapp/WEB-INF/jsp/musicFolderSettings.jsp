@@ -38,14 +38,15 @@
         <td/>
     </tr>
 
-    <tr>
-        <td colspan="4" style="padding-top:1.5em">
-            <input type="submit" value="<fmt:message key="common.save"/>" style="margin-right:0.3em">
-            <input type="button" value="<fmt:message key="common.cancel"/>" onclick="location.href='nowPlaying.view'">
-        </td>
-    </tr>
-
 </table>
+
+    <p class="forward"><a href="musicFolderSettings.view?scanNow"><fmt:message key="musicfoldersettings.scannow"/></a></p>
+
+    <p >
+        <input type="submit" value="<fmt:message key="common.save"/>" style="margin-right:0.3em">
+        <input type="button" value="<fmt:message key="common.cancel"/>" onclick="location.href='nowPlaying.view'">
+    </p>
+
 </form>
 
 <c:if test="${not empty model.error}">

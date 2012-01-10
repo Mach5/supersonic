@@ -163,6 +163,7 @@
      <bean id="musicFolderSettingsController" class="net.sourceforge.subsonic.controller.MusicFolderSettingsController">
         <property name="viewName" value="musicFolderSettings"/>
         <property name="settingsService" ref="settingsService"/>
+        <property name="searchService" ref="searchService"/>
     </bean>
     <bean id="networkSettingsController" class="net.sourceforge.subsonic.controller.NetworkSettingsController">
         <property name="commandClass" value="net.sourceforge.subsonic.command.NetworkSettingsCommand"/>

@@ -1,11 +1,16 @@
 
-Remove artist name from album name (Poetry for the Poisoned)
-
--
-Document MediaFileService.
+Invalidate cache when updating cover art.
 Change Settings > Search/Caching.
   Move to Settings > Media folders.
-  MediaFileService: Determine when to check if files exists.
+  "Scan media folders [Every day]"
+  "Fast access mode"
+  Show scan status.
+Add logic to determine if search index is created.
+Copy comments from music_file_info
+-
+Better error message if media file not found.
+Remove artist name from album name (Poetry for the Poisoned)
+Document MediaFileService.
 Support per-artist cover art.
 Revisit MetaDataParser.isRoot()
 Check file I/O.

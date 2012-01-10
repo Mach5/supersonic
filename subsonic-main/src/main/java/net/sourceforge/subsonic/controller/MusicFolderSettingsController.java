@@ -20,6 +20,7 @@ package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.service.*;
 import net.sourceforge.subsonic.domain.*;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.*;
 import org.springframework.web.servlet.mvc.*;
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +37,7 @@ import java.io.*;
 public class MusicFolderSettingsController extends ParameterizableViewController {
 
     private SettingsService settingsService;
+    private SearchService searchService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -108,6 +110,10 @@ public class MusicFolderSettingsController extends ParameterizableViewController
             settingsService.createMusicFolder(new MusicFolder(file, name, enabled, new Date()));
         }
 
+        if (request.getParameter("scanNow") != null) {
+            searchService.createIndex();
+        }
+
         return null;
     }
 
@@ -119,4 +125,7 @@ public class MusicFolderSettingsController extends ParameterizableViewController
         this.settingsService = settingsService;
     }
 
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
+    }
 }

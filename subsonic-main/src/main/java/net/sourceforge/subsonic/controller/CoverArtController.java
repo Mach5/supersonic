@@ -142,7 +142,7 @@ public class CoverArtController implements Controller, LastModified {
         File cachedImage = new File(getImageCacheDirectory(size), md5 + ".jpeg");
 
         // Is cache missing or obsolete?
-        if (!FileUtil.exists(cachedImage) || FileUtil.lastModified(file) > FileUtil.lastModified(cachedImage)) {
+        if (!cachedImage.exists() || FileUtil.lastModified(file) > cachedImage.lastModified()) {
             InputStream in = null;
             OutputStream out = null;
             try {
@@ -188,7 +188,7 @@ public class CoverArtController implements Controller, LastModified {
     private synchronized File getImageCacheDirectory(int size) {
         File dir = new File(SettingsService.getSubsonicHome(), "thumbs");
         dir = new File(dir, String.valueOf(size));
-        if (!FileUtil.exists(dir)) {
+        if (!dir.exists()) {
             if (dir.mkdirs()) {
                 LOG.info("Created thumbnail cache " + dir);
             } else {
