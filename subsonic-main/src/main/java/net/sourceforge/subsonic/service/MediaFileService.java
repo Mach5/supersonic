@@ -384,7 +384,7 @@ public class MediaFileService {
 
             MetaDataParser parser = metaDataParserFactory.getParser(file);
             if (parser != null) {
-                MetaData metaData = parser.getMetaData(mediaFile);
+                MetaData metaData = parser.getMetaData(file);
                 mediaFile.setArtist(metaData.getArtist());
                 mediaFile.setAlbumName(metaData.getAlbumName());
                 mediaFile.setTitle(metaData.getTitle());
@@ -410,6 +410,9 @@ public class MediaFileService {
                         break;
                     }
                 }
+
+                // Get artist/album name from first child.
+
             }
         }
 

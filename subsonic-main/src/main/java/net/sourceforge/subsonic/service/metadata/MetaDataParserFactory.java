@@ -18,8 +18,6 @@
  */
 package net.sourceforge.subsonic.service.metadata;
 
-import net.sourceforge.subsonic.domain.MediaFile;
-
 import java.io.File;
 import java.util.List;
 
@@ -49,13 +47,5 @@ public class MetaDataParserFactory {
             }
         }
         return null;
-    }
-
-    /**
-     * Register in service locator so that non-Spring objects can access me.
-     * This method is invoked automatically by Spring.
-     */
-    public void init() {
-        // TODO: remove
     }
 }

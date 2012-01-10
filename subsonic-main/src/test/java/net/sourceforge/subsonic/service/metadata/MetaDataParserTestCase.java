@@ -33,7 +33,7 @@ public class MetaDataParserTestCase extends TestCase {
     public void testRemoveTrackNumberFromTitle() throws Exception {
 
         MetaDataParser parser = new MetaDataParser() {
-            public MetaData getRawMetaData(MediaFile file) {
+            public MetaData getRawMetaData(File file) {
                 return null;
             }
 

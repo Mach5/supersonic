@@ -87,10 +87,10 @@ public class TagService {
             MetaDataParser parser = metaDataParserFactory.getParser(file.getFile());
 
             if (!parser.isEditingSupported()) {
-                return "Tag editing of " + FilenameUtils.getExtension(file.getName()) + " files is not supported.";
+                return "Tag editing of " + FilenameUtils.getExtension(file.getPath()) + " files is not supported.";
             }
 
-            MetaData existingMetaData = parser.getRawMetaData(file);
+            MetaData existingMetaData = parser.getRawMetaData(file.getFile());
 
             if (StringUtils.equals(artist, existingMetaData.getArtist()) &&
                     StringUtils.equals(album, existingMetaData.getAlbumName()) &&

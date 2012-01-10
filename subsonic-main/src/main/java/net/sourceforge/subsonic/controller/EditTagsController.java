@@ -70,7 +70,7 @@ public class EditTagsController extends ParameterizableViewController {
 
     private Song createSong(MediaFile file, int index) {
         MetaDataParser parser = metaDataParserFactory.getParser(file.getFile());
-        MetaData metaData = parser.getRawMetaData(file);
+        MetaData metaData = parser.getRawMetaData(file.getFile());
 
         Song song = new Song();
         song.setPath(file.getPath());
@@ -78,7 +78,7 @@ public class EditTagsController extends ParameterizableViewController {
         song.setTrack(metaData.getTrackNumber());
         song.setSuggestedTrack(index + 1);
         song.setTitle(metaData.getTitle());
-        song.setSuggestedTitle(parser.guessTitle(file));
+        song.setSuggestedTitle(parser.guessTitle(file.getFile()));
         song.setArtist(metaData.getArtist());
         song.setAlbum(metaData.getAlbumName());
         song.setYear(metaData.getYear());

@@ -61,16 +61,17 @@ public class JaudiotaggerParser extends MetaDataParser {
     /**
      * Parses meta data for the given music file. No guessing or reformatting is done.
      *
+     *
      * @param file The music file to parse.
      * @return Meta data for the file.
      */
     @Override
-    public MetaData getRawMetaData(MediaFile file) {
+    public MetaData getRawMetaData(File file) {
 
         MetaData metaData = new MetaData();
 
         try {
-            AudioFile audioFile = AudioFileIO.read(file.getFile());
+            AudioFile audioFile = AudioFileIO.read(file);
             Tag tag = audioFile.getTag();
             if (tag != null) {
                 metaData.setArtist(getTagField(tag, FieldKey.ARTIST));

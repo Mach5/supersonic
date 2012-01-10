@@ -37,12 +37,12 @@ import net.sourceforge.subsonic.service.SettingsService;
 public abstract class MetaDataParser {
 
     /**
-     * Parses meta data for the given music file.
+     * Parses meta data for the given file.
      *
-     * @param file The music file to parse.
+     * @param file The file to parse.
      * @return Meta data for the file, never null.
      */
-    public MetaData getMetaData(MediaFile file) {
+    public MetaData getMetaData(File file) {
 
         MetaData metaData = getRawMetaData(file);
         String artist = metaData.getArtist();
@@ -70,10 +70,11 @@ public abstract class MetaDataParser {
     /**
      * Parses meta data for the given music file. No guessing or reformatting is done.
      *
+     *
      * @param file The music file to parse.
      * @return Meta data for the file.
      */
-    public abstract MetaData getRawMetaData(MediaFile file);
+    public abstract MetaData getRawMetaData(File file);
 
     /**
      * Updates the given file with the given meta data.
@@ -101,7 +102,7 @@ public abstract class MetaDataParser {
     /**
      * Guesses the artist for the given music file.
      */
-    protected String guessArtist(MediaFile file) {
+    protected String guessArtist(File file) {
         File parent = file.getParentFile();
         if (isRoot(parent)) {
             return "";
@@ -113,8 +114,8 @@ public abstract class MetaDataParser {
     /**
      * Guesses the album for the given music file.
      */
-    protected String guessAlbum(MediaFile file) {
-        File parent = file.getFile().getParentFile();
+    protected String guessAlbum(File file) {
+        File parent = file.getParentFile();
         String album = isRoot(parent) ? "" : parent.getName();
         String artist = guessArtist(file);
         return album.replace(artist + " - ", "");
@@ -123,7 +124,7 @@ public abstract class MetaDataParser {
     /**
      * Guesses the title for the given music file.
      */
-    public String guessTitle(MediaFile file) {
+    public String guessTitle(File file) {
         return removeTrackNumberFromTitle(FilenameUtils.getBaseName(file.getPath()), null);
     }
 

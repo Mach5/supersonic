@@ -32,10 +32,11 @@ public class DefaultMetaDataParser extends MetaDataParser {
     /**
      * Parses meta data for the given music file. No guessing or reformatting is done.
      *
+     *
      * @param file The music file to parse.
      * @return Meta data for the file.
      */
-    public MetaData getRawMetaData(MediaFile file) {
+    public MetaData getRawMetaData(File file) {
         MetaData metaData = new MetaData();
         metaData.setArtist(guessArtist(file));
         metaData.setAlbumName(guessAlbum(file));

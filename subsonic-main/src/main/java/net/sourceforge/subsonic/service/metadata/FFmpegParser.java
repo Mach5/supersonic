@@ -51,11 +51,12 @@ public class FFmpegParser extends MetaDataParser {
     /**
      * Parses meta data for the given music file. No guessing or reformatting is done.
      *
+     *
      * @param file The music file to parse.
      * @return Meta data for the file.
      */
     @Override
-    public MetaData getRawMetaData(MediaFile file) {
+    public MetaData getRawMetaData(File file) {
 
         MetaData metaData = new MetaData();
 
@@ -63,7 +64,7 @@ public class FFmpegParser extends MetaDataParser {
 
             File ffmpeg = new File(transcodingService.getTranscodeDirectory(), "ffmpeg");
 
-            String[] command = new String[]{ffmpeg.getAbsolutePath(), "-i", file.getFile().getAbsolutePath()};
+            String[] command = new String[]{ffmpeg.getAbsolutePath(), "-i", file.getAbsolutePath()};
             Process process = Runtime.getRuntime().exec(command);
             InputStream stdout = process.getInputStream();
             InputStream stderr = process.getErrorStream();

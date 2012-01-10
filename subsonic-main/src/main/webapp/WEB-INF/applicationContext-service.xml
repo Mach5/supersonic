@@ -157,7 +157,7 @@
         <property name="securityService" ref="securityService"/>
     </bean>
 
-    <bean id="metaDataParserFactory" class="net.sourceforge.subsonic.service.metadata.MetaDataParserFactory" init-method="init">
+    <bean id="metaDataParserFactory" class="net.sourceforge.subsonic.service.metadata.MetaDataParserFactory">
         <property name="parsers">
             <list>
                 <bean class="net.sourceforge.subsonic.service.metadata.JaudiotaggerParser"/>
