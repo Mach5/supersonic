@@ -68,6 +68,7 @@ public class Schema47 extends Schema {
                     "last_modified datetime not null," +
                     "children_last_updated datetime not null," +
                     "enabled boolean not null," +
+                    "version int not null," +
                     "unique (path))");
 
             template.execute("create index idx_media_file_path on media_file(path)");

@@ -22,6 +22,7 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import net.sourceforge.subsonic.domain.MediaType;
+import net.sourceforge.subsonic.domain.Version;
 import net.sourceforge.subsonic.util.Util;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
@@ -39,7 +40,9 @@ public class MediaFileDao extends AbstractDao {
     private static final Logger LOG = Logger.getLogger(MediaFileDao.class);
     private static final String COLUMNS = "id, path, type, format, title, album, artist, disc_number, " +
             "track_number, year, genre, bit_rate, variable_bit_rate, duration_seconds, file_size, width, height, cover_art_path, " +
-            "parent_path, play_count, last_played, comment, created, last_modified, children_last_updated, enabled";
+            "parent_path, play_count, last_played, comment, created, last_modified, children_last_updated, enabled, version";
+
+    private static final int VERSION = 1;
 
     private final MediaFileMapper rowMapper = new MediaFileMapper();
 
@@ -99,7 +102,8 @@ public class MediaFileDao extends AbstractDao {
                 "comment=?," +
                 "last_modified=?," +
                 "children_last_updated=?," +
-                "enabled=? " +
+                "enabled=?, " +
+                "version=? " +
                 "where path=?";
 
         int n = update(sql,
@@ -107,7 +111,7 @@ public class MediaFileDao extends AbstractDao {
                 file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
                 file.isVariableBitRate(), file.getDurationSeconds(), file.getFileSize(), file.getWidth(), file.getHeight(),
                 file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
-                file.getLastModified(), file.getChildrenLastUpdated(), file.isEnabled(), file.getPath());
+                file.getLastModified(), file.getChildrenLastUpdated(), file.isEnabled(), VERSION, file.getPath());
 
         if (n > 0) {
             LOG.debug("Updated media_file for " + file.getPath());
@@ -118,7 +122,7 @@ public class MediaFileDao extends AbstractDao {
                     file.isVariableBitRate(), file.getDurationSeconds(), file.getFileSize(), file.getWidth(), file.getHeight(),
                     file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
                     file.getCreated(), file.getLastModified(),
-                    file.getChildrenLastUpdated(), file.isEnabled());
+                    file.getChildrenLastUpdated(), file.isEnabled(), VERSION);
             LOG.debug("Created media_file for " + file.getPath());
         }
     }
