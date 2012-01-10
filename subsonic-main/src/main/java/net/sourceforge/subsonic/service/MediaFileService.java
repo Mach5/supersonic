@@ -454,6 +454,12 @@ public class MediaFileService {
         return settingsService.isFastCacheEnabled() && !searchService.isIndexBeingCreated();
     }
 
+    public void refreshMediaFile(MediaFile mediaFile) {
+        mediaFile = createMediaFile(mediaFile.getFile());
+        mediaFileDao.createOrUpdateMediaFile(mediaFile);
+        mediaFileMemoryCache.remove(mediaFile.getFile());
+    }
+
     /**
      * Returns a cover art image for the given media file.
      */

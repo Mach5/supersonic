@@ -1,8 +1,8 @@
 
-Invalidate cache when changing tags.
 Remove artist name from album name (Poetry for the Poisoned)
 
 -
+Document MediaFileService.
 Change Settings > Search/Caching.
   Move to Settings > Media folders.
   MediaFileService: Determine when to check if files exists.
