@@ -1,14 +1,11 @@
 
 When changing tags, web page displays old data.
-Decide when to set "album" and "artist" for directories.
-  Make sure that artist/album (for songs and albums) are displayed in search results.
-  Remove artist name from album name (Poetry for the Poisoned)
+Remove artist name from album name (Poetry for the Poisoned)
 -
 Add "version" to media_file
 Support per-artist cover art.
 Revisit MetaDataParser.isRoot()
 Use long rather than Date in MediaFile?
-Remove id from MediaFile (not from table)
 Optimize MediaFile getters.
 Remove obsolete caches
 Remove ServiceLocator

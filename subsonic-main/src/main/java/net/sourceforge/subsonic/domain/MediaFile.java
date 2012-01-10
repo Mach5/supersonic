@@ -31,7 +31,6 @@ import org.apache.commons.io.FilenameUtils;
  */
 public class MediaFile {
 
-    private int id;
     private String path;
     private MediaType mediaType;
     private String format;
@@ -58,12 +57,11 @@ public class MediaFile {
     private Date childrenLastUpdated;
     private boolean enabled;
 
-    public MediaFile(int id, String path, MediaType mediaType, String format, String title,
+    public MediaFile(String path, MediaType mediaType, String format, String title,
             String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
             boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
             String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date lastModified,
             Date childrenLastUpdated, boolean enabled) {
-        this.id = id;
         this.path = path;
         this.mediaType = mediaType;
         this.format = format;
@@ -95,14 +93,6 @@ public class MediaFile {
      * For testing only.
      */
     public MediaFile() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getPath() {

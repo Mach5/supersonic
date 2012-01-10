@@ -218,7 +218,6 @@ public class MediaFileDao extends AbstractDao {
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {
         public MediaFile mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new MediaFile(
-                    rs.getInt(1),
                     rs.getString(2),
                     MediaType.valueOf(rs.getString(3)),
                     rs.getString(4),
