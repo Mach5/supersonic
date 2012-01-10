@@ -74,9 +74,9 @@ public class MediaFileService {
 
         // Look in fast memory cache first.
         Element element = mediaFileMemoryCache.get(file);
-        MediaFile cachedMediaFile = element == null ? null : (MediaFile) element.getObjectValue();
-        if (cachedMediaFile != null) {
-            return cachedMediaFile;
+        MediaFile result = element == null ? null : (MediaFile) element.getObjectValue();
+        if (result != null) {
+            return result;
         }
 
         if (!securityService.isReadAllowed(file)) {
@@ -84,22 +84,30 @@ public class MediaFileService {
         }
 
         // Secondly, look in database.
-        cachedMediaFile = mediaFileDao.getMediaFile(file.getPath());
-        if (cachedMediaFile != null) {
-            if (useFastCache() || cachedMediaFile.getLastModified().getTime() >= FileUtil.lastModified(file)) {
-                mediaFileMemoryCache.put(new Element(file, cachedMediaFile));
-                return cachedMediaFile;
-            }
+        result = mediaFileDao.getMediaFile(file.getPath());
+        if (result != null) {
+            result = checkLastModified(result);
+            mediaFileMemoryCache.put(new Element(file, result));
+            return result;
         }
 
         // Not found, must read from disk.
-        MediaFile mediaFile = createMediaFile(file);
+        result = createMediaFile(file);
 
         // Put in cache and database.
-        mediaFileMemoryCache.put(new Element(file, mediaFile));
-        mediaFileDao.createOrUpdateMediaFile(mediaFile);
+        mediaFileMemoryCache.put(new Element(file, result));
+        mediaFileDao.createOrUpdateMediaFile(result);
 
-        return mediaFile;
+        return result;
+    }
+
+    private MediaFile checkLastModified(MediaFile mediaFile) {
+        if (useFastCache() || mediaFile.getLastModified().getTime() >= FileUtil.lastModified(mediaFile.getFile())) {
+            return mediaFile;
+        }
+        mediaFile = createMediaFile(mediaFile.getFile());
+        mediaFileDao.createOrUpdateMediaFile(mediaFile);
+        return  mediaFile;
     }
 
     /**
@@ -147,6 +155,7 @@ public class MediaFileService {
 
         List<MediaFile> result = new ArrayList<MediaFile>();
         for (MediaFile child : mediaFileDao.getChildrenOf(parent.getPath())) {
+            child = checkLastModified(child);
             if (child.isDirectory() && includeDirectories) {
                 result.add(child);
             }

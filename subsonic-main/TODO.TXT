@@ -1,7 +1,7 @@
 
-When changing tags, web page displays old data.
+Invalidate cache when changing tags.
 Remove artist name from album name (Poetry for the Poisoned)
-Use long rather than Date in MediaFile?
+
 -
 Change Settings > Search/Caching.
   Move to Settings > Media folders.
@@ -20,6 +20,7 @@ Test searching etc before search index is created.
 Test searching while createing lucene index
 Cleanup SearchService.
 Final Frontier album throws exception.
+Use long rather than Date in MediaFile?
 
 DONE IN 4.7
 -----------------
@@ -151,6 +152,8 @@ Don't pause on incoming call if RC.
 ICS theme
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=8497
   https://mail.google.com/mail/?tab=cm#inbox/1344527f4abc11af
+PayPal integration
+  https://www.x.com/developers/paypal/products/mobile-payment-libraries
 Change generic album art.
 In ICS, doesn't pause when disconnected from Bluetooth.
 Bug if switching to RC and back for a song that is currently downloading.
