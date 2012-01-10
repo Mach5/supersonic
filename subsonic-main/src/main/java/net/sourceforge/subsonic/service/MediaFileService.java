@@ -31,8 +31,8 @@ import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
 import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
 import net.sourceforge.subsonic.util.FileUtil;
+
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.filefilter.FileFileFilter;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
@@ -304,8 +304,7 @@ public class MediaFileService {
             storedChildrenMap.put(child.getPath(), child);
         }
 
-        List<File> children = listMediaFiles(parent.getFile());
-
+        List<File> children = filterMediaFiles(FileUtil.listFiles(parent.getFile()));
         for (File child : children) {
             if (storedChildrenMap.remove(child.getPath()) == null) {
                 // Add children that are not already stored.
@@ -323,12 +322,12 @@ public class MediaFileService {
         mediaFileDao.createOrUpdateMediaFile(parent);
     }
 
-    private List<File> listMediaFiles(File parent) {
+    private List<File> filterMediaFiles(File[] candidates) {
         List<File> result = new ArrayList<File>();
-        for (File child : FileUtil.listFiles(parent)) {
-            String suffix = FilenameUtils.getExtension(child.getName()).toLowerCase();
-            if (!isExcluded(child) && (FileUtil.isDirectory(child) || isMusicFile(suffix) || isVideoFile(suffix))) {
-                result.add(child);
+        for (File candidate : candidates) {
+            String suffix = FilenameUtils.getExtension(candidate.getName()).toLowerCase();
+            if (!isExcluded(candidate) && (FileUtil.isDirectory(candidate) || isMusicFile(suffix) || isVideoFile(suffix))) {
+                result.add(candidate);
             }
         }
         return result;
@@ -403,30 +402,41 @@ public class MediaFileService {
 
             // Is this an album?
             if (!isRoot(mediaFile)) {
-                List<File> children = listMediaFiles(file);
-                for (File child : children) {
+                File[] children = FileUtil.listFiles(file);
+                File firstChild = null;
+                for (File child : filterMediaFiles(children)) {
                     if (FileUtil.isFile(child)) {
-                        mediaFile.setMediaType(MediaType.ALBUM);
+                        firstChild = child;
                         break;
                     }
                 }
 
-                // Get artist/album name from first child.
+                if (firstChild != null) {
+                    mediaFile.setMediaType(MediaType.ALBUM);
 
-            }
-        }
+                    // Get artist/album name from first child.
+                    MetaDataParser parser = metaDataParserFactory.getParser(firstChild);
+                    if (parser != null) {
+                        MetaData metaData = parser.getMetaData(firstChild);
+                        mediaFile.setArtist(metaData.getArtist());
+                        mediaFile.setAlbumName(metaData.getAlbumName());
+                    }
 
-        if (mediaFile.isAlbum()) {
-            try {
-                File coverArt = findCoverArt(file);
-                if (coverArt != null) {
-                    mediaFile.setCoverArtPath(coverArt.getPath());
+                    // Look for cover art.
+                    try {
+                        File coverArt = findCoverArt(children);
+                        if (coverArt != null) {
+                            mediaFile.setCoverArtPath(coverArt.getPath());
+                        }
+                    } catch (IOException x) {
+                        LOG.error("Failed to find cover art.", x);
+                    }
+
+                } else {
+                    mediaFile.setArtist(file.getName());
                 }
-            } catch (IOException x) {
-                LOG.error("Failed to find cover art.", x);
             }
         }
-
 
         return mediaFile;
     }
@@ -449,12 +459,10 @@ public class MediaFileService {
     /**
      * Finds a cover art image for the given directory, by looking for it on the disk.
      */
-    private File findCoverArt(File dir) throws IOException {
-        File[] candidates = FileUtil.listFiles(dir, FileFileFilter.FILE);
-
+    private File findCoverArt(File[] candidates) throws IOException {
         for (String mask : settingsService.getCoverArtFileTypesAsArray()) {
             for (File candidate : candidates) {
-                if (candidate.getName().toUpperCase().endsWith(mask.toUpperCase()) && !candidate.getName().startsWith(".")) {
+                if (candidate.isFile() && candidate.getName().toUpperCase().endsWith(mask.toUpperCase()) && !candidate.getName().startsWith(".")) {
                     return candidate;
                 }
             }
