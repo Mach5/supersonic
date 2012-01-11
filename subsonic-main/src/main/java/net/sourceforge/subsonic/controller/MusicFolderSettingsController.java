@@ -19,17 +19,16 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.command.MusicFolderSettingsCommand;
-import net.sourceforge.subsonic.command.SearchSettingsCommand;
-import net.sourceforge.subsonic.service.*;
-import net.sourceforge.subsonic.domain.*;
-import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.servlet.*;
-import org.springframework.web.servlet.mvc.*;
-import org.apache.commons.lang.StringUtils;
+import net.sourceforge.subsonic.domain.MusicFolder;
+import net.sourceforge.subsonic.service.SearchService;
+import net.sourceforge.subsonic.service.SettingsService;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.SimpleFormController;
+import org.springframework.web.servlet.view.RedirectView;
 
-import javax.servlet.http.*;
-import java.util.*;
-import java.io.*;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Controller for the page used to administrate the set of music folders.
@@ -42,7 +41,7 @@ public class MusicFolderSettingsController extends SimpleFormController {
     private SearchService searchService;
 
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
-        MusicFolderSettingsCommand command = MusicFolderSettingsCommand SearchSettingsCommand();
+        MusicFolderSettingsCommand command = new MusicFolderSettingsCommand();
 
         if (request.getParameter("update") != null) {
             searchService.createIndex();
@@ -52,12 +51,35 @@ public class MusicFolderSettingsController extends SimpleFormController {
         command.setHour(String.valueOf(settingsService.getIndexCreationHour()));
         command.setFastCache(settingsService.isFastCacheEnabled());
         command.setCreatingIndex(searchService.isIndexBeingCreated());
-        command.setMusicFolders(settingsService.getAllMusicFolders(true, true));
-
+        command.setMusicFolders(wrap(settingsService.getAllMusicFolders(true, true)));
+        command.setNewMusicFolder(new MusicFolderSettingsCommand.MusicFolderInfo());
         return command;
     }
-    protected void doSubmitAction(Object comm) throws Exception {
-        SearchSettingsCommand command = (SearchSettingsCommand) comm;
+
+    private List<MusicFolderSettingsCommand.MusicFolderInfo> wrap(List<MusicFolder> musicFolders) {
+        ArrayList<MusicFolderSettingsCommand.MusicFolderInfo> result = new ArrayList<MusicFolderSettingsCommand.MusicFolderInfo>();
+        for (MusicFolder musicFolder : musicFolders) {
+            result.add(new MusicFolderSettingsCommand.MusicFolderInfo(musicFolder));
+        }
+        return result;
+    }
+
+    @Override
+    protected ModelAndView onSubmit(Object comm) throws Exception {
+        MusicFolderSettingsCommand command = (MusicFolderSettingsCommand) comm;
+
+        for (MusicFolderSettingsCommand.MusicFolderInfo musicFolderInfo : command.getMusicFolders()) {
+            if (musicFolderInfo.isDelete()) {
+                settingsService.deleteMusicFolder(musicFolderInfo.getId());
+            } else {
+                settingsService.updateMusicFolder(musicFolderInfo.toMusicFolder());
+            }
+        }
+
+        MusicFolder newMusicFolder = command.getNewMusicFolder().toMusicFolder();
+        if (newMusicFolder != null) {
+            settingsService.createMusicFolder(newMusicFolder);
+        }
 
         settingsService.setIndexCreationInterval(Integer.parseInt(command.getInterval()));
         settingsService.setIndexCreationHour(Integer.parseInt(command.getHour()));
@@ -65,86 +87,7 @@ public class MusicFolderSettingsController extends SimpleFormController {
         settingsService.save();
 
         searchService.schedule();
-    }
-//    @Override
-//    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-//
-//        if (request.getParameter("scanNow") != null) {
-//            searchService.createIndex();
-//        }
-//
-//        Map<String, Object> map = new HashMap<String, Object>();
-//
-//        if (isFormSubmission(request)) {
-//            String error = handleParameters(request);
-//            map.put("error", error);
-//            if (error == null) {
-//                map.put("reload", true);
-//            }
-//        }
-//
-//        ModelAndView result = super.handleRequestInternal(request, response);
-//        map.put("musicFolders", settingsService.getAllMusicFolders(true, true));
-//        map.put("fastCache", settingsService.isFastCacheEnabled());
-//
-//        result.addObject("model", map);
-//        return result;
-//    }
-
-
-    private String handleParameters(HttpServletRequest request) {
-
-        for (MusicFolder musicFolder : settingsService.getAllMusicFolders(true, true)) {
-            Integer id = musicFolder.getId();
-
-            String path = getParameter(request, "path", id);
-            String name = getParameter(request, "name", id);
-            boolean enabled = getParameter(request, "enabled", id) != null;
-            boolean delete = getParameter(request, "delete", id) != null;
-
-            if (delete) {
-                settingsService.deleteMusicFolder(id);
-            } else if (path == null) {
-                return "musicfoldersettings.nopath";
-            } else {
-                File file = new File(path);
-                if (name == null) {
-                    name = file.getName();
-                }
-                musicFolder.setName(name);
-                musicFolder.setPath(file);
-                musicFolder.setEnabled(enabled);
-                musicFolder.setChanged(new Date());
-                settingsService.updateMusicFolder(musicFolder);
-            }
-        }
-
-        String name = StringUtils.trimToNull(request.getParameter("name"));
-        String path = StringUtils.trimToNull(request.getParameter("path"));
-        boolean enabled = StringUtils.trimToNull(request.getParameter("enabled")) != null;
-
-        if (name != null || path != null) {
-            if (path == null) {
-                return "musicfoldersettings.nopath";
-            }
-            File file = new File(path);
-            if (name == null) {
-                name = file.getName();
-            }
-            settingsService.createMusicFolder(new MusicFolder(file, name, enabled, new Date()));
-        }
-
-        boolean fastCache = request.getParameter("fastCache") != null;
-        if (fastCache != settingsService.isFastCacheEnabled()) {
-            settingsService.setFastCacheEnabled(fastCache);
-            settingsService.save();
-        }
-
-        return null;
-    }
-
-    private String getParameter(HttpServletRequest request, String name, Integer id) {
-        return StringUtils.trimToNull(request.getParameter(name + "[" + id + "]"));
+        return new ModelAndView(new RedirectView(getSuccessView() + ".view"));
     }
 
     public void setSettingsService(SettingsService settingsService) {

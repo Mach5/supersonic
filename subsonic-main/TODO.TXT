@@ -6,6 +6,7 @@ Change Settings > Search/Caching.
   "Fast access mode"
   Show scan status.
   Rewrite to SimpleFormController
+  Show warning if music folder doesn't exist.
 Add logic to determine if search index is created.
 Copy comments from music_file_info
 -

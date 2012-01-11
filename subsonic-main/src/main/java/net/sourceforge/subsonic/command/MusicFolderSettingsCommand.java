@@ -18,12 +18,13 @@
  */
 package net.sourceforge.subsonic.command;
 
+import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import net.sourceforge.subsonic.controller.MusicFolderSettingsController;
-import net.sourceforge.subsonic.controller.SearchSettingsController;
-import net.sourceforge.subsonic.domain.Cache;
 import net.sourceforge.subsonic.domain.MusicFolder;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Command used in {@link MusicFolderSettingsController}.
@@ -36,7 +37,8 @@ public class MusicFolderSettingsCommand {
     private String hour;
     private boolean isCreatingIndex;
     private boolean fastCache;
-    private List<MusicFolder> musicFolders;
+    private List<MusicFolderInfo> musicFolders;
+    private MusicFolderInfo newMusicFolder;
 
     public String getInterval() {
         return interval;
@@ -66,11 +68,11 @@ public class MusicFolderSettingsCommand {
         return fastCache;
     }
 
-    public List<MusicFolder> getMusicFolders() {
+    public List<MusicFolderInfo> getMusicFolders() {
         return musicFolders;
     }
 
-    public void setMusicFolders(List<MusicFolder> musicFolders) {
+    public void setMusicFolders(List<MusicFolderInfo> musicFolders) {
         this.musicFolders = musicFolders;
     }
 
@@ -78,4 +80,84 @@ public class MusicFolderSettingsCommand {
         this.fastCache = fastCache;
     }
 
+    public MusicFolderInfo getNewMusicFolder() {
+        return newMusicFolder;
+    }
+
+    public void setNewMusicFolder(MusicFolderInfo newMusicFolder) {
+        this.newMusicFolder = newMusicFolder;
+    }
+
+    public static class MusicFolderInfo {
+
+        private Integer id;
+        private String path;
+        private String name;
+        private boolean enabled;
+        private boolean delete;
+
+        public MusicFolderInfo(MusicFolder musicFolder) {
+            id = musicFolder.getId();
+            path = musicFolder.getPath().getPath();
+            name = musicFolder.getName();
+            enabled = musicFolder.isEnabled();
+        }
+
+        public MusicFolderInfo() {
+            enabled = true;
+        }
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public boolean isDelete() {
+            return delete;
+        }
+
+        public void setDelete(boolean delete) {
+            this.delete = delete;
+        }
+
+        public MusicFolder toMusicFolder() {
+            String path = StringUtils.trimToNull(this.path);
+            if (path == null) {
+                return null;
+            }
+            File file = new File(path);
+            String name = StringUtils.trimToNull(this.name);
+            if (name == null) {
+                name = file.getName();
+            }
+            return new MusicFolder(id, new File(path), name, enabled, new Date());
+        }
+    }
 }

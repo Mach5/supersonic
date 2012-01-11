@@ -9,7 +9,9 @@
     <c:param name="cat" value="musicFolder"/>
 </c:import>
 
-<form method="post" action="musicFolderSettings.view">
+<form:form commandName="command" action="musicFolderSettings.view" method="post">
+<%--@elvariable id="command" type="net.sourceforge.subsonic.command.MusicFolderSettingsCommand"--%>
+
 <table class="indent">
     <tr>
         <th><fmt:message key="musicfoldersettings.name"/></th>
@@ -18,12 +20,12 @@
         <th style="padding-left:1em"><fmt:message key="common.delete"/></th>
     </tr>
 
-    <c:forEach items="${model.musicFolders}" var="folder">
+    <c:forEach items="${command.musicFolders}" var="folder" varStatus="loopStatus">
         <tr>
-            <td><input type="text" name="name[${folder.id}]" size="20" value="${folder.name}"/></td>
-            <td><input type="text" name="path[${folder.id}]" size="40" value="${folder.path.path}"/></td>
-            <td align="center" style="padding-left:1em"><input type="checkbox" ${folder.enabled ? "checked" : ""} name="enabled[${folder.id}]" class="checkbox"/></td>
-            <td align="center" style="padding-left:1em"><input type="checkbox" name="delete[${folder.id}]" class="checkbox"/></td>
+            <td><form:input path="musicFolders[${loopStatus.count-1}].name" size="20"/></td>
+            <td><form:input path="musicFolders[${loopStatus.count-1}].path" size="50"/></td>
+            <td align="center" style="padding-left:1em"><form:checkbox path="musicFolders[${loopStatus.count-1}].enabled" cssClass="checkbox"/></td>
+            <td align="center" style="padding-left:1em"><form:checkbox path="musicFolders[${loopStatus.count-1}].delete" cssClass="checkbox"/></td>
         </tr>
     </c:forEach>
 
@@ -32,9 +34,12 @@
     </tr>
 
     <tr>
-        <td><input type="text" name="name" size="20"/></td>
-        <td><input type="text" name="path" size="40"/></td>
-        <td align="center" style="padding-left:1em"><input name="enabled" checked type="checkbox" class="checkbox"/></td>
+        <td><form:input path="newMusicFolder.name" size="20"/></td>
+        <td><form:input path="newMusicFolder.path" size="50"/></td>
+        <td align="center" style="padding-left:1em"><form:checkbox path="newMusicFolder.enabled" cssClass="checkbox"/></td>
+        <%--<td><input type="text" name="name" size="20"/></td>--%>
+        <%--<td><input type="text" name="path" size="40"/></td>--%>
+        <%--<td align="center" style="padding-left:1em"><input name="enabled" checked type="checkbox" class="checkbox"/></td>--%>
         <td/>
     </tr>
 
@@ -56,7 +61,7 @@
         <input type="button" value="<fmt:message key="common.cancel"/>" onclick="location.href='nowPlaying.view'">
     </p>
 
-</form>
+</form:form>
 
 <c:if test="${not empty model.error}">
     <p class="warning"><fmt:message key="${model.error}"/></p>
