@@ -18,6 +18,8 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import net.sourceforge.subsonic.command.MusicFolderSettingsCommand;
+import net.sourceforge.subsonic.command.SearchSettingsCommand;
 import net.sourceforge.subsonic.service.*;
 import net.sourceforge.subsonic.domain.*;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -34,44 +36,61 @@ import java.io.*;
  *
  * @author Sindre Mehus
  */
-public class MusicFolderSettingsController extends ParameterizableViewController {
+public class MusicFolderSettingsController extends SimpleFormController {
 
     private SettingsService settingsService;
     private SearchService searchService;
 
-    @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    protected Object formBackingObject(HttpServletRequest request) throws Exception {
+        MusicFolderSettingsCommand command = MusicFolderSettingsCommand SearchSettingsCommand();
 
-        if (request.getParameter("scanNow") != null) {
+        if (request.getParameter("update") != null) {
             searchService.createIndex();
         }
 
-        Map<String, Object> map = new HashMap<String, Object>();
+        command.setInterval(String.valueOf(settingsService.getIndexCreationInterval()));
+        command.setHour(String.valueOf(settingsService.getIndexCreationHour()));
+        command.setFastCache(settingsService.isFastCacheEnabled());
+        command.setCreatingIndex(searchService.isIndexBeingCreated());
+        command.setMusicFolders(settingsService.getAllMusicFolders(true, true));
 
-        if (isFormSubmission(request)) {
-            String error = handleParameters(request);
-            map.put("error", error);
-            if (error == null) {
-                map.put("reload", true);
-            }
-        }
-
-        ModelAndView result = super.handleRequestInternal(request, response);
-        map.put("musicFolders", settingsService.getAllMusicFolders(true, true));
-        map.put("fastCache", settingsService.isFastCacheEnabled());
-
-        result.addObject("model", map);
-        return result;
+        return command;
     }
+    protected void doSubmitAction(Object comm) throws Exception {
+        SearchSettingsCommand command = (SearchSettingsCommand) comm;
 
-    /**
-     * Determine if the given request represents a form submission.
-     * @param request current HTTP request
-     * @return if the request represents a form submission
-     */
-    private boolean isFormSubmission(HttpServletRequest request) {
-        return "POST".equals(request.getMethod());
+        settingsService.setIndexCreationInterval(Integer.parseInt(command.getInterval()));
+        settingsService.setIndexCreationHour(Integer.parseInt(command.getHour()));
+        settingsService.setFastCacheEnabled(command.isFastCache());
+        settingsService.save();
+
+        searchService.schedule();
     }
+//    @Override
+//    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
+//
+//        if (request.getParameter("scanNow") != null) {
+//            searchService.createIndex();
+//        }
+//
+//        Map<String, Object> map = new HashMap<String, Object>();
+//
+//        if (isFormSubmission(request)) {
+//            String error = handleParameters(request);
+//            map.put("error", error);
+//            if (error == null) {
+//                map.put("reload", true);
+//            }
+//        }
+//
+//        ModelAndView result = super.handleRequestInternal(request, response);
+//        map.put("musicFolders", settingsService.getAllMusicFolders(true, true));
+//        map.put("fastCache", settingsService.isFastCacheEnabled());
+//
+//        result.addObject("model", map);
+//        return result;
+//    }
+
 
     private String handleParameters(HttpServletRequest request) {
 

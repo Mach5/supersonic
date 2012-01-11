@@ -160,8 +160,10 @@
         <property name="securityService" ref="securityService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
-     <bean id="musicFolderSettingsController" class="net.sourceforge.subsonic.controller.MusicFolderSettingsController">
-        <property name="viewName" value="musicFolderSettings"/>
+    <bean id="musicFolderSettingsController" class="net.sourceforge.subsonic.controller.MusicFolderSettingsController">
+        <property name="commandClass" value="net.sourceforge.subsonic.command.MusicFolderSettingsCommand"/>
+        <property name="successView" value="musicFolderSettings"/>
+        <property name="formView" value="musicFolderSettings"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="searchService" ref="searchService"/>
     </bean>
