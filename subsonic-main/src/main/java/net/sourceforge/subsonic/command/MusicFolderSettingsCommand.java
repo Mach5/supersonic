@@ -95,12 +95,14 @@ public class MusicFolderSettingsCommand {
         private String name;
         private boolean enabled;
         private boolean delete;
+        private boolean existing;
 
         public MusicFolderInfo(MusicFolder musicFolder) {
             id = musicFolder.getId();
             path = musicFolder.getPath().getPath();
             name = musicFolder.getName();
             enabled = musicFolder.isEnabled();
+            existing = musicFolder.getPath().exists() && musicFolder.getPath().isDirectory();
         }
 
         public MusicFolderInfo() {
@@ -158,6 +160,10 @@ public class MusicFolderSettingsCommand {
                 name = file.getName();
             }
             return new MusicFolder(id, new File(path), name, enabled, new Date());
+        }
+
+        public boolean isExisting() {
+            return existing;
         }
     }
 }

@@ -18,14 +18,16 @@
         <th><fmt:message key="musicfoldersettings.path"/></th>
         <th style="padding-left:1em"><fmt:message key="musicfoldersettings.enabled"/></th>
         <th style="padding-left:1em"><fmt:message key="common.delete"/></th>
+        <th></th>
     </tr>
 
     <c:forEach items="${command.musicFolders}" var="folder" varStatus="loopStatus">
         <tr>
             <td><form:input path="musicFolders[${loopStatus.count-1}].name" size="20"/></td>
-            <td><form:input path="musicFolders[${loopStatus.count-1}].path" size="50"/></td>
+            <td><form:input path="musicFolders[${loopStatus.count-1}].path" size="40"/></td>
             <td align="center" style="padding-left:1em"><form:checkbox path="musicFolders[${loopStatus.count-1}].enabled" cssClass="checkbox"/></td>
             <td align="center" style="padding-left:1em"><form:checkbox path="musicFolders[${loopStatus.count-1}].delete" cssClass="checkbox"/></td>
+            <td><c:if test="${not folder.existing}"><span class="warning"><fmt:message key="musicfoldersettings.notfound"/></span></c:if></td>
         </tr>
     </c:forEach>
 
@@ -35,11 +37,8 @@
 
     <tr>
         <td><form:input path="newMusicFolder.name" size="20"/></td>
-        <td><form:input path="newMusicFolder.path" size="50"/></td>
+        <td><form:input path="newMusicFolder.path" size="40"/></td>
         <td align="center" style="padding-left:1em"><form:checkbox path="newMusicFolder.enabled" cssClass="checkbox"/></td>
-        <%--<td><input type="text" name="name" size="20"/></td>--%>
-        <%--<td><input type="text" name="path" size="40"/></td>--%>
-        <%--<td align="center" style="padding-left:1em"><input name="enabled" checked type="checkbox" class="checkbox"/></td>--%>
         <td/>
     </tr>
 
