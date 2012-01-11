@@ -42,6 +42,10 @@ public class MusicFolderSettingsController extends ParameterizableViewController
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+        if (request.getParameter("scanNow") != null) {
+            searchService.createIndex();
+        }
+
         Map<String, Object> map = new HashMap<String, Object>();
 
         if (isFormSubmission(request)) {
@@ -54,6 +58,7 @@ public class MusicFolderSettingsController extends ParameterizableViewController
 
         ModelAndView result = super.handleRequestInternal(request, response);
         map.put("musicFolders", settingsService.getAllMusicFolders(true, true));
+        map.put("fastCache", settingsService.isFastCacheEnabled());
 
         result.addObject("model", map);
         return result;
@@ -110,8 +115,10 @@ public class MusicFolderSettingsController extends ParameterizableViewController
             settingsService.createMusicFolder(new MusicFolder(file, name, enabled, new Date()));
         }
 
-        if (request.getParameter("scanNow") != null) {
-            searchService.createIndex();
+        boolean fastCache = request.getParameter("fastCache") != null;
+        if (fastCache != settingsService.isFastCacheEnabled()) {
+            settingsService.setFastCacheEnabled(fastCache);
+            settingsService.save();
         }
 
         return null;

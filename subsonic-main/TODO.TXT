@@ -5,6 +5,7 @@ Change Settings > Search/Caching.
   "Scan media folders [Every day]"
   "Fast access mode"
   Show scan status.
+  Rewrite to SimpleFormController
 Add logic to determine if search index is created.
 Copy comments from music_file_info
 -

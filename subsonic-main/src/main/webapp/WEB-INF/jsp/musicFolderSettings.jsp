@@ -42,6 +42,15 @@
 
     <p class="forward"><a href="musicFolderSettings.view?scanNow"><fmt:message key="musicfoldersettings.scannow"/></a></p>
 
+    <div>
+        <input type="checkbox" class="checkbox" ${model.fastCache ? "checked" : ""} name="fastCache" id="fastCache"/>
+        <label for="fastCache"><fmt:message key="musicfoldersettings.fastcache"/></label>
+    </div>
+
+    <p class="detail" style="width:60%;white-space:normal;">
+        <fmt:message key="musicfoldersettings.fastcache.description"/>
+    </p>
+
     <p >
         <input type="submit" value="<fmt:message key="common.save"/>" style="margin-right:0.3em">
         <input type="button" value="<fmt:message key="common.cancel"/>" onclick="location.href='nowPlaying.view'">
