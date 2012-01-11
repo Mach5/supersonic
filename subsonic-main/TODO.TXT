@@ -1,9 +1,8 @@
 
 Invalidate cache when updating cover art.
 Change Settings > Search/Caching.
-  Move to Settings > Media folders.
-  "Scan media folders [Every day]"
-  Show scan status.
+  Reload frames
+  Remove searchSettings et al
 Add logic to determine if search index is created.
 Copy comments from music_file_info
 -

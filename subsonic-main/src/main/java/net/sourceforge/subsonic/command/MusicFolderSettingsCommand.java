@@ -35,7 +35,7 @@ public class MusicFolderSettingsCommand {
 
     private String interval;
     private String hour;
-    private boolean isCreatingIndex;
+    private boolean scanning;
     private boolean fastCache;
     private List<MusicFolderInfo> musicFolders;
     private MusicFolderInfo newMusicFolder;
@@ -56,12 +56,12 @@ public class MusicFolderSettingsCommand {
         this.hour = hour;
     }
 
-    public boolean isCreatingIndex() {
-        return isCreatingIndex;
+    public boolean isScanning() {
+        return scanning;
     }
 
-    public void setCreatingIndex(boolean creatingIndex) {
-        isCreatingIndex = creatingIndex;
+    public void setScanning(boolean scanning) {
+        this.scanning = scanning;
     }
 
     public boolean isFastCache() {

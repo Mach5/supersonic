@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
+<%--@elvariable id="command" type="net.sourceforge.subsonic.command.MusicFolderSettingsCommand"--%>
 
 <html><head>
     <%@ include file="head.jsp" %>
@@ -10,7 +11,6 @@
 </c:import>
 
 <form:form commandName="command" action="musicFolderSettings.view" method="post">
-<%--@elvariable id="command" type="net.sourceforge.subsonic.command.MusicFolderSettingsCommand"--%>
 
 <table class="indent">
     <tr>
@@ -39,16 +39,43 @@
         <td><form:input path="newMusicFolder.name" size="20"/></td>
         <td><form:input path="newMusicFolder.path" size="40"/></td>
         <td align="center" style="padding-left:1em"><form:checkbox path="newMusicFolder.enabled" cssClass="checkbox"/></td>
-        <td/>
+        <td></td>
     </tr>
 
 </table>
 
+    <div style="padding-top: 1.2em;padding-bottom: 0.3em">
+        <span style="white-space: nowrap">
+            <fmt:message key="musicfoldersettings.scan"/>
+            <form:select path="interval">
+                <fmt:message key="musicfoldersettings.interval.never" var="never"/>
+                <fmt:message key="musicfoldersettings.interval.one" var="one"/>
+                <form:option value="-1" label="${never}"/>
+                <form:option value="1" label="${one}"/>
+
+                <c:forTokens items="2 3 7 14 30 60" delims=" " var="interval">
+                    <fmt:message key="musicfoldersettings.interval.many" var="many"><fmt:param value="${interval}"/></fmt:message>
+                    <form:option value="${interval}" label="${many}"/>
+                </c:forTokens>
+            </form:select>
+            <form:select path="hour">
+                <c:forEach begin="0" end="23" var="hour">
+                    <fmt:message key="musicfoldersettings.hour" var="hourLabel"><fmt:param value="${hour}"/></fmt:message>
+                    <form:option value="${hour}" label="${hourLabel}"/>
+                </c:forEach>
+            </form:select>
+        </span>
+    </div>
+
     <p class="forward"><a href="musicFolderSettings.view?scanNow"><fmt:message key="musicfoldersettings.scannow"/></a></p>
 
+    <c:if test="${command.scanning}">
+        <p style="width:60%"><b><fmt:message key="musicfoldersettings.nowscanning"/></b></p>
+    </c:if>
+
     <div>
-        <input type="checkbox" class="checkbox" ${model.fastCache ? "checked" : ""} name="fastCache" id="fastCache"/>
-        <label for="fastCache"><fmt:message key="musicfoldersettings.fastcache"/></label>
+        <form:checkbox path="fastCache" cssClass="checkbox" id="fastCache"/>
+        <form:label path="fastCache"><fmt:message key="musicfoldersettings.fastcache"/></form:label>
     </div>
 
     <p class="detail" style="width:60%;white-space:normal;">
@@ -62,15 +89,13 @@
 
 </form:form>
 
-<c:if test="${not empty model.error}">
-    <p class="warning"><fmt:message key="${model.error}"/></p>
-</c:if>
+<%--todo--%>
 
-<c:if test="${model.reload}">
-    <script type="text/javascript">
-        parent.frames.upper.location.href="top.view?";
-        parent.frames.left.location.href="left.view?";
-    </script>
-</c:if>
+<%--<c:if test="${command.reload}">--%>
+    <%--<script type="text/javascript">--%>
+        <%--parent.frames.upper.location.href="top.view?";--%>
+        <%--parent.frames.left.location.href="left.view?";--%>
+    <%--</script>--%>
+<%--</c:if>--%>
 
 </body></html>

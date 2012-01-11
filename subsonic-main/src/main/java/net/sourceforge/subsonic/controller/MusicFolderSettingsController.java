@@ -43,14 +43,14 @@ public class MusicFolderSettingsController extends SimpleFormController {
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         MusicFolderSettingsCommand command = new MusicFolderSettingsCommand();
 
-        if (request.getParameter("update") != null) {
+        if (request.getParameter("scanNow") != null) {
             searchService.createIndex();
         }
 
         command.setInterval(String.valueOf(settingsService.getIndexCreationInterval()));
         command.setHour(String.valueOf(settingsService.getIndexCreationHour()));
         command.setFastCache(settingsService.isFastCacheEnabled());
-        command.setCreatingIndex(searchService.isIndexBeingCreated());
+        command.setScanning(searchService.isIndexBeingCreated());
         command.setMusicFolders(wrap(settingsService.getAllMusicFolders(true, true)));
         command.setNewMusicFolder(new MusicFolderSettingsCommand.MusicFolderInfo());
         return command;
