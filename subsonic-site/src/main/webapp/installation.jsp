@@ -77,7 +77,7 @@
             </p>
             <p><b>Advanced configuration</b></p>
             <p>
-                To change the port number, Java memory settings or other startup parameters, edit <code style="white-space:nowrap;">/Application/Subsonic.app/Contents/Info.plist</code>.
+                To change the port number, Java memory settings or other startup parameters, edit <code style="white-space:nowrap;">/Applications/Subsonic.app/Contents/Info.plist</code>.
             </p>
             <p><b>Troubleshooting</b></p>
             <p>
