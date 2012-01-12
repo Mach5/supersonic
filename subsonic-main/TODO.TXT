@@ -4,8 +4,9 @@ Change Settings > Search/Caching.
   Reload frames
   Remove searchSettings et al
 Add logic to determine if search index is created.
-Copy comments from music_file_info
+Revisit LeftController caching. Shouldn't persist MediaFile binary.
 -
+Copy comments from music_file_info
 Better error message if media file not found.
 Remove artist name from album name (Poetry for the Poisoned)
 Document MediaFileService.
@@ -15,7 +16,6 @@ Check file I/O.
 Optimize MediaFile getters.
 Remove obsolete caches
 Remove ServiceLocator
-Revisit LeftController caching. Shouldn't persist MediaFile binary.
 Measure time for media scanning, clean and incremental.
 Use MediaFile.enabled
 Test performance of MusicFileDao.
