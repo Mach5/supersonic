@@ -39,6 +39,7 @@ public class MusicFolderSettingsCommand {
     private boolean fastCache;
     private List<MusicFolderInfo> musicFolders;
     private MusicFolderInfo newMusicFolder;
+    private boolean reload;
 
     public String getInterval() {
         return interval;
@@ -86,6 +87,14 @@ public class MusicFolderSettingsCommand {
 
     public void setNewMusicFolder(MusicFolderInfo newMusicFolder) {
         this.newMusicFolder = newMusicFolder;
+    }
+
+    public void setReload(boolean reload) {
+        this.reload = reload;
+    }
+
+    public boolean isReload() {
+        return reload;
     }
 
     public static class MusicFolderInfo {

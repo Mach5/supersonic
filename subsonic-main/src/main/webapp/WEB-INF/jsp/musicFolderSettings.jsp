@@ -89,13 +89,11 @@
 
 </form:form>
 
-<%--todo--%>
-
-<%--<c:if test="${command.reload}">--%>
-    <%--<script type="text/javascript">--%>
-        <%--parent.frames.upper.location.href="top.view?";--%>
-        <%--parent.frames.left.location.href="left.view?";--%>
-    <%--</script>--%>
-<%--</c:if>--%>
+<c:if test="${command.reload}">
+    <script type="text/javascript">
+        parent.frames.upper.location.href="top.view?";
+        parent.frames.left.location.href="left.view?";
+    </script>
+</c:if>
 
 </body></html>

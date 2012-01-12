@@ -1,10 +1,11 @@
 
 Invalidate cache when updating cover art.
 Change Settings > Search/Caching.
-  Reload frames
   Remove searchSettings et al
 Add logic to determine if search index is created.
 Revisit LeftController caching. Shouldn't persist MediaFile binary.
+Keep lastScanned date in settings.
+Necessary to reload playlist frame in RandomPlaylistController?
 -
 Copy comments from music_file_info
 Better error message if media file not found.

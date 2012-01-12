@@ -53,6 +53,7 @@ public class MusicFolderSettingsController extends SimpleFormController {
         command.setScanning(searchService.isIndexBeingCreated());
         command.setMusicFolders(wrap(settingsService.getAllMusicFolders(true, true)));
         command.setNewMusicFolder(new MusicFolderSettingsCommand.MusicFolderInfo());
+        command.setReload(request.getParameter("reload") != null);
         return command;
     }
 
@@ -87,7 +88,7 @@ public class MusicFolderSettingsController extends SimpleFormController {
         settingsService.save();
 
         searchService.schedule();
-        return new ModelAndView(new RedirectView(getSuccessView() + ".view"));
+        return new ModelAndView(new RedirectView(getSuccessView() + ".view?reload"));
     }
 
     public void setSettingsService(SettingsService settingsService) {
