@@ -1,13 +1,21 @@
 
 Invalidate cache when updating cover art.
 Add logic to determine if search index is created.
-Revisit LeftController caching. Shouldn't persist MediaFile binary.
 Keep lastScanned date in settings.
 Necessary to reload playlist frame in RandomPlaylistController?
+Change random implementation.
 -
 Copy comments from music_file_info
+Use MediaFile.enabled
+  1. Disable all rows
+  2. List all files
+  3. For each file, enable row.
+
+
+
 Better error message if media file not found.
 Remove artist name from album name (Poetry for the Poisoned)
+  Use artist/album name from directory, rather than tag?
 Document MediaFileService.
 Support per-artist cover art.
 Revisit MetaDataParser.isRoot()
@@ -16,7 +24,6 @@ Optimize MediaFile getters.
 Remove obsolete caches
 Remove ServiceLocator
 Measure time for media scanning, clean and incremental.
-Use MediaFile.enabled
 Test performance of MusicFileDao.
 Test searching etc before search index is created.
 Test searching while createing lucene index

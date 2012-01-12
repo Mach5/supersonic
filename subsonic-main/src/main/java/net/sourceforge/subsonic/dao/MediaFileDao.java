@@ -219,6 +219,14 @@ public class MediaFileDao extends AbstractDao {
         return new MediaLibraryStatistics(artistCount, albumCount, songCount, totalLengthInBytes, totalDurationInSeconds);
     }
 
+    public void disableAllMediaFiles() {
+        update("update media_file set enabled=false");
+    }
+
+    public void enableMediaFile(String path) {
+        update("update media_file set enabled=true where path=?", path);
+    }
+
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {
         public MediaFile mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new MediaFile(

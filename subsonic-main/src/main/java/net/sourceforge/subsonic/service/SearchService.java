@@ -163,6 +163,8 @@ public class SearchService {
 
         try {
 
+            mediaFileDao.disableAllMediaFiles();
+
             // Read entire music directory.
             scanCount = 0;
             for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
@@ -191,6 +193,8 @@ public class SearchService {
         if (scanCount % 250 == 0) {
             LOG.info("Created search index with " + scanCount + " entries.");
         }
+
+        mediaFileDao.enableMediaFile(file.getPath());
 
         for (MediaFile child : mediaFileService.getChildrenOf(file, true, false, false)) {
             scan(child);
