@@ -1,7 +1,5 @@
 
 Invalidate cache when updating cover art.
-Change Settings > Search/Caching.
-  Remove searchSettings et al
 Add logic to determine if search index is created.
 Revisit LeftController caching. Shouldn't persist MediaFile binary.
 Keep lastScanned date in settings.

@@ -119,7 +119,6 @@
                 /networkSettings.view=ROLE_ADMIN
                 /transcodingSettings.view=ROLE_ADMIN
                 /internetRadioSettings.view=ROLE_ADMIN
-                /searchSettings.view=ROLE_ADMIN
                 /podcastSettings.view=ROLE_ADMIN
                 /db.view=ROLE_ADMIN
 
