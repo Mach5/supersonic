@@ -55,13 +55,13 @@ public class MediaFile {
     private Date created;
     private Date lastModified;
     private Date childrenLastUpdated;
-    private boolean enabled;
+    private State state;
 
     public MediaFile(String path, MediaType mediaType, String format, String title,
             String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
             boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
             String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date lastModified,
-            Date childrenLastUpdated, boolean enabled) {
+            Date childrenLastUpdated, State state) {
         this.path = path;
         this.mediaType = mediaType;
         this.format = format;
@@ -86,7 +86,7 @@ public class MediaFile {
         this.created = created;
         this.lastModified = lastModified;
         this.childrenLastUpdated = childrenLastUpdated;
-        this.enabled = enabled;
+        this.state = state;
     }
 
     /**
@@ -360,14 +360,6 @@ public class MediaFile {
         this.childrenLastUpdated = childrenLastUpdated;
     }
 
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     @Override
     public boolean equals(Object o) {
         return o instanceof MediaFile && ((MediaFile) o).path.equals(path);
@@ -383,8 +375,29 @@ public class MediaFile {
         return coverArtPath == null ? null : new File(coverArtPath);
     }
 
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
     @Override
     public String toString() {
         return getName();
+    }
+
+    public static enum MediaType {
+        AUDIO,
+        VIDEO,
+        DIRECTORY,
+        ALBUM
+    }
+
+    public static enum State {
+        UNKNOWN,
+        EXISTING,
+        NON_EXISTING,
     }
 }

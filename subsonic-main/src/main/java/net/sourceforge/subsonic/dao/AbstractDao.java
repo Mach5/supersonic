@@ -58,17 +58,17 @@ public class AbstractDao {
         return getJdbcTemplate().query(sql, args, rowMapper);
     }
 
-    protected List<String> queryForString(String sql) {
-        return getJdbcTemplate().queryForList(sql, String.class);
+    protected List<String> queryForStrings(String sql, Object... args) {
+        return getJdbcTemplate().queryForList(sql, args, String.class);
     }
 
-    protected Integer queryForInt(String sql, Integer defaultValue) {
-        List<Integer> result = getJdbcTemplate().queryForList(sql, Integer.class);
+    protected Integer queryForInt(String sql, Integer defaultValue, Object... args) {
+        List<Integer> result = getJdbcTemplate().queryForList(sql, args, Integer.class);
         return result.isEmpty() ? defaultValue : result.get(0) == null ? defaultValue : result.get(0);
     }
 
-    protected Long queryForLong(String sql, Long defaultValue) {
-        List<Long> result = getJdbcTemplate().queryForList(sql, Long.class);
+    protected Long queryForLong(String sql, Long defaultValue, Object... args) {
+        List<Long> result = getJdbcTemplate().queryForList(sql, args, Long.class);
         return result.isEmpty() ? defaultValue : result.get(0) == null ? defaultValue : result.get(0);
     }
 

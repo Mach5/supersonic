@@ -67,7 +67,7 @@ public class Schema47 extends Schema {
                     "created datetime not null," +
                     "last_modified datetime not null," +
                     "children_last_updated datetime not null," +
-                    "enabled boolean not null," +
+                    "state varchar not null," +
                     "version int not null," +
                     "unique (path))");
 
@@ -79,7 +79,7 @@ public class Schema47 extends Schema {
             template.execute("create index idx_media_file_genre on media_file(genre)");
             template.execute("create index idx_media_file_play_count on media_file(play_count)");
             template.execute("create index idx_media_file_last_played on media_file(last_played)");
-//            template.execute("create index idx_media_file_enabled on media_file(enabled)"); // TODO
+            template.execute("create index idx_media_file_state on media_file(state)");
 
             LOG.info("Database table 'media_file' was created successfully.");
         }

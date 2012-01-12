@@ -47,7 +47,7 @@ public class RatingDao extends AbstractDao {
                 "group by path " +
                 "order by avg(rating) desc " +
                 " limit " + count + " offset " + offset;
-        return queryForString(sql);
+        return queryForStrings(sql);
     }
 
     /**

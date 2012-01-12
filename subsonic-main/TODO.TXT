@@ -6,12 +6,13 @@ Necessary to reload playlist frame in RandomPlaylistController?
 Change random implementation.
 -
 Copy comments from music_file_info
-Use MediaFile.enabled
-  1. Disable all rows
+Add "presence" to media_file
+  1. Set all rows to presence UNKNOWN
   2. List all files
-  3. For each file, enable row.
-
-
+  3. For each file, set presence to EXISTING
+  4. Set last_seen to current time.
+  5. Set all UNKNOWN to NON_EXISTING
+  6. Delete all rows where last_seen is older than threshold.
 
 Better error message if media file not found.
 Remove artist name from album name (Poetry for the Poisoned)
