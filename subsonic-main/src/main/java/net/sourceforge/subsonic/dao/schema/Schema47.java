@@ -67,7 +67,7 @@ public class Schema47 extends Schema {
                     "created datetime not null," +
                     "last_modified datetime not null," +
                     "children_last_updated datetime not null," +
-                    "state varchar not null," +
+                    "present boolean not null," +
                     "version int not null," +
                     "unique (path))");
 
@@ -79,9 +79,22 @@ public class Schema47 extends Schema {
             template.execute("create index idx_media_file_genre on media_file(genre)");
             template.execute("create index idx_media_file_play_count on media_file(play_count)");
             template.execute("create index idx_media_file_last_played on media_file(last_played)");
-            template.execute("create index idx_media_file_state on media_file(state)");
 
             LOG.info("Database table 'media_file' was created successfully.");
+        }
+
+        if (!tableExists(template, "media_file_archive")) {
+            LOG.info("Database table 'media_file_archive' not found.  Creating it.");
+            template.execute("create table media_file_archive (" +
+                    "id identity," +
+                    "path varchar not null," +
+                    "play_count int not null," +
+                    "last_played datetime," +
+                    "comment varchar," +
+                    "created datetime not null," +
+                    "unique (path))");
+
+            LOG.info("Database table 'media_file_archive' was created successfully.");
         }
     }
 }

@@ -164,13 +164,13 @@ public class SearchService {
         try {
 
             // Read entire music directory.
-            mediaFileDao.setMediaStateUnknown();
+            mediaFileDao.setAllMediaFilesNotPresent();
             scanCount = 0;
             for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
                 MediaFile root = mediaFileService.getMediaFile(musicFolder.getPath());
                 scan(root);
             }
-            mediaFileDao.setMediaStateNonExisting();
+            mediaFileDao.archiveNotPresent();
 
             // Update Lucene search index.
             LOG.info("Updating Lucene search index.");
@@ -194,7 +194,7 @@ public class SearchService {
             LOG.info("Created search index with " + scanCount + " entries.");
         }
 
-        mediaFileDao.setMediaStateExisting(file.getPath());
+        mediaFileDao.setMediaFilePresent(file.getPath());
 
         for (MediaFile child : mediaFileService.getChildrenOf(file, true, false, false)) {
             scan(child);

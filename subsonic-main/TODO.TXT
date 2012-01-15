@@ -10,9 +10,9 @@ Add "presence" to media_file
   1. Set all rows to presence UNKNOWN
   2. List all files
   3. For each file, set presence to EXISTING
-  4. Set last_seen to current time.
   5. Set all UNKNOWN to NON_EXISTING
-  6. Delete all rows where last_seen is older than threshold.
+  6. Move all NON_EXISTING to media_file_archive
+Populate media_file_archive from music_file_info
 
 Better error message if media file not found.
 Remove artist name from album name (Poetry for the Poisoned)
@@ -31,6 +31,7 @@ Test searching while createing lucene index
 Cleanup SearchService.
 Final Frontier album throws exception.
 Use long rather than Date in MediaFile?
+Add musicfolder root to media_file (in support of per-user permissions). Must be updated if changed.
 
 DONE IN 4.7
 -----------------
@@ -76,6 +77,7 @@ java.lang.NullPointerException
 
 Lots of exists() when playing a song.
 
+Support ISO files.
 Make it possible to suppress content length estimation.
 minisub
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
@@ -105,7 +107,8 @@ Subsonic Chumby
   http://forum.chumby.com/viewtopic.php?id=6733
 REST: add method to get everything in search index (binary, compressed)?
 
-Favorite rather rating?
+Favorite rather than rating?
+Bookmark support (for audiobooks, podcasts)
 Stream from devices
   https://mail.google.com/mail/?shva=1#inbox/13352f77f870eba1
 Instant playlist

@@ -45,8 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static net.sourceforge.subsonic.domain.MediaFile.State.EXISTING;
-import static net.sourceforge.subsonic.domain.MediaFile.State.NON_EXISTING;
+import static net.sourceforge.subsonic.domain.MediaFile.MediaType.*;
 
 /**
  * Provides services for instantiating and caching media files and cover art.
@@ -157,9 +156,6 @@ public class MediaFileService {
 
         List<MediaFile> result = new ArrayList<MediaFile>();
         for (MediaFile child : mediaFileDao.getChildrenOf(parent.getPath())) {
-            if (child.getState() == NON_EXISTING) {
-                continue;
-            }
             child = checkLastModified(child);
             if (child.isDirectory() && includeDirectories) {
                 result.add(child);
@@ -315,9 +311,7 @@ public class MediaFileService {
         List<MediaFile> storedChildren = mediaFileDao.getChildrenOf(parent.getPath());
         Map<String, MediaFile> storedChildrenMap = new HashMap<String, MediaFile>();
         for (MediaFile child : storedChildren) {
-            if (child.getState() != NON_EXISTING) {
-                storedChildrenMap.put(child.getPath(), child);
-            }
+            storedChildrenMap.put(child.getPath(), child);
         }
 
         List<File> children = filterMediaFiles(FileUtil.listFiles(parent.getFile()));
@@ -388,14 +382,14 @@ public class MediaFileService {
         mediaFile.setPlayCount(0);
         mediaFile.setChildrenLastUpdated(new Date(0));
         mediaFile.setCreated(new Date());
-        mediaFile.setMediaType(MediaFile.MediaType.DIRECTORY);
-        mediaFile.setState(EXISTING);
+        mediaFile.setMediaType(DIRECTORY);
+        mediaFile.setPresent(true);
 
         if (file.isFile()) {
             String format = StringUtils.trimToNull(StringUtils.lowerCase(FilenameUtils.getExtension(mediaFile.getPath())));
             mediaFile.setFormat(format);
             mediaFile.setFileSize(FileUtil.length(file));
-            mediaFile.setMediaType(isMusicFile(format) ? MediaFile.MediaType.AUDIO : MediaFile.MediaType.VIDEO);
+            mediaFile.setMediaType(isMusicFile(format) ? AUDIO : VIDEO);
 
             MetaDataParser parser = metaDataParserFactory.getParser(file);
             if (parser != null) {
@@ -428,7 +422,7 @@ public class MediaFileService {
                 }
 
                 if (firstChild != null) {
-                    mediaFile.setMediaType(MediaFile.MediaType.ALBUM);
+                    mediaFile.setMediaType(ALBUM);
 
                     // Get artist/album name from first child.
                     MetaDataParser parser = metaDataParserFactory.getParser(firstChild);

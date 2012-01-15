@@ -55,13 +55,13 @@ public class MediaFile {
     private Date created;
     private Date lastModified;
     private Date childrenLastUpdated;
-    private State state;
+    private boolean present;
 
     public MediaFile(String path, MediaType mediaType, String format, String title,
             String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
             boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
             String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date lastModified,
-            Date childrenLastUpdated, State state) {
+            Date childrenLastUpdated, boolean present) {
         this.path = path;
         this.mediaType = mediaType;
         this.format = format;
@@ -86,7 +86,7 @@ public class MediaFile {
         this.created = created;
         this.lastModified = lastModified;
         this.childrenLastUpdated = childrenLastUpdated;
-        this.state = state;
+        this.present = present;
     }
 
     /**
@@ -360,6 +360,14 @@ public class MediaFile {
         this.childrenLastUpdated = childrenLastUpdated;
     }
 
+    public boolean isPresent() {
+        return present;
+    }
+
+    public void setPresent(boolean present) {
+        this.present = present;
+    }
+
     @Override
     public boolean equals(Object o) {
         return o instanceof MediaFile && ((MediaFile) o).path.equals(path);
@@ -375,14 +383,6 @@ public class MediaFile {
         return coverArtPath == null ? null : new File(coverArtPath);
     }
 
-    public State getState() {
-        return state;
-    }
-
-    public void setState(State state) {
-        this.state = state;
-    }
-
     @Override
     public String toString() {
         return getName();
@@ -393,11 +393,5 @@ public class MediaFile {
         VIDEO,
         DIRECTORY,
         ALBUM
-    }
-
-    public static enum State {
-        UNKNOWN,
-        EXISTING,
-        NON_EXISTING,
     }
 }

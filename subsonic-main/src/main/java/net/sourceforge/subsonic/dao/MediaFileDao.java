@@ -30,8 +30,6 @@ import java.util.List;
 
 import static net.sourceforge.subsonic.domain.MediaFile.MediaType;
 import static net.sourceforge.subsonic.domain.MediaFile.MediaType.*;
-import static net.sourceforge.subsonic.domain.MediaFile.State;
-import static net.sourceforge.subsonic.domain.MediaFile.State.*;
 
 /**
  * Provides database services for media files.
@@ -43,7 +41,7 @@ public class MediaFileDao extends AbstractDao {
     private static final Logger LOG = Logger.getLogger(MediaFileDao.class);
     private static final String COLUMNS = "id, path, type, format, title, album, artist, disc_number, " +
             "track_number, year, genre, bit_rate, variable_bit_rate, duration_seconds, file_size, width, height, cover_art_path, " +
-            "parent_path, play_count, last_played, comment, created, last_modified, children_last_updated, state, version";
+            "parent_path, play_count, last_played, comment, created, last_modified, children_last_updated, present, version";
 
     private static final int VERSION = 1;
 
@@ -73,7 +71,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The list of children.
      */
     public List<MediaFile> getChildrenOf(String path) {
-        return query("select " + COLUMNS + " from media_file where parent_path=? and state=?", rowMapper, path);
+        return query("select " + COLUMNS + " from media_file where parent_path=?", rowMapper, path);
     }
 
     /**
@@ -105,7 +103,7 @@ public class MediaFileDao extends AbstractDao {
                 "comment=?," +
                 "last_modified=?," +
                 "children_last_updated=?," +
-                "state=?, " +
+                "present=?, " +
                 "version=? " +
                 "where path=?";
 
@@ -114,7 +112,7 @@ public class MediaFileDao extends AbstractDao {
                 file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
                 file.isVariableBitRate(), file.getDurationSeconds(), file.getFileSize(), file.getWidth(), file.getHeight(),
                 file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
-                file.getLastModified(), file.getChildrenLastUpdated(), file.getState().name(), VERSION, file.getPath());
+                file.getLastModified(), file.getChildrenLastUpdated(), file.isPresent(), VERSION, file.getPath());
 
         if (n > 0) {
             LOG.debug("Updated media_file for " + file.getPath());
@@ -125,31 +123,35 @@ public class MediaFileDao extends AbstractDao {
                     file.isVariableBitRate(), file.getDurationSeconds(), file.getFileSize(), file.getWidth(), file.getHeight(),
                     file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
                     file.getCreated(), file.getLastModified(),
-                    file.getChildrenLastUpdated(), file.getState().name(), VERSION);
+                    file.getChildrenLastUpdated(), file.isPresent(), VERSION);
+
+            // TODO: Copy values from archive.
+
             LOG.debug("Created media_file for " + file.getPath());
         }
     }
 
     public void deleteMediaFile(String path) {
+        // TODO: Move to archive.
+//        update("delete from media_file_archive where path=?", path);
         update("delete from media_file where path=?", path);
     }
 
     public List<String> getGenres() {
-        return queryForStrings("select distinct genre from media_file where genre is not null and state=? order by genre", EXISTING.name());
+        return queryForStrings("select distinct genre from media_file where genre is not null order by genre");
     }
 
     public MediaFile getRandomAlbum() {
-        int min = queryForInt("select min(id) from media_file where state=?", 0, EXISTING.name());
-        int max = queryForInt("select max(id) from media_file where state=?", 0, EXISTING.name());
-        return queryOne("select " + COLUMNS + " from media_file where type=? and id > ? and state=? limit 1", rowMapper, ALBUM.name(), Util.randomInt(min, max), EXISTING.name());
+        int min = queryForInt("select min(id) from media_file", 0);
+        int max = queryForInt("select max(id) from media_file", 0);
+        return queryOne("select " + COLUMNS + " from media_file where type=? and id > ? limit 1", rowMapper, ALBUM.name(), Util.randomInt(min, max));
     }
 
     public MediaFile getRandomSong(Integer fromYear, Integer toYear, String genre, String musicFolderPath) {
-        Integer min = queryForInt("select min(id) from media_file where state=?", 0, EXISTING.name());
-        Integer max = queryForInt("select max(id) from media_file where state=?", 0, EXISTING.name());
+        Integer min = queryForInt("select min(id) from media_file", 0);
+        Integer max = queryForInt("select max(id) from media_file", 0);
 
         StringBuilder whereClause = new StringBuilder("type in ('AUDIO', 'VIDEO') and id > ").append(Util.randomInt(min, max));
-        whereClause.append(" and state = '").append(EXISTING.name()).append("'");
 
         if (fromYear != null) {
             whereClause.append(" and year >= ").append(fromYear);
@@ -175,8 +177,8 @@ public class MediaFileDao extends AbstractDao {
      * @return The most frequently played albums.
      */
     public List<MediaFile> getMostFrequentlyPlayedAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where type=? and state=? and play_count > 0 " +
-                "order by play_count desc limit ? offset ?", rowMapper, ALBUM.name(), EXISTING.name(), count, offset);
+        return query("select " + COLUMNS + " from media_file where type=? and play_count > 0 " +
+                "order by play_count desc limit ? offset ?", rowMapper, ALBUM.name(), count, offset);
     }
 
     /**
@@ -187,8 +189,8 @@ public class MediaFileDao extends AbstractDao {
      * @return The most recently played albums.
      */
     public List<MediaFile> getMostRecentlyPlayedAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where type=? and state=? and last_played is not null " +
-                "order by last_played desc limit ? offset ?", rowMapper, ALBUM.name(), EXISTING.name(), count, offset);
+        return query("select " + COLUMNS + " from media_file where type=? and last_played is not null " +
+                "order by last_played desc limit ? offset ?", rowMapper, ALBUM.name(), count, offset);
     }
 
     /**
@@ -199,8 +201,8 @@ public class MediaFileDao extends AbstractDao {
      * @return The most recently added albums.
      */
     public List<MediaFile> getNewestAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where type=? and state=? order by created desc limit ? offset ?", rowMapper,
-                ALBUM.name(), EXISTING.name(), count, offset);
+        return query("select " + COLUMNS + " from media_file where type=? order by created desc limit ? offset ?", rowMapper,
+                ALBUM.name(), count, offset);
     }
 
     /**
@@ -209,55 +211,57 @@ public class MediaFileDao extends AbstractDao {
      * @return Media library statistics.
      */
     public MediaLibraryStatistics getStatistics() {
-        int artistCount = queryForInt("select count(distinct artist) from media_file where state=?", 0, EXISTING.name());
-        int albumCount = queryForInt("select count(distinct album) from media_file where state=?", 0, EXISTING.name());
-        int songCount = queryForInt("select count(id) from media_file where type in (?, ?) and state=?", 0, VIDEO.name(), AUDIO.name(), EXISTING.name());
-        long totalLengthInBytes = queryForLong("select sum(file_size) from media_file where state=?", 0L, EXISTING.name());
-        long totalDurationInSeconds = queryForLong("select sum(duration_seconds) from media_file where state=?", 0L, EXISTING.name());
+        int artistCount = queryForInt("select count(distinct artist) from media_file", 0);
+        int albumCount = queryForInt("select count(distinct album) from media_file", 0);
+        int songCount = queryForInt("select count(id) from media_file where type in (?, ?)", 0, VIDEO.name(), AUDIO.name());
+        long totalLengthInBytes = queryForLong("select sum(file_size) from media_file", 0L);
+        long totalDurationInSeconds = queryForLong("select sum(duration_seconds) from media_file", 0L);
 
         return new MediaLibraryStatistics(artistCount, albumCount, songCount, totalLengthInBytes, totalDurationInSeconds);
     }
 
-    public void setMediaStateUnknown() {
-        update("update media_file set state=?", UNKNOWN.name());
+    public void setAllMediaFilesNotPresent() {
+        update("update media_file set present=false");
     }
 
-    public void setMediaStateExisting(String path) {
-        update("update media_file set state=? where path=?", EXISTING.name(), path);
+    public void setMediaFilePresent(String path) {
+        update("update media_file set present=? where path=?", true, path);
     }
 
-    public void setMediaStateNonExisting() {
-        update("update media_file set state=? where state=?", NON_EXISTING.name(), UNKNOWN.name());
+    @Deprecated
+    public void archiveNotPresent() {
+//        TODO: Move to media_file_archive
+        update("delete from media_file where not present");
     }
 
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {
-        public MediaFile mapRow(ResultSet rs, int rowNum) throws SQLException {
-            return new MediaFile(
-                    rs.getString(2),
-                    MediaType.valueOf(rs.getString(3)),
-                    rs.getString(4),
-                    rs.getString(5),
-                    rs.getString(6),
-                    rs.getString(7),
-                    rs.getInt(8) == 0 ? null : rs.getInt(8),
-                    rs.getInt(9) == 0 ? null : rs.getInt(9),
-                    rs.getInt(10) == 0 ? null : rs.getInt(10),
-                    rs.getString(11),
-                    rs.getInt(12) == 0 ? null : rs.getInt(12),
-                    rs.getBoolean(13),
-                    rs.getInt(14) == 0 ? null : rs.getInt(14),
-                    rs.getLong(15) == 0 ? null : rs.getLong(15),
-                    rs.getInt(16) == 0 ? null : rs.getInt(16),
-                    rs.getInt(17) == 0 ? null : rs.getInt(17),
-                    rs.getString(18),
-                    rs.getString(19),
-                    rs.getInt(20),
-                    rs.getTimestamp(21),
-                    rs.getString(22),
-                    rs.getTimestamp(23),
-                    rs.getTimestamp(24),
-                    rs.getTimestamp(25),
-                    State.valueOf(rs.getString(26)));
+            public MediaFile mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new MediaFile(
+                        rs.getString(2),
+                        MediaType.valueOf(rs.getString(3)),
+                        rs.getString(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(7),
+                        rs.getInt(8) == 0 ? null : rs.getInt(8),
+                        rs.getInt(9) == 0 ? null : rs.getInt(9),
+                        rs.getInt(10) == 0 ? null : rs.getInt(10),
+                        rs.getString(11),
+                        rs.getInt(12) == 0 ? null : rs.getInt(12),
+                        rs.getBoolean(13),
+                        rs.getInt(14) == 0 ? null : rs.getInt(14),
+                        rs.getLong(15) == 0 ? null : rs.getLong(15),
+                        rs.getInt(16) == 0 ? null : rs.getInt(16),
+                        rs.getInt(17) == 0 ? null : rs.getInt(17),
+                        rs.getString(18),
+                        rs.getString(19),
+                        rs.getInt(20),
+                        rs.getTimestamp(21),
+                        rs.getString(22),
+                        rs.getTimestamp(23),
+                        rs.getTimestamp(24),
+                        rs.getTimestamp(25),
+                        rs.getBoolean(26));
+            }
         }
     }
-}

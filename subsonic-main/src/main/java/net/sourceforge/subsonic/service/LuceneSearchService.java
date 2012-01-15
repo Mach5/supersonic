@@ -107,14 +107,12 @@ public class LuceneSearchService {
                 offset += mediaFiles.size();
 
                 for (MediaFile mediaFile : mediaFiles) {
-                    if (mediaFile.getState() == MediaFile.State.EXISTING) {
-                        if (mediaFile.isFile()) {
-                            songWriter.addDocument(SONG.createDocument(mediaFile));
-                        } else if (mediaFile.isAlbum()) {
-                            albumWriter.addDocument(ALBUM.createDocument(mediaFile));
-                        } else {
-                            artistWriter.addDocument(ARTIST.createDocument(mediaFile));
-                        }
+                    if (mediaFile.isFile()) {
+                        songWriter.addDocument(SONG.createDocument(mediaFile));
+                    } else if (mediaFile.isAlbum()) {
+                        albumWriter.addDocument(ALBUM.createDocument(mediaFile));
+                    } else {
+                        artistWriter.addDocument(ARTIST.createDocument(mediaFile));
                     }
                 }
             }
