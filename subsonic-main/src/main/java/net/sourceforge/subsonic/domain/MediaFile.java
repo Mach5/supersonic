@@ -89,9 +89,6 @@ public class MediaFile {
         this.present = present;
     }
 
-    /**
-     * For testing only.
-     */
     public MediaFile() {
     }
 

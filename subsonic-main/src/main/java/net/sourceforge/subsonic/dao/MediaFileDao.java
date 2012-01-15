@@ -248,7 +248,6 @@ public class MediaFileDao extends AbstractDao {
         update("update media_file set present=? where path=?", true, path);
     }
 
-    @Deprecated
     public void archiveNotPresent() {
         update("delete from media_file_archive where exists (select 1 from media_file where media_file.path=media_file_archive.path and not media_file.present)");
 

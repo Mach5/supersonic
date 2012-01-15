@@ -329,6 +329,7 @@ public class MediaFileService {
 
         // Update timestamp in parent.
         parent.setChildrenLastUpdated(parent.getLastModified());
+        parent.setPresent(true);
         mediaFileDao.createOrUpdateMediaFile(parent);
     }
 

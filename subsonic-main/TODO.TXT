@@ -5,7 +5,6 @@ Keep lastScanned date in settings.
 Necessary to reload playlist frame in RandomPlaylistController?
 Change random implementation.
 -
-
 Better error message if media file not found.
 Remove artist name from album name (Poetry for the Poisoned)
   Use artist/album name from directory, rather than tag?
