@@ -179,6 +179,7 @@ public class SearchService {
             // Update statistics
             statistics = mediaFileDao.getStatistics();
 
+            settingsService.setLastScanned(new Date());
             LOG.info("Created search index with " + scanCount + " entries.");
 
         } catch (Exception x) {

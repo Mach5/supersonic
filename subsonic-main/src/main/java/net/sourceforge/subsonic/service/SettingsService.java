@@ -118,6 +118,7 @@ public class SettingsService {
     private static final String KEY_VIDEO_TRIAL_EXPIRES = "VideoTrialExpires";
     private static final String KEY_SERVER_ID = "ServerId";
     private static final String KEY_SETTINGS_CHANGED = "SettingsChanged";
+    private static final String KEY_LAST_SCANNED = "LastScanned";
 
     // Default values.
     private static final String DEFAULT_INDEX_STRING = "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ)";
@@ -177,6 +178,7 @@ public class SettingsService {
     private static final String DEFAULT_VIDEO_TRIAL_EXPIRES = null;
     private static final String DEFAULT_SERVER_ID = null;
     private static final long DEFAULT_SETTINGS_CHANGED = 0L;
+    private static final Date DEFAULT_LAST_SCANNED = null;
 
     // Array of obsolete keys.  Used to clean property file.
     private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort",
@@ -783,6 +785,19 @@ public class SettingsService {
 
     public long getSettingsChanged() {
         return Long.parseLong(properties.getProperty(KEY_SETTINGS_CHANGED, String.valueOf(DEFAULT_SETTINGS_CHANGED)));
+    }
+
+    public Date getLastScanned() {
+        String lastScanned = properties.getProperty(KEY_LAST_SCANNED);
+        return lastScanned == null ? null : new Date(Long.parseLong(lastScanned));
+    }
+
+    public void setLastScanned(Date date) {
+        if (date == null) {
+            properties.remove(KEY_LAST_SCANNED);
+        } else {
+            properties.setProperty(KEY_LAST_SCANNED, String.valueOf(date.getTime()));
+        }
     }
 
     /**
