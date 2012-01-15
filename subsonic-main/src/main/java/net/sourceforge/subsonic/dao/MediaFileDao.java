@@ -22,6 +22,7 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import net.sourceforge.subsonic.util.Util;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import java.sql.ResultSet;
@@ -45,7 +46,8 @@ public class MediaFileDao extends AbstractDao {
 
     private static final int VERSION = 1;
 
-    private final MediaFileMapper rowMapper = new MediaFileMapper();
+    private final RowMapper rowMapper = new MediaFileMapper();
+    private final RowMapper archiveRowMapper = new ArchivedMediaFileMapper();
 
     /**
      * Returns the media file for the given path.
@@ -117,6 +119,16 @@ public class MediaFileDao extends AbstractDao {
         if (n > 0) {
             LOG.debug("Updated media_file for " + file.getPath());
         } else {
+
+            // Copy values from archive.
+            MediaFile archived = getArchivedMediaFile(file.getPath());
+            if (archived != null) {
+                file.setComment(archived.getComment());
+                file.setLastPlayed(archived.getLastPlayed());
+                file.setPlayCount(archived.getPlayCount());
+                file.setCreated(archived.getCreated());
+            }
+
             update("insert into media_file (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")", null,
                     file.getPath(), file.getMediaType().name(), file.getFormat(), file.getTitle(), file.getAlbumName(), file.getArtist(),
                     file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
@@ -125,15 +137,23 @@ public class MediaFileDao extends AbstractDao {
                     file.getCreated(), file.getLastModified(),
                     file.getChildrenLastUpdated(), file.isPresent(), VERSION);
 
-            // TODO: Copy values from archive.
+            update("delete from media_file_archive where path=?", file.getPath());
 
             LOG.debug("Created media_file for " + file.getPath());
         }
     }
 
+    private MediaFile getArchivedMediaFile(String path) {
+        return queryOne("select path, play_count, last_played, comment, created from media_file_archive where path=?", archiveRowMapper, path);
+    }
+
     public void deleteMediaFile(String path) {
-        // TODO: Move to archive.
-//        update("delete from media_file_archive where path=?", path);
+        // Update archive.
+        update("delete from media_file_archive where path=?", path);
+        update("insert into media_file_archive select where path=?", path);
+        update("insert into media_file_archive(path, play_count, last_played, comment, created) " +
+                "select path, play_count, last_played, comment, created from media_file where path=?", path);
+
         update("delete from media_file where path=?", path);
     }
 
@@ -230,38 +250,56 @@ public class MediaFileDao extends AbstractDao {
 
     @Deprecated
     public void archiveNotPresent() {
-//        TODO: Move to media_file_archive
+        update("delete from media_file_archive where exists (select 1 from media_file where media_file.path=media_file_archive.path and not media_file.present)");
+
+        update("insert into media_file_archive(path, play_count, last_played, comment, created) " +
+                "select path, play_count, last_played, comment, created from media_file where not present");
+
         update("delete from media_file where not present");
     }
 
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {
-            public MediaFile mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new MediaFile(
-                        rs.getString(2),
-                        MediaType.valueOf(rs.getString(3)),
-                        rs.getString(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(7),
-                        rs.getInt(8) == 0 ? null : rs.getInt(8),
-                        rs.getInt(9) == 0 ? null : rs.getInt(9),
-                        rs.getInt(10) == 0 ? null : rs.getInt(10),
-                        rs.getString(11),
-                        rs.getInt(12) == 0 ? null : rs.getInt(12),
-                        rs.getBoolean(13),
-                        rs.getInt(14) == 0 ? null : rs.getInt(14),
-                        rs.getLong(15) == 0 ? null : rs.getLong(15),
-                        rs.getInt(16) == 0 ? null : rs.getInt(16),
-                        rs.getInt(17) == 0 ? null : rs.getInt(17),
-                        rs.getString(18),
-                        rs.getString(19),
-                        rs.getInt(20),
-                        rs.getTimestamp(21),
-                        rs.getString(22),
-                        rs.getTimestamp(23),
-                        rs.getTimestamp(24),
-                        rs.getTimestamp(25),
-                        rs.getBoolean(26));
-            }
+        public MediaFile mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new MediaFile(
+                    rs.getString(2),
+                    MediaType.valueOf(rs.getString(3)),
+                    rs.getString(4),
+                    rs.getString(5),
+                    rs.getString(6),
+                    rs.getString(7),
+                    rs.getInt(8) == 0 ? null : rs.getInt(8),
+                    rs.getInt(9) == 0 ? null : rs.getInt(9),
+                    rs.getInt(10) == 0 ? null : rs.getInt(10),
+                    rs.getString(11),
+                    rs.getInt(12) == 0 ? null : rs.getInt(12),
+                    rs.getBoolean(13),
+                    rs.getInt(14) == 0 ? null : rs.getInt(14),
+                    rs.getLong(15) == 0 ? null : rs.getLong(15),
+                    rs.getInt(16) == 0 ? null : rs.getInt(16),
+                    rs.getInt(17) == 0 ? null : rs.getInt(17),
+                    rs.getString(18),
+                    rs.getString(19),
+                    rs.getInt(20),
+                    rs.getTimestamp(21),
+                    rs.getString(22),
+                    rs.getTimestamp(23),
+                    rs.getTimestamp(24),
+                    rs.getTimestamp(25),
+                    rs.getBoolean(26));
         }
     }
+
+    private static class ArchivedMediaFileMapper implements ParameterizedRowMapper<MediaFile> {
+        public MediaFile mapRow(ResultSet rs, int rowNum) throws SQLException {
+            MediaFile file = new MediaFile();
+            file.setPath(rs.getString(1));
+            file.setPlayCount(rs.getInt(2));
+            file.setLastPlayed(rs.getTimestamp(3));
+            file.setComment(rs.getString(4));
+            file.setCreated(rs.getTimestamp(5));
+
+            return file;
+        }
+    }
+
+}

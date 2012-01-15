@@ -1,18 +1,10 @@
-
+Directories are not deleted from media_file_arhive
 Invalidate cache when updating cover art.
 Add logic to determine if search index is created.
 Keep lastScanned date in settings.
 Necessary to reload playlist frame in RandomPlaylistController?
 Change random implementation.
 -
-Copy comments from music_file_info
-Add "presence" to media_file
-  1. Set all rows to presence UNKNOWN
-  2. List all files
-  3. For each file, set presence to EXISTING
-  5. Set all UNKNOWN to NON_EXISTING
-  6. Move all NON_EXISTING to media_file_archive
-Populate media_file_archive from music_file_info
 
 Better error message if media file not found.
 Remove artist name from album name (Poetry for the Poisoned)

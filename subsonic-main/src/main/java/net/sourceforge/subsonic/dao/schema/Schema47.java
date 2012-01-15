@@ -94,6 +94,9 @@ public class Schema47 extends Schema {
                     "created datetime not null," +
                     "unique (path))");
 
+            template.execute("insert into media_file_archive(path, play_count, last_played, comment, created) " +
+                    "select path, play_count, last_played, comment, curtime() from music_file_info");
+
             LOG.info("Database table 'media_file_archive' was created successfully.");
         }
     }
