@@ -91,7 +91,6 @@ Support custom domain name in sharing (Settings > Advanced)
 Rename "offsetSeconds" to "timeOffset" in StreamController, and update API doc.
 Add "byteOffset" parameter as well.
 Add rating attributes to <directory> in getMusicDirectory.
-Update description of Thumper.
 Subsonic Chumby
   http://www.activeobjects.no/subsonic/forum/viewtopic.php?t=7154
   http://forum.chumby.com/viewtopic.php?id=6733
