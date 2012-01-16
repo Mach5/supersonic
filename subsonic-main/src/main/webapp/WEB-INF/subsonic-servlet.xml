@@ -138,7 +138,7 @@
         <property name="commandClass" value="net.sourceforge.subsonic.command.SearchCommand"/>
         <property name="successView" value="search"/>
         <property name="formView" value="search"/>
-        <property name="mediaScannerService" ref="mediaScannerService"/>
+        <property name="searchService" ref="searchService"/>
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="playerService" ref="playerService"/>
@@ -319,7 +319,7 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="playerService" ref="playerService"/>
         <property name="playlistService" ref="playlistService"/>
-        <property name="mediaScannerService" ref="mediaScannerService"/>
+        <property name="searchService" ref="searchService"/>
         <property name="securityService" ref="securityService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="musicIndexService" ref="musicIndexService"/>
@@ -331,7 +331,7 @@
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="statusService" ref="statusService"/>
-        <property name="mediaScannerService" ref="mediaScannerService"/>
+        <property name="searchService" ref="searchService"/>
         <property name="jukeboxService" ref="jukeboxService"/>
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
         <property name="playlistService" ref="playlistService"/>

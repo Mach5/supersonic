@@ -31,11 +31,10 @@ import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
-import net.sourceforge.subsonic.service.MediaScannerService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.service.LuceneSearchService;
+import net.sourceforge.subsonic.service.SearchService;
 
 /**
  * Controller for the search page.
@@ -46,10 +45,10 @@ public class SearchController extends SimpleFormController {
 
     private static final int MATCH_COUNT = 25;
 
-    private MediaScannerService mediaScannerService;
     private SecurityService securityService;
     private SettingsService settingsService;
     private PlayerService playerService;
+    private SearchService searchService;
 
     @Override
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
@@ -70,32 +69,23 @@ public class SearchController extends SimpleFormController {
 
         if (any != null) {
 
-            if (mediaScannerService.isScanning()) {
-                command.setIndexBeingCreated(true);
-            } else {
+            SearchCriteria criteria = new SearchCriteria();
+            criteria.setCount(MATCH_COUNT);
+            criteria.setQuery(any);
 
-                SearchCriteria criteria = new SearchCriteria();
-                criteria.setCount(MATCH_COUNT);
-                criteria.setQuery(any);
+            SearchResult artists = searchService.search(criteria, SearchService.IndexType.ARTIST);
+            command.setArtists(artists.getMediaFiles());
 
-                SearchResult artists = mediaScannerService.search(criteria, LuceneSearchService.IndexType.ARTIST);
-                command.setArtists(artists.getMediaFiles());
+            SearchResult albums = searchService.search(criteria, SearchService.IndexType.ALBUM);
+            command.setAlbums(albums.getMediaFiles());
 
-                SearchResult albums = mediaScannerService.search(criteria, LuceneSearchService.IndexType.ALBUM);
-                command.setAlbums(albums.getMediaFiles());
+            SearchResult songs = searchService.search(criteria, SearchService.IndexType.SONG);
+            command.setSongs(songs.getMediaFiles());
 
-                SearchResult songs = mediaScannerService.search(criteria, LuceneSearchService.IndexType.SONG);
-                command.setSongs(songs.getMediaFiles());
-
-                command.setPlayer(playerService.getPlayer(request, response));
-            }
+            command.setPlayer(playerService.getPlayer(request, response));
         }
 
         return new ModelAndView(getSuccessView(), errors.getModel());
-    }
-
-    public void setMediaScannerService(MediaScannerService mediaScannerService) {
-        this.mediaScannerService = mediaScannerService;
     }
 
     public void setSecurityService(SecurityService securityService) {
@@ -108,5 +98,9 @@ public class SearchController extends SimpleFormController {
 
     public void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
+    }
+
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
     }
 }

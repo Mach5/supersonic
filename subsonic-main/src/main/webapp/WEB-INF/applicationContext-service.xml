@@ -80,10 +80,10 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
-        <property name="luceneSearchService" ref="luceneSearchService"/>
+        <property name="searchService" ref="searchService"/>
     </bean>
 
-    <bean id="luceneSearchService" class="net.sourceforge.subsonic.service.LuceneSearchService">
+    <bean id="searchService" class="net.sourceforge.subsonic.service.SearchService">
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
     </bean>

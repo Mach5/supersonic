@@ -42,9 +42,8 @@ import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
 import net.sourceforge.subsonic.domain.User;
-import net.sourceforge.subsonic.service.LuceneSearchService;
+import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.MediaFileService;
-import net.sourceforge.subsonic.service.MediaScannerService;
 import net.sourceforge.subsonic.service.MusicIndexService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
@@ -61,10 +60,10 @@ public class WapController extends MultiActionController {
     private SettingsService settingsService;
     private PlayerService playerService;
     private PlaylistService playlistService;
-    private MediaScannerService mediaScannerService;
     private SecurityService securityService;
     private MusicIndexService musicIndexService;
     private MediaFileService mediaFileService;
+    private SearchService searchService;
 
     public ModelAndView index(HttpServletRequest request, HttpServletResponse response) throws Exception {
         return wap(request, response);
@@ -174,14 +173,9 @@ public class WapController extends MultiActionController {
 
     public ModelAndView searchResult(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String query = request.getParameter("query");
-        boolean creatingIndex = mediaScannerService.isScanning();
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("creatingIndex", creatingIndex);
-
-        if (!creatingIndex) {
-            map.put("hits", search(query));
-        }
+        map.put("hits", search(query));
 
         return new ModelAndView("wap/searchResult", "model", map);
     }
@@ -217,7 +211,7 @@ public class WapController extends MultiActionController {
         criteria.setOffset(0);
         criteria.setCount(50);
 
-        SearchResult result = mediaScannerService.search(criteria, LuceneSearchService.IndexType.SONG);
+        SearchResult result = searchService.search(criteria, SearchService.IndexType.SONG);
         return result.getMediaFiles();
     }
 
@@ -233,10 +227,6 @@ public class WapController extends MultiActionController {
         this.playlistService = playlistService;
     }
 
-    public void setMediaScannerService(MediaScannerService mediaScannerService) {
-        this.mediaScannerService = mediaScannerService;
-    }
-
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
     }
@@ -247,5 +237,9 @@ public class WapController extends MultiActionController {
 
     public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
+    }
+
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
     }
 }

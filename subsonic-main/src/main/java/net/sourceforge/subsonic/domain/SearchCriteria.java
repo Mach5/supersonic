@@ -19,12 +19,13 @@
 package net.sourceforge.subsonic.domain;
 
 import net.sourceforge.subsonic.service.MediaScannerService;
+import net.sourceforge.subsonic.service.SearchService;
 
 /**
  * Defines criteria used when searching.
  *
  * @author Sindre Mehus
- * @see MediaScannerService#search
+ * @see SearchService#search
  */
 public class SearchCriteria {
 

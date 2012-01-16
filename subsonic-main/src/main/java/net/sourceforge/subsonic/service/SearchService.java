@@ -54,9 +54,9 @@ import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
 import net.sourceforge.subsonic.util.FileUtil;
 
-import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.ALBUM;
-import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.ARTIST;
-import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.SONG;
+import static net.sourceforge.subsonic.service.SearchService.IndexType.ALBUM;
+import static net.sourceforge.subsonic.service.SearchService.IndexType.ARTIST;
+import static net.sourceforge.subsonic.service.SearchService.IndexType.SONG;
 
 /**
  * Performs Lucene-based searching and indexing.
@@ -65,9 +65,9 @@ import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.SON
  * @version $Id$
  * @see MediaScannerService
  */
-public class LuceneSearchService {
+public class SearchService {
 
-    private static final Logger LOG = Logger.getLogger(LuceneSearchService.class);
+    private static final Logger LOG = Logger.getLogger(SearchService.class);
 
     private static final String FIELD_PATH = "path";
     private static final String FIELD_TITLE = "title";
@@ -78,7 +78,7 @@ public class LuceneSearchService {
     private MediaFileService mediaFileService;
     private MediaFileDao mediaFileDao;
 
-    public LuceneSearchService() {
+    public SearchService() {
         removeLocks();
     }
 

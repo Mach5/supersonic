@@ -21,12 +21,13 @@ package net.sourceforge.subsonic.domain;
 import java.util.List;
 
 import net.sourceforge.subsonic.service.MediaScannerService;
+import net.sourceforge.subsonic.service.SearchService;
 
 /**
  * The outcome of a search.
  *
  * @author Sindre Mehus
- * @see MediaScannerService#search
+ * @see SearchService#search
  */
 public class SearchResult {
 

@@ -49,7 +49,7 @@ public class MediaScannerService {
     private boolean scanning;
     private Timer timer;
     private SettingsService settingsService;
-    private LuceneSearchService luceneSearchService;
+    private SearchService searchService;
     private MediaFileService mediaFileService;
     private MediaFileDao mediaFileDao;
     private int scanCount;
@@ -159,7 +159,7 @@ public class MediaScannerService {
 
             // Update Lucene search index.
             LOG.info("Updating Lucene search index.");
-            luceneSearchService.updateIndexes();
+            searchService.updateIndexes();
 
             // Update statistics
             statistics = mediaFileDao.getStatistics();
@@ -189,19 +189,6 @@ public class MediaScannerService {
         for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false)) {
             scanFile(child);
         }
-    }
-
-    /**
-     * Search for music files fulfilling the given search criteria.
-     *
-     * @param criteria  The search criteria.
-     * @param indexType The search index to use.
-     * @return The search result.
-     * @throws IOException If an I/O error occurs.
-     */
-    @Deprecated
-    public synchronized SearchResult search(SearchCriteria criteria, LuceneSearchService.IndexType indexType) throws IOException {
-        return luceneSearchService.search(criteria, indexType);
     }
 
     /**
@@ -246,8 +233,8 @@ public class MediaScannerService {
         this.settingsService = settingsService;
     }
 
-    public void setLuceneSearchService(LuceneSearchService luceneSearchService) {
-        this.luceneSearchService = luceneSearchService;
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
     }
 
     public void setMediaFileService(MediaFileService mediaFileService) {

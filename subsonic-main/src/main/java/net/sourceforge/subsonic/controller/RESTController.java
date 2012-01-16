@@ -33,10 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.service.MediaFileService;
-import net.sourceforge.subsonic.service.MediaScannerService;
-import net.sourceforge.subsonic.service.RatingService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -49,11 +45,14 @@ import net.sourceforge.subsonic.ajax.ChatService;
 import net.sourceforge.subsonic.ajax.LyricsInfo;
 import net.sourceforge.subsonic.ajax.LyricsService;
 import net.sourceforge.subsonic.command.UserSettingsCommand;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.PlayerTechnology;
 import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PodcastChannel;
+import net.sourceforge.subsonic.domain.PodcastEpisode;
 import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
@@ -62,19 +61,19 @@ import net.sourceforge.subsonic.domain.TranscodeScheme;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
-import net.sourceforge.subsonic.domain.PodcastChannel;
-import net.sourceforge.subsonic.domain.PodcastEpisode;
+import net.sourceforge.subsonic.service.AudioScrobblerService;
 import net.sourceforge.subsonic.service.JukeboxService;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
+import net.sourceforge.subsonic.service.PodcastService;
+import net.sourceforge.subsonic.service.RatingService;
+import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.ShareService;
 import net.sourceforge.subsonic.service.StatusService;
 import net.sourceforge.subsonic.service.TranscodingService;
-import net.sourceforge.subsonic.service.LuceneSearchService;
-import net.sourceforge.subsonic.service.AudioScrobblerService;
-import net.sourceforge.subsonic.service.PodcastService;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.XMLBuilder;
 
@@ -106,7 +105,6 @@ public class RESTController extends MultiActionController {
     private StatusService statusService;
     private StreamController streamController;
     private ShareService shareService;
-    private MediaScannerService mediaScannerService;
     private PlaylistService playlistService;
     private ChatService chatService;
     private LyricsService lyricsService;
@@ -115,6 +113,7 @@ public class RESTController extends MultiActionController {
     private AudioScrobblerService audioScrobblerService;
     private PodcastService podcastService;
     private RatingService ratingService;
+    private SearchService searchService;
 
     public void ping(HttpServletRequest request, HttpServletResponse response) throws Exception {
         XMLBuilder builder = createXMLBuilder(request, response, true).endAll();
@@ -280,7 +279,7 @@ public class RESTController extends MultiActionController {
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "count", 20));
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "offset", 0));
 
-        SearchResult result = mediaScannerService.search(criteria, LuceneSearchService.IndexType.SONG);
+        SearchResult result = searchService.search(criteria, SearchService.IndexType.SONG);
         builder.add("searchResult", false,
                 new Attribute("offset", result.getOffset()),
                 new Attribute("totalHits", result.getTotalHits()));
@@ -306,7 +305,7 @@ public class RESTController extends MultiActionController {
         criteria.setQuery(StringUtils.trimToEmpty(query));
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "artistCount", 20));
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "artistOffset", 0));
-        SearchResult artists = mediaScannerService.search(criteria, LuceneSearchService.IndexType.ARTIST);
+        SearchResult artists = searchService.search(criteria, SearchService.IndexType.ARTIST);
         for (MediaFile mediaFile : artists.getMediaFiles()) {
             builder.add("artist", true,
                     new Attribute("name", mediaFile.getName()),
@@ -315,7 +314,7 @@ public class RESTController extends MultiActionController {
 
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "albumCount", 20));
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "albumOffset", 0));
-        SearchResult albums = mediaScannerService.search(criteria, LuceneSearchService.IndexType.ALBUM);
+        SearchResult albums = searchService.search(criteria, SearchService.IndexType.ALBUM);
         for (MediaFile mediaFile : albums.getMediaFiles()) {
             AttributeSet attributes = createAttributesForMediaFile(player, null, mediaFile);
             builder.add("album", attributes, true);
@@ -323,7 +322,7 @@ public class RESTController extends MultiActionController {
 
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "songCount", 20));
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "songOffset", 0));
-        SearchResult songs = mediaScannerService.search(criteria, LuceneSearchService.IndexType.SONG);
+        SearchResult songs = searchService.search(criteria, SearchService.IndexType.SONG);
         for (MediaFile mediaFile : songs.getMediaFiles()) {
             File coverArt = mediaFileService.getCoverArt(mediaFile);
             AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
@@ -1031,7 +1030,7 @@ public class RESTController extends MultiActionController {
             XMLBuilder builder = createXMLBuilder(request, response, true).endAll();
             response.getWriter().print(builder);
 
-            } catch (ServletRequestBindingException x) {
+        } catch (ServletRequestBindingException x) {
             error(request, response, ErrorCode.MISSING_PARAMETER, getErrorMessage(x));
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
@@ -1359,15 +1358,15 @@ public class RESTController extends MultiActionController {
             builder = XMLBuilder.createJSONPBuilder(request.getParameter("callback"));
             response.setContentType("text/javascript");
         } else {
-        	builder = XMLBuilder.createXMLBuilder();
+            builder = XMLBuilder.createXMLBuilder();
             response.setContentType("text/xml");
         }
-        
+
         builder.preamble(StringUtil.ENCODING_UTF8);
         builder.add("subsonic-response", false,
-                    new Attribute("xmlns", "http://subsonic.org/restapi"),
-                    new Attribute("status", ok ? "ok" : "failed"),
-                    new Attribute("version", StringUtil.getRESTProtocolVersion()));
+                new Attribute("xmlns", "http://subsonic.org/restapi"),
+                new Attribute("status", ok ? "ok" : "failed"),
+                new Attribute("version", StringUtil.getRESTProtocolVersion()));
         return builder;
     }
 
@@ -1432,10 +1431,6 @@ public class RESTController extends MultiActionController {
         this.statusService = statusService;
     }
 
-    public void setMediaScannerService(MediaScannerService mediaScannerService) {
-        this.mediaScannerService = mediaScannerService;
-    }
-
     public void setPlaylistService(PlaylistService playlistService) {
         this.playlistService = playlistService;
     }
@@ -1474,6 +1469,10 @@ public class RESTController extends MultiActionController {
 
     public void setRatingService(RatingService ratingService) {
         this.ratingService = ratingService;
+    }
+
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
     }
 
     public void setShareService(ShareService shareService) {
