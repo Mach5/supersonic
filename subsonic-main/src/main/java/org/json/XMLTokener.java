@@ -28,7 +28,7 @@ SOFTWARE.
  * The XMLTokener extends the JSONTokener to provide additional methods
  * for the parsing of XML texts.
  * @author JSON.org
- * @version 2010-01-30
+ * @version 2010-12-24
  */
 public class XMLTokener extends JSONTokener {
 
@@ -120,11 +120,11 @@ public class XMLTokener extends JSONTokener {
     /**
      * Return the next entity. These entities are translated to Characters:
      *     <code>&amp;  &apos;  &gt;  &lt;  &quot;</code>.
-     * @param a An ampersand character.
+     * @param ampersand An ampersand character.
      * @return  A Character or an entity String if the entity is not recognized.
      * @throws JSONException If missing ';' in XML entity.
      */
-    public Object nextEntity(char a) throws JSONException {
+    public Object nextEntity(char ampersand) throws JSONException {
         StringBuffer sb = new StringBuffer();
         for (;;) {
             char c = next();
@@ -136,9 +136,9 @@ public class XMLTokener extends JSONTokener {
                 throw syntaxError("Missing ';' in XML entity: &" + sb);
             }
         }
-        String s = sb.toString();
-        Object e = entity.get(s);
-        return e != null ? e : a + s + ";";
+        String string = sb.toString();
+        Object object = entity.get(string);
+        return object != null ? object : ampersand + string + ";";
     }
 
 
@@ -272,7 +272,7 @@ public class XMLTokener extends JSONTokener {
                 }
                 switch (c) {
                 case 0:
-                	return sb.toString();
+                    return sb.toString();
                 case '>':
                 case '/':
                 case '=':
@@ -299,67 +299,67 @@ public class XMLTokener extends JSONTokener {
      * @throws JSONException
      */
     public boolean skipPast(String to) throws JSONException {
-    	boolean b;
-    	char c;
-    	int i;
-    	int j;
-    	int offset = 0;
-    	int n = to.length();
-        char[] circle = new char[n];
+        boolean b;
+        char c;
+        int i;
+        int j;
+        int offset = 0;
+        int length = to.length();
+        char[] circle = new char[length];
         
         /*
          * First fill the circle buffer with as many characters as are in the
          * to string. If we reach an early end, bail.
          */
         
-    	for (i = 0; i < n; i += 1) {
-    		c = next();
-    		if (c == 0) {
-    			return false;
-    		}
-    		circle[i] = c;
-    	}
-    	/*
-    	 * We will loop, possibly for all of the remaining characters.
-    	 */
-    	for (;;) {
-    		j = offset;
-    		b = true;
-    		/*
-    		 * Compare the circle buffer with the to string. 
-    		 */
-    		for (i = 0; i < n; i += 1) {
-    			if (circle[j] != to.charAt(i)) {
-    				b = false;
-    				break;
-    			}
-    			j += 1;
-    			if (j >= n) {
-    				j -= n;
-    			}
-    		}
-    		/*
-    		 * If we exit the loop with b intact, then victory is ours.
-    		 */
-    		if (b) {
-    			return true;
-    		}
-    		/*
-    		 * Get the next character. If there isn't one, then defeat is ours.
-    		 */
-    		c = next();
-    		if (c == 0) {
-    			return false;
-    		}
-    		/*
-    		 * Shove the character in the circle buffer and advance the 
-    		 * circle offset. The offset is mod n.
-    		 */
-    		circle[offset] = c;
-    		offset += 1;
-    		if (offset >= n) {
-    			offset -= n;
-    		}
-    	}
+        for (i = 0; i < length; i += 1) {
+            c = next();
+            if (c == 0) {
+                return false;
+            }
+            circle[i] = c;
+        }
+        /*
+         * We will loop, possibly for all of the remaining characters.
+         */
+        for (;;) {
+            j = offset;
+            b = true;
+            /*
+             * Compare the circle buffer with the to string. 
+             */
+            for (i = 0; i < length; i += 1) {
+                if (circle[j] != to.charAt(i)) {
+                    b = false;
+                    break;
+                }
+                j += 1;
+                if (j >= length) {
+                    j -= length;
+                }
+            }
+            /*
+             * If we exit the loop with b intact, then victory is ours.
+             */
+            if (b) {
+                return true;
+            }
+            /*
+             * Get the next character. If there isn't one, then defeat is ours.
+             */
+            c = next();
+            if (c == 0) {
+                return false;
+            }
+            /*
+             * Shove the character in the circle buffer and advance the 
+             * circle offset. The offset is mod n.
+             */
+            circle[offset] = c;
+            offset += 1;
+            if (offset >= length) {
+                offset -= length;
+            }
+        }
     }
 }
