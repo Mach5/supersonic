@@ -24,8 +24,8 @@ import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.MediaScannerService;
 import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.StatusService;
 import net.sourceforge.subsonic.util.StringUtil;
@@ -49,7 +49,7 @@ public class NowPlayingService {
     private PlayerService playerService;
     private StatusService statusService;
     private SettingsService settingsService;
-    private SearchService searchService;
+    private MediaScannerService mediaScannerService;
     private MediaFileService mediaFileService;
 
     /**
@@ -79,7 +79,7 @@ public class NowPlayingService {
      * Returns media folder scanning status.
      */
     public ScanInfo getScanningStatus() {
-        return new ScanInfo(searchService.isScanning(), searchService.getScanCount());
+        return new ScanInfo(mediaScannerService.isScanning(), mediaScannerService.getScanCount());
     }
 
     private List<NowPlayingInfo> convert(List<TransferStatus> statuses) throws Exception {
@@ -167,8 +167,8 @@ public class NowPlayingService {
         this.settingsService = settingsService;
     }
 
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
+    public void setMediaScannerService(MediaScannerService mediaScannerService) {
+        this.mediaScannerService = mediaScannerService;
     }
 
     public void setMediaFileService(MediaFileService mediaFileService) {

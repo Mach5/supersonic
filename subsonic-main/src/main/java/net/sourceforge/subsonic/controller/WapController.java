@@ -44,10 +44,10 @@ import net.sourceforge.subsonic.domain.SearchResult;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.service.LuceneSearchService;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.MediaScannerService;
 import net.sourceforge.subsonic.service.MusicIndexService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
-import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 
@@ -61,7 +61,7 @@ public class WapController extends MultiActionController {
     private SettingsService settingsService;
     private PlayerService playerService;
     private PlaylistService playlistService;
-    private SearchService searchService;
+    private MediaScannerService mediaScannerService;
     private SecurityService securityService;
     private MusicIndexService musicIndexService;
     private MediaFileService mediaFileService;
@@ -174,7 +174,7 @@ public class WapController extends MultiActionController {
 
     public ModelAndView searchResult(HttpServletRequest request, HttpServletResponse response) throws Exception {
         String query = request.getParameter("query");
-        boolean creatingIndex = searchService.isScanning();
+        boolean creatingIndex = mediaScannerService.isScanning();
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("creatingIndex", creatingIndex);
@@ -217,7 +217,7 @@ public class WapController extends MultiActionController {
         criteria.setOffset(0);
         criteria.setCount(50);
 
-        SearchResult result = searchService.search(criteria, LuceneSearchService.IndexType.SONG);
+        SearchResult result = mediaScannerService.search(criteria, LuceneSearchService.IndexType.SONG);
         return result.getMediaFiles();
     }
 
@@ -233,8 +233,8 @@ public class WapController extends MultiActionController {
         this.playlistService = playlistService;
     }
 
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
+    public void setMediaScannerService(MediaScannerService mediaScannerService) {
+        this.mediaScannerService = mediaScannerService;
     }
 
     public void setSecurityService(SecurityService securityService) {

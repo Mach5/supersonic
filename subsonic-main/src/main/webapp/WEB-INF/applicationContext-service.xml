@@ -56,7 +56,7 @@
     <bean id="mediaFileService" class="net.sourceforge.subsonic.service.MediaFileService">
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
-        <property name="searchService" ref="searchService"/>
+        <property name="mediaScannerService" ref="mediaScannerService"/>
         <property name="mediaFileMemoryCache" ref="mediaFileMemoryCache"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
         <property name="metaDataParserFactory" ref="metaDataParserFactory"/>
@@ -76,7 +76,7 @@
         <property name="versionService" ref="versionService"/>
     </bean>
 
-    <bean id="searchService" class="net.sourceforge.subsonic.service.SearchService" init-method="init" depends-on="metaDataParserFactory">
+    <bean id="mediaScannerService" class="net.sourceforge.subsonic.service.MediaScannerService" init-method="init" depends-on="metaDataParserFactory">
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
@@ -180,7 +180,7 @@
         <property name="statusService" ref="statusService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="settingsService" ref="settingsService"/>
-        <property name="searchService" ref="searchService"/>
+        <property name="mediaScannerService" ref="mediaScannerService"/>
     </bean>
 
     <bean id="ajaxPlaylistService" class="net.sourceforge.subsonic.ajax.PlaylistService">

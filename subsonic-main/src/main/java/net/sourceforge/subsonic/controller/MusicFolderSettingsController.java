@@ -20,7 +20,7 @@ package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.command.MusicFolderSettingsCommand;
 import net.sourceforge.subsonic.domain.MusicFolder;
-import net.sourceforge.subsonic.service.SearchService;
+import net.sourceforge.subsonic.service.MediaScannerService;
 import net.sourceforge.subsonic.service.SettingsService;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.SimpleFormController;
@@ -38,19 +38,19 @@ import java.util.List;
 public class MusicFolderSettingsController extends SimpleFormController {
 
     private SettingsService settingsService;
-    private SearchService searchService;
+    private MediaScannerService mediaScannerService;
 
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         MusicFolderSettingsCommand command = new MusicFolderSettingsCommand();
 
         if (request.getParameter("scanNow") != null) {
-            searchService.scanLibrary();
+            mediaScannerService.scanLibrary();
         }
 
         command.setInterval(String.valueOf(settingsService.getIndexCreationInterval()));
         command.setHour(String.valueOf(settingsService.getIndexCreationHour()));
         command.setFastCache(settingsService.isFastCacheEnabled());
-        command.setScanning(searchService.isScanning());
+        command.setScanning(mediaScannerService.isScanning());
         command.setMusicFolders(wrap(settingsService.getAllMusicFolders(true, true)));
         command.setNewMusicFolder(new MusicFolderSettingsCommand.MusicFolderInfo());
         command.setReload(request.getParameter("reload") != null);
@@ -87,7 +87,7 @@ public class MusicFolderSettingsController extends SimpleFormController {
         settingsService.setFastCacheEnabled(command.isFastCache());
         settingsService.save();
 
-        searchService.schedule();
+        mediaScannerService.schedule();
         return new ModelAndView(new RedirectView(getSuccessView() + ".view?reload"));
     }
 
@@ -95,7 +95,7 @@ public class MusicFolderSettingsController extends SimpleFormController {
         this.settingsService = settingsService;
     }
 
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
+    public void setMediaScannerService(MediaScannerService mediaScannerService) {
+        this.mediaScannerService = mediaScannerService;
     }
 }

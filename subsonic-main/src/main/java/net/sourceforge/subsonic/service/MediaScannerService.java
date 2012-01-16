@@ -30,20 +30,19 @@ import net.sourceforge.subsonic.util.FileUtil;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Provides services for searching for music.
+ * Provides services for scanning the music library.
  *
  * @author Sindre Mehus
  */
-public class SearchService {
+public class MediaScannerService {
 
     private static final int INDEX_VERSION = 15;
-    private static final Logger LOG = Logger.getLogger(SearchService.class);
+    private static final Logger LOG = Logger.getLogger(MediaScannerService.class);
 
     private MediaLibraryStatistics statistics;
 
@@ -103,19 +102,10 @@ public class SearchService {
         LOG.info("Automatic media library scanning scheduled to run every " + daysBetween + " day(s), starting at " + firstTime);
 
         // In addition, create index immediately if it doesn't exist on disk.
-        if (!isScanned()) {
+        if (settingsService.getLastScanned() == null) {
             LOG.info("Media library never scanned. Doing it now.");
             scanLibrary();
         }
-    }
-
-    /**
-     * Returns whether the search index exists.
-     *
-     * @return Whether the search index exists.
-     */
-    private boolean isScanned() {
-        return settingsService.getLastScanned() != null;
     }
 
     /**
@@ -211,14 +201,6 @@ public class SearchService {
      */
     @Deprecated
     public synchronized SearchResult search(SearchCriteria criteria, LuceneSearchService.IndexType indexType) throws IOException {
-
-        if (!isScanned() || isScanning()) {
-            SearchResult empty = new SearchResult();
-            empty.setOffset(criteria.getOffset());
-            empty.setMediaFiles(Collections.<MediaFile>emptyList());
-            return empty;
-        }
-
         return luceneSearchService.search(criteria, indexType);
     }
 

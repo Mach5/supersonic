@@ -63,7 +63,7 @@ import static net.sourceforge.subsonic.service.LuceneSearchService.IndexType.SON
  *
  * @author Sindre Mehus
  * @version $Id$
- * @see SearchService
+ * @see MediaScannerService
  */
 public class LuceneSearchService {
 

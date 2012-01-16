@@ -60,7 +60,7 @@ public class MediaFileService {
 
     private SecurityService securityService;
     private SettingsService settingsService;
-    private SearchService searchService;
+    private MediaScannerService mediaScannerService;
     private MediaFileDao mediaFileDao;
     private MetaDataParserFactory metaDataParserFactory;
 
@@ -453,7 +453,7 @@ public class MediaFileService {
     }
 
     private boolean useFastCache() {
-        return settingsService.isFastCacheEnabled() && !searchService.isScanning();
+        return settingsService.isFastCacheEnabled() && !mediaScannerService.isScanning();
     }
 
     public void refreshMediaFile(MediaFile mediaFile) {
@@ -511,8 +511,8 @@ public class MediaFileService {
         this.mediaFileMemoryCache = mediaFileMemoryCache;
     }
 
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
+    public void setMediaScannerService(MediaScannerService mediaScannerService) {
+        this.mediaScannerService = mediaScannerService;
     }
 
     public void setMediaFileDao(MediaFileDao mediaFileDao) {

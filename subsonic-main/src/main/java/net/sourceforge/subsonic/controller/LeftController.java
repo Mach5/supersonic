@@ -47,9 +47,9 @@ import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.MediaScannerService;
 import net.sourceforge.subsonic.service.MusicIndexService;
 import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.FileUtil;
@@ -64,7 +64,7 @@ public class LeftController extends ParameterizableViewController implements Las
 
     private static final Logger LOG = Logger.getLogger(LeftController.class);
 
-    private SearchService searchService;
+    private MediaScannerService mediaScannerService;
     private SettingsService settingsService;
     private SecurityService securityService;
     private MediaFileService mediaFileService;
@@ -119,7 +119,7 @@ public class LeftController extends ParameterizableViewController implements Las
         saveSelectedMusicFolder(request);
         Map<String, Object> map = new HashMap<String, Object>();
 
-        MediaLibraryStatistics statistics = searchService.getStatistics();
+        MediaLibraryStatistics statistics = mediaScannerService.getStatistics();
         Locale locale = RequestContextUtils.getLocale(request);
 
         List<MusicFolder> allMusicFolders = settingsService.getAllMusicFolders();
@@ -227,8 +227,8 @@ public class LeftController extends ParameterizableViewController implements Las
         return entry;
     }
 
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
+    public void setMediaScannerService(MediaScannerService mediaScannerService) {
+        this.mediaScannerService = mediaScannerService;
     }
 
     public void setSettingsService(SettingsService settingsService) {

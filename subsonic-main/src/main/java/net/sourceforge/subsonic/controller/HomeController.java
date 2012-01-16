@@ -22,8 +22,8 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.MediaScannerService;
 import net.sourceforge.subsonic.service.RatingService;
-import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import org.springframework.web.servlet.ModelAndView;
@@ -55,7 +55,7 @@ public class HomeController extends ParameterizableViewController {
     private static final int MAX_LIST_OFFSET = 5000;
 
     private SettingsService settingsService;
-    private SearchService searchService;
+    private MediaScannerService mediaScannerService;
     private RatingService ratingService;
     private SecurityService securityService;
     private MediaFileService mediaFileService;
@@ -99,7 +99,7 @@ public class HomeController extends ParameterizableViewController {
         map.put("welcomeTitle", settingsService.getWelcomeTitle());
         map.put("welcomeSubtitle", settingsService.getWelcomeSubtitle());
         map.put("welcomeMessage", settingsService.getWelcomeMessage());
-        map.put("isIndexBeingCreated", searchService.isScanning());
+        map.put("isIndexBeingCreated", mediaScannerService.isScanning());
         map.put("listType", listType);
         map.put("listSize", listSize);
         map.put("listOffset", listOffset);
@@ -210,8 +210,8 @@ public class HomeController extends ParameterizableViewController {
         this.settingsService = settingsService;
     }
 
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
+    public void setMediaScannerService(MediaScannerService mediaScannerService) {
+        this.mediaScannerService = mediaScannerService;
     }
 
     public void setRatingService(RatingService ratingService) {

@@ -6,7 +6,7 @@
 
     <bean id="leftController" class="net.sourceforge.subsonic.controller.LeftController">
         <property name="viewName" value="left"/>
-        <property name="searchService" ref="searchService"/>
+        <property name="mediaScannerService" ref="mediaScannerService"/>
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
@@ -138,7 +138,7 @@
         <property name="commandClass" value="net.sourceforge.subsonic.command.SearchCommand"/>
         <property name="successView" value="search"/>
         <property name="formView" value="search"/>
-        <property name="searchService" ref="searchService"/>
+        <property name="mediaScannerService" ref="mediaScannerService"/>
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="playerService" ref="playerService"/>
@@ -165,7 +165,7 @@
         <property name="successView" value="musicFolderSettings"/>
         <property name="formView" value="musicFolderSettings"/>
         <property name="settingsService" ref="settingsService"/>
-        <property name="searchService" ref="searchService"/>
+        <property name="mediaScannerService" ref="mediaScannerService"/>
     </bean>
     <bean id="networkSettingsController" class="net.sourceforge.subsonic.controller.NetworkSettingsController">
         <property name="commandClass" value="net.sourceforge.subsonic.command.NetworkSettingsCommand"/>
@@ -236,7 +236,7 @@
     <bean id="homeController" class="net.sourceforge.subsonic.controller.HomeController">
         <property name="viewName" value="home"/>
         <property name="ratingService" ref="musicInfoService"/>
-        <property name="searchService" ref="searchService"/>
+        <property name="mediaScannerService" ref="mediaScannerService"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="securityService" ref="securityService"/>
@@ -280,7 +280,7 @@
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
-        <property name="searchService" ref="searchService"/>
+        <property name="mediaScannerService" ref="mediaScannerService"/>
     </bean>
     <bean id="videoPlayerController" class="net.sourceforge.subsonic.controller.VideoPlayerController">
         <property name="viewName" value="videoPlayer"/>
@@ -319,7 +319,7 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="playerService" ref="playerService"/>
         <property name="playlistService" ref="playlistService"/>
-        <property name="searchService" ref="searchService"/>
+        <property name="mediaScannerService" ref="mediaScannerService"/>
         <property name="securityService" ref="securityService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="musicIndexService" ref="musicIndexService"/>
@@ -331,7 +331,7 @@
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="statusService" ref="statusService"/>
-        <property name="searchService" ref="searchService"/>
+        <property name="mediaScannerService" ref="mediaScannerService"/>
         <property name="jukeboxService" ref="jukeboxService"/>
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
         <property name="playlistService" ref="playlistService"/>

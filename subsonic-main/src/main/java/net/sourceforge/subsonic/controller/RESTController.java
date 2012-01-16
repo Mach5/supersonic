@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.MediaScannerService;
 import net.sourceforge.subsonic.service.RatingService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
@@ -66,7 +67,6 @@ import net.sourceforge.subsonic.domain.PodcastEpisode;
 import net.sourceforge.subsonic.service.JukeboxService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
-import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.ShareService;
@@ -106,7 +106,7 @@ public class RESTController extends MultiActionController {
     private StatusService statusService;
     private StreamController streamController;
     private ShareService shareService;
-    private SearchService searchService;
+    private MediaScannerService mediaScannerService;
     private PlaylistService playlistService;
     private ChatService chatService;
     private LyricsService lyricsService;
@@ -280,7 +280,7 @@ public class RESTController extends MultiActionController {
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "count", 20));
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "offset", 0));
 
-        SearchResult result = searchService.search(criteria, LuceneSearchService.IndexType.SONG);
+        SearchResult result = mediaScannerService.search(criteria, LuceneSearchService.IndexType.SONG);
         builder.add("searchResult", false,
                 new Attribute("offset", result.getOffset()),
                 new Attribute("totalHits", result.getTotalHits()));
@@ -306,7 +306,7 @@ public class RESTController extends MultiActionController {
         criteria.setQuery(StringUtils.trimToEmpty(query));
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "artistCount", 20));
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "artistOffset", 0));
-        SearchResult artists = searchService.search(criteria, LuceneSearchService.IndexType.ARTIST);
+        SearchResult artists = mediaScannerService.search(criteria, LuceneSearchService.IndexType.ARTIST);
         for (MediaFile mediaFile : artists.getMediaFiles()) {
             builder.add("artist", true,
                     new Attribute("name", mediaFile.getName()),
@@ -315,7 +315,7 @@ public class RESTController extends MultiActionController {
 
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "albumCount", 20));
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "albumOffset", 0));
-        SearchResult albums = searchService.search(criteria, LuceneSearchService.IndexType.ALBUM);
+        SearchResult albums = mediaScannerService.search(criteria, LuceneSearchService.IndexType.ALBUM);
         for (MediaFile mediaFile : albums.getMediaFiles()) {
             AttributeSet attributes = createAttributesForMediaFile(player, null, mediaFile);
             builder.add("album", attributes, true);
@@ -323,7 +323,7 @@ public class RESTController extends MultiActionController {
 
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "songCount", 20));
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "songOffset", 0));
-        SearchResult songs = searchService.search(criteria, LuceneSearchService.IndexType.SONG);
+        SearchResult songs = mediaScannerService.search(criteria, LuceneSearchService.IndexType.SONG);
         for (MediaFile mediaFile : songs.getMediaFiles()) {
             File coverArt = mediaFileService.getCoverArt(mediaFile);
             AttributeSet attributes = createAttributesForMediaFile(player, coverArt, mediaFile);
@@ -1432,8 +1432,8 @@ public class RESTController extends MultiActionController {
         this.statusService = statusService;
     }
 
-    public void setSearchService(SearchService searchService) {
-        this.searchService = searchService;
+    public void setMediaScannerService(MediaScannerService mediaScannerService) {
+        this.mediaScannerService = mediaScannerService;
     }
 
     public void setPlaylistService(PlaylistService playlistService) {
