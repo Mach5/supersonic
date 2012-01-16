@@ -53,7 +53,7 @@ public abstract class MetaDataParser {
             artist = guessArtist(file);
         }
         if (album == null) {
-            album = guessAlbum(file);
+            album = guessAlbum(file, artist);
         }
         if (title == null) {
             title = guessTitle(file);
@@ -68,10 +68,10 @@ public abstract class MetaDataParser {
     }
 
     /**
-     * Parses meta data for the given music file. No guessing or reformatting is done.
+     * Parses meta data for the given file. No guessing or reformatting is done.
      *
      *
-     * @param file The music file to parse.
+     * @param file The file to parse.
      * @return Meta data for the file.
      */
     public abstract MetaData getRawMetaData(File file);
@@ -79,7 +79,7 @@ public abstract class MetaDataParser {
     /**
      * Updates the given file with the given meta data.
      *
-     * @param file     The music file to update.
+     * @param file     The file to update.
      * @param metaData The new meta data.
      */
     public abstract void setMetaData(MediaFile file, MetaData metaData);
@@ -100,9 +100,9 @@ public abstract class MetaDataParser {
     public abstract boolean isEditingSupported();
 
     /**
-     * Guesses the artist for the given music file.
+     * Guesses the artist for the given file.
      */
-    protected String guessArtist(File file) {
+    public String guessArtist(File file) {
         File parent = file.getParentFile();
         if (isRoot(parent)) {
             return "";
@@ -112,17 +112,19 @@ public abstract class MetaDataParser {
     }
 
     /**
-     * Guesses the album for the given music file.
+     * Guesses the album for the given file.
      */
-    protected String guessAlbum(File file) {
+    public String guessAlbum(File file, String artist) {
         File parent = file.getParentFile();
         String album = isRoot(parent) ? "" : parent.getName();
-        String artist = guessArtist(file);
-        return album.replace(artist + " - ", "");
+        if (artist != null) {
+            album = album.replace(artist + " - ", "");
+        }
+        return album;
     }
 
     /**
-     * Guesses the title for the given music file.
+     * Guesses the title for the given file.
      */
     public String guessTitle(File file) {
         return removeTrackNumberFromTitle(FilenameUtils.getBaseName(file.getPath()), null);

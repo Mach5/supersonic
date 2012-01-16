@@ -5,8 +5,6 @@ Change random implementation.
 Rename SearchService to MediaScannerService
 -
 Better error message if media file not found.
-Remove artist name from album name (Poetry for the Poisoned)
-  Use artist/album name from directory, rather than tag?
 Document MediaFileService.
 Support per-artist cover art.
 Revisit MetaDataParser.isRoot()
@@ -22,6 +20,7 @@ Cleanup SearchService.
 Final Frontier album throws exception.
 Use long rather than Date in MediaFile?
 Add musicfolder root to media_file (in support of per-user permissions). Must be updated if changed.
+parent_file should be null if root?
 
 DONE IN 4.7
 -----------------
@@ -40,6 +39,8 @@ REST API authentication & session
 
 TODO IN 4.7
 -----------------
+Fix JSON bug
+  https://mail.google.com/mail/?shva=1#inbox/134e21354999d203
 REST: Ensure that podcast dir is included.
 Suppport HEAD request in StreamController
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
@@ -59,11 +60,6 @@ Improve performance on network shares
   Add Settings options:  - Aggressive caching
                          - Delete cache
                          - Show cache statistics
-
-java.lang.NullPointerException
-	at net.sourceforge.subsonic.service.MusicFileService.getCoverArt(MusicFileService.java:109)
-	at net.sourceforge.subsonic.controller.MainController.getCoverArts(MainController.java:179)
-	at net.sourceforge.subsonic.controller.MainController.handleRequestInternal(MainController.java:131)
 
 Lots of exists() when playing a song.
 

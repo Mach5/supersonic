@@ -30,16 +30,15 @@ import net.sourceforge.subsonic.domain.MediaFile;
 public class DefaultMetaDataParser extends MetaDataParser {
 
     /**
-     * Parses meta data for the given music file. No guessing or reformatting is done.
+     * Parses meta data for the given file. No guessing or reformatting is done.
      *
-     *
-     * @param file The music file to parse.
+     * @param file The file to parse.
      * @return Meta data for the file.
      */
     public MetaData getRawMetaData(File file) {
         MetaData metaData = new MetaData();
         metaData.setArtist(guessArtist(file));
-        metaData.setAlbumName(guessAlbum(file));
+        metaData.setAlbumName(guessAlbum(file, metaData.getArtist()));
         metaData.setTitle(guessTitle(file));
         return metaData;
     }
@@ -48,7 +47,7 @@ public class DefaultMetaDataParser extends MetaDataParser {
      * Updates the given file with the given meta data.
      * This method has no effect.
      *
-     * @param file     The music file to update.
+     * @param file     The file to update.
      * @param metaData The new meta data.
      */
     public void setMetaData(MediaFile file, MetaData metaData) {
@@ -66,7 +65,7 @@ public class DefaultMetaDataParser extends MetaDataParser {
     /**
      * Returns whether this parser is applicable to the given file.
      *
-     * @param file The music file in question.
+     * @param file The file in question.
      * @return Whether this parser is applicable to the given file.
      */
     public boolean isApplicable(File file) {
