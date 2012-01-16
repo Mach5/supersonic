@@ -70,7 +70,7 @@ public class SearchController extends SimpleFormController {
 
         if (any != null) {
 
-            if (searchService.isIndexBeingCreated()) {
+            if (searchService.isScanning()) {
                 command.setIndexBeingCreated(true);
             } else {
 

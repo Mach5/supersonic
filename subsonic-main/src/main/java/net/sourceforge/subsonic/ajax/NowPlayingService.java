@@ -79,7 +79,7 @@ public class NowPlayingService {
      * Returns media folder scanning status.
      */
     public ScanInfo getScanningStatus() {
-        return new ScanInfo(searchService.isIndexBeingCreated(), searchService.getScanCount());
+        return new ScanInfo(searchService.isScanning(), searchService.getScanCount());
     }
 
     private List<NowPlayingInfo> convert(List<TransferStatus> statuses) throws Exception {

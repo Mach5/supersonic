@@ -247,7 +247,7 @@ public class SettingsService {
         save(true);
     }
 
-    private void save(boolean updateChangedDate) {
+    public void save(boolean updateChangedDate) {
         if (updateChangedDate) {
             setProperty(KEY_SETTINGS_CHANGED, String.valueOf(System.currentTimeMillis()));
         }

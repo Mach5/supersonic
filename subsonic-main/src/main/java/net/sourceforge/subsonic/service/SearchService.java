@@ -42,19 +42,18 @@ import java.util.TimerTask;
  */
 public class SearchService {
 
-    private static final int INDEX_VERSION = 14;
+    private static final int INDEX_VERSION = 15;
     private static final Logger LOG = Logger.getLogger(SearchService.class);
 
     private MediaLibraryStatistics statistics;
 
-    private boolean creatingIndex;
+    private boolean scanning;
     private Timer timer;
     private SettingsService settingsService;
     private LuceneSearchService luceneSearchService;
     private MediaFileService mediaFileService;
     private MediaFileDao mediaFileDao;
     private int scanCount;
-
 
     public void init() {
         deleteOldIndexFiles();
@@ -63,7 +62,7 @@ public class SearchService {
     }
 
     /**
-     * Schedule background execution of index creation.
+     * Schedule background execution of media library scanning.
      */
     public synchronized void schedule() {
         if (timer != null) {
@@ -74,7 +73,7 @@ public class SearchService {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                createIndex();
+                scanLibrary();
             }
         };
 
@@ -82,7 +81,7 @@ public class SearchService {
         int hour = settingsService.getIndexCreationHour();
 
         if (daysBetween == -1) {
-            LOG.info("Automatic index creation disabled.");
+            LOG.info("Automatic media scanning disabled.");
             return;
         }
 
@@ -101,12 +100,12 @@ public class SearchService {
         long period = daysBetween * 24L * 3600L * 1000L;
         timer.schedule(task, firstTime, period);
 
-        LOG.info("Automatic index creation scheduled to run every " + daysBetween + " day(s), starting at " + firstTime);
+        LOG.info("Automatic media library scanning scheduled to run every " + daysBetween + " day(s), starting at " + firstTime);
 
         // In addition, create index immediately if it doesn't exist on disk.
-        if (!isIndexCreated()) {
-            LOG.info("Search index not found on disk. Creating it.");
-            createIndex();
+        if (!isScanned()) {
+            LOG.info("Media library never scanned. Doing it now.");
+            scanLibrary();
         }
     }
 
@@ -115,18 +114,15 @@ public class SearchService {
      *
      * @return Whether the search index exists.
      */
-    @Deprecated
-    private synchronized boolean isIndexCreated() {
-        return getIndexFile().exists();
+    private boolean isScanned() {
+        return settingsService.getLastScanned() != null;
     }
 
     /**
-     * Returns whether the search index is currently being created.
-     *
-     * @return Whether the search index is currently being created.
+     * Returns whether the media library is currently being scanned.
      */
-    public synchronized boolean isIndexBeingCreated() {
-        return creatingIndex;
+    public synchronized boolean isScanning() {
+        return scanning;
     }
 
     /**
@@ -137,20 +133,19 @@ public class SearchService {
     }
 
     /**
-     * Generates the search index.  If the index already exists it will be
-     * overwritten.  The index is created asynchronously, i.e., this method returns
-     * before the index is created.
+     * Scans the media library.
+     * The scanning is done asynchronously, i.e., this method returns immediately.
      */
-    public synchronized void createIndex() {
-        if (isIndexBeingCreated()) {
+    public synchronized void scanLibrary() {
+        if (isScanning()) {
             return;
         }
-        creatingIndex = true;
+        scanning = true;
 
-        Thread thread = new Thread("Search Index Generator") {
+        Thread thread = new Thread("MediaLibraryScanner") {
             @Override
             public void run() {
-                doCreateIndex();
+                doScanLibrary();
             }
         };
 
@@ -158,17 +153,17 @@ public class SearchService {
         thread.start();
     }
 
-    private void doCreateIndex() {
-        LOG.info("Starting to create search index.");
+    private void doScanLibrary() {
+        LOG.info("Starting to scan media library.");
 
         try {
-
-            // Read entire music directory.
             mediaFileDao.setAllMediaFilesNotPresent();
             scanCount = 0;
+
+            // Recurse through all files on disk.
             for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
                 MediaFile root = mediaFileService.getMediaFile(musicFolder.getPath());
-                scan(root);
+                scanFile(root);
             }
             mediaFileDao.archiveNotPresent();
 
@@ -180,28 +175,29 @@ public class SearchService {
             statistics = mediaFileDao.getStatistics();
 
             settingsService.setLastScanned(new Date());
-            LOG.info("Created search index with " + scanCount + " entries.");
+            settingsService.save(false);
+            LOG.info("Scanned media library with " + scanCount + " entries.");
 
         } catch (Exception x) {
-            LOG.error("Failed to create search index.", x);
+            LOG.error("Failed to scan media library.", x);
         } finally {
-            creatingIndex = false;
+            scanning = false;
         }
     }
 
-    private void scan(MediaFile file) {
+    private void scanFile(MediaFile file) {
         scanCount++;
         if (scanCount % 250 == 0) {
-            LOG.info("Created search index with " + scanCount + " entries.");
+            LOG.info("Scanned media library with " + scanCount + " entries.");
         }
 
         mediaFileDao.setMediaFilePresent(file.getPath());
 
         for (MediaFile child : mediaFileService.getChildrenOf(file, true, false, false)) {
-            scan(child);
+            scanFile(child);
         }
         for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false)) {
-            scan(child);
+            scanFile(child);
         }
     }
 
@@ -213,9 +209,10 @@ public class SearchService {
      * @return The search result.
      * @throws IOException If an I/O error occurs.
      */
+    @Deprecated
     public synchronized SearchResult search(SearchCriteria criteria, LuceneSearchService.IndexType indexType) throws IOException {
 
-        if (!isIndexCreated() || isIndexBeingCreated()) {
+        if (!isScanned() || isScanning()) {
             SearchResult empty = new SearchResult();
             empty.setOffset(criteria.getOffset());
             empty.setMediaFiles(Collections.<MediaFile>emptyList());
@@ -235,26 +232,6 @@ public class SearchService {
     }
 
     /**
-     * Returns the file containing the index.
-     *
-     * @return The file containing the index.
-     */
-    private File getIndexFile() {
-        return getIndexFile(INDEX_VERSION);
-    }
-
-    /**
-     * Returns the index file for the given index version.
-     *
-     * @param version The index version.
-     * @return The index file for the given index version.
-     */
-    private File getIndexFile(int version) {
-        File home = SettingsService.getSubsonicHome();
-        return new File(home, "subsonic" + version + ".index");
-    }
-
-    /**
      * Deletes old versions of the index file.
      */
     private void deleteOldIndexFiles() {
@@ -270,6 +247,17 @@ public class SearchService {
                 LOG.warn("Failed to delete old index file: " + file.getPath(), x);
             }
         }
+    }
+
+    /**
+     * Returns the index file for the given index version.
+     *
+     * @param version The index version.
+     * @return The index file for the given index version.
+     */
+    private File getIndexFile(int version) {
+        File home = SettingsService.getSubsonicHome();
+        return new File(home, "subsonic" + version + ".index");
     }
 
     public void setSettingsService(SettingsService settingsService) {

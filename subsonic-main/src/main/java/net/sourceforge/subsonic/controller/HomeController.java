@@ -99,7 +99,7 @@ public class HomeController extends ParameterizableViewController {
         map.put("welcomeTitle", settingsService.getWelcomeTitle());
         map.put("welcomeSubtitle", settingsService.getWelcomeSubtitle());
         map.put("welcomeMessage", settingsService.getWelcomeMessage());
-        map.put("isIndexBeingCreated", searchService.isIndexBeingCreated());
+        map.put("isIndexBeingCreated", searchService.isScanning());
         map.put("listType", listType);
         map.put("listSize", listSize);
         map.put("listOffset", listOffset);

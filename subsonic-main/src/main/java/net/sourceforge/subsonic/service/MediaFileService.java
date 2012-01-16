@@ -453,7 +453,7 @@ public class MediaFileService {
     }
 
     private boolean useFastCache() {
-        return settingsService.isFastCacheEnabled() && !searchService.isIndexBeingCreated();
+        return settingsService.isFastCacheEnabled() && !searchService.isScanning();
     }
 
     public void refreshMediaFile(MediaFile mediaFile) {

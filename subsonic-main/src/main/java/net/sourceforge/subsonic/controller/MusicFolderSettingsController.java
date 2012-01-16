@@ -44,13 +44,13 @@ public class MusicFolderSettingsController extends SimpleFormController {
         MusicFolderSettingsCommand command = new MusicFolderSettingsCommand();
 
         if (request.getParameter("scanNow") != null) {
-            searchService.createIndex();
+            searchService.scanLibrary();
         }
 
         command.setInterval(String.valueOf(settingsService.getIndexCreationInterval()));
         command.setHour(String.valueOf(settingsService.getIndexCreationHour()));
         command.setFastCache(settingsService.isFastCacheEnabled());
-        command.setScanning(searchService.isIndexBeingCreated());
+        command.setScanning(searchService.isScanning());
         command.setMusicFolders(wrap(settingsService.getAllMusicFolders(true, true)));
         command.setNewMusicFolder(new MusicFolderSettingsCommand.MusicFolderInfo());
         command.setReload(request.getParameter("reload") != null);
