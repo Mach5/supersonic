@@ -84,7 +84,7 @@ public class Playlist {
             MediaFile file = files.get(index);
 
             // Remove file from playlist if it doesn't exist.
-            if (!FileUtil.exists(file.getFile())) {
+            if (!file.exists()) {
                 files.remove(index);
                 index = Math.max(0, Math.min(index, size() - 1));
                 return getCurrentFile();

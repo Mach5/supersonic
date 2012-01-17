@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.domain;
 
+import java.io.File;
 import java.io.IOException;
 
 import junit.framework.TestCase;
@@ -245,7 +246,9 @@ public class PlaylistTestCase extends TestCase {
     private static class TestMediaFile extends MediaFile {
 
         private String name;
-        private net.sourceforge.subsonic.service.metadata.MetaData metaData;
+        private Integer track;
+        private String album;
+        private String artist;
 
         TestMediaFile() {
         }
@@ -255,12 +258,9 @@ public class PlaylistTestCase extends TestCase {
         }
 
         TestMediaFile(Integer track, String artist, String album) {
-            metaData = new net.sourceforge.subsonic.service.metadata.MetaData();
-            if (track != null) {
-                metaData.setTrackNumber(track);
-            }
-            metaData.setArtist(artist);
-            metaData.setAlbumName(album);
+            this.track = track;
+            this.album = album;
+            this.artist = artist;
         }
 
         @Override
@@ -268,13 +268,33 @@ public class PlaylistTestCase extends TestCase {
             return name;
         }
 
-//        @Override
-//        public boolean exists() {
-//            return true;
-//        }
-
         @Override
         public boolean isFile() {
+            return true;
+        }
+
+        @Override
+        public Integer getTrackNumber() {
+            return track;
+        }
+
+        @Override
+        public String getArtist() {
+            return artist;
+        }
+
+        @Override
+        public String getAlbumName() {
+            return album;
+        }
+        
+        @Override
+        public File getFile() {
+            return new File(name);
+        }
+
+        @Override
+        public boolean exists() {
             return true;
         }
 
@@ -282,11 +302,6 @@ public class PlaylistTestCase extends TestCase {
         public boolean isDirectory() {
             return false;
         }
-
-//        @Override
-//        public net.sourceforge.subsonic.service.metadata.MetaData getMetaData() {
-//            return metaData;
-//        }
 
         @Override
         public boolean equals(Object o) {

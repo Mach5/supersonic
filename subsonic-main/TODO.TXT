@@ -1,8 +1,5 @@
 Invalidate cache when updating cover art.
-Add logic to determine if search index is created.
-Keep lastScanned date in settings.
 Change random implementation.
-Rename SearchService to MediaScannerService
 -
 Better error message if media file not found.
 Document MediaFileService.
@@ -20,6 +17,7 @@ Cleanup SearchService.
 Final Frontier album throws exception.
 Use long rather than Date in MediaFile?
 Add musicfolder root to media_file (in support of per-user permissions). Must be updated if changed.
+Implement browse by tag.
 parent_file should be null if root? Maybe not, as roots may change.
 
 DONE IN 4.7

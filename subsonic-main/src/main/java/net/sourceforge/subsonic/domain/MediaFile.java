@@ -23,6 +23,8 @@ import java.util.Date;
 
 import org.apache.commons.io.FilenameUtils;
 
+import net.sourceforge.subsonic.util.FileUtil;
+
 /**
  * A media file (audio, video or directory) with an assortment of its meta data.
  *
@@ -103,6 +105,10 @@ public class MediaFile {
     public File getFile() {
         // TODO: Optimize
         return new File(path);
+    }
+
+    public boolean exists() {
+        return FileUtil.exists(getFile());
     }
 
     public MediaType getMediaType() {
