@@ -119,6 +119,7 @@ public class SettingsService {
     private static final String KEY_SERVER_ID = "ServerId";
     private static final String KEY_SETTINGS_CHANGED = "SettingsChanged";
     private static final String KEY_LAST_SCANNED = "LastScanned";
+    private static final String KEY_BROWSE_BY_FOLDER_STRUCTURE = "BrowseByFolderStructure";
 
     // Default values.
     private static final String DEFAULT_INDEX_STRING = "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ)";
@@ -178,7 +179,7 @@ public class SettingsService {
     private static final String DEFAULT_VIDEO_TRIAL_EXPIRES = null;
     private static final String DEFAULT_SERVER_ID = null;
     private static final long DEFAULT_SETTINGS_CHANGED = 0L;
-    private static final Date DEFAULT_LAST_SCANNED = null;
+    private static final boolean DEFAULT_BROWSE_BY_FOLDER_STRUCTURE = true;
 
     // Array of obsolete keys.  Used to clean property file.
     private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort",
@@ -305,6 +306,14 @@ public class SettingsService {
         }
 
         return home;
+    }
+
+    private boolean getBoolean(String key, boolean defaultValue) {
+        return Boolean.valueOf(properties.getProperty(key, String.valueOf(defaultValue)));
+    }
+
+    private void setBoolean(String key, boolean value) {
+        setProperty(key, String.valueOf(value));
     }
 
     public String getIndexString() {
@@ -466,11 +475,11 @@ public class SettingsService {
     }
 
     public boolean isFastCacheEnabled() {
-        return Boolean.valueOf(properties.getProperty(KEY_FAST_CACHE_ENABLED, String.valueOf(DEFAULT_FAST_CACHE_ENABLED)));
+        return getBoolean(KEY_FAST_CACHE_ENABLED, DEFAULT_FAST_CACHE_ENABLED);
     }
 
     public void setFastCacheEnabled(boolean enabled) {
-        properties.setProperty(KEY_FAST_CACHE_ENABLED, String.valueOf(enabled));
+        setBoolean(KEY_FAST_CACHE_ENABLED, enabled);
     }
 
     /**
@@ -623,19 +632,19 @@ public class SettingsService {
     }
 
     public boolean isRewriteUrlEnabled() {
-        return Boolean.valueOf(properties.getProperty(KEY_REWRITE_URL, String.valueOf(DEFAULT_REWRITE_URL)));
+        return getBoolean(KEY_REWRITE_URL, DEFAULT_REWRITE_URL);
     }
 
     public void setRewriteUrlEnabled(boolean rewriteUrl) {
-        properties.setProperty(KEY_REWRITE_URL, String.valueOf(rewriteUrl));
+        setBoolean(KEY_REWRITE_URL, rewriteUrl);
     }
 
     public boolean isLdapEnabled() {
-        return Boolean.valueOf(properties.getProperty(KEY_LDAP_ENABLED, String.valueOf(DEFAULT_LDAP_ENABLED)));
+        return getBoolean(KEY_LDAP_ENABLED, DEFAULT_LDAP_ENABLED);
     }
 
     public void setLdapEnabled(boolean ldapEnabled) {
-        properties.setProperty(KEY_LDAP_ENABLED, String.valueOf(ldapEnabled));
+        setBoolean(KEY_LDAP_ENABLED, ldapEnabled);
     }
 
     public String getLdapUrl() {
@@ -682,27 +691,27 @@ public class SettingsService {
     }
 
     public boolean isLdapAutoShadowing() {
-        return Boolean.valueOf(properties.getProperty(KEY_LDAP_AUTO_SHADOWING, String.valueOf(DEFAULT_LDAP_AUTO_SHADOWING)));
+        return getBoolean(KEY_LDAP_AUTO_SHADOWING, DEFAULT_LDAP_AUTO_SHADOWING);
     }
 
     public void setLdapAutoShadowing(boolean ldapAutoShadowing) {
-        properties.setProperty(KEY_LDAP_AUTO_SHADOWING, String.valueOf(ldapAutoShadowing));
+        setBoolean(KEY_LDAP_AUTO_SHADOWING, ldapAutoShadowing);
     }
 
     public boolean isGettingStartedEnabled() {
-        return Boolean.valueOf(properties.getProperty(KEY_GETTING_STARTED_ENABLED, String.valueOf(DEFAULT_GETTING_STARTED_ENABLED)));
+        return getBoolean(KEY_GETTING_STARTED_ENABLED, DEFAULT_GETTING_STARTED_ENABLED);
     }
 
     public void setGettingStartedEnabled(boolean isGettingStartedEnabled) {
-        setProperty(KEY_GETTING_STARTED_ENABLED, String.valueOf(isGettingStartedEnabled));
+        setBoolean(KEY_GETTING_STARTED_ENABLED, isGettingStartedEnabled);
     }
 
     public boolean isPortForwardingEnabled() {
-        return Boolean.valueOf(properties.getProperty(KEY_PORT_FORWARDING_ENABLED, String.valueOf(DEFAULT_PORT_FORWARDING_ENABLED)));
+        return getBoolean(KEY_PORT_FORWARDING_ENABLED, DEFAULT_PORT_FORWARDING_ENABLED);
     }
 
     public void setPortForwardingEnabled(boolean isPortForwardingEnabled) {
-        setProperty(KEY_PORT_FORWARDING_ENABLED, String.valueOf(isPortForwardingEnabled));
+        setBoolean(KEY_PORT_FORWARDING_ENABLED, isPortForwardingEnabled);
     }
 
     public int getPort() {
@@ -722,11 +731,11 @@ public class SettingsService {
     }
 
     public boolean isUrlRedirectionEnabled() {
-        return Boolean.valueOf(properties.getProperty(KEY_URL_REDIRECTION_ENABLED, String.valueOf(DEFAULT_URL_REDIRECTION_ENABLED)));
+        return getBoolean(KEY_URL_REDIRECTION_ENABLED, DEFAULT_URL_REDIRECTION_ENABLED);
     }
 
     public void setUrlRedirectionEnabled(boolean isUrlRedirectionEnabled) {
-        setProperty(KEY_URL_REDIRECTION_ENABLED, String.valueOf(isUrlRedirectionEnabled));
+        setBoolean(KEY_URL_REDIRECTION_ENABLED, isUrlRedirectionEnabled);
     }
 
     public String getUrlRedirectFrom() {
@@ -798,6 +807,14 @@ public class SettingsService {
         } else {
             properties.setProperty(KEY_LAST_SCANNED, String.valueOf(date.getTime()));
         }
+    }
+
+    public boolean isBrowseByFolderStructure() {
+        return getBoolean(KEY_BROWSE_BY_FOLDER_STRUCTURE, DEFAULT_BROWSE_BY_FOLDER_STRUCTURE);
+    }
+
+    public void setBrowseByFolderStructure(boolean b) {
+        setBoolean(KEY_BROWSE_BY_FOLDER_STRUCTURE, b);
     }
 
     /**

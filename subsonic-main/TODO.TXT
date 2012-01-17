@@ -1,6 +1,6 @@
 Invalidate cache when updating cover art.
 Change random implementation.
--
+Browse by tag / folder structure
 Better error message if media file not found.
 Document MediaFileService.
 Support per-artist cover art.
