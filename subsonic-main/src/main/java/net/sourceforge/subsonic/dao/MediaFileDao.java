@@ -148,7 +148,7 @@ public class MediaFileDao extends AbstractDao {
     }
 
     public List<String> getArtists() {
-        return queryForStrings("select distinct artist from media_file order by artist");
+        return queryForStrings("select distinct artist from media_file where artist is not null order by artist");
     }
 
     public void deleteMediaFile(String path) {

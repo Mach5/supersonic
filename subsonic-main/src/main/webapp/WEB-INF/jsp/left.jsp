@@ -87,6 +87,7 @@
                     <c:forEach items="${artist.mediaFiles}" var="mediaFile">
                         <sub:param name="path" value="${mediaFile.path}"/>
                     </c:forEach>
+                    <sub:param name="artist" value="${artist.name}"/>
                 </sub:url>
                 <a target="main" href="${mainUrl}"><str:truncateNicely upper="${model.captionCutoff}">${artist.name}</str:truncateNicely></a>
             </span>
