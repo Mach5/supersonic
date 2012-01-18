@@ -32,6 +32,7 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
@@ -46,6 +47,7 @@ public class MusicIndexService {
 
     private SettingsService settingsService;
     private MediaFileService mediaFileService;
+    private MediaFileDao mediaFileDao;
 
     /**
      * Returns a map from music indexes to sets of artists that are direct children of the given music folders.
@@ -125,8 +127,13 @@ public class MusicIndexService {
         return result;
     }
 
-    private SortedSet<Artist> createArtists(List<MusicFolder> folders, String[] ignoredArticles,
-            String[] shortcuts) throws IOException {
+    private SortedSet<Artist> createArtists(List<MusicFolder> folders, String[] ignoredArticles, String[] shortcuts) throws IOException {
+        return settingsService.isOrganizeByFolderStructure() ?
+                createArtistsByFolderStructure(folders, ignoredArticles, shortcuts) :
+                createArtistsByTagStructure(folders, ignoredArticles, shortcuts);
+    }
+
+    private SortedSet<Artist> createArtistsByFolderStructure(List<MusicFolder> folders, String[] ignoredArticles, String[] shortcuts) {
         SortedMap<String, Artist> artistMap = new TreeMap<String, Artist>();
         Set<String> shortcutSet = new HashSet<String>(Arrays.asList(shortcuts));
 
@@ -150,6 +157,25 @@ public class MusicIndexService {
         }
 
         return new TreeSet<Artist>(artistMap.values());
+    }
+
+    private SortedSet<Artist> createArtistsByTagStructure(List<MusicFolder> folders, String[] ignoredArticles, String[] shortcuts) {
+        Set<String> shortcutSet = new HashSet<String>(Arrays.asList(shortcuts));
+        SortedSet<Artist> artists = new TreeSet<Artist>();
+
+        // TODO: Filter by folder
+        for (String artistName : mediaFileDao.getArtists()) {
+
+            if (shortcutSet.contains(artistName)) {
+                continue;
+            }
+
+            String sortableName = createSortableName(artistName, ignoredArticles);
+            Artist artist = new Artist(artistName, sortableName);
+            artists.add(artist);
+        }
+
+        return artists;
     }
 
     private String createSortableName(String name, String[] ignoredArticles) {
@@ -187,6 +213,10 @@ public class MusicIndexService {
 
     public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
+    }
+
+    public void setMediaFileDao(MediaFileDao mediaFileDao) {
+        this.mediaFileDao = mediaFileDao;
     }
 
     private static class MusicIndexComparator implements Comparator<MusicIndex>, Serializable {

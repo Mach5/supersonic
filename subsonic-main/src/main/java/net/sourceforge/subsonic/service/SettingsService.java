@@ -119,7 +119,7 @@ public class SettingsService {
     private static final String KEY_SERVER_ID = "ServerId";
     private static final String KEY_SETTINGS_CHANGED = "SettingsChanged";
     private static final String KEY_LAST_SCANNED = "LastScanned";
-    private static final String KEY_BROWSE_BY_FOLDER_STRUCTURE = "BrowseByFolderStructure";
+    private static final String KEY_ORGANIZE_BY_FOLDER_STRUCTURE = "OrganizeByFolderStructure";
 
     // Default values.
     private static final String DEFAULT_INDEX_STRING = "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ)";
@@ -179,7 +179,7 @@ public class SettingsService {
     private static final String DEFAULT_VIDEO_TRIAL_EXPIRES = null;
     private static final String DEFAULT_SERVER_ID = null;
     private static final long DEFAULT_SETTINGS_CHANGED = 0L;
-    private static final boolean DEFAULT_BROWSE_BY_FOLDER_STRUCTURE = true;
+    private static final boolean DEFAULT_ORGANIZE_BY_FOLDER_STRUCTURE = true;
 
     // Array of obsolete keys.  Used to clean property file.
     private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort",
@@ -809,12 +809,12 @@ public class SettingsService {
         }
     }
 
-    public boolean isBrowseByFolderStructure() {
-        return getBoolean(KEY_BROWSE_BY_FOLDER_STRUCTURE, DEFAULT_BROWSE_BY_FOLDER_STRUCTURE);
+    public boolean isOrganizeByFolderStructure() {
+        return getBoolean(KEY_ORGANIZE_BY_FOLDER_STRUCTURE, DEFAULT_ORGANIZE_BY_FOLDER_STRUCTURE);
     }
 
-    public void setBrowseByFolderStructure(boolean b) {
-        setBoolean(KEY_BROWSE_BY_FOLDER_STRUCTURE, b);
+    public void setOrganizeByFolderStructure(boolean b) {
+        setBoolean(KEY_ORGANIZE_BY_FOLDER_STRUCTURE, b);
     }
 
     /**

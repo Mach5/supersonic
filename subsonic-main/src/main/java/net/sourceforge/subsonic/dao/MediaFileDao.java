@@ -147,6 +147,10 @@ public class MediaFileDao extends AbstractDao {
         return queryOne("select path, play_count, last_played, comment, created from media_file_archive where path=?", archiveRowMapper, path);
     }
 
+    public List<String> getArtists() {
+        return queryForStrings("select distinct artist from media_file order by artist");
+    }
+
     public void deleteMediaFile(String path) {
         // Update archive.
         update("delete from media_file_archive where path=?", path);
