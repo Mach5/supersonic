@@ -2,27 +2,23 @@
 
 Implement browse by tag.
   Filter by folder
-
+  MainController
+Proper reload frames when changing music folder settings.
 Invalidate cache when updating cover art.
 Change random implementation.
-Browse by tag / folder structure
 Better error message if media file not found.
 Document MediaFileService.
 Support per-artist cover art.
-Revisit MetaDataParser.isRoot()
 Check file I/O.
 Optimize MediaFile getters.
 Remove obsolete caches
-Remove ServiceLocator
 Measure time for media scanning, clean and incremental.
 Test performance of MusicFileDao.
 Test searching etc before search index is created.
 Test searching while createing lucene index
-Cleanup SearchService.
-Final Frontier album throws exception.
-Use long rather than Date in MediaFile?
 Add musicfolder root to media_file (in support of per-user permissions). Must be updated if changed.
-parent_file should be null if root? Maybe not, as roots may change.
+Use long rather than Date in MediaFile?
+Revisit MetaDataParser.isRoot()
 
 DONE IN 4.7
 -----------------

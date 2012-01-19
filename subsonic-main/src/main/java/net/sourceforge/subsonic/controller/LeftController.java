@@ -137,6 +137,7 @@ public class LeftController extends ParameterizableViewController implements Las
         map.put("shortcuts", getShortcuts(musicFoldersToUse, shortcuts));
         map.put("captionCutoff", userSettings.getMainVisibility().getCaptionCutoff());
         map.put("partyMode", userSettings.isPartyModeEnabled());
+        map.put("organizeByFolderStructure", settingsService.isOrganizeByFolderStructure());
 
         if (statistics != null) {
             map.put("statistics", statistics);
