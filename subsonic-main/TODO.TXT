@@ -39,6 +39,8 @@ Fix JSON bug
 
 TODO IN 4.7
 -----------------
+SubWiji
+  http://forum.subsonic.org/forum/viewtopic.php?f=8&t=8772
 Make it easier to run as non-root in rpm.
   Update installation doc with recommendation.
   https://mail.google.com/mail/?shva=1#inbox/134fac2d57a0c334
