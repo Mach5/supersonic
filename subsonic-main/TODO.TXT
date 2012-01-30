@@ -39,6 +39,10 @@ Fix JSON bug
 
 TODO IN 4.7
 -----------------
+Make it easier to run as non-root in rpm.
+  Update installation doc with recommendation.
+  https://mail.google.com/mail/?shva=1#inbox/134fac2d57a0c334
+  Give warning in gettingStarted.jsp?
 REST: Ensure that podcast dir is included.
 Suppport HEAD request in StreamController
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
