@@ -32,6 +32,9 @@
             <h3>I forgot my Subsonic password. Can it be retrieved?</h3>
             <p>Yes. Please read <a href="http://forum.subsonic.org/forum/viewtopic.php?t=3770">this forum post</a>.</p>
 
+            <h3>I've lost my license key. Can I have it resent?</h3>
+            <p>Yes. Please go <a href="http://subsonic.org/backend/requestLicense.view">here</a>.</p>
+
             <%--TODO: Network shares--%>
         </div>
 
