@@ -72,9 +72,6 @@ public class LeftController extends ParameterizableViewController implements Las
     private PlayerService playerService;
     private Cache musicFolderCache;
 
-    /**
-     * {@inheritDoc}
-     */
     public long getLastModified(HttpServletRequest request) {
         saveSelectedMusicFolder(request);
 
@@ -111,9 +108,6 @@ public class LeftController extends ParameterizableViewController implements Las
         return lastModified;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         saveSelectedMusicFolder(request);
