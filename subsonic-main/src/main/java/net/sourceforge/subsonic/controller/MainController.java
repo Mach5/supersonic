@@ -22,7 +22,6 @@ import net.sourceforge.subsonic.domain.CoverArtScheme;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.UserSettings;
-import net.sourceforge.subsonic.service.AdService;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.RatingService;
 import net.sourceforge.subsonic.service.PlayerService;
@@ -57,7 +56,6 @@ public class MainController extends ParameterizableViewController {
     private SettingsService settingsService;
     private RatingService ratingService;
     private MediaFileService mediaFileService;
-    private AdService adService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -91,9 +89,6 @@ public class MainController extends ParameterizableViewController {
         map.put("updateNowPlaying", request.getParameter("updateNowPlaying") != null);
         map.put("partyMode", userSettings.isPartyModeEnabled());
         map.put("brand", settingsService.getBrand());
-        if (!settingsService.isLicenseValid()) {
-            map.put("ad", adService.getAd());
-        }
 
         try {
             MediaFile parent = mediaFileService.getParentOf(dir);
@@ -263,11 +258,4 @@ public class MainController extends ParameterizableViewController {
         this.ratingService = ratingService;
     }
 
-    public void setAdService(AdService adService) {
-        this.adService = adService;
-    }
-
-    public void setMediaFileService(MediaFileService mediaFileService) {
-        this.mediaFileService = mediaFileService;
-    }
 }

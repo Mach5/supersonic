@@ -1,0 +1,6 @@
+=== UI ===
+* Desktop application like UI
+* HTML5 audio playback?
+
+=== Application ===
+* Fix hard coded paths for windows (C:\subsonic) / Unix (/var/subsonic)

@@ -2,16 +2,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.sourceforge.subsonic</groupId>
-    <artifactId>subsonic</artifactId>
+    <groupId>com.github.porkcharsui.supersonic</groupId>
+    <artifactId>supersonic</artifactId>
     <version>4.6</version>
-    <name>Subsonic</name>
+    <name>Supersonic</name>
     <packaging>pom</packaging>
     <organization>
-        <name>Sindre Mehus</name>
-        <url>http://subsonic.org/</url>
+        <name>Derek Ellis</name>
+        <url>https://github.com/porkcharsui/supersonic</url>
     </organization>
-    <inceptionYear>2004</inceptionYear>
+    <inceptionYear>2011</inceptionYear>
 
     <properties>
         <failOnDependencyWarning>true</failOnDependencyWarning>
@@ -43,31 +43,6 @@
         </pluginRepository>
     </pluginRepositories>
 
-    <scm>
-        <connection>scm:svn:https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk</connection>
-        <developerConnection>scm:svn:https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk</developerConnection>
-        <url>http://subsonic.svn.sourceforge.net/viewvc/subsonic/</url>
-    </scm>
-
-    <ciManagement>
-        <system>continuum</system>
-        <notifiers>
-            <notifier>
-                <type>mail</type>
-                <configuration>
-                    <address>sindre@activeobjects.no</address>
-                </configuration>
-            </notifier>
-        </notifiers>
-    </ciManagement>
-
-    <developers>
-        <developer>
-            <name>Sindre Mehus</name>
-            <email>sindre@activeobjects.no</email>
-        </developer>
-    </developers>
-
     <modules>
         <module>subsonic-main</module>
     </modules>
@@ -81,8 +56,6 @@
                 <module>subsonic-installer-mac</module>
                 <module>subsonic-installer-debian</module>
                 <module>subsonic-installer-rpm</module>
-                <module>subsonic-backend</module>
-                <module>subsonic-site</module>
                 <module>subsonic-assembly</module>
             </modules>
         </profile>
