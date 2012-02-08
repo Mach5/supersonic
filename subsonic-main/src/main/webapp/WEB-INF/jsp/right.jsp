@@ -24,6 +24,10 @@
     }
 </script>
 
+<div id="scanningStatus" style="display: none;" class="warning">
+    <fmt:message key="main.scanning"/> <span id="scanCount"></span>
+</div>
+
 <c:if test="${model.showNowPlaying}">
 
     <!-- This script uses AJAX to periodically retrieve what all users are playing. -->
@@ -137,6 +141,26 @@
             }
             result += minutes;
             return result;
+        }
+    </script>
+
+    <script type="text/javascript">
+
+        startGetScanningStatusTimer();
+
+        function startGetScanningStatusTimer() {
+            nowPlayingService.getScanningStatus(getScanningStatusCallback);
+        }
+
+        function getScanningStatusCallback(scanInfo) {
+            dwr.util.setValue("scanCount", scanInfo.count);
+            if (scanInfo.scanning) {
+                $("scanningStatus").show();
+                setTimeout("startGetScanningStatusTimer()", 1000);
+            } else {
+                $("scanningStatus").hide();
+                setTimeout("startGetScanningStatusTimer()", 15000);
+            }
         }
     </script>
 

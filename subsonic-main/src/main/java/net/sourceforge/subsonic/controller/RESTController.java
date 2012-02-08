@@ -210,7 +210,7 @@ public class RESTController extends MultiActionController {
             builder.end();
         }
 
-        // TODO: Add children
+        // Add children
         Player player = playerService.getPlayer(request, response);
         List<MusicFile> singleSongs = leftController.getSingleSongs(musicFolders);
         for (MusicFile singleSong : singleSongs) {
@@ -761,7 +761,7 @@ public class RESTController extends MultiActionController {
 
         String filePathLower = filePath.toLowerCase();
 
-        List<MusicFolder> musicFolders = settingsService.getAllMusicFolders();
+        List<MusicFolder> musicFolders = settingsService.getAllMusicFolders(false, true);
         for (MusicFolder musicFolder : musicFolders) {
             String folderPath = musicFolder.getPath().getPath();
             folderPath = folderPath.replace('\\', '/');
@@ -1187,6 +1187,7 @@ public class RESTController extends MultiActionController {
             command.setPodcastRole(ServletRequestUtils.getBooleanParameter(request, "podcastRole", false));
             command.setSettingsRole(ServletRequestUtils.getBooleanParameter(request, "settingsRole", true));
             command.setTranscodeSchemeName(ServletRequestUtils.getStringParameter(request, "transcodeScheme", TranscodeScheme.OFF.name()));
+            command.setShareRole(ServletRequestUtils.getBooleanParameter(request, "shareRole", false));
 
             userSettingsController.createUser(command);
             XMLBuilder builder = createXMLBuilder(request, response, true).endAll();

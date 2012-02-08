@@ -20,6 +20,7 @@ package net.sourceforge.subsonic.service.metadata;
 
 import net.sourceforge.subsonic.*;
 import net.sourceforge.subsonic.domain.MusicFile;
+import net.sourceforge.subsonic.util.FileUtil;
 
 import java.io.*;
 
@@ -98,17 +99,12 @@ public abstract class MetaDataParser {
      * Guesses the artist for the given music file.
      */
     public String guessArtist(MusicFile file) {
-        try {
-            MusicFile parent = file.getParent();
-            if (parent.isRoot()) {
-                return "";
-            }
-            MusicFile grandParent = parent.getParent();
-            return grandParent.isRoot() ? "" : grandParent.getName();
-        } catch (IOException x) {
-            LOG.warn("Error in guessArtist()", x);
-            return null;
+        File parent = file.getFile().getParentFile();
+        if (MusicFile.isRoot(parent)) {
+            return "";
         }
+        File grandParent = parent.getParentFile();
+        return MusicFile.isRoot(grandParent) ? "" : grandParent.getName();
     }
 
     /**
@@ -119,7 +115,7 @@ public abstract class MetaDataParser {
      */
     protected MusicFile.MetaData getBasicMetaData(MusicFile file) {
         MusicFile.MetaData metaData = new MusicFile.MetaData();
-        metaData.setFileSize(file.length());
+        metaData.setFileSize(FileUtil.length(file.getFile()));
         metaData.setFormat(file.getSuffix());
         return metaData;
     }
@@ -128,13 +124,10 @@ public abstract class MetaDataParser {
      * Guesses the album for the given music file.
      */
     public String guessAlbum(MusicFile file) {
-        try {
-            MusicFile parent = file.getParent();
-            return parent.isRoot() ? "" : parent.getName();
-        } catch (IOException x) {
-            LOG.warn("Error in guessAlbum()", x);
-            return null;
-        }
+        File parent = file.getFile().getParentFile();
+        String album = MusicFile.isRoot(parent) ? "" : parent.getName();
+        String artist = guessArtist(file);
+        return album.replace(artist + " - ", "");
     }
 
     /**

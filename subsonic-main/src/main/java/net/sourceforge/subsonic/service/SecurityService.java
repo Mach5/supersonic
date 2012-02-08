@@ -37,6 +37,7 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.UserDao;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.util.FileUtil;
 
 /**
  * Provides security-related services for authentication and authorization.
@@ -199,7 +200,7 @@ public class SecurityService implements UserDetailsService {
      * @return Whether the given file may be uploaded.
      */
     public boolean isUploadAllowed(File file) {
-        return isInMusicFolder(file) && !file.exists();
+        return isInMusicFolder(file) && !FileUtil.exists(file);
     }
 
     /**
@@ -209,7 +210,7 @@ public class SecurityService implements UserDetailsService {
      * @return Whether the given file is located in one of the music folders.
      */
     private boolean isInMusicFolder(File file) {
-        List<MusicFolder> folders = settingsService.getAllMusicFolders();
+        List<MusicFolder> folders = settingsService.getAllMusicFolders(false, true);
         String path = file.getPath();
         for (MusicFolder folder : folders) {
             if (isFileInFolder(path, folder.getPath().getPath())) {

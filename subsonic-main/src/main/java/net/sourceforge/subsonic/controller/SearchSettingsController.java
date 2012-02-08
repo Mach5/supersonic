@@ -19,10 +19,13 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.command.*;
+import net.sourceforge.subsonic.dao.CacheDao;
+import net.sourceforge.subsonic.domain.Cache;
 import net.sourceforge.subsonic.service.*;
 import org.springframework.web.servlet.mvc.*;
 
 import javax.servlet.http.*;
+import java.util.List;
 
 /**
  * Controller for the page used to administrate the search index.
@@ -33,6 +36,8 @@ public class SearchSettingsController extends SimpleFormController {
 
     private SettingsService settingsService;
     private SearchService searchService;
+    private List<Cache> caches;
+    private CacheDao cacheDao;
 
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         SearchSettingsCommand command = new SearchSettingsCommand();
@@ -41,10 +46,18 @@ public class SearchSettingsController extends SimpleFormController {
             searchService.createIndex();
             command.setCreatingIndex(true);
         }
+        if (request.getParameter("clear") != null) {
+            for (Cache cache : caches) {
+                cache.clearStatistics();
+                cacheDao.clearDatabase();
+            }
+        }
 
         command.setInterval("" + settingsService.getIndexCreationInterval());
         command.setHour("" + settingsService.getIndexCreationHour());
         command.setBrand(settingsService.getBrand());
+        command.setCaches(caches);
+        command.setFastCache(settingsService.isFastCacheEnabled());
 
         return command;
     }
@@ -54,6 +67,7 @@ public class SearchSettingsController extends SimpleFormController {
 
         settingsService.setIndexCreationInterval(Integer.parseInt(command.getInterval()));
         settingsService.setIndexCreationHour(Integer.parseInt(command.getHour()));
+        settingsService.setFastCacheEnabled(command.isFastCache());
         settingsService.save();
 
         searchService.schedule();
@@ -65,5 +79,13 @@ public class SearchSettingsController extends SimpleFormController {
 
     public void setSearchService(SearchService searchService) {
         this.searchService = searchService;
+    }
+
+    public void setCaches(List<Cache> caches) {
+        this.caches = caches;
+    }
+
+    public void setCacheDao(CacheDao cacheDao) {
+        this.cacheDao = cacheDao;
     }
 }

@@ -41,15 +41,16 @@ public class CacheDao {
     private static final Logger LOG = Logger.getLogger(CacheDao.class);
     private static final int BATCH_SIZE = 100;
 
-    private final EmbeddedObjectContainer db;
+    private EmbeddedObjectContainer db;
     private final ReadWriteLock dbLock = new ReentrantReadWriteLock();
     private int writeCount = 0;
+    private final File dbFile;
 
     public CacheDao() {
 
         File subsonicHome = SettingsService.getSubsonicHome();
         File dbDir = new File(subsonicHome, "cache");
-        File dbFile = new File(dbDir, "cache.dat");
+        dbFile = new File(dbDir, "cache.dat");
 
         if (!dbDir.exists()) {
             dbDir.mkdirs();
@@ -63,22 +64,40 @@ public class CacheDao {
 //            }
 //        }
 
+        try {
+            openDatabase(dbFile);
+        } catch (Throwable x) {
+            LOG.error("Failed to open " + dbFile + ", deleting it: " + x);
+
+            dbFile.delete();
+            openDatabase(dbFile);
+        }
+    }
+
+    private void openDatabase(File dbFile) {
         EmbeddedConfiguration config = Db4oEmbedded.newConfiguration();
         config.common().objectClass(CacheElement.class).objectField("id").indexed(true);
         config.common().objectClass(CacheElement.class).cascadeOnUpdate(true);
         config.common().objectClass(CacheElement.class).cascadeOnDelete(true);
         config.common().objectClass(CacheElement.class).cascadeOnActivate(true);
 
-//        config.common().messageLevel(3);
-        System.out.println("Optimized: " + config.common().optimizeNativeQueries());
         db = Db4oEmbedded.openFile(config, dbFile.getPath());
-
-//        ((ObjectContainerBase) db).getNativeQueryHandler().addListener(new Db4oQueryExecutionListener() {
-//            public void notifyQueryExecuted(NQOptimizationInfo info) {
-//                System.out.println(info);
-//            }
-//        });
     }
+
+    /**
+     * Recreates the database.
+     */
+    public void clearDatabase() {
+        dbLock.writeLock().lock();
+        try {
+            db.close();
+            dbFile.delete();
+            openDatabase(dbFile);
+        } finally{
+            dbLock.writeLock().unlock();
+        }
+    }
+
 
     /**
      * Creates a new cache element.

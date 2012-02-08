@@ -26,7 +26,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import net.sourceforge.subsonic.androidapp.R;
@@ -35,6 +34,7 @@ import net.sourceforge.subsonic.androidapp.service.MusicServiceFactory;
 import net.sourceforge.subsonic.androidapp.service.MusicService;
 import net.sourceforge.subsonic.androidapp.util.BackgroundTask;
 import net.sourceforge.subsonic.androidapp.util.Constants;
+import net.sourceforge.subsonic.androidapp.util.PlaylistAdapter;
 import net.sourceforge.subsonic.androidapp.util.TabActivityBackgroundTask;
 import net.sourceforge.subsonic.androidapp.util.Util;
 
@@ -95,7 +95,7 @@ public class SelectPlaylistActivity extends SubsonicTabActivity implements Adapt
 
             @Override
             protected void done(List<Playlist> result) {
-                list.setAdapter(new PlaylistAdapter(result));
+                list.setAdapter(new PlaylistAdapter(SelectPlaylistActivity.this, PlaylistAdapter.PlaylistComparator.sort(result)));
                 emptyTextView.setVisibility(result.isEmpty() ? View.VISIBLE : View.GONE);
             }
         };
@@ -138,9 +138,4 @@ public class SelectPlaylistActivity extends SubsonicTabActivity implements Adapt
         Util.startActivityWithoutTransition(SelectPlaylistActivity.this, intent);
     }
 
-    private class PlaylistAdapter extends ArrayAdapter<Playlist> {
-        public PlaylistAdapter(List<Playlist> playlists) {
-            super(SelectPlaylistActivity.this, R.layout.playlist_list_item, playlists);
-        }
-    }
 }

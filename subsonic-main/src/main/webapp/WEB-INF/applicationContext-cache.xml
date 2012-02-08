@@ -11,33 +11,31 @@
         <constructor-arg value="userCache"/>
     </bean>
 
-    <bean id="coverArtCache" class="net.sourceforge.subsonic.domain.Cache">
-        <constructor-arg value="coverArt"/>
+    <bean id="musicFileMemoryCache" factory-bean="cacheFactory" factory-method="getCache">
+        <constructor-arg value="musicFileMemoryCache"/>
+    </bean>
+
+    <bean id="musicFileDiskCache" class="net.sourceforge.subsonic.domain.Cache">
+        <constructor-arg value="Media files"/>
         <constructor-arg value="1"/>
         <constructor-arg ref="cacheDao"/>
     </bean>
 
-    <bean id="musicFileCache" class="net.sourceforge.subsonic.domain.Cache">
-        <constructor-arg value="musicFile"/>
+    <bean id="coverArtCache" class="net.sourceforge.subsonic.domain.Cache">
+        <constructor-arg value="Cover art"/>
         <constructor-arg value="2"/>
         <constructor-arg ref="cacheDao"/>
     </bean>
 
     <bean id="chatCache" class="net.sourceforge.subsonic.domain.Cache">
-        <constructor-arg value="chat"/>
+        <constructor-arg value="Chat messages"/>
         <constructor-arg value="3"/>
         <constructor-arg ref="cacheDao"/>
     </bean>
 
-    <bean id="childDirCache" class="net.sourceforge.subsonic.domain.Cache">
-        <constructor-arg value="childDir"/>
-        <constructor-arg value="4"/>
-        <constructor-arg ref="cacheDao"/>
-    </bean>
-
     <bean id="musicFolderCache" class="net.sourceforge.subsonic.domain.Cache">
-        <constructor-arg value="musicFolder"/>
-        <constructor-arg value="5"/>
+        <constructor-arg value="Root folders"/>
+        <constructor-arg value="4"/>
         <constructor-arg ref="cacheDao"/>
     </bean>
 

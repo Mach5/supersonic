@@ -19,7 +19,6 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.*;
-import net.sourceforge.subsonic.domain.Cache;
 import net.sourceforge.subsonic.service.*;
 import org.springframework.web.servlet.*;
 import org.springframework.web.servlet.mvc.*;
@@ -36,7 +35,6 @@ public class HelpController extends ParameterizableViewController {
 
     private VersionService versionService;
     private SettingsService settingsService;
-    private List<Cache> caches;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -64,7 +62,6 @@ public class HelpController extends ParameterizableViewController {
         map.put("serverInfo", serverInfo);
         map.put("usedMemory", totalMemory - freeMemory);
         map.put("totalMemory", totalMemory);
-        map.put("caches", caches);
         map.put("logEntries", Logger.getLatestLogEntries());
         map.put("logFile", Logger.getLogFile());
 
@@ -79,9 +76,5 @@ public class HelpController extends ParameterizableViewController {
 
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
-    }
-
-    public void setCaches(List<Cache> caches) {
-        this.caches = caches;
     }
 }

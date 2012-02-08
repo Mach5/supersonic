@@ -20,6 +20,7 @@ package net.sourceforge.subsonic.service;
 
 import net.sourceforge.subsonic.dao.*;
 import net.sourceforge.subsonic.domain.*;
+import net.sourceforge.subsonic.util.FileUtil;
 
 import java.util.*;
 import java.io.File;
@@ -69,7 +70,7 @@ public class MusicInfoService {
         List<MusicFile> result = new ArrayList<MusicFile>();
         for (String path : highestRated) {
             File file = new File(path);
-            if (file.exists() && securityService.isReadAllowed(file)) {
+            if (FileUtil.exists(file) && securityService.isReadAllowed(file)) {
                 result.add(musicFileService.getMusicFile(path));
             }
         }

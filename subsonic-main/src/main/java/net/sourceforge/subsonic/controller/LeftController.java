@@ -33,6 +33,7 @@ import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
+import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.util.StringUtil;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.LastModified;
@@ -84,11 +85,11 @@ public class LeftController extends ParameterizableViewController implements Las
         MusicFolder selectedMusicFolder = getSelectedMusicFolder(request);
         if (selectedMusicFolder != null) {
             File file = selectedMusicFolder.getPath();
-            lastModified = Math.max(lastModified, file.lastModified());
+            lastModified = Math.max(lastModified, FileUtil.lastModified(file));
         } else {
             for (MusicFolder musicFolder : allMusicFolders) {
                 File file = musicFolder.getPath();
-                lastModified = Math.max(lastModified, file.lastModified());
+                lastModified = Math.max(lastModified, FileUtil.lastModified(file));
             }
         }
 
@@ -192,7 +193,7 @@ public class LeftController extends ParameterizableViewController implements Las
         for (String shortcut : shortcuts) {
             for (MusicFolder musicFolder : musicFoldersToUse) {
                 File file = new File(musicFolder.getPath(), shortcut);
-                if (file.exists()) {
+                if (FileUtil.exists(file)) {
                     result.add(musicFileService.getMusicFile(file));
                 }
             }
@@ -203,10 +204,14 @@ public class LeftController extends ParameterizableViewController implements Las
 
     public MusicFolderCacheEntry getCacheEntry(List<MusicFolder> musicFoldersToUse, long lastModified) throws Exception {
         StringBuilder musicFolderIds = new StringBuilder();
-        for (MusicFolder musicFolder : musicFoldersToUse) {
-            musicFolderIds.append(musicFolder.getId()).append(",");
+        if (musicFoldersToUse.isEmpty()) {
+            musicFolderIds.append("NULL");
+        } else {
+            for (MusicFolder musicFolder : musicFoldersToUse) {
+                musicFolderIds.append(musicFolder.getId()).append(",");
+            }
+            musicFolderIds.setLength(musicFolderIds.length() - 1);
         }
-        musicFolderIds.setLength(musicFolderIds.length() - 1);
         String key = musicFolderIds.toString();
 
         MusicFolderCacheEntry entry = musicFolderCache.getValue(key);

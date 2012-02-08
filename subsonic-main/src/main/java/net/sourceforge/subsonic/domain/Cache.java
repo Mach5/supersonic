@@ -47,8 +47,7 @@ public class Cache {
         long t1 = System.nanoTime();
         totalLookupTimeMicros += (t1 - t0) / 1000L;
 
-        // TODO
-        System.out.println((element == null ? "M " : "  ") + name + ", " + key + ": " + (t1 - t0) / 1000L);
+//        LOG.debug((element == null ? "M " : "  ") + name + ", " + key + ": " + (t1 - t0) / 1000L);
 
         if (element == null) {
             misses++;
@@ -66,7 +65,7 @@ public class Cache {
     public void put(String key, Object value) {
         CacheElement element = new CacheElement(type, key, value, System.currentTimeMillis());
         cacheDao.createCacheElement(element);
-        System.out.println(("P ") + name + ", " + key);
+//        LOG.debug(("P ") + name + ", " + key);
     }
 
     public String getStatistics() {
@@ -74,7 +73,13 @@ public class Cache {
         double hitRate = accesses == 0 ? 0.0 : (double) hits / (double) accesses;
         long hitRatePercentage = Math.round(hitRate * 100.0);
         long avgLookupTime = accesses == 0 ? 0 : totalLookupTimeMicros / accesses;
-        return "Cache '" + name + "': " + hits + " of " + accesses + " hits (" + hitRatePercentage + "%). " +
+        return name + ": " + hits + " of " + accesses + " hits (" + hitRatePercentage + "%). " +
                 "Avg time: " + avgLookupTime + " microsec.";
+    }
+
+    public void clearStatistics() {
+        hits = 0L;
+        misses = 0L;
+        totalLookupTimeMicros = 0L;
     }
 }

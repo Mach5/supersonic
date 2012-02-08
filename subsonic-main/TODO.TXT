@@ -1,16 +1,8 @@
-TRANSCODING
------------
-- Update documentation in Settings > Transcoding
-- Support %o for audio ?
-- Are ID3 tags preserved by ffmpeg?
-- Increase volume? (-vol)
-- Use -async 30 rather than -async 1 ?
-- Subtitle support  (-scodec copy ?)
-    http://www.longtailvideo.com/support/addons/captions-plugin/14974/captions-plugin-reference-guide
-- Remove -ac2 ?
-- Update StringUtil mime types.
+Support per-artist cover art.
+When scanning media library, don't visit excluded directories.
+Only store recognized file types?
+Collapse media_type, is_album and is_directory
 
-/var/subsonic/transcode/ffmpeg -ss 0 -i /Users/sindre/Movies/Test/Sample.wtv -async 1 -b 1000k -s 480x360 -ar 44100 -ac 2 -f flv -scodec copy -vcodec libx264 -preset veryfast -threads 0 foo.flv
 
 DONE IN 4.7
 -----------------
@@ -18,9 +10,8 @@ Serve generic cover art if failing to scale original.
 Use ffmpeg rather than lame for downsampling.
   Retain track number when doing lame downsampling.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
-
-TODO IN 4.7
------------------
+Show scanning status.
+REST: Added "shareRole" to createUser
 REST API authentication & session
   https://mail.google.com/mail/?shva=1#inbox/1341d1f45f89d15a
   Update API doc
@@ -28,41 +19,43 @@ REST API authentication & session
   wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies  "http://localhost:8080/rest/ping.view?u=admin&p=admin&v=1.6&c=android" -O -
   wget --auth-no-challenge --http-user=admin --http-password=admin --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies  "http://localhost:8080/rest/ping.view?u=sindre&p=foo&v=1.6&c=android" -O -
 
+TODO IN 4.7
+-----------------
+REST: Ensure that podcast dir is included.
+Suppport HEAD request in StreamController
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
 Improve performance on network shares
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=1456&start=15#p27979
   http://forum.subsonic.org/forum/viewtopic.php?t=3771
   https://mail.google.com/mail/?shva=1#inbox/1343272326ddfa84
-  Is childDirCache necessary? Probably. Used by RESTController.
-  Show scan status in right.jsp
+  Avoid call to isDirectory in MusicFile.java:428
   Start scan automatically when changing music folders.
-  CacheDaoTestCase
-  CacheDao
-  Remove ehcache.
-  Memory usage.
   Profile
   Defragment.
-  Don't set MusicFile.includes.  Remove it.
-  Log statistics (access time, hit rate). Show in About page.
-  Test tag editing vs caching.
-  Test corrupt database.
-  Analyze when tags are read.
-  MusicFile.isAlbum() can be slow.
-  MusicFile.lastModified is cached.
-  Look for all usage of listFiles.
-  Store something in cache also if no cover art is found.
-  LeftController crashes if no media folders defined. (LeftController:209)
+  Test tag editing vs caching.  Maybe manually invalidate cache.
+  Analyze when tags are read. Maybe no need to cache/reuse search index lines.
+  Remove verbose logging in FileUtil.
+  MusicFile.isRoot()
+  Add animated icon to scan progress.
+  Add Settings options:  - Aggressive caching
+                         - Delete cache
+                         - Show cache statistics
+
+java.lang.NullPointerException
+	at net.sourceforge.subsonic.service.MusicFileService.getCoverArt(MusicFileService.java:109)
+	at net.sourceforge.subsonic.controller.MainController.getCoverArts(MainController.java:179)
+	at net.sourceforge.subsonic.controller.MainController.handleRequestInternal(MainController.java:131)
+
+Lots of exists() when playing a song.
 
 Make it possible to suppress content length estimation.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
   http://forum.subsonic.org/forum/viewtopic.php?f=3&t=3270&p=34114#p34114
-REST: Ensure that podcast dir is included.
 Test with IE 9
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=8295&p=33672#p33672
 Don't hardcode c:/subsonic in windows installer.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=8213
-Add Subsonic Channel (for Roku)
-  http://www.randomwalking.com/project.php?project=roku_subsonic
 Audio problems on Linux.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/133318f313c0ffbd
 Coniq:
@@ -129,12 +122,13 @@ Linux locale issue
 DONE IN ANDROID 3.4
 --------------------
 Ensure readable text in notification when background is dark.
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/13416901b8cec7db
-  http://stackoverflow.com/questions/4867338/custom-notification-layouts-and-text-colors/7320604#7320604
-Fix crash in SectionIndexer
+Fix crash when using fast scrolling.
+Enable fast scrolling of playlists, search results and songs.
 
 TODO IN ANDROID 3.4
 --------------------
+Check for lingering .partial files.
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 Don't pause on incoming call if RC.
 ICS theme
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=8497

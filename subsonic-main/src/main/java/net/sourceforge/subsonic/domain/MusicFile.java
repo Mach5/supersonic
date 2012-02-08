@@ -20,15 +20,12 @@ package net.sourceforge.subsonic.domain;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
@@ -42,8 +39,8 @@ import net.sourceforge.subsonic.service.MusicFileService;
 import net.sourceforge.subsonic.service.ServiceLocator;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
+import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
 import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.StringUtil;
 
 /**
  * Represents a file or directory containing music. Music files can be put in a {@link Playlist},
@@ -55,13 +52,14 @@ public class MusicFile implements Serializable {
 
     private static final Logger LOG = Logger.getLogger(MusicFile.class);
 
-    private File file;
-    private boolean isFile;
-    private boolean isDirectory;
-    private boolean isVideo;
-    private long lastModified;
-    private MetaData metaData;
-    private Set<String> excludes;
+    private final File file;
+    private final boolean isFile;
+    private final boolean isDirectory;
+    private boolean isAlbum;
+    private final boolean isVideo;
+    private final long lastModified;
+    private final MetaData metaData;
+    private final File[] children;
 
     /**
      * Do not use this method directly. Instead, use {@link MusicFileService#getMusicFile}.
@@ -74,18 +72,35 @@ public class MusicFile implements Serializable {
         this.file = file;
 
         // Cache these values for performance.
-        isFile = file.isFile();
-        isDirectory = file.isDirectory();
-        lastModified = file.lastModified();
+        isFile = FileUtil.isFile(file);
+        isDirectory = FileUtil.isDirectory(file);
+        lastModified = FileUtil.lastModified(file);
         String suffix = FilenameUtils.getExtension(file.getName()).toLowerCase();
         isVideo = isFile && isVideoFile(suffix);
+        children = isDirectory ? FileUtil.listFiles(file) : null;
+        try {
+            isAlbum = isDirectory && getFirstChild() != null;
+        } catch (IOException e) {
+            // Ignored
+        }
+
+        MetaDataParserFactory factory = ServiceLocator.getMetaDataParserFactory();
+        MetaDataParser parser = factory == null ? null : factory.getParser(this);
+        metaData = parser == null ? null : parser.getMetaData(this);
     }
 
     /**
      * Empty constructor.  Used for testing purposes only.
      */
     protected MusicFile() {
+        file = null;
         isFile = true;
+        isDirectory = false;
+        isAlbum = false;
+        isVideo = false;
+        lastModified = 0L;
+        metaData = null;
+        children = null;
     }
 
     /**
@@ -132,7 +147,7 @@ public class MusicFile implements Serializable {
      * @throws IOException If an I/O error occurs.
      */
     public boolean isAlbum() throws IOException {
-        return !isFile && getFirstChild() != null;
+        return isAlbum;
     }
 
     /**
@@ -141,8 +156,12 @@ public class MusicFile implements Serializable {
      * @return Whether this music file is one of the root music folders.
      */
     public boolean isRoot() {
+        return isRoot(file);
+    }
+
+    public static boolean isRoot(File file) {
         SettingsService settings = ServiceLocator.getSettingsService();
-        List<MusicFolder> folders = settings.getAllMusicFolders();
+        List<MusicFolder> folders = settings.getAllMusicFolders(false, true);
         for (MusicFolder folder : folders) {
             if (file.equals(folder.getPath())) {
                 return true;
@@ -152,10 +171,10 @@ public class MusicFile implements Serializable {
     }
 
     /**
-     * Returns the time this music file was last modified.
-     *
-     * @return The time since this music file was last modified, in milliseconds since the epoch.
-     */
+    * Returns the time this music file was last modified.
+    *
+    * @return The time since this music file was last modified, in milliseconds since the epoch.
+    */
     public long lastModified() {
         return lastModified;
     }
@@ -168,7 +187,7 @@ public class MusicFile implements Serializable {
      *         or <code>0L</code> if the file does not exist
      */
     public long length() {
-        return file.length();
+        return metaData == null ? 0L : metaData.fileSize;
     }
 
     /**
@@ -177,7 +196,7 @@ public class MusicFile implements Serializable {
      * @return Whether this music file exists.
      */
     public boolean exists() {
-        return file.exists();
+        return FileUtil.exists(file);
     }
 
     /**
@@ -190,7 +209,7 @@ public class MusicFile implements Serializable {
         String name = file.getName();
         try {
             // Remove artist name from album name, if present.
-            String parentName = getParent().getName() + " - ";
+            String parentName = file.getParentFile().getName() + " - ";
             if (name.startsWith(parentName)) {
                 name = name.substring(parentName.length());
             }
@@ -238,11 +257,7 @@ public class MusicFile implements Serializable {
      *
      * @return Meta data (artist, album, title etc) for this music file.
      */
-    public synchronized MetaData getMetaData() {
-        if (metaData == null) {
-            MetaDataParser parser = ServiceLocator.getMetaDataParserFactory().getParser(this);
-            metaData = (parser == null) ? null : parser.getMetaData(this);
-        }
+    public MetaData getMetaData() {
         return metaData;
     }
 
@@ -269,6 +284,23 @@ public class MusicFile implements Serializable {
     }
 
     /**
+     * If this is a directory, return all contained files, otherwise {@code null}.
+     */
+    public List<File> getChildrenFiles(FileFilter filter) {
+        if (children == null) {
+            return null;
+        }
+
+        List<File> filteredChildren = new ArrayList<File>(children.length);
+        for (File child : children) {
+            if (filter.accept(child)) {
+                filteredChildren.add(child);
+            }
+        }
+        return filteredChildren;
+    }
+
+    /**
      * Returns all music files that are children of this music file.
      *
      * @param includeFiles       Whether files should be included in the result.
@@ -289,10 +321,9 @@ public class MusicFile implements Serializable {
             filter = FalseFileFilter.INSTANCE;
         }
 
-        File[] children = FileUtil.listFiles(file, filter);
-        List<MusicFile> result = new ArrayList<MusicFile>(children.length);
-
-        for (File child : children) {
+        List<File> filteredChildren = getChildrenFiles(filter);
+        List<MusicFile> result = new ArrayList<MusicFile>(filteredChildren.size());
+        for (File child : filteredChildren) {
             try {
                 if (acceptMedia(child)) {
                     result.add(createMusicFile(child));
@@ -372,9 +403,12 @@ public class MusicFile implements Serializable {
      * @throws IOException If an I/O error occurs.
      */
     public MusicFile getFirstChild() throws IOException {
-        File[] files = FileUtil.listFiles(file);
-        for (File f : files) {
-            if (f.isFile() && acceptMedia(f)) {
+        if (children == null) {
+            return null;
+        }
+
+        for (File f : children) {
+            if (FileUtil.isFile(f) && acceptMedia(f)) {
                 try {
                     return createMusicFile(f);
                 } catch (SecurityException x) {
@@ -391,7 +425,7 @@ public class MusicFile implements Serializable {
             return false;
         }
 
-        if (file.isDirectory()) {
+        if (FileUtil.isDirectory(file)) {
             return true;
         }
 
@@ -418,8 +452,7 @@ public class MusicFile implements Serializable {
     }
 
     /**
-     * Returns whether the given file is excluded, i.e., whether it is listed in 'subsonic_exclude.txt' in
-     * the current directory.
+     * Returns whether the given file is excluded.
      *
      * @param file The child file in question.
      * @return Whether the child file is excluded.
@@ -427,22 +460,7 @@ public class MusicFile implements Serializable {
     public boolean isExcluded(File file) throws IOException {
 
         // Exclude all hidden files starting with a "." or "@eaDir" (thumbnail dir created on Synology devices).
-        if (file.getName().startsWith(".") || file.getName().startsWith("@eaDir")) {
-            return true;
-        }
-
-        if (excludes == null) {
-            excludes = new HashSet<String>();
-            File excludeFile = new File(this.file, "subsonic_exclude.txt");
-            if (excludeFile.exists()) {
-                String[] lines = StringUtil.readLines(new FileInputStream(excludeFile));
-                for (String line : lines) {
-                    excludes.add(line.toLowerCase());
-                }
-            }
-        }
-
-        return excludes.contains(file.getName().toLowerCase());
+        return file.getName().startsWith(".") || file.getName().startsWith("@eaDir");
     }
 
     /**
@@ -600,7 +618,7 @@ public class MusicFile implements Serializable {
                 return null;
             }
 
-            StringBuffer result = new StringBuffer(8);
+            StringBuilder result = new StringBuilder(8);
 
             int seconds = duration;
 

@@ -18,20 +18,22 @@
  */
 package net.sourceforge.subsonic.service;
 
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.Cache;
 import net.sourceforge.subsonic.domain.CacheElement;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.domain.MusicFile;
 import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.Pair;
 
-import net.sourceforge.subsonic.util.TimeLimitedCache;
 import org.apache.commons.io.filefilter.FileFileFilter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Provides services for instantiating and caching music files and cover art.
@@ -40,17 +42,18 @@ import java.util.concurrent.TimeUnit;
  */
 public class MusicFileService {
 
-    private Cache childDirCache;
+    private static final Logger LOG = Logger.getLogger(MusicFileService.class);
+
+    private final File NULL_FILE = new File("NULL");
+
     private Cache coverArtCache;
     private Cache musicFileDiskCache;
-    private final TimeLimitedCache<File, MusicFile> musicFileMemoryCache;
+    private Ehcache musicFileMemoryCache;
 
     private SecurityService securityService;
     private SettingsService settingsService;
-
-    public MusicFileService() {
-        musicFileMemoryCache = new TimeLimitedCache<File, MusicFile>(10, TimeUnit.SECONDS);
-    }
+    private SearchService searchService;
+    private MediaFileDao mediaFileDao;
 
     /**
      * Returns a music file instance for the given file.  If possible, a cached value is returned.
@@ -62,7 +65,8 @@ public class MusicFileService {
     public MusicFile getMusicFile(File file) {
 
         // Look in fast memory cache first.
-        MusicFile cachedMusicFile = musicFileMemoryCache.get(file);
+        Element element = musicFileMemoryCache.get(file);
+        MusicFile cachedMusicFile = element == null ? null : (MusicFile) element.getObjectValue();
         if (cachedMusicFile != null) {
             return cachedMusicFile;
         }
@@ -71,22 +75,44 @@ public class MusicFileService {
             throw new SecurityException("Access denied to file " + file);
         }
 
+
         cachedMusicFile = musicFileDiskCache.getValue(file.getPath());
-        if (cachedMusicFile != null && cachedMusicFile.lastModified() >= file.lastModified()) {
-            musicFileMemoryCache.put(file, cachedMusicFile);
-            return cachedMusicFile;
+        if (cachedMusicFile != null) {
+            if (useFastCache() || cachedMusicFile.lastModified() >= FileUtil.lastModified(file)) {
+                musicFileMemoryCache.put(new Element(file, cachedMusicFile));
+                return cachedMusicFile;
+            }
         }
 
         MusicFile musicFile = new MusicFile(file);
 
-        // Read metadata before caching.
-        musicFile.getMetaData();
-
         // Put in caches.
-        musicFileMemoryCache.put(file, musicFile);
+        musicFileMemoryCache.put(new Element(file, musicFile));
         musicFileDiskCache.put(file.getPath(), musicFile);
+        createMediaFile(musicFile);
 
         return musicFile;
+    }
+
+    private void createMediaFile(MusicFile musicFile) {
+        // TODO: handle existing file.
+        String coverArtPath = null;
+        try {
+            if (musicFile.isAlbum()) {
+                File coverArt = getCoverArt(musicFile);
+                if (coverArt != null) {
+                    coverArtPath = coverArt.getPath();
+                }
+            }
+
+            mediaFileDao.createMediaFile(MediaFile.forMusicFile(musicFile, coverArtPath));
+        } catch (IOException x) {
+            LOG.error("Failed to create media file.", x);
+        }
+    }
+
+    private boolean useFastCache() {
+        return settingsService.isFastCacheEnabled() && !searchService.isIndexBeingCreated();
     }
 
     /**
@@ -110,21 +136,18 @@ public class MusicFileService {
         if (element != null) {
 
             // Check if cache is up-to-date.
-            if (element.getCreated() > dir.getFile().lastModified()) {
-                return (File) element.getValue();
+            if (useFastCache() || element.getCreated() > FileUtil.lastModified(dir.getFile())) {
+                File file = (File) element.getValue();
+                return file.equals(NULL_FILE) ? null : file;
             }
         }
 
-        File coverArt = getBestCoverArt(FileUtil.listFiles(dir.getFile(), FileFileFilter.FILE));
-        if (coverArt != null) {
-            coverArtCache.put(dir.getPath(), coverArt);
-        }
+        File coverArt = getBestCoverArt(dir.getChildrenFiles(FileFileFilter.FILE));
+        coverArtCache.put(dir.getPath(), coverArt == null ? NULL_FILE : coverArt);
         return coverArt;
     }
 
-    private final File NULL_FILE = new File("NULL");
-
-    private File getBestCoverArt(File[] candidates) {
+    private File getBestCoverArt(List<File> candidates) {
         for (String mask : settingsService.getCoverArtFileTypesAsArray()) {
             for (File candidate : candidates) {
                 if (candidate.getName().toUpperCase().endsWith(mask.toUpperCase()) && !candidate.getName().startsWith(".")) {
@@ -149,32 +172,6 @@ public class MusicFileService {
     }
 
     /**
-     * Returns the (sorted) child directories of the given parent. If possible, a cached
-     * value is returned.
-     *
-     * @param parent The parent directory.
-     * @return The child directories.
-     * @throws IOException If an I/O error occurs.
-     */
-    @SuppressWarnings({"unchecked"})
-    public synchronized List<MusicFile> getChildDirectories(MusicFile parent) throws IOException {
-        Pair<MusicFile, List<MusicFile>> value = childDirCache.getValue(parent.getPath());
-        if (value != null) {
-
-            // Check if cache is up-to-date.
-            MusicFile cachedParent = value.getFirst();
-            if (cachedParent.lastModified() >= parent.lastModified()) {
-                return value.getSecond();
-            }
-        }
-
-        List<MusicFile> children = parent.getChildren(false, true, true);
-        childDirCache.put(parent.getPath(), new Pair<MusicFile, List<MusicFile>>(parent, children));
-
-        return children;
-    }
-
-    /**
      * Register in service locator so that non-Spring objects can access me.
      * This method is invoked automatically by Spring.
      */
@@ -190,15 +187,23 @@ public class MusicFileService {
         this.settingsService = settingsService;
     }
 
-    public void setMusicFileCache(Cache musicFileCache) {
-        this.musicFileDiskCache = musicFileCache;
+    public void setMusicFileDiskCache(Cache musicFileDiskCache) {
+        this.musicFileDiskCache = musicFileDiskCache;
     }
 
-    public void setChildDirCache(Cache childDirCache) {
-        this.childDirCache = childDirCache;
+    public void setMusicFileMemoryCache(Ehcache musicFileMemoryCache) {
+        this.musicFileMemoryCache = musicFileMemoryCache;
     }
 
     public void setCoverArtCache(Cache coverArtCache) {
         this.coverArtCache = coverArtCache;
+    }
+
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
+    }
+
+    public void setMediaFileDao(MediaFileDao mediaFileDao) {
+        this.mediaFileDao = mediaFileDao;
     }
 }
