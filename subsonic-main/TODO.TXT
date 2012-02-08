@@ -55,11 +55,12 @@ Make it easier to run as non-root in rpm.
 REST: Ensure that podcast dir is included.
 Suppport HEAD request in StreamController
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
+Suppress content length estimation by default.
 Add animated icon to scan progress.
 Lots of exists() when playing a song.
+Star support
 
 Support ISO files.
-Make it possible to suppress content length estimation.
 minisub
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
@@ -160,6 +161,7 @@ Include German translation.
 Google TV?
 Test BlackBerry runtime
 Android 4.0: Support Audio remote controls
+  http://developer.android.com/reference/android/media/RemoteControlClient.html
 Handle files in root folder.
 EQ resets when switching between online/offline.
   https://mail.google.com/mail/?shva=1#inbox/131e7e98173f0c97
