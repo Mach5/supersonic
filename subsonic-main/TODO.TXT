@@ -45,8 +45,6 @@ Support HEAD request in StreamController
 
 TODO IN 4.7
 -----------------
-XO, for webOS
-  https://developer.palm.com/appredirect/index.php?packageid=com.ericblade.xobeta
 SubWiji
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=8772
 Make it easier to run as non-root in rpm.
