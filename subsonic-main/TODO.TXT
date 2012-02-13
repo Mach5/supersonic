@@ -1,26 +1,5 @@
 
 
-Implement browse by tag.
-  Filter by folder
-  MainController
-Keep rating.
-Proper reload frames when changing music folder settings.
-Invalidate cache when updating cover art.
-Change random implementation.
-Better error message if media file not found.
-Document MediaFileService.
-Support per-artist cover art.
-Check file I/O.
-Optimize MediaFile getters.
-Remove obsolete caches
-Measure time for media scanning, clean and incremental.
-Test performance of MusicFileDao.
-Test searching etc before search index is created.
-Test searching while createing lucene index
-Add musicfolder root to media_file (in support of per-user permissions). Must be updated if changed.
-Use long rather than Date in MediaFile?
-Revisit MetaDataParser.isRoot()
-
 DONE IN 4.7
 -----------------
 Serve generic cover art if failing to scale original.
@@ -45,6 +24,27 @@ Support HEAD request in StreamController
 
 TODO IN 4.7
 -----------------
+Remove obsolete caches
+Implement browse by tag.
+  Filter by folder
+  MainController
+Keep rating.
+Proper reload frames when changing music folder settings.
+Invalidate cache when updating cover art.
+Change random implementation.
+Better error message if media file not found.
+Document MediaFileService.
+Support per-artist cover art.
+Check file I/O.
+Optimize MediaFile getters.
+Measure time for media scanning, clean and incremental.
+Test performance of MusicFileDao.
+Test searching etc before search index is created.
+Test searching while createing lucene index
+Add musicfolder root to media_file (in support of per-user permissions). Must be updated if changed.
+Use long rather than Date in MediaFile?
+Revisit MetaDataParser.isRoot()
+-
 SubWiji
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=8772
 Make it easier to run as non-root in rpm.
