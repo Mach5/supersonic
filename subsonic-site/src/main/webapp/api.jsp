@@ -176,6 +176,10 @@
         <th class="param-heading">Subsonic version</th>
         <th class="param-heading">REST API version</th>
     </tr>
+    <tr class="table-altrow">
+        <td>4.7</td>
+        <td>1.8.0</td>
+    </tr>
     <tr>
         <td>4.6</td>
         <td>1.7.0</td>
@@ -674,7 +678,13 @@
         <td></td>
         <td>(Since <a href="#versions">1.6.0</a>) Only applicable to video streaming. Requested video size specified as WxH, for instance "640x480".</td>
     </tr>
-</table>
+    <tr>
+        <td><code>estimateContentLength</code></td>
+        <td>No</td>
+        <td>false</td>
+        <td>(Since <a href="#versions">1.8.0</a>). If set to "true", the <em>Content-Length</em> HTTP header will be set to an estimated value
+            for transcoded or downsampled media.</td>
+    </tr></table>
 <p>
     Returns binary data on success, or an XML document on error (in which case the HTTP content type will start with "text/xml").
 </p>
