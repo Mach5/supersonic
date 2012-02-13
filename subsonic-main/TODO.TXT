@@ -54,9 +54,9 @@ Make it easier to run as non-root in rpm.
   https://mail.google.com/mail/?shva=1#inbox/134fac2d57a0c334
   Give warning in gettingStarted.jsp?
 REST: Ensure that podcast dir is included.
-Add animated icon to scan progress.
 Lots of exists() when playing a song.
 Star support
+Remove browse-by-tag stuff
 
 Support ISO files.
 minisub
