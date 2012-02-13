@@ -34,7 +34,6 @@ Check file I/O.
 Optimize MediaFile getters.
 Measure time for media scanning, clean and incremental.
 Test performance of MusicFileDao.
-Test searching etc before search index is created.
 Test searching while createing lucene index
 Revisit MetaDataParser.isRoot()
 -
@@ -47,7 +46,6 @@ Make it easier to run as non-root in rpm.
 REST: Ensure that podcast dir is included.
 Lots of exists() when playing a song.
 Star support
-Remove browse-by-tag stuff
 
 Support ISO files.
 minisub
