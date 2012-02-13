@@ -40,6 +40,8 @@ Fix JSON bug
 Added Polish translation, courtesy of Micha&#322; Kotas
 Bugfix: Fixed problem with players being associated to wrong users.
 Suppress content length estimation by default.
+Support HEAD request in StreamController
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
 
 TODO IN 4.7
 -----------------
@@ -52,8 +54,6 @@ Make it easier to run as non-root in rpm.
   https://mail.google.com/mail/?shva=1#inbox/134fac2d57a0c334
   Give warning in gettingStarted.jsp?
 REST: Ensure that podcast dir is included.
-Suppport HEAD request in StreamController
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
 Add animated icon to scan progress.
 Lots of exists() when playing a song.
 Star support

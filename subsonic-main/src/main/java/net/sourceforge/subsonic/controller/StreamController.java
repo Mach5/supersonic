@@ -159,7 +159,9 @@ public class StreamController implements Controller {
                 }
             }
 
-            Playlist playlist = player.getPlaylist();
+            if (request.getMethod().equals("HEAD")) {
+                return null;
+            }
 
             // Terminate any other streams to this player.
             if (!isPodcast && !isSingleFile) {
@@ -185,7 +187,7 @@ public class StreamController implements Controller {
                 response.setHeader("icy-name", "Subsonic");
                 response.setHeader("icy-genre", "Mixed");
                 response.setHeader("icy-url", "http://subsonic.org/");
-                out = new ShoutCastOutputStream(out, playlist, settingsService);
+                out = new ShoutCastOutputStream(out, player.getPlaylist(), settingsService);
             }
 
             final int BUFFER_SIZE = 2048;
@@ -198,7 +200,7 @@ public class StreamController implements Controller {
                     return null;
                 }
 
-                if (playlist.getStatus() == Playlist.Status.STOPPED) {
+                if (player.getPlaylist().getStatus() == Playlist.Status.STOPPED) {
                     if (isPodcast || isSingleFile) {
                         break;
                     } else {
