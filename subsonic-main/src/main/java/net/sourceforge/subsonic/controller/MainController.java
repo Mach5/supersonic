@@ -163,7 +163,10 @@ public class MainController extends ParameterizableViewController {
 
         List<File> coverArts = new ArrayList<File>();
         if (dir.isAlbum()) {
-            coverArts.add(mediaFileService.getCoverArt(dir));
+            File coverArt = mediaFileService.getCoverArt(dir);
+            if (coverArt != null) {
+                coverArts.add(coverArt);
+            }
         } else {
             for (MediaFile child : children) {
                 if (child.isDirectory()) {

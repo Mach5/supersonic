@@ -24,7 +24,6 @@ Support HEAD request in StreamController
 
 TODO IN 4.7
 -----------------
-Dimmu Borgir, click on cover art throws exception.
 Remove obsolete caches
 Proper reload frames when changing music folder settings.
 Change random implementation.
