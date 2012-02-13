@@ -378,6 +378,7 @@ public class MediaFileService {
     private MediaFile createMediaFile(File file) {
         MediaFile mediaFile = new MediaFile();
         mediaFile.setPath(file.getPath());
+        mediaFile.setFolder(securityService.getRootFolderForFile(file));
         mediaFile.setParentPath(file.getParent());
         mediaFile.setLastModified(new Date(FileUtil.lastModified(file)));
         mediaFile.setPlayCount(0);

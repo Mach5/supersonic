@@ -36,7 +36,6 @@ Measure time for media scanning, clean and incremental.
 Test performance of MusicFileDao.
 Test searching etc before search index is created.
 Test searching while createing lucene index
-Add musicfolder root to media_file (in support of per-user permissions). Must be updated if changed.
 Revisit MetaDataParser.isRoot()
 -
 SubWiji
