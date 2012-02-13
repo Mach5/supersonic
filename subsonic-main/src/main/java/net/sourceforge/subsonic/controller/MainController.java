@@ -257,5 +257,9 @@ public class MainController extends ParameterizableViewController {
     public void setRatingService(RatingService ratingService) {
         this.ratingService = ratingService;
     }
+    
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
+    }
 
 }

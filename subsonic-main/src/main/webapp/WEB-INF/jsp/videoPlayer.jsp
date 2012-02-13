@@ -5,7 +5,7 @@
     <%@ include file="head.jsp" %>
 
     <sub:url value="videoPlayer.view" var="baseUrl"><sub:param name="path" value="${model.video.path}"/></sub:url>
-    <sub:url value="main.view" var="backUrl"><sub:param name="path" value="${model.video.parent.path}"/></sub:url>
+    <sub:url value="main.view" var="backUrl"><sub:param name="path" value="${model.video.path}"/></sub:url>
 
     <sub:url value="/stream" var="streamUrl">
         <sub:param name="path" value="${model.video.path}"/>
