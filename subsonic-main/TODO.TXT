@@ -24,13 +24,9 @@ Support HEAD request in StreamController
 
 TODO IN 4.7
 -----------------
+Dimmu Borgir, click on cover art throws exception.
 Remove obsolete caches
-Implement browse by tag.
-  Filter by folder
-  MainController
-Keep rating.
 Proper reload frames when changing music folder settings.
-Invalidate cache when updating cover art.
 Change random implementation.
 Better error message if media file not found.
 Document MediaFileService.
@@ -42,7 +38,6 @@ Test performance of MusicFileDao.
 Test searching etc before search index is created.
 Test searching while createing lucene index
 Add musicfolder root to media_file (in support of per-user permissions). Must be updated if changed.
-Use long rather than Date in MediaFile?
 Revisit MetaDataParser.isRoot()
 -
 SubWiji
