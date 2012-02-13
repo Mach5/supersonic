@@ -13,8 +13,8 @@
 <h1><img src="icons/error.png" alt=""/> Error</h1>
 
 <p>
-    Subsonic encountered an internal error. You can report this error in the
-    <a href="http://forum.subsonic.org" target="_blank">Subsonic Forum</a>.
+    Supersonic encountered an internal error. You can report this error in the project's 
+    <a href="https://github.com/porkcharsui/supersonic/issues" target="_blank">Github issues</a>.
     Please include the information below.
 </p>
 
