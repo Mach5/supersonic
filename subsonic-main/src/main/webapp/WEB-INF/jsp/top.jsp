@@ -28,8 +28,8 @@
     <td>
         <table><tr align="center">
             <td style="min-width:4em;padding-right:1.5em">
-                <a href="home.view?" target="main"><img src="<spring:theme code="homeImage"/>" title="${home}" alt="${home}"></a><br>
-                <a href="home.view?" target="main">${home}</a>
+                <a href="home.view?listType=newest" target="main"><img src="<spring:theme code="homeImage"/>" title="${home}" alt="${home}"></a><br>
+                <a href="home.view?listType=newest" target="main">${home}</a>
             </td>
             <td style="min-width:4em;padding-right:1.5em">
                 <a href="nowPlaying.view?" target="main"><img src="<spring:theme code="nowPlayingImage"/>" title="${nowPlaying}" alt="${nowPlaying}"></a><br>
