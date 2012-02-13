@@ -90,6 +90,11 @@ public class PlayerService {
             player = getPlayerById(getPlayerIdFromCookie(request, username));
         }
 
+        // Make sure we're not hijacking the player of another user.
+        if (player != null && player.getUsername() != null && username != null && !player.getUsername().equals(username)) {
+            player = null;
+        }
+
         // Look for player with same IP address and user name.
         if (player == null) {
             player = getPlayerByIpAddressAndUsername(request.getRemoteAddr(), username);

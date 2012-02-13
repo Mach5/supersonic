@@ -38,13 +38,10 @@ REST API authentication & session
 Fix JSON bug
   https://mail.google.com/mail/?shva=1#inbox/134e21354999d203
 Added Polish translation, courtesy of Micha&#322; Kotas
+Bugfix: Fixed problem with players being associated to wrong users.
 
 TODO IN 4.7
 -----------------
-Fix problem with wrong identity
-  http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7837&start=30
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/135116d36c89b434
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/1351694ef596254e
 XO, for webOS
   https://developer.palm.com/appredirect/index.php?packageid=com.ericblade.xobeta
 SubWiji
