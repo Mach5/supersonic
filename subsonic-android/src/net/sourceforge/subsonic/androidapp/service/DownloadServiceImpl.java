@@ -768,6 +768,10 @@ public class DownloadServiceImpl extends Service implements DownloadService {
             }
 
             if (start) {
+            	if (audioManager.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                	Log.e(TAG, "Couldn't get audio focus.");
+                	return;
+                }
                 mediaPlayer.start();
                 setPlayerState(STARTED);
             } else {
