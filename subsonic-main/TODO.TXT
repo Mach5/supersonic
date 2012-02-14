@@ -2,6 +2,7 @@
 
 DONE IN 4.7
 -----------------
+Database-backed metadata.
 Serve generic cover art if failing to scale original.
 Use ffmpeg rather than lame for downsampling.
   Retain track number when doing lame downsampling.
@@ -24,8 +25,9 @@ Support HEAD request in StreamController
 
 TODO IN 4.7
 -----------------
+Test with a big collection on a network disk.
 Remove obsolete caches
-Proper reload frames when changing music folder settings.
+Remove complex caching in LeftController?
 Change random implementation.
 Better error message if media file not found.
 Document MediaFileService.
@@ -37,6 +39,7 @@ Test performance of MusicFileDao.
 Test searching while createing lucene index
 Revisit MetaDataParser.isRoot()
 -
+Maintain track order for offline files in Android. Prepend track number for sortability?
 SubWiji
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=8772
 Make it easier to run as non-root in rpm.
@@ -127,7 +130,9 @@ Enable fast scrolling of playlists, search results and songs.
 TODO IN ANDROID 3.4
 --------------------
 Show artist list faster, check for invalid cache in background.
-  
+
+Browser / web page widget for Android
+
 Maintain track order for offline files.
 Check for lingering .partial files.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
@@ -375,14 +380,11 @@ Make maven build from root work.
 Java silent installation: http://java.sun.com/javase/6/webnotes/install/jre/silent.html
 WiX: https://sourceforge.net/projects/wix/
 Add track count REST.
-Use AAC rather than MP3 for transcoding.
-Create album table (or reuse music_file_info), reimplement related services in SearchService.
 Upgrade JWPlayer
 Fix bug with executor in networkservice.
 Disable ads first 30 days?
 Show status in getting started.
 Test lyrics with non-ascii.
-Optimize SettingsService.getAllMusicFolders()?
 Global option to disable chat.  Admin should be able to remove individual messages.
 Scrobbling broken for transcoded songs? http://www.activeobjects.no/subsonic/forum/viewtopic.php?t=2316
 Bug: Double-scrobbling when transcoding.
