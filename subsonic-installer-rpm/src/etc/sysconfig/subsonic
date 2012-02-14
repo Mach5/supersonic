@@ -15,3 +15,11 @@
 # SUBSONIC_ARGS="--port=80 --https-port=443 --max-memory=120"
 
 SUBSONIC_ARGS="--max-memory=100"
+
+
+# The user which should run the Subsonic process. Default "root".
+# Note that non-root users are by default not allowed to use ports
+# below 1024. Also make sure to grant the user write permissions in
+# the music directories, otherwise changing album art and tags will fail.
+
+SUBSONIC_USER=root

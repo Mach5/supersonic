@@ -22,6 +22,7 @@ Bugfix: Fixed problem with players being associated to wrong users.
 Suppress content length estimation by default.
 Support HEAD request in StreamController
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
+Make it configurable to run as a different user than root in RPM.
 
 TODO IN 4.7
 -----------------
