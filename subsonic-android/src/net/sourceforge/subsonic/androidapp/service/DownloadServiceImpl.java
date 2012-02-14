@@ -788,6 +788,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
         Log.w(TAG, "Media player error: " + x, x);
         mediaPlayer.reset();
         setPlayerState(IDLE);
+        audioManager.abandonAudioFocus(audioFocusListener);
     }
 
     protected synchronized void checkDownloads() {
