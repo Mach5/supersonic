@@ -1,25 +1,5 @@
 
 
-Implement browse by tag.
-  Filter by folder
-  MainController
-Proper reload frames when changing music folder settings.
-Invalidate cache when updating cover art.
-Change random implementation.
-Better error message if media file not found.
-Document MediaFileService.
-Support per-artist cover art.
-Check file I/O.
-Optimize MediaFile getters.
-Remove obsolete caches
-Measure time for media scanning, clean and incremental.
-Test performance of MusicFileDao.
-Test searching etc before search index is created.
-Test searching while createing lucene index
-Add musicfolder root to media_file (in support of per-user permissions). Must be updated if changed.
-Use long rather than Date in MediaFile?
-Revisit MetaDataParser.isRoot()
-
 DONE IN 4.7
 -----------------
 Serve generic cover art if failing to scale original.
@@ -36,9 +16,30 @@ REST API authentication & session
   wget --auth-no-challenge --http-user=admin --http-password=admin --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies  "http://localhost:8080/rest/ping.view?u=sindre&p=foo&v=1.6&c=android" -O -
 Fix JSON bug
   https://mail.google.com/mail/?shva=1#inbox/134e21354999d203
+Added Polish translation, courtesy of Micha&#322; Kotas
+Bugfix: Fixed problem with players being associated to wrong users.
+Suppress content length estimation by default.
+Support HEAD request in StreamController
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
 
 TODO IN 4.7
 -----------------
+Dimmu Borgir, click on cover art throws exception.
+Remove obsolete caches
+Proper reload frames when changing music folder settings.
+Change random implementation.
+Better error message if media file not found.
+Document MediaFileService.
+Support per-artist cover art.
+Check file I/O.
+Optimize MediaFile getters.
+Measure time for media scanning, clean and incremental.
+Test performance of MusicFileDao.
+Test searching etc before search index is created.
+Test searching while createing lucene index
+Add musicfolder root to media_file (in support of per-user permissions). Must be updated if changed.
+Revisit MetaDataParser.isRoot()
+-
 SubWiji
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=8772
 Make it easier to run as non-root in rpm.
@@ -46,13 +47,11 @@ Make it easier to run as non-root in rpm.
   https://mail.google.com/mail/?shva=1#inbox/134fac2d57a0c334
   Give warning in gettingStarted.jsp?
 REST: Ensure that podcast dir is included.
-Suppport HEAD request in StreamController
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
-Add animated icon to scan progress.
 Lots of exists() when playing a song.
+Star support
+Remove browse-by-tag stuff
 
 Support ISO files.
-Make it possible to suppress content length estimation.
 minisub
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
@@ -131,6 +130,8 @@ Enable fast scrolling of playlists, search results and songs.
 
 TODO IN ANDROID 3.4
 --------------------
+Show artist list faster, check for invalid cache in background.
+  
 Maintain track order for offline files.
 Check for lingering .partial files.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
@@ -151,6 +152,7 @@ Include German translation.
 Google TV?
 Test BlackBerry runtime
 Android 4.0: Support Audio remote controls
+  http://developer.android.com/reference/android/media/RemoteControlClient.html
 Handle files in root folder.
 EQ resets when switching between online/offline.
   https://mail.google.com/mail/?shva=1#inbox/131e7e98173f0c97
@@ -895,14 +897,14 @@ Ogmunds vei 11
 0488 Oslo
 Norway
 
+Account number: 97223688407
+IBAN number: NO7297223688407
+SWIFT/BIC code: DNBANOKK
+
 Bank address:
 DnB NOR
 0021 Oslo
 Norway
-
-Account number: 97223688407
-IBAN number: NO7297223688407
-SWIFT/BIC code: DNBANOKK
 
 RipNAS, http://www.ripnas.com/
 QNAP

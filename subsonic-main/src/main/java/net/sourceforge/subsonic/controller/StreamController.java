@@ -137,7 +137,7 @@ public class StreamController implements Controller {
                 TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
                 long fileLength = getFileLength(parameters);
                 boolean isConversion = parameters.isDownsample() || parameters.isTranscode();
-                boolean isWebPlayer = player.getTechnology() == PlayerTechnology.WEB;
+                boolean estimateContentLength = ServletRequestUtils.getBooleanParameter(request, "estimateContentLength", false);
 
                 range = getRange(request, file);
                 if (range != null) {
@@ -147,7 +147,7 @@ public class StreamController implements Controller {
                     long firstBytePos = range.getMinimumLong();
                     long lastBytePos = fileLength - 1;
                     response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
-                } else if (!isConversion || !isWebPlayer) {
+                } else if (!isConversion || estimateContentLength) {
                     Util.setContentLength(response, fileLength);
                 }
 
@@ -159,7 +159,9 @@ public class StreamController implements Controller {
                 }
             }
 
-            Playlist playlist = player.getPlaylist();
+            if (request.getMethod().equals("HEAD")) {
+                return null;
+            }
 
             // Terminate any other streams to this player.
             if (!isPodcast && !isSingleFile) {
@@ -185,7 +187,7 @@ public class StreamController implements Controller {
                 response.setHeader("icy-name", "Subsonic");
                 response.setHeader("icy-genre", "Mixed");
                 response.setHeader("icy-url", "http://subsonic.org/");
-                out = new ShoutCastOutputStream(out, playlist, settingsService);
+                out = new ShoutCastOutputStream(out, player.getPlaylist(), settingsService);
             }
 
             final int BUFFER_SIZE = 2048;
@@ -198,7 +200,7 @@ public class StreamController implements Controller {
                     return null;
                 }
 
-                if (playlist.getStatus() == Playlist.Status.STOPPED) {
+                if (player.getPlaylist().getStatus() == Playlist.Status.STOPPED) {
                     if (isPodcast || isSingleFile) {
                         break;
                     } else {

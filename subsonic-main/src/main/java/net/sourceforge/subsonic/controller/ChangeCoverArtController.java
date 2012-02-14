@@ -31,7 +31,7 @@ import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.service.MediaFileService;
 
 /**
- * Controller for saving playlists.
+ * Controller for changing cover art.
  *
  * @author Sindre Mehus
  */

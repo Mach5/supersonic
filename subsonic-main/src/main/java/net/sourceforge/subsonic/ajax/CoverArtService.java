@@ -98,9 +98,10 @@ public class CoverArtService {
             // Write file.
             IOUtils.copy(input, new FileOutputStream(newCoverFile));
 
+            MediaFile mediaFile = mediaFileService.getMediaFile(path);
+
             // Rename existing cover file if new cover file is not the preferred.
             try {
-                MediaFile mediaFile = mediaFileService.getMediaFile(path);
                 File coverFile = mediaFileService.getCoverArt(mediaFile);
                 if (coverFile != null) {
                     if (!newCoverFile.equals(coverFile)) {
@@ -111,6 +112,8 @@ public class CoverArtService {
             } catch (Exception x) {
                 LOG.warn("Failed to rename existing cover file.", x);
             }
+
+            mediaFileService.refreshMediaFile(mediaFile);
 
         } finally {
             IOUtils.closeQuietly(input);

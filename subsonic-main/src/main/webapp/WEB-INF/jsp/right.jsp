@@ -25,7 +25,7 @@
 </script>
 
 <div id="scanningStatus" style="display: none;" class="warning">
-    <fmt:message key="main.scanning"/> <span id="scanCount"></span>
+    <img src="<spring:theme code="scanningImage"/>" title="" alt=""> <fmt:message key="main.scanning"/> <span id="scanCount"></span>
 </div>
 
 <c:if test="${model.showNowPlaying}">
