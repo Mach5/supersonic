@@ -25,6 +25,7 @@ Support HEAD request in StreamController
 
 TODO IN 4.7
 -----------------
+Change description of apps in More page.
 Test with a big collection on a network disk.
 Remove obsolete caches
 Remove complex caching in LeftController?

@@ -172,8 +172,15 @@ public class MediaFileDao extends AbstractDao {
     }
 
     public MediaFile getRandomSong(Integer fromYear, Integer toYear, String genre, String musicFolderPath) {
-        Integer min = queryForInt("select min(id) from media_file", 0);
-        Integer max = queryForInt("select max(id) from media_file", 0);
+        Integer min;
+        Integer max;
+        if (musicFolderPath != null) {
+            min = queryForInt("select min(id) from media_file where folder=?", 0, musicFolderPath);
+            max = queryForInt("select max(id) from media_file where folder=?", 0, musicFolderPath);
+        } else {
+            min = queryForInt("select min(id) from media_file", 0);
+            max = queryForInt("select max(id) from media_file", 0);
+        }
 
         StringBuilder whereClause = new StringBuilder("type in ('AUDIO', 'VIDEO') and id > ").append(Util.randomInt(min, max));
 
@@ -187,7 +194,7 @@ public class MediaFileDao extends AbstractDao {
             whereClause.append(" and genre = '").append(genre).append("'");
         }
         if (musicFolderPath != null) {
-            whereClause.append(" and path like '").append(musicFolderPath).append("%'");
+            whereClause.append(" and folder = '").append(musicFolderPath).append("'");
         }
 
         return queryOne("select " + COLUMNS + " from media_file where " + whereClause + " limit 1", rowMapper);

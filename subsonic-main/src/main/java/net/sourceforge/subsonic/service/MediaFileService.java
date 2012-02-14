@@ -246,7 +246,7 @@ public class MediaFileService {
         String musicFolderPath = null;
         if (criteria.getMusicFolderId() != null) {
             MusicFolder musicFolder = settingsService.getMusicFolderById(criteria.getMusicFolderId());
-            musicFolderPath = musicFolder.getPath().getPath() + File.separator;
+            musicFolderPath = musicFolder.getPath().getPath();
         }
 
         // Note: To avoid duplicates, we iterate over more than the requested number of items.
