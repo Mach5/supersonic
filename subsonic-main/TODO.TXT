@@ -23,9 +23,12 @@ Suppress content length estimation by default.
 Support HEAD request in StreamController
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
 Make it configurable to run as a different user than root in RPM.
+Build two versions of subsonic-agent.exe, one with run-as admin.
 
 TODO IN 4.7
 -----------------
+Why are there two instances of subsonic-service.exe?
+Make it work with 64-bit Java 7.  Problem with exe4j?
 Change description of apps in More page.
 Test with a big collection on a network disk.
 Remove obsolete caches

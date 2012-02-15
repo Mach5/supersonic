@@ -109,7 +109,7 @@ public class SubsonicAgent {
     public void checkElevation(String arg) {
         if (isElevationNeeded() && !isElevated()) {
             try {
-                String cmd = "elevate.exe subsonic-agent.exe -elevated " + arg;
+                String cmd = "subsonic-agent-elevated.exe " + arg;
                 Runtime.getRuntime().exec(cmd);
                 System.err.println("Executing: " + cmd);
                 System.exit(0);

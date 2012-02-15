@@ -57,13 +57,16 @@
                                     <target>
                                         <echo>Compiling exe4j...</echo>
                                         <copy file="${basedir}/src/main/exe4j/subsonic-agent.exe.vmoptions" todir="${project.build.directory}"/>
+                                        <copy file="${basedir}/src/main/exe4j/subsonic-agent-elevated.exe.vmoptions" todir="${project.build.directory}"/>
                                         <copy file="${basedir}/src/main/exe4j/subsonic-service.exe.vmoptions" todir="${project.build.directory}"/>
-                                        <copy file="${basedir}/src/main/exe4j/elevate.exe" todir="${project.build.directory}"/>
                                         <exec executable="${exe4j.home}/bin/exe4jc">
                                             <arg value="--license=L-SINDRE_MEHUS#14926715500010001-1ty7dbe11l10ll#140"/>
                                         </exec>
                                         <exec executable="${exe4j.home}/bin/exe4jc">
                                             <arg value="${basedir}/src/main/exe4j/subsonic-agent.exe4j"/>
+                                        </exec>
+                                        <exec executable="${exe4j.home}/bin/exe4jc">
+                                            <arg value="${basedir}/src/main/exe4j/subsonic-agent-elevated.exe4j"/>
                                         </exec>
                                         <exec executable="${exe4j.home}/bin/exe4jc">
                                             <arg value="${basedir}/src/main/exe4j/subsonic-service.exe4j"/>
