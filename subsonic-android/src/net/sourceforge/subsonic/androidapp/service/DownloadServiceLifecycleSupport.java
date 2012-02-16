@@ -29,12 +29,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
-import net.sourceforge.subsonic.androidapp.domain.PlayerState;
 import net.sourceforge.subsonic.androidapp.util.CacheCleaner;
 import net.sourceforge.subsonic.androidapp.util.FileUtil;
 import net.sourceforge.subsonic.androidapp.util.Util;
@@ -51,7 +48,6 @@ public class DownloadServiceLifecycleSupport {
     private ScheduledExecutorService executorService;
     private BroadcastReceiver headsetEventReceiver;
     private BroadcastReceiver ejectEventReceiver;
-    private PhoneStateListener phoneStateListener;
     private boolean externalStorageAvailable= true;
 
     /**
@@ -132,11 +128,6 @@ public class DownloadServiceLifecycleSupport {
         // React to media buttons.
         Util.registerMediaButtonEventReceiver(downloadService);
 
-        // Pause temporarily on incoming phone calls.
-        phoneStateListener = new MyPhoneStateListener();
-        TelephonyManager telephonyManager = (TelephonyManager) downloadService.getSystemService(Context.TELEPHONY_SERVICE);
-        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-
         // Register the handler for outside intents.
         IntentFilter commandFilter = new IntentFilter();
         commandFilter.addAction(DownloadServiceImpl.CMD_PLAY);
@@ -168,9 +159,6 @@ public class DownloadServiceLifecycleSupport {
         downloadService.unregisterReceiver(ejectEventReceiver);
         downloadService.unregisterReceiver(headsetEventReceiver);
         downloadService.unregisterReceiver(intentReceiver);
-
-        TelephonyManager telephonyManager = (TelephonyManager) downloadService.getSystemService(Context.TELEPHONY_SERVICE);
-        telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
     }
 
     public boolean isExternalStorageAvailable() {
@@ -224,35 +212,6 @@ public class DownloadServiceLifecycleSupport {
                 break;
             default:
                 break;
-        }
-    }
-
-    /**
-     * Logic taken from packages/apps/Music.  Will pause when an incoming
-     * call rings or if a call (incoming or outgoing) is connected.
-     */
-    private class MyPhoneStateListener extends PhoneStateListener {
-        private boolean resumeAfterCall;
-
-        @Override
-        public void onCallStateChanged(int state, String incomingNumber) {
-            switch (state) {
-                case TelephonyManager.CALL_STATE_RINGING:
-                case TelephonyManager.CALL_STATE_OFFHOOK:
-                    if (downloadService.getPlayerState() == PlayerState.STARTED) {
-                        resumeAfterCall = true;
-                        downloadService.pause();
-                    }
-                    break;
-                case TelephonyManager.CALL_STATE_IDLE:
-                    if (resumeAfterCall) {
-                        resumeAfterCall = false;
-                        downloadService.start();
-                    }
-                    break;
-                default:
-                    break;
-            }
         }
     }
 
