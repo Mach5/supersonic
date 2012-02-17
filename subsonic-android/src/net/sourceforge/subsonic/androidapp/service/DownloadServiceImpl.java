@@ -63,6 +63,8 @@ public class DownloadServiceImpl extends Service implements DownloadService {
 
     private final IBinder binder = new SimpleServiceBinder<DownloadService>(this);
     private MediaPlayer mediaPlayer;
+    private AudioManager audioManager;
+    private AudioFocusListener audioFocusListener;
     private final List<DownloadFile> downloadList = new ArrayList<DownloadFile>();
     private final Handler handler = new Handler();
     private final DownloadServiceLifecycleSupport lifecycleSupport = new DownloadServiceLifecycleSupport(this);
@@ -140,6 +142,9 @@ public class DownloadServiceImpl extends Service implements DownloadService {
         PowerManager pm = (PowerManager)getSystemService(Context.POWER_SERVICE);
         wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, this.getClass().getName());
         wakeLock.setReferenceCounted(false);
+        
+        audioFocusListener = new AudioFocusListener(this);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         instance = this;
         lifecycleSupport.onCreate();
@@ -448,6 +453,10 @@ public class DownloadServiceImpl extends Service implements DownloadService {
                     jukeboxService.skip(getCurrentPlayingIndex(), 0);
                     setPlayerState(STARTED);
                 } else {
+                    if (audioManager.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                    	Log.e(TAG, "Couldn't get audio focus.");
+                    	return;
+                    }
                     bufferAndPlay();
                 }
             }
@@ -523,7 +532,17 @@ public class DownloadServiceImpl extends Service implements DownloadService {
 
     @Override
     public synchronized void pause() {
-        try {
+    	if (!jukeboxEnabled) audioManager.abandonAudioFocus(audioFocusListener);
+    	pauseMedia();
+    }
+    
+    @Override
+    public synchronized void pauseAndRetainFocus() {
+    		pauseMedia();
+    }
+    
+    private synchronized void pauseMedia() {
+    	try {
             if (playerState == STARTED) {
                 if (jukeboxEnabled) {
                     jukeboxService.stop();
@@ -543,6 +562,10 @@ public class DownloadServiceImpl extends Service implements DownloadService {
             if (jukeboxEnabled) {
                 jukeboxService.start();
             } else {
+            	if (audioManager.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                	Log.e(TAG, "Couldn't get audio focus.");
+                	return;
+                }
                 mediaPlayer.start();
             }
             setPlayerState(STARTED);
@@ -559,6 +582,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
         try {
             mediaPlayer.reset();
             setPlayerState(IDLE);
+            audioManager.abandonAudioFocus(audioFocusListener);
         } catch (Exception x) {
             handleError(x);
         }
@@ -672,6 +696,10 @@ public class DownloadServiceImpl extends Service implements DownloadService {
     public void adjustJukeboxVolume(boolean up) {
         jukeboxService.adjustVolume(up);
     }
+    
+    private synchronized void setVolume(float volume) {
+    	if (mediaPlayer.isPlaying()) mediaPlayer.setVolume(volume, volume);
+    }
 
     private synchronized void bufferAndPlay() {
         reset();
@@ -740,6 +768,10 @@ public class DownloadServiceImpl extends Service implements DownloadService {
             }
 
             if (start) {
+            	if (audioManager.requestAudioFocus(audioFocusListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN) != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+                	Log.e(TAG, "Couldn't get audio focus.");
+                	return;
+                }
                 mediaPlayer.start();
                 setPlayerState(STARTED);
             } else {
@@ -756,6 +788,7 @@ public class DownloadServiceImpl extends Service implements DownloadService {
         Log.w(TAG, "Media player error: " + x, x);
         mediaPlayer.reset();
         setPlayerState(IDLE);
+        audioManager.abandonAudioFocus(audioFocusListener);
     }
 
     protected synchronized void checkDownloads() {
@@ -926,5 +959,44 @@ public class DownloadServiceImpl extends Service implements DownloadService {
         public String toString() {
             return "BufferTask (" + downloadFile + ")";
         }
+    }
+    
+    private class AudioFocusListener implements AudioManager.OnAudioFocusChangeListener {
+    	
+    	private final DownloadServiceImpl downloadService;
+    	
+    	public AudioFocusListener(DownloadServiceImpl downloadService) {
+    		this.downloadService = downloadService;
+    	}
+    	
+		@Override
+		public void onAudioFocusChange(int focusChange) {
+			switch (focusChange) {
+				case AudioManager.AUDIOFOCUS_GAIN:
+					if (!downloadService.isJukeboxEnabled()) {
+						downloadService.setVolume(1.0f);
+						downloadService.start();
+					}
+					break;
+					
+				case AudioManager.AUDIOFOCUS_LOSS:
+					if (!downloadService.isJukeboxEnabled()) {
+						downloadService.pause();
+					}
+					break;
+				
+				case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+					if (!downloadService.isJukeboxEnabled()) {
+						downloadService.pauseAndRetainFocus();
+					}
+					break;
+				
+				case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+					if (!downloadService.isJukeboxEnabled()) {
+						downloadService.setVolume(0.1f);
+					}
+					break;
+			}
+		}
     }
 }

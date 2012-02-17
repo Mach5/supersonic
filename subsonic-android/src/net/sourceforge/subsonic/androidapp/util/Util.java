@@ -683,31 +683,16 @@ public final class Util {
         boolean enabled = prefs.getBoolean(Constants.PREFERENCES_KEY_MEDIA_BUTTONS, true);
 
         if (enabled) {
-
-            // AudioManager.registerMediaButtonEventReceiver() was introduced in Android 2.2.
-            // Use reflection to maintain compatibility with 1.5.
-            try {
-                AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
-                ComponentName componentName = new ComponentName(context.getPackageName(), MediaButtonIntentReceiver.class.getName());
-                Method method = AudioManager.class.getMethod("registerMediaButtonEventReceiver", ComponentName.class);
-                method.invoke(audioManager, componentName);
-            } catch (Throwable x) {
-                // Ignored.
-            }
+            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            ComponentName componentName = new ComponentName(context.getPackageName(), MediaButtonIntentReceiver.class.getName());
+            audioManager.registerMediaButtonEventReceiver(componentName);
         }
     }
 
     public static void unregisterMediaButtonEventReceiver(Context context) {
-        // AudioManager.unregisterMediaButtonEventReceiver() was introduced in Android 2.2.
-        // Use reflection to maintain compatibility with 1.5.
-        try {
             AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
             ComponentName componentName = new ComponentName(context.getPackageName(), MediaButtonIntentReceiver.class.getName());
-            Method method = AudioManager.class.getMethod("unregisterMediaButtonEventReceiver", ComponentName.class);
-            method.invoke(audioManager, componentName);
-        } catch (Throwable x) {
-            // Ignored.
-        }
+            audioManager.unregisterMediaButtonEventReceiver(componentName);
     }
 
     private static void startForeground(Service service, int notificationId, Notification notification) {
