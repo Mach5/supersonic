@@ -344,6 +344,7 @@
         <property name="downloadController" ref="downloadController"/>
         <property name="streamController" ref="streamController"/>
         <property name="coverArtController" ref="coverArtController"/>
+        <property name="avatarController" ref="avatarController"/>
         <property name="userSettingsController" ref="userSettingsController"/>
         <property name="leftController" ref="leftController"/>
         <property name="homeController" ref="homeController"/>

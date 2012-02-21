@@ -24,6 +24,7 @@ Support HEAD request in StreamController
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
 Make it configurable to run as a different user than root in RPM.
 Build two versions of subsonic-agent.exe, one with run-as admin.
+REST: Added getAvatar.
 
 TODO IN 4.7
 -----------------
@@ -932,3 +933,11 @@ Use color: #ff8200
 Getting started, yellow marker
 Use brush: circle fuzzy 17, transparency 67.3
 Use color: #ffe200
+
+DK
+--
+Commercial lyrics service, musixmatch.com
+Languages, themes.
+Apps.
+Domain names, redirection.
+Use in marketing of Subsonic.

@@ -99,6 +99,7 @@ public class RESTController extends MultiActionController {
     private TranscodingService transcodingService;
     private DownloadController downloadController;
     private CoverArtController coverArtController;
+    private AvatarController avatarController;
     private UserSettingsController userSettingsController;
     private LeftController leftController;
     private HomeController homeController;
@@ -1091,6 +1092,11 @@ public class RESTController extends MultiActionController {
         return coverArtController.handleRequest(request, response);
     }
 
+    public ModelAndView getAvatar(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        return avatarController.handleRequest(request, response);
+    }
+
     public void changePassword(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         try {
@@ -1481,6 +1487,10 @@ public class RESTController extends MultiActionController {
 
     public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
+    }
+
+    public void setAvatarController(AvatarController avatarController) {
+        this.avatarController = avatarController;
     }
 
     public static enum ErrorCode {

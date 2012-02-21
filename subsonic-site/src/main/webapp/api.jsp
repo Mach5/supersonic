@@ -18,7 +18,7 @@
 
 <p>
     The Subsonic API allows anyone to build their own programs using Subsonic as the server, whether they're
-    on the web, the desktop or on mobile devices. As an example, the Subsonic Android and iPhone <a href="apps.jsp">apps</a> are built using the
+    on the web, the desktop or on mobile devices. As an example, all the Subsonic<a href="apps.jsp">apps</a> are built using the
     Subsonic API.
 </p>
 <p>
@@ -721,7 +721,35 @@
     </tr>
 </table>
 <p>
-    Returns binary data on success, or an XML document on error (in which case the HTTP content type will start with "text/xml").
+    Returns the cover art image in binary form.
+</p>
+
+<h2 class="div">getAvatar</h2>
+
+<p>
+    <code>http://your-server/rest/getAvatar.view</code>
+    <br>Since <a href="#versions">1.8.0</a>
+</p>
+
+<p>
+    Returns the avatar (personal image) for a user.
+</p>
+<table width="100%" class="bottomspace">
+    <tr>
+        <th class="param-heading">Parameter</th>
+        <th class="param-heading">Required</th>
+        <th class="param-heading">Default</th>
+        <th class="param-heading">Comment</th>
+    </tr>
+    <tr class="table-altrow">
+        <td><code>username</code></td>
+        <td>Yes</td>
+        <td></td>
+        <td>The user in question.</td>
+    </tr>
+</table>
+<p>
+    Returns the avatar image in binary form.
 </p>
 
 

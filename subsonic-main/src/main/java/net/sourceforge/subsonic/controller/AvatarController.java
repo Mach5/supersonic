@@ -19,11 +19,12 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.domain.Avatar;
+import net.sourceforge.subsonic.domain.AvatarScheme;
+import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.SettingsService;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 import org.springframework.web.servlet.mvc.LastModified;
-import org.springframework.web.bind.ServletRequestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,10 +65,15 @@ public class AvatarController implements Controller, LastModified {
         }
 
         String username = request.getParameter("username");
-        if (username != null) {
-            return settingsService.getCustomAvatar(username);
+        if (username == null) {
+            return null;
         }
-        return null;
+
+        UserSettings userSettings = settingsService.getUserSettings(username);
+        if (userSettings.getAvatarScheme() == AvatarScheme.SYSTEM) {
+            return settingsService.getSystemAvatar(userSettings.getSystemAvatarId());
+        }
+        return settingsService.getCustomAvatar(username);
     }
 
     public void setSettingsService(SettingsService settingsService) {
