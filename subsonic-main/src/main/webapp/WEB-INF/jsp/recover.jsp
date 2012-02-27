@@ -5,7 +5,7 @@
 <head>
     <%@ include file="head.jsp" %>
 </head>
-<body class="mainframe bgcolor1" onload="document.getElementById('usernameOrPassword').focus()">
+<body class="mainframe bgcolor1" onload="document.getElementById('usernameOrEmail').focus()">
 
 <form action="recover.view" method="POST">
     <div class="bgcolor2" style="border:1px solid black; padding:20px 50px 20px 50px; margin-top:100px">
@@ -14,7 +14,7 @@
 
             <h1><fmt:message key="recover.title"/></h1>
             <p style="padding-top: 1em; padding-bottom: 0.5em"><fmt:message key="recover.text"/></p>
-            <input type="text" id="usernameOrPassword" name="usernameOrPassword" style="width:18em;margin-right: 1em">
+            <input type="text" id="usernameOrEmail" name="usernameOrEmail" style="width:18em;margin-right: 1em">
             <input name="submit" type="submit" value="<fmt:message key="recover.send"/>">
 
             <c:if test="${model.success}">
