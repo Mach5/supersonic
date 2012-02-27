@@ -18,7 +18,6 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -70,6 +69,18 @@ public class MultiController extends MultiActionController {
         }
 
         return new ModelAndView("login", "model", map);
+    }
+
+    public ModelAndView recover(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        String usernameOrEmail = request.getParameter("usernameOrEmail");
+        if (usernameOrEmail != null) {
+            // TODO: Send email
+        }
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        return new ModelAndView("recover", "model", map);
     }
 
     public ModelAndView accessDenied(HttpServletRequest request, HttpServletResponse response) {

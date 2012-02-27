@@ -29,8 +29,10 @@ REST: Added getAvatar.
 
 TODO IN 4.7
 -----------------
+Email forgotten password, using subsonic backend service.  Reset password.
 Why are there two instances of subsonic-service.exe?
 Make it work with 64-bit Java 7.  Problem with exe4j?
+Add REST method to get user details, including avatar.
 Change description of apps in More page.
 Test with a big collection on a network disk.
 Remove obsolete caches
@@ -351,7 +353,6 @@ Build ffmpeg for x86 on Mac
   ./configure --disable-shared --disable-mmx --arch=x86_64
   ./configure --arch=ppc --enable-altivec --extra-cflags="-arch ppc" --extra-ldflags="-arch ppc" --enable-cross-compile --target-os=darwin
 According to Petter, overriding SUBSONIC_HOME doesn't work in Debian.
-Email forgotten password, using subsonic backend service.
 Estimate content-length for transcoded/downsampled files.
 Complete getjar registration.
 Test non-ascii transcoding on linux.
