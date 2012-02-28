@@ -1,9 +1,5 @@
 language: java
 
-# only build backend
-before_script:
-  - "cd subsonic-main"
-
 # whitelist 
 branches:
   only:
