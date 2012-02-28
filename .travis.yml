@@ -1,0 +1,7 @@
+language: java
+
+# whitelist 
+branches:
+  only:
+    - master
+    - upstream
