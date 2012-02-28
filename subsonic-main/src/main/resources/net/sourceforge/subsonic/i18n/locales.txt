@@ -16,6 +16,9 @@ fr
 # Spanish
 es
 
+# Catalan
+ca
+
 # Portuguese
 pt
 

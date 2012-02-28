@@ -210,14 +210,18 @@ public class SecurityService implements UserDetailsService {
      * @return Whether the given file is located in one of the music folders.
      */
     private boolean isInMusicFolder(File file) {
+        return getMusicFolderForFile(file) != null;
+    }
+
+    private MusicFolder getMusicFolderForFile(File file) {
         List<MusicFolder> folders = settingsService.getAllMusicFolders(false, true);
         String path = file.getPath();
         for (MusicFolder folder : folders) {
             if (isFileInFolder(path, folder.getPath().getPath())) {
-                return true;
+                return folder;
             }
         }
-        return false;
+        return null;
     }
 
     /**
@@ -240,6 +244,18 @@ public class SecurityService implements UserDetailsService {
     private boolean isInPodcastFolder(File file) {
         String podcastFolder = settingsService.getPodcastFolder();
         return isFileInFolder(file.getPath(), podcastFolder);
+    }
+
+    public String getRootFolderForFile(File file) {
+        MusicFolder folder = getMusicFolderForFile(file);
+        if (folder != null) {
+            return folder.getPath().getPath();
+        }
+
+        if (isInPodcastFolder(file)) {
+            return settingsService.getPodcastFolder();
+        }
+        return null;
     }
 
     /**

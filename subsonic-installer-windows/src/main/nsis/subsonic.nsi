@@ -61,9 +61,10 @@ Section "Subsonic"
   SetOutPath $INSTDIR
 
   # Write files.
-  File ..\..\..\target\elevate.exe
   File ..\..\..\target\subsonic-agent.exe
   File ..\..\..\target\subsonic-agent.exe.vmoptions
+  File ..\..\..\target\subsonic-agent-elevated.exe
+  File ..\..\..\target\subsonic-agent-elevated.exe.vmoptions
   File ..\..\..\target\subsonic-service.exe
   File ..\..\..\target\subsonic-service.exe.vmoptions
   File ..\..\..\..\subsonic-booter\target\subsonic-booter-jar-with-dependencies.jar
@@ -95,16 +96,16 @@ Section "Subsonic"
   # Add Windows Firewall exception.
   # (Requires NSIS plugin found on http://nsis.sourceforge.net/NSIS_Simple_Firewall_Plugin to be installed
   # as NSIS_HOME/Plugins/SimpleFC.dll)
-  SimpleFC::AddApplication "Subsonic Elevate" "$INSTDIR\elevate.exe" 0 2 "" 1
   SimpleFC::AddApplication "Subsonic Service" "$INSTDIR\subsonic-service.exe" 0 2 "" 1
   SimpleFC::AddApplication "Subsonic Agent" "$INSTDIR\subsonic-agent.exe" 0 2 "" 1
+  SimpleFC::AddApplication "Subsonic Agent (Elevated)" "$INSTDIR\subsonic-agent-elevated.exe" 0 2 "" 1
 
   # Install and start service.
   ExecWait '"$INSTDIR\subsonic-service.exe" -install'
   ExecWait '"$INSTDIR\subsonic-service.exe" -start'
 
   # Start agent.
-  Exec '"$INSTDIR\subsonic-agent.exe" -elevated -balloon'
+  Exec '"$INSTDIR\subsonic-agent-elevated.exe" -balloon'
 
 SectionEnd
 
@@ -139,6 +140,7 @@ Section "Uninstall"
   # (Requires NSIS plugin found on http://nsis.sourceforge.net/Processes_plug-in to be installed
   # as NSIS_HOME/Plugins/Processes.dll)
   Processes::KillProcess "subsonic-agent"
+  Processes::KillProcess "subsonic-agent-elevated"
   Processes::KillProcess "ffmpeg"
   Processes::KillProcess "lame"
 
@@ -158,6 +160,8 @@ Section "Uninstall"
   Delete "$INSTDIR\subsonic.war"
   Delete "$INSTDIR\subsonic-agent.exe"
   Delete "$INSTDIR\subsonic-agent.exe.vmoptions"
+  Delete "$INSTDIR\subsonic-agent-elevated.exe"
+  Delete "$INSTDIR\subsonic-agent-elevated.exe.vmoptions"
   Delete "$INSTDIR\subsonic-booter-jar-with-dependencies.jar"
   Delete "$INSTDIR\subsonic-service.exe"
   Delete "$INSTDIR\subsonic-service.exe.vmoptions"
@@ -172,6 +176,7 @@ Section "Uninstall"
   SimpleFC::RemoveApplication "$INSTDIR\elevate.exe"
   SimpleFC::RemoveApplication "$INSTDIR\subsonic-service.exe"
   SimpleFC::RemoveApplication "$INSTDIR\subsonic-agent.exe"
+  SimpleFC::RemoveApplication "$INSTDIR\subsonic-agent-elevated.exe"
 
 SectionEnd
 

@@ -82,14 +82,14 @@
         <fmt:message key="musicfoldersettings.fastcache.description"/>
     </p>
 
-    <div>
-        <form:checkbox path="organizeByFolderStructure" cssClass="checkbox" id="organizeByFolderStructure"/>
-        <form:label path="organizeByFolderStructure"><fmt:message key="musicfoldersettings.organizebyfolderstructure"/></form:label>
-    </div>
+    <%--<div>--%>
+        <%--<form:checkbox path="organizeByFolderStructure" cssClass="checkbox" id="organizeByFolderStructure"/>--%>
+        <%--<form:label path="organizeByFolderStructure"><fmt:message key="musicfoldersettings.organizebyfolderstructure"/></form:label>--%>
+    <%--</div>--%>
 
-    <p class="detail" style="width:60%;white-space:normal;">
-        <fmt:message key="musicfoldersettings.organizebyfolderstructure.description"/>
-    </p>
+    <%--<p class="detail" style="width:60%;white-space:normal;">--%>
+        <%--<fmt:message key="musicfoldersettings.organizebyfolderstructure.description"/>--%>
+    <%--</p>--%>
 
     <p >
         <input type="submit" value="<fmt:message key="common.save"/>" style="margin-right:0.3em">

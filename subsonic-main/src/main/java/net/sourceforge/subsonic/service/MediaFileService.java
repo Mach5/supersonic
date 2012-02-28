@@ -246,7 +246,7 @@ public class MediaFileService {
         String musicFolderPath = null;
         if (criteria.getMusicFolderId() != null) {
             MusicFolder musicFolder = settingsService.getMusicFolderById(criteria.getMusicFolderId());
-            musicFolderPath = musicFolder.getPath().getPath() + File.separator;
+            musicFolderPath = musicFolder.getPath().getPath();
         }
 
         // Note: To avoid duplicates, we iterate over more than the requested number of items.
@@ -378,6 +378,7 @@ public class MediaFileService {
     private MediaFile createMediaFile(File file) {
         MediaFile mediaFile = new MediaFile();
         mediaFile.setPath(file.getPath());
+        mediaFile.setFolder(securityService.getRootFolderForFile(file));
         mediaFile.setParentPath(file.getParent());
         mediaFile.setLastModified(new Date(FileUtil.lastModified(file)));
         mediaFile.setPlayCount(0);

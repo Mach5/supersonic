@@ -34,6 +34,9 @@ SCRIPTNAME=/etc/init.d/$NAME
 # Exit if the package is not installed.
 [ -x "$DAEMON" ] || exit 0
 
+# Run as root if SUBSONIC_USER is not set.
+[ "$SUBSONIC_USER" = "" ] && SUBSONIC_USER=root
+
 # Source function library.
 . /etc/init.d/functions
 
@@ -49,8 +52,13 @@ do_start()
 	[ "$?" = 0 ] && return 1
     fi
 
+    touch $PIDFILE
+    chown $SUBSONIC_USER $PIDFILE
+    [ -e /var/subsonic ] && chown -R $SUBSONIC_USER /var/subsonic
+    [ -e /tmp/subsonic ] && chown -R $SUBSONIC_USER /tmp/subsonic
+
     echo $"Starting $NAME ..."
-    $DAEMON $DAEMON_ARGS
+    su -c "$DAEMON $DAEMON_ARGS" $SUBSONIC_USER
     RETVAL=$?
     echo
     [ $RETVAL -eq 0 ] && touch $LOCKFILE

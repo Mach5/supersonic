@@ -23,12 +23,9 @@ import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import net.sourceforge.subsonic.domain.MusicFolder;
-import net.sourceforge.subsonic.domain.SearchCriteria;
-import net.sourceforge.subsonic.domain.SearchResult;
 import net.sourceforge.subsonic.util.FileUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
@@ -153,7 +150,7 @@ public class MediaScannerService {
             // Recurse through all files on disk.
             for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
                 MediaFile root = mediaFileService.getMediaFile(musicFolder.getPath());
-                scanFile(root);
+                scanFile(root, musicFolder);
             }
             mediaFileDao.archiveNotPresent();
 
@@ -175,19 +172,25 @@ public class MediaScannerService {
         }
     }
 
-    private void scanFile(MediaFile file) {
+    private void scanFile(MediaFile file, MusicFolder musicFolder) {
         scanCount++;
         if (scanCount % 250 == 0) {
             LOG.info("Scanned media library with " + scanCount + " entries.");
         }
 
+        // Update the root folder if it has changed.
+        if (!musicFolder.getPath().getPath().equals(file.getFolder())) {
+            file.setFolder(musicFolder.getPath().getPath());
+            mediaFileDao.createOrUpdateMediaFile(file);
+        }
+
         mediaFileDao.setMediaFilePresent(file.getPath());
 
         for (MediaFile child : mediaFileService.getChildrenOf(file, true, false, false)) {
-            scanFile(child);
+            scanFile(child, musicFolder);
         }
         for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false)) {
-            scanFile(child);
+            scanFile(child, musicFolder);
         }
     }
 

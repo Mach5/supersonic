@@ -18,12 +18,11 @@
  */
 package net.sourceforge.subsonic.domain;
 
-import java.io.File;
-import java.util.Date;
-
+import net.sourceforge.subsonic.util.FileUtil;
 import org.apache.commons.io.FilenameUtils;
 
-import net.sourceforge.subsonic.util.FileUtil;
+import java.io.File;
+import java.util.Date;
 
 /**
  * A media file (audio, video or directory) with an assortment of its meta data.
@@ -34,6 +33,7 @@ import net.sourceforge.subsonic.util.FileUtil;
 public class MediaFile {
 
     private String path;
+    private String folder;
     private MediaType mediaType;
     private String format;
     private String title;
@@ -59,12 +59,13 @@ public class MediaFile {
     private Date childrenLastUpdated;
     private boolean present;
 
-    public MediaFile(String path, MediaType mediaType, String format, String title,
-            String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
-            boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
-            String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date lastModified,
-            Date childrenLastUpdated, boolean present) {
+    public MediaFile(String path, String folder, MediaType mediaType, String format, String title,
+                     String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
+                     boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
+                     String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date lastModified,
+                     Date childrenLastUpdated, boolean present) {
         this.path = path;
+        this.folder = folder;
         this.mediaType = mediaType;
         this.format = format;
         this.title = title;
@@ -100,6 +101,14 @@ public class MediaFile {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getFolder() {
+        return folder;
+    }
+
+    public void setFolder(String folder) {
+        this.folder = folder;
     }
 
     public File getFile() {
