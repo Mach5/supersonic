@@ -75,6 +75,17 @@ public class UserDao extends AbstractDao {
     }
 
     /**
+     * Returns the user with the given email address.
+     *
+     * @param email The email address.
+     * @return The user, or <code>null</code> if not found.
+     */
+    public User getUserByEmail(String email) {
+        String sql = "select " + USER_COLUMNS + " from user where email=?";
+        return queryOne(sql, userRowMapper, email);
+    }
+
+    /**
      * Returns all users.
      *
      * @return Possibly empty array of all users.

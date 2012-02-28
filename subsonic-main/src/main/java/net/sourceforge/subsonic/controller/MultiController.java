@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import org.springframework.web.servlet.view.RedirectView;
@@ -73,14 +75,36 @@ public class MultiController extends MultiActionController {
 
     public ModelAndView recover(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        String usernameOrEmail = request.getParameter("usernameOrEmail");
-        if (usernameOrEmail != null) {
-            // TODO: Send email
-        }
-
+        User user = getUserByUsernameOrEmail(StringUtils.trimToNull(request.getParameter("usernameOrEmail")));
         Map<String, Object> map = new HashMap<String, Object>();
 
+        if (user == null) {
+            map.put("error", "recover.error.usernotfound");
+        } else if (user.getEmail() == null) {
+            map.put("error", "recover.error.noemail");
+        } else {
+            String password = RandomStringUtils.randomAscii(8);
+            if (emailPassword(password, user.getEmail())) {
+                map.put("sentTo", user.getEmail());
+                user.setLdapAuthenticated(false);
+                user.setPassword(password);
+                securityService.updateUser(user);
+            } else {
+                map.put("error", "recover.error.sendfailed");
+            }
+        }
+
         return new ModelAndView("recover", "model", map);
+    }
+
+    private User getUserByUsernameOrEmail(String usernameOrEmail) {
+        if (usernameOrEmail != null) {
+            User user = securityService.getUserByName(usernameOrEmail);
+            if (user == null) {
+                return securityService.getUserByEmail(usernameOrEmail);
+            }
+        }
+        return null;
     }
 
     public ModelAndView accessDenied(HttpServletRequest request, HttpServletResponse response) {
