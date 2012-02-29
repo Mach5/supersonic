@@ -14,7 +14,7 @@
 
 <p>
     Supersonic encountered an internal error. You can report this error in the project's 
-    <a href="https://github.com/porkcharsui/supersonic/issues" target="_blank">Github issues</a>.
+    <a href="https://github.com/mach5/supersonic/issues" target="_blank">Github issues</a>.
     Please include the information below.
 </p>
 

@@ -1,7 +1,5 @@
 language: java
 
-# whitelist 
-branches:
-  only:
-    - master
+# blacklist
+except:
     - upstream

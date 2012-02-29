@@ -2,13 +2,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.github.porkcharsui.supersonic</groupId>
+    <groupId>com.github.mach5.supersonic</groupId>
     <artifactId>supersonic-main</artifactId>
     <packaging>war</packaging>
     <name>Supersonic Main</name>
 
     <parent>
-        <groupId>com.github.porkcharsui.supersonic</groupId>
+        <groupId>com.github.mach5.supersonic</groupId>
         <artifactId>supersonic</artifactId>
         <version>4.6</version>
     </parent>
