@@ -26,10 +26,10 @@ Support HEAD request in StreamController
 Make it configurable to run as a different user than root in RPM.
 Build two versions of subsonic-agent.exe, one with run-as admin.
 REST: Added getAvatar.
+Email forgotten password, using subsonic backend service.  Reset password.
 
 TODO IN 4.7
 -----------------
-Email forgotten password, using subsonic backend service.  Reset password.
 Why are there two instances of subsonic-service.exe?
 Make it work with 64-bit Java 7.  Problem with exe4j?
 Add REST method to get user details, including avatar.
@@ -943,3 +943,10 @@ Languages, themes.
 Apps.
 Domain names, redirection.
 Use in marketing of Subsonic.
+Test unit.
+Access SQLite directly. Schema.
+How/where to define users?
+Twonky, DLNA?
+Podcast support
+Create/edit/delete playlists?
+Transcoding

@@ -18,24 +18,32 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
-import org.springframework.web.servlet.view.RedirectView;
-
+import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.StringUtil;
+import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpConnectionParams;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+import org.springframework.web.servlet.view.RedirectView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Multi-controller used for simple pages.
@@ -43,6 +51,8 @@ import net.sourceforge.subsonic.util.StringUtil;
  * @author Sindre Mehus
  */
 public class MultiController extends MultiActionController {
+
+    private static final Logger LOG = Logger.getLogger(MultiController.class);
 
     private SecurityService securityService;
     private SettingsService settingsService;
@@ -75,34 +85,68 @@ public class MultiController extends MultiActionController {
 
     public ModelAndView recover(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        User user = getUserByUsernameOrEmail(StringUtils.trimToNull(request.getParameter("usernameOrEmail")));
         Map<String, Object> map = new HashMap<String, Object>();
+        String usernameOrEmail = StringUtils.trimToNull(request.getParameter("usernameOrEmail"));
 
-        if (user == null) {
-            map.put("error", "recover.error.usernotfound");
-        } else if (user.getEmail() == null) {
-            map.put("error", "recover.error.noemail");
-        } else {
-            String password = RandomStringUtils.randomAscii(8);
-            if (emailPassword(password, user.getEmail())) {
-                map.put("sentTo", user.getEmail());
-                user.setLdapAuthenticated(false);
-                user.setPassword(password);
-                securityService.updateUser(user);
+        if (usernameOrEmail != null) {
+            User user = getUserByUsernameOrEmail(usernameOrEmail);
+            if (user == null) {
+                map.put("error", "recover.error.usernotfound");
+            } else if (user.getEmail() == null) {
+                map.put("error", "recover.error.noemail");
             } else {
-                map.put("error", "recover.error.sendfailed");
+                String password = RandomStringUtils.randomAlphanumeric(8);
+                if (emailPassword(password, user.getUsername(), user.getEmail())) {
+                    map.put("sentTo", user.getEmail());
+                    user.setLdapAuthenticated(false);
+                    user.setPassword(password);
+                    securityService.updateUser(user);
+                } else {
+                    map.put("error", "recover.error.sendfailed");
+                }
             }
         }
 
         return new ModelAndView("recover", "model", map);
     }
 
+    private boolean emailPassword(String password, String username, String email) {
+        HttpClient client = new DefaultHttpClient();
+        try {
+            HttpConnectionParams.setConnectionTimeout(client.getParams(), 10000);
+            HttpConnectionParams.setSoTimeout(client.getParams(), 10000);
+            HttpPost method = new HttpPost("http://subsonic.org/backend/sendMail.view");
+
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+            params.add(new BasicNameValuePair("from", "noreply@subsonic.org"));
+            params.add(new BasicNameValuePair("to", email));
+            params.add(new BasicNameValuePair("subject", "Subsonic Password"));
+            params.add(new BasicNameValuePair("text",
+                    "Hi there!\n\n" +
+                            "You have requested to reset your Subsonic password.  Please find your new login details below.\n\n" +
+                            "Username: " + username + "\n" +
+                            "Password: " + password + "\n\n" +
+                            "--\n" +
+                            "The Subsonic Team\n" +
+                            "subsonic.org"));
+            method.setEntity(new UrlEncodedFormEntity(params, StringUtil.ENCODING_UTF8));
+            client.execute(method);
+            return true;
+        } catch (Exception x) {
+            LOG.warn("Failed to send email.", x);
+            return false;
+        } finally {
+            client.getConnectionManager().shutdown();
+        }
+    }
+
     private User getUserByUsernameOrEmail(String usernameOrEmail) {
         if (usernameOrEmail != null) {
             User user = securityService.getUserByName(usernameOrEmail);
-            if (user == null) {
-                return securityService.getUserByEmail(usernameOrEmail);
+            if (user != null) {
+                return user;
             }
+            return securityService.getUserByEmail(usernameOrEmail);
         }
         return null;
     }

@@ -17,12 +17,12 @@
             <input type="text" id="usernameOrEmail" name="usernameOrEmail" style="width:18em;margin-right: 1em">
             <input name="submit" type="submit" value="<fmt:message key="recover.send"/>">
 
-            <c:if test="${model.success}">
-                <p><fmt:message key="recover.success"/></p>
+            <c:if test="${not empty model.sentTo}">
+                <p style="padding-top: 1em"><fmt:message key="recover.success"><fmt:param value="${model.sentTo}"/></fmt:message></p>
             </c:if>
 
             <c:if test="${not empty model.error}">
-                <p class="warning"><fmt:message key="${model.error}"/></p>
+                <p style="padding-top: 1em" class="warning"><fmt:message key="${model.error}"/></p>
             </c:if>
 
             <div class="back" style="margin-top: 1.5em"><a href="login.view"><fmt:message key="common.back"/></a></div>

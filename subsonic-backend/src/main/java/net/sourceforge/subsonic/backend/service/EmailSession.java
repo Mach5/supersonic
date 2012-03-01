@@ -66,6 +66,7 @@ public class EmailSession {
         Message message = new MimeMessage(session);
 
         message.setFrom(new InternetAddress(from));
+        message.setReplyTo(new Address[]{new InternetAddress(from)});
         message.setRecipients(Message.RecipientType.TO, convertAddress(to));
         message.setRecipients(Message.RecipientType.CC, convertAddress(cc));
         message.setRecipients(Message.RecipientType.BCC, convertAddress(bcc));
