@@ -2,15 +2,15 @@
 
 set -e
 
-ln -sf /usr/share/subsonic/subsonic.sh /usr/bin/subsonic
+ln -sf /usr/share/supersonic/supersonic.sh /usr/bin/supersonic
 
-chmod 750 /var/subsonic
+chmod 750 /var/supersonic
 
 # Clear jetty cache.
-rm -rf /var/subsonic/jetty
+rm -rf /var/supersonic/jetty
 
-# Configure Subsonic service.
-update-rc.d subsonic defaults 99
+# Configure Supersonic service.
+update-rc.d supersonic defaults 99
 
-# Start Subsonic service.
-invoke-rc.d subsonic start
+# Start Supersonic service.
+invoke-rc.d supersonic start

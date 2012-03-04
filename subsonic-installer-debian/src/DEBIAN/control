@@ -1,18 +1,18 @@
-Package: subsonic
+Package: supersonic
 Version: @VERSION@
 Section: Multimedia
 Priority: optional
 Recommends: lame, ffmpeg
 Architecture: all
-Maintainer: Sindre Mehus <sindre@activeobjects.no>
+Maintainer: Timo Reimann <devel@foo-lounge.de>
 Description: A web-based music streamer, jukebox and Podcast receiver
- Subsonic is a web-based music streamer, jukebox and Podcast receiver,
+ Supersonic is a web-based music streamer, jukebox and Podcast receiver,
  providing access to your music collection wherever you are. Use it
  to share your music with friends, or to listen to your music while away
  from home.
  .
- Apps for Android, iPhone and Windows Phone 7 are also available.
+ An app for Android is also available.
  .
- Java 1.6 or higher is required to run Subsonic.
+ Java 1.6 or higher is required to run Supersonic.
  .
- Subsonic can be found at http://subsonic.org
+ Supersonic can be found at https://github.com/Mach5/supersonic

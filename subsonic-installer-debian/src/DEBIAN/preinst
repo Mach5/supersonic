@@ -2,7 +2,7 @@
 
 set -e
 
-# Stop Subsonic service.
-if [ -e /etc/init.d/subsonic ]; then
-  invoke-rc.d subsonic stop
+# Stop Supersonic service.
+if [ -e /etc/init.d/supersonic ]; then
+  invoke-rc.d supersonic stop
 fi

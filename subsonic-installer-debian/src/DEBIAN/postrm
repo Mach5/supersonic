@@ -3,7 +3,7 @@
 set -e
 
 # Remove symlink.
-rm -f /usr/bin/subsonic
+rm -f /usr/bin/supersonic
 
 # Remove startup scripts.
-update-rc.d -f subsonic remove
+update-rc.d -f supersonic remove

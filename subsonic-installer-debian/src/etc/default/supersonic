@@ -1,0 +1,25 @@
+#
+# This is the configuration file for the Supersonic service
+# (/etc/init.d/supersonic)
+#
+# To change the startup parameters of Supersonic, modify
+# the Subsonic_ARGS variable below.
+#
+# Type "supersonic --help" on the command line to read an
+# explanation of the different options.
+#
+# For example, to specify that Supersonic should use port 80 (for http)
+# and 443 (for https), and use a Java memory heap size of 120 MB, use
+# the following:
+#
+# Subsonic_ARGS="--port=80 --https-port=443 --max-memory=120"
+
+Subsonic_ARGS="--max-memory=100"
+
+
+# The user which should run the Supersonic process. Default "root".
+# Note that non-root users are by default not allowed to use ports
+# below 1024. Also make sure to grant the user write permissions in
+# the music directories, otherwise changing album art and tags will fail.
+
+Subsonic_USER=root
