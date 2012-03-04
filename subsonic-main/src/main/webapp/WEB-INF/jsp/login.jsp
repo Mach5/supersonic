@@ -40,6 +40,11 @@
                 <label for="remember"><fmt:message key="login.remember"/></label>
             </td>
         </tr>
+            <tr>
+                <td></td>
+                <td align="left" class="detail"><a href="recover.view"><fmt:message key="login.recover"/></a></td>
+            </tr>
+            
             <c:if test="${model.logout}">
                 <tr><td colspan="2" style="padding-top:10px"><b><fmt:message key="login.logout"/></b></td></tr>
             </c:if>
