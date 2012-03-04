@@ -45,6 +45,8 @@
 
 <p></p>
 
+<c:if test="${model.isAdmin}">
+    
 <h2><img src="<spring:theme code="logImage"/>" alt="">&nbsp;<fmt:message key="help.log"/></h2>
 
 <table cellpadding="2" class="log indent">
@@ -59,5 +61,7 @@
 <p><fmt:message key="help.logfile"><fmt:param value="${model.logFile}"/></fmt:message> </p>
 
 <div class="forward"><a href="help.view?"><fmt:message key="common.refresh"/></a></div>
+
+</c:if>
 
 </body></html>

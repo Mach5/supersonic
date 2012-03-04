@@ -26,6 +26,8 @@ import org.springframework.web.servlet.mvc.*;
 import javax.servlet.http.*;
 import java.util.*;
 
+import net.sourceforge.subsonic.domain.User;
+
 /**
  * Controller for the help page.
  *
@@ -35,11 +37,15 @@ public class HelpController extends ParameterizableViewController {
 
     private VersionService versionService;
     private SettingsService settingsService;
+    private SecurityService securityService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
 
+        User user = securityService.getUserByName(securityService.getCurrentUsername(request));
+        map.put("isAdmin", user.isAdminRole());  
+              
         if (versionService.isNewFinalVersionAvailable()) {
             map.put("newVersionAvailable", true);
             map.put("latestVersion", versionService.getLatestFinalVersion());
@@ -77,4 +83,9 @@ public class HelpController extends ParameterizableViewController {
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
     }
+    
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
+    }
+        
 }
