@@ -111,6 +111,16 @@ public class SecurityService implements UserDetailsService {
     }
 
     /**
+     * Returns the user with the given email address.
+     *
+     * @param email The email address.
+     * @return The user, or <code>null</code> if not found.
+     */
+    public User getUserByEmail(String email) {
+        return userDao.getUserByEmail(email);
+    }
+
+    /**
      * Returns all users.
      *
      * @return Possibly empty array of all users.
