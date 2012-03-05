@@ -33,6 +33,7 @@ public class NetworkSettingsCommand {
     private boolean trial;
     private Date trialExpires;
     private boolean trialExpired;
+    private String subsonicUrl;
 
     public void setPortForwardingEnabled(boolean portForwardingEnabled) {
         this.portForwardingEnabled = portForwardingEnabled;
@@ -89,4 +90,13 @@ public class NetworkSettingsCommand {
     public boolean isTrialExpired() {
         return trialExpired;
     }
+    
+    public String getSubsonicUrl() {
+       return subsonicUrl;
+    }
+
+    public void setSubsonicUrl(String subsonicUrl) {
+        this.subsonicUrl = subsonicUrl;
+    }
+    
 }

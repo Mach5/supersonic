@@ -36,6 +36,9 @@
 <p style="padding-top:1em"><fmt:message key="networksettings.text"/></p>
 
 <form:form commandName="command" action="networkSettings.view" method="post">
+    
+    <p><fmt:message key="networksettings.subsonicurl"/><form:input id="subsonicUrl" path="subsonicUrl" size="50" cssStyle="margin-left:0.25em"/></p>
+
     <p style="padding-top:1em">
         <form:checkbox id="portForwardingEnabled" path="portForwardingEnabled"/>
         <label for="portForwardingEnabled"><fmt:message key="networksettings.portforwardingenabled"/></label>
