@@ -19,10 +19,4 @@
         <constructor-arg value="musicFileMemoryCache"/>
     </bean>
 
-    <bean id="chatCache" class="net.sourceforge.subsonic.domain.Cache">
-        <constructor-arg value="Chat messages"/>
-        <constructor-arg value="1"/>
-        <constructor-arg ref="cacheDao"/>
-    </bean>
-
 </beans>

@@ -46,8 +46,6 @@
         <property name="daoHelper" ref="daoHelper"/>
     </bean>
 
-    <bean id="cacheDao" class="net.sourceforge.subsonic.dao.CacheDao"/>
-
     <bean id="daoHelper" class="net.sourceforge.subsonic.dao.DaoHelper"/>
 
 
@@ -208,7 +206,6 @@
 
     <bean id="ajaxChatService" class="net.sourceforge.subsonic.ajax.ChatService" init-method="init">
         <property name="securityService" ref="securityService"/>
-        <property name="chatCache" ref="chatCache"/>
     </bean>
 
 </beans>
