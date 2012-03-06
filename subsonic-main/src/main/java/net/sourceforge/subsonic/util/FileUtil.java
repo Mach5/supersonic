@@ -20,7 +20,6 @@ package net.sourceforge.subsonic.util;
 
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -128,24 +127,6 @@ public final class FileUtil {
     }
 
     /**
-     * Similar to {@link File#listFiles(FileFilter)}, but never returns null.
-     * Instead a warning is logged, and an empty array is returned.
-     */
-    public static File[] listFiles(final File dir, final FileFilter filter) {
-        File[] files = timed(new FileTask<File[]>("listFiles3", dir) {
-            @Override
-            public File[] execute() {
-                return dir.listFiles(filter);
-            }
-        });
-        if (files == null) {
-            LOG.warn("Failed to list children for " + dir.getPath());
-            return new File[0];
-        }
-        return files;
-    }
-
-    /**
      * Returns a short path for the given file.  The path consists of the name
      * of the parent directory and the given file.
      */
@@ -176,16 +157,16 @@ public final class FileUtil {
     }
 
     private static <T> T timed(FileTask<T> task) {
-        long t0 = System.nanoTime();
-        try {
+//        long t0 = System.nanoTime();
+//        try {
             return task.execute();
-        } finally {
-            long t1 = System.nanoTime();
-            LOG.debug((t1 - t0) / 1000L + " microsec, " + task);
-        }
+//        } finally {
+//            long t1 = System.nanoTime();
+//            LOG.debug((t1 - t0) / 1000L + " microsec, " + task);
+//        }
     }
 
-    private static abstract class FileTask<T> {
+    private abstract static class FileTask<T> {
 
         private final String name;
         private final File file;

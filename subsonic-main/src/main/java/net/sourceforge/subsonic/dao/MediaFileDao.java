@@ -117,9 +117,7 @@ public class MediaFileDao extends AbstractDao {
                 file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
                 file.getLastModified(), file.getChildrenLastUpdated(), file.isPresent(), VERSION, file.getPath());
 
-        if (n > 0) {
-            LOG.debug("Updated media_file for " + file.getPath());
-        } else {
+        if (n == 0) {
 
             // Copy values from archive.
             MediaFile archived = getArchivedMediaFile(file.getPath());
@@ -139,8 +137,6 @@ public class MediaFileDao extends AbstractDao {
                     file.getChildrenLastUpdated(), file.isPresent(), VERSION);
 
             update("delete from media_file_archive where path=?", file.getPath());
-
-            LOG.debug("Created media_file for " + file.getPath());
         }
     }
 

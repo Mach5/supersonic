@@ -30,6 +30,9 @@ Email forgotten password, using subsonic backend service.  Reset password.
 
 TODO IN 4.7
 -----------------
+Elevation broken.
+  Try with ProcessBuilder builder = new ProcessBuilder(new String[] { "cmd.exe", "/C", fileToExecute });
+Use proper IDs in rest api.
 Why are there two instances of subsonic-service.exe?
 Make it work with 64-bit Java 7.  Problem with exe4j?
 Add REST method to get user details, including avatar.
@@ -56,7 +59,6 @@ Make it easier to run as non-root in rpm.
   https://mail.google.com/mail/?shva=1#inbox/134fac2d57a0c334
   Give warning in gettingStarted.jsp?
 REST: Ensure that podcast dir is included.
-Lots of exists() when playing a song.
 Star support
 
 Support ISO files.
@@ -935,18 +937,3 @@ Use color: #ff8200
 Getting started, yellow marker
 Use brush: circle fuzzy 17, transparency 67.3
 Use color: #ffe200
-
-DK
---
-Commercial lyrics service, musixmatch.com
-Languages, themes.
-Apps.
-Domain names, redirection.
-Use in marketing of Subsonic.
-Test unit.
-Access SQLite directly. Schema.
-How/where to define users?
-Twonky, DLNA?
-Podcast support
-Create/edit/delete playlists?
-Transcoding

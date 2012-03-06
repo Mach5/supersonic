@@ -668,7 +668,7 @@ public class RESTController extends MultiActionController {
         } catch (SecurityException x) {
             // Ignored.
         }
-        attributes.add("title", mediaFile.getTitle());
+        attributes.add("title", mediaFile.getName());
         attributes.add("isDir", mediaFile.isDirectory());
 
         String username = player.getUsername();
