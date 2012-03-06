@@ -102,8 +102,8 @@
     <string name="download.repeat_single">Repeat song</string>
     <string name="download.visualizer_on">Turned on visualizer.</string>
     <string name="download.visualizer_off">Turned off visualizer.</string>
-    <string name="download.jukebox_on">Turned on remote control. Music is played on server.</string>
-    <string name="download.jukebox_off">Turned off remote control. Music is played on phone.</string>
+    <string name="download.jukebox_on">Turned on remote control. Music is played on the computer.</string>
+    <string name="download.jukebox_off">Turned off remote control. Music is played on the phone.</string>
     <string name="download.jukebox_volume">Remote volume</string>
     <string name="download.jukebox_server_too_old">Remote control is not supported. Please upgrade your Subsonic server.</string>
     <string name="download.jukebox_offline">Remote control is not available in offline mode.</string>

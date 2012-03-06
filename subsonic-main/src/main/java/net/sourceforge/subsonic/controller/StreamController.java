@@ -39,7 +39,6 @@ import org.springframework.web.servlet.mvc.Controller;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.PlayerTechnology;
 import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
@@ -76,7 +75,6 @@ public class StreamController implements Controller {
     private TranscodingService transcodingService;
     private AudioScrobblerService audioScrobblerService;
     private MediaFileService mediaFileService;
-    private MediaScannerService mediaScannerService;
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -115,22 +113,20 @@ public class StreamController implements Controller {
 
             VideoTranscodingSettings videoTranscodingSettings = null;
 
-            // If "path" request parameter is set, this is a request for a single file
-            // (typically from the embedded Flash player). In that case, create a separate
-            // playlist (in order to support multiple parallel streams). Also, enable
-            // partial download (HTTP byte range).
-            String path = request.getParameter("path");
-            boolean isSingleFile = path != null;
+            // Is this a request for a single file (typically from the embedded Flash player)?
+            // In that case, create a separate playlist (in order to support multiple parallel streams).
+            // Also, enable partial download (HTTP byte range).
+            MediaFile file = getSingleFile(request);
+            boolean isSingleFile = file != null;
             LongRange range = null;
 
             if (isSingleFile) {
                 Playlist playlist = new Playlist();
-                MediaFile file = mediaFileService.getMediaFile(path);
                 playlist.addFiles(true, file);
                 player.setPlaylist(playlist);
 
                 if (!file.isVideo()) {
-                    response.setHeader("ETag", StringUtil.utf8HexEncode(path));
+                    response.setIntHeader("ETag", file.getId());
                     response.setHeader("Accept-Ranges", "bytes");
                 }
 
@@ -227,6 +223,18 @@ public class StreamController implements Controller {
                 statusService.removeStreamStatus(status);
             }
             IOUtils.closeQuietly(in);
+        }
+        return null;
+    }
+
+    private MediaFile getSingleFile(HttpServletRequest request) throws ServletRequestBindingException {
+        String path = request.getParameter("path");
+        if (path != null) {
+            return mediaFileService.getMediaFile(path);
+        }
+        Integer id = ServletRequestUtils.getIntParameter(request, "id");
+        if (id != null) {
+            return mediaFileService.getMediaFile(id);
         }
         return null;
     }
@@ -398,10 +406,6 @@ public class StreamController implements Controller {
 
     public void setAudioScrobblerService(AudioScrobblerService audioScrobblerService) {
         this.audioScrobblerService = audioScrobblerService;
-    }
-
-    public void setMediaScannerService(MediaScannerService mediaScannerService) {
-        this.mediaScannerService = mediaScannerService;
     }
 
     public void setMediaFileService(MediaFileService mediaFileService) {

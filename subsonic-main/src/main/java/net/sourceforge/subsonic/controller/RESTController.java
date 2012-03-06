@@ -1303,6 +1303,8 @@ public class RESTController extends MultiActionController {
             public String getParameter(String name) {
 
                 // Maps "id" request parameter to "path".
+
+                // TODO: Remove id > path mapping after making DownloadController support id param.
                 if ("path".equals(name)) {
                     try {
                         int id = ServletRequestUtils.getRequiredIntParameter(request, "id");

@@ -34,7 +34,6 @@ TODO IN 4.7
 Elevation broken.
   Try with ProcessBuilder builder = new ProcessBuilder(new String[] { "cmd.exe", "/C", fileToExecute });
 Use media file IDs in web interface etc.
-Use ID for cover art.
 Use ID in stream, download. Avoid wrapping in restcontroller.
 Why are there two instances of subsonic-service.exe?
 Make it work with 64-bit Java 7.  Problem with exe4j?

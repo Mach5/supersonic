@@ -279,7 +279,6 @@
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
-        <property name="mediaScannerService" ref="mediaScannerService"/>
     </bean>
     <bean id="videoPlayerController" class="net.sourceforge.subsonic.controller.VideoPlayerController">
         <property name="viewName" value="videoPlayer"/>
