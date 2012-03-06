@@ -47,6 +47,10 @@
             <id>Codehaus Repository</id>
             <url>http://repository.codehaus.org/</url>
         </pluginRepository>
+        <pluginRepository>
+            <id>oss-sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </pluginRepository>
     </pluginRepositories>
 
     <modules>
@@ -100,6 +104,26 @@
     </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>downloads-maven-plugin</artifactId>
+                <configuration>
+                    <description>Latest snapshot of Supersonic ${project.version}</description>
+                    <override>true</override>
+                    <includeAttached>true</includeAttached>
+                    <excludes>
+                        <exclude>*.pom</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>upload</goal>
+                        </goals>
+                        <phase>install</phase>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
