@@ -33,6 +33,7 @@ TODO IN 4.7
 Elevation broken.
   Try with ProcessBuilder builder = new ProcessBuilder(new String[] { "cmd.exe", "/C", fileToExecute });
 Use proper IDs in rest api.
+Remove cache and corresponding jars.
 Why are there two instances of subsonic-service.exe?
 Make it work with 64-bit Java 7.  Problem with exe4j?
 Add REST method to get user details, including avatar.

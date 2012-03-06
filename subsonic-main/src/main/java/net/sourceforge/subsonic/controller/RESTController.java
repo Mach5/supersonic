@@ -193,7 +193,7 @@ public class RESTController extends MultiActionController {
                     new Attribute("id", StringUtil.utf8HexEncode(shortcut.getPath())));
         }
 
-        SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists = leftController.getCacheEntry(musicFolders, lastModified).getIndexedArtists();
+        SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists = leftController.getMusicFolderContent(musicFolders).getIndexedArtists();
 
         for (Map.Entry<MusicIndex, SortedSet<MusicIndex.Artist>> entry : indexedArtists.entrySet()) {
             builder.add("index", "name", entry.getKey().getIndex(), false);

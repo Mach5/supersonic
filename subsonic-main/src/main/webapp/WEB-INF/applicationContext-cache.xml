@@ -25,10 +25,4 @@
         <constructor-arg ref="cacheDao"/>
     </bean>
 
-    <bean id="musicFolderCache" class="net.sourceforge.subsonic.domain.Cache">
-        <constructor-arg value="Root folders"/>
-        <constructor-arg value="2"/>
-        <constructor-arg ref="cacheDao"/>
-    </bean>
-
 </beans>
