@@ -27,12 +27,14 @@ Make it configurable to run as a different user than root in RPM.
 Build two versions of subsonic-agent.exe, one with run-as admin.
 REST: Added getAvatar.
 Email forgotten password, using subsonic backend service.  Reset password.
+Use media file IDs in rest api.
 
 TODO IN 4.7
 -----------------
 Elevation broken.
   Try with ProcessBuilder builder = new ProcessBuilder(new String[] { "cmd.exe", "/C", fileToExecute });
-Use proper IDs in rest api.
+Use media file IDs in web interface etc.
+Use ID for cover art.
 Why are there two instances of subsonic-service.exe?
 Make it work with 64-bit Java 7.  Problem with exe4j?
 Add REST method to get user details, including avatar.

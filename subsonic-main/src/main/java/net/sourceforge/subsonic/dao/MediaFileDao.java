@@ -60,6 +60,16 @@ public class MediaFileDao extends AbstractDao {
     }
 
     /**
+     * Returns the media file for the given ID.
+     *
+     * @param id The ID.
+     * @return The media file or null.
+     */
+    public MediaFile getMediaFile(int id) {
+        return queryOne("select " + COLUMNS + " from media_file where id=?", rowMapper, id);
+    }
+
+    /**
      * Returns a subset of all media files.
      */
     public List<MediaFile> getMediaFiles(int offset, int size) {

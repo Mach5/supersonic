@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -62,6 +63,13 @@ public class LeftController extends ParameterizableViewController implements Las
 
     private static final Logger LOG = Logger.getLogger(LeftController.class);
 
+    // Update this time if you want to force a refresh in clients.
+    private static final Calendar LAST_COMPATIBILITY_TIME = Calendar.getInstance();
+    static {
+        LAST_COMPATIBILITY_TIME.set(2012, Calendar.MARCH, 6, 0, 0, 0);
+        LAST_COMPATIBILITY_TIME.set(Calendar.MILLISECOND, 0);
+    }
+
     private MediaScannerService mediaScannerService;
     private SettingsService settingsService;
     private SecurityService securityService;
@@ -69,11 +77,14 @@ public class LeftController extends ParameterizableViewController implements Las
     private MusicIndexService musicIndexService;
     private PlayerService playerService;
 
+
     public long getLastModified(HttpServletRequest request) {
         saveSelectedMusicFolder(request);
 
+        long lastModified = LAST_COMPATIBILITY_TIME.getTimeInMillis();
+
         // When was settings last changed?
-        long lastModified = settingsService.getSettingsChanged();
+        lastModified = Math.max(lastModified, settingsService.getSettingsChanged());
 
         // When was music folder(s) on disk last changed?
         List<MusicFolder> allMusicFolders = settingsService.getAllMusicFolders();

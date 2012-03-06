@@ -190,7 +190,7 @@ public class RESTController extends MultiActionController {
         for (MediaFile shortcut : shortcuts) {
             builder.add("shortcut", true,
                     new Attribute("name", shortcut.getName()),
-                    new Attribute("id", StringUtil.utf8HexEncode(shortcut.getPath())));
+                    new Attribute("id", shortcut.getId()));
         }
 
         SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists = leftController.getMusicFolderContent(musicFolders).getIndexedArtists();
@@ -203,7 +203,7 @@ public class RESTController extends MultiActionController {
                     if (mediaFile.isDirectory()) {
                         builder.add("artist", true,
                                 new Attribute("name", artist.getName()),
-                                new Attribute("id", StringUtil.utf8HexEncode(mediaFile.getPath())));
+                                new Attribute("id", mediaFile.getId()));
                     }
                 }
             }
@@ -227,8 +227,8 @@ public class RESTController extends MultiActionController {
 
         MediaFile dir;
         try {
-            String path = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
-            dir = mediaFileService.getMediaFile(path);
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            dir = mediaFileService.getMediaFile(id);
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
             error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
@@ -237,7 +237,7 @@ public class RESTController extends MultiActionController {
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
         builder.add("directory", false,
-                new Attribute("id", StringUtil.utf8HexEncode(dir.getPath())),
+                new Attribute("id", dir.getId()),
                 new Attribute("name", dir.getName()));
 
         File coverArt = mediaFileService.getCoverArt(dir);
@@ -310,7 +310,7 @@ public class RESTController extends MultiActionController {
         for (MediaFile mediaFile : artists.getMediaFiles()) {
             builder.add("artist", true,
                     new Attribute("name", mediaFile.getName()),
-                    new Attribute("id", StringUtil.utf8HexEncode(mediaFile.getPath())));
+                    new Attribute("id", mediaFile.getId()));
         }
 
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "albumCount", 20));
@@ -406,17 +406,17 @@ public class RESTController extends MultiActionController {
                 int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
                 playlistControlService.doSkip(request, response, index, offset);
             } else if ("add".equals(action)) {
-                String[] ids = ServletRequestUtils.getStringParameters(request, "id");
+                int[] ids = ServletRequestUtils.getIntParameters(request, "id");
                 List<String> paths = new ArrayList<String>(ids.length);
-                for (String id : ids) {
-                    paths.add(StringUtil.utf8HexDecode(id));
+                for (int id : ids) {
+                    paths.add(mediaFileService.getMediaFile(id).getPath());
                 }
                 playlistControlService.doAdd(request, response, paths);
             } else if ("set".equals(action)) {
-                String[] ids = ServletRequestUtils.getStringParameters(request, "id");
+                int[] ids = ServletRequestUtils.getIntParameters(request, "id");
                 List<String> paths = new ArrayList<String>(ids.length);
-                for (String id : ids) {
-                    paths.add(StringUtil.utf8HexDecode(id));
+                for (int id : ids) {
+                    paths.add(mediaFileService.getMediaFile(id).getPath());
                 }
                 playlistControlService.doSet(request, response, paths);
             } else if ("clear".equals(action)) {
@@ -497,9 +497,9 @@ public class RESTController extends MultiActionController {
             Playlist playlist = new Playlist();
             playlist.setName(playlistId != null ? StringUtil.utf8HexDecode(playlistId) : name);
 
-            String[] ids = ServletRequestUtils.getStringParameters(request, "songId");
-            for (String id : ids) {
-                playlist.addFiles(true, mediaFileService.getMediaFile(StringUtil.utf8HexDecode(id)));
+            int[] ids = ServletRequestUtils.getIntParameters(request, "songId");
+            for (int id : ids) {
+                playlist.addFiles(true, mediaFileService.getMediaFile(id));
             }
             playlistService.savePlaylist(playlist);
 
@@ -660,10 +660,10 @@ public class RESTController extends MultiActionController {
     private AttributeSet createAttributesForMediaFile(Player player, File coverArt, MediaFile mediaFile) {
         MediaFile parent = mediaFileService.getParentOf(mediaFile);
         AttributeSet attributes = new AttributeSet();
-        attributes.add("id", StringUtil.utf8HexEncode(mediaFile.getPath()));
+        attributes.add("id", mediaFile.getId());
         try {
             if (!mediaFileService.isRoot(parent)) {
-                attributes.add("parent", StringUtil.utf8HexEncode(parent.getPath()));
+                attributes.add("parent", parent.getId());
             }
         } catch (SecurityException x) {
             // Ignored.
@@ -830,8 +830,8 @@ public class RESTController extends MultiActionController {
         }
 
         try {
-            String path = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
-            MediaFile file = mediaFileService.getMediaFile(path);
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            MediaFile file = mediaFileService.getMediaFile(id);
             boolean submission = ServletRequestUtils.getBooleanParameter(request, "submission", true);
             audioScrobblerService.register(file, player.getUsername(), submission);
         } catch (Exception x) {
@@ -875,7 +875,7 @@ public class RESTController extends MultiActionController {
                     MediaFile mediaFile = mediaFileService.getMediaFile(path);
                     File coverArt = mediaFileService.getCoverArt(mediaFile);
                     episodeAttrs.addAll(createAttributesForMediaFile(player, coverArt, mediaFile));
-                    episodeAttrs.add("streamId", StringUtil.utf8HexEncode(mediaFile.getPath()));
+                    episodeAttrs.add("streamId", mediaFile.getId());
                 }
 
                 episodeAttrs.add("id", episode.getId());  // Overwrites the previous "id" attribute.
@@ -943,8 +943,8 @@ public class RESTController extends MultiActionController {
         try {
 
             List<MediaFile> files = new ArrayList<MediaFile>();
-            for (String id : ServletRequestUtils.getRequiredStringParameters(request, "id")) {
-                files.add(mediaFileService.getMediaFile(StringUtil.utf8HexDecode(id)));
+            for (int id : ServletRequestUtils.getRequiredIntParameters(request, "id")) {
+                files.add(mediaFileService.getMediaFile(id));
             }
 
             // TODO: Update api.jsp
@@ -1087,9 +1087,23 @@ public class RESTController extends MultiActionController {
         return result;
     }
 
-    public ModelAndView getCoverArt(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        request = wrapRequest(request);
-        return coverArtController.handleRequest(request, response);
+    public ModelAndView getCoverArt(final HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HttpServletRequest wrappedRequest = new HttpServletRequestWrapper(request) {
+            @Override
+            public String getParameter(String name) {
+
+                // Renames "id" request parameter to "path".
+                if ("path".equals(name)) {
+                    try {
+                        return StringUtil.utf8HexDecode(request.getParameter("id"));
+                    } catch (Exception e) {
+                        return null;
+                    }
+                }
+                return super.getParameter(name);
+            }
+        };
+        return coverArtController.handleRequest(wrappedRequest, response);
     }
 
     public ModelAndView getAvatar(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -1292,8 +1306,8 @@ public class RESTController extends MultiActionController {
                 rating = null;
             }
 
-            String path = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
-            MediaFile mediaFile = mediaFileService.getMediaFile(path);
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            MediaFile mediaFile = mediaFileService.getMediaFile(id);
             String username = securityService.getCurrentUsername(request);
             ratingService.setRatingForUser(username, mediaFile, rating);
 
@@ -1314,10 +1328,11 @@ public class RESTController extends MultiActionController {
             @Override
             public String getParameter(String name) {
 
-                // Renames "id" request parameter to "path".
+                // Maps "id" request parameter to "path".
                 if ("path".equals(name)) {
                     try {
-                        return StringUtil.utf8HexDecode(request.getParameter("id"));
+                        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+                        return mediaFileService.getMediaFile(id).getPath();
                     } catch (Exception e) {
                         return null;
                     }
