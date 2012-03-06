@@ -138,6 +138,9 @@ public class MediaFileDao extends AbstractDao {
 
             update("delete from media_file_archive where path=?", file.getPath());
         }
+
+        int id = queryForInt("select id from media_file where path=?", null, file.getPath());
+        file.setId(id);
     }
 
     private MediaFile getArchivedMediaFile(String path) {
@@ -267,6 +270,7 @@ public class MediaFileDao extends AbstractDao {
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {
         public MediaFile mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new MediaFile(
+                    rs.getInt(1),
                     rs.getString(2),
                     rs.getString(3),
                     MediaType.valueOf(rs.getString(4)),
