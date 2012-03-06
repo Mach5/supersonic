@@ -30,7 +30,6 @@ import java.io.File;
  *
  * @author Sindre Mehus
  */
-@Deprecated
 public class RatingService {
 
     private RatingDao ratingDao;

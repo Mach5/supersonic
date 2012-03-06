@@ -28,6 +28,7 @@ import net.sourceforge.subsonic.util.FileUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
@@ -73,8 +74,7 @@ public class CoverArtController implements Controller, LastModified {
     }
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String path = request.getParameter("path");
-        File file = (path == null || path.length() == 0) ? null : new File(path);
+        File file = getImageFile(request);
         Integer size = ServletRequestUtils.getIntParameter(request, "size");
 
         // Check access.
@@ -104,6 +104,19 @@ public class CoverArtController implements Controller, LastModified {
         }
 
         return null;
+    }
+
+    private File getImageFile(HttpServletRequest request) throws ServletRequestBindingException {
+        Integer id = ServletRequestUtils.getIntParameter(request, "id");
+        if (id != null) {
+            MediaFile mediaFile = mediaFileService.getMediaFile(id);
+            if (mediaFile != null) {
+                return mediaFileService.getCoverArt(mediaFile);
+            }
+        }
+
+        String path = StringUtils.trimToNull(request.getParameter("path"));
+        return path != null ? new File(path) : null;
     }
 
     private void sendImage(File file, HttpServletResponse response) throws IOException {
