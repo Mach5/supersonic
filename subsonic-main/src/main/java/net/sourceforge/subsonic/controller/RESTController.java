@@ -1301,21 +1301,8 @@ public class RESTController extends MultiActionController {
         return new HttpServletRequestWrapper(request) {
             @Override
             public String getParameter(String name) {
-
-                // Maps "id" request parameter to "path".
-
-                // TODO: Remove id > path mapping after making DownloadController support id param.
-                if ("path".equals(name)) {
-                    try {
-                        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
-                        return mediaFileService.getMediaFile(id).getPath();
-                    } catch (Exception e) {
-                        return null;
-                    }
-                }
-
                 // Returns the correct player to be used in PlayerService.getPlayer()
-                else if ("player".equals(name)) {
+                if ("player".equals(name)) {
                     return playerId;
                 }
 
