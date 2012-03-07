@@ -29,6 +29,7 @@ import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.springframework.web.servlet.view.RedirectView;
@@ -64,9 +65,8 @@ public class MainController extends ParameterizableViewController {
         Map<String, Object> map = new HashMap<String, Object>();
 
         Player player = playerService.getPlayer(request, response);
-        String[] paths = request.getParameterValues("path");
-        String path = paths[0];
-        MediaFile dir = mediaFileService.getMediaFile(path);
+        List<MediaFile> mediaFiles = getMediaFiles(request);
+        MediaFile dir = mediaFiles.get(0);
         if (dir.isFile()) {
             dir = mediaFileService.getParentOf(dir);
         }
@@ -76,7 +76,7 @@ public class MainController extends ParameterizableViewController {
             return new ModelAndView(new RedirectView("home.view?"));
         }
 
-        List<MediaFile> children = paths.length == 1 ? mediaFileService.getChildrenOf(dir, true, true, true) : getMultiFolderChildren(paths);
+        List<MediaFile> children = mediaFiles.size() == 1 ? mediaFileService.getChildrenOf(dir, true, true, true) : getMultiFolderChildren(mediaFiles);
         UserSettings userSettings = settingsService.getUserSettings(securityService.getCurrentUsername(request));
 
         map.put("dir", dir);
@@ -137,6 +137,26 @@ public class MainController extends ParameterizableViewController {
         return result;
     }
 
+    private List<MediaFile> getMediaFiles(HttpServletRequest request) {
+        String[] paths = request.getParameterValues("path");
+        int[] ids = ServletRequestUtils.getIntParameters(request, "id");
+
+        List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
+        for (String path : paths) {
+            MediaFile mediaFile = mediaFileService.getMediaFile(path);
+            if (mediaFile != null) {
+                mediaFiles.add(mediaFile);
+            }
+        }
+        for (int id : ids) {
+            MediaFile mediaFile = mediaFileService.getMediaFile(id);
+            if (mediaFile != null) {
+                mediaFiles.add(mediaFile);
+            }
+        }
+        return mediaFiles;
+    }
+
     private String guessArtist(List<MediaFile> children) {
         for (MediaFile child : children) {
             if (child.isFile() && child.getArtist() != null) {
@@ -183,14 +203,13 @@ public class MainController extends ParameterizableViewController {
         return coverArts;
     }
 
-    private List<MediaFile> getMultiFolderChildren(String[] paths) throws IOException {
+    private List<MediaFile> getMultiFolderChildren(List<MediaFile> mediaFiles) throws IOException {
         List<MediaFile> result = new ArrayList<MediaFile>();
-        for (String path : paths) {
-            MediaFile dir = mediaFileService.getMediaFile(path);
-            if (dir.isFile()) {
-                dir = mediaFileService.getParentOf(dir);
+        for (MediaFile mediaFile : mediaFiles) {
+            if (mediaFile.isFile()) {
+                mediaFile = mediaFileService.getParentOf(mediaFile);
             }
-            result.addAll(mediaFileService.getChildrenOf(dir, true, true, true));
+            result.addAll(mediaFileService.getChildrenOf(mediaFile, true, true, true));
         }
         return result;
     }
