@@ -109,12 +109,24 @@
                 After installing, open the Subsonic web page on <a href="http://localhost:4040">http://localhost:4040</a>.
             </p>
 
+            <p><b>Change user</b></p>
+            <p>
+                By default the Subsonic process is run as the root user. To improve security it is strongly advised that you run it as a
+                dedicated user with less powerful privileges. You can specify this user by setting the SUBSONIC_USER variable in
+                <code style="white-space:nowrap;">/etc/default/subsonic</code>.
+            </p>
+            <p>
+                Note that non-root users are by default not allowed to use ports below 1024. Also make sure to grant the user write permissions in
+                the music directories, otherwise changing album art and tags will fail.
+            </p>
+
             <p><b>Advanced configuration</b></p>
             <p>
                 To change the port number, Java memory settings or other startup parameters, edit the SUBSONIC_ARGS variable in
                 <code style="white-space:nowrap;">/etc/default/subsonic</code>. To restart Subsonic, do
                 <code style="white-space:nowrap;">sudo service subsonic restart</code>
             </p>
+
             <p><b>Troubleshooting</b></p>
             <p>
                 Check the logs in <code style="white-space:nowrap;">/var/subsonic</code>.
@@ -141,13 +153,25 @@
                 Notice that the installer configures your system to start Subsonic automatically when booting.
                 After installing, open the Subsonic web page on <a href="http://localhost:4040">http://localhost:4040</a>.
             </p>
-            
+
+            <p><b>Change user</b></p>
+            <p>
+                By default the Subsonic process is run as the root user. To improve security it is strongly advised that you run it as a
+                dedicated user with less powerful privileges. You can specify this user by setting the SUBSONIC_USER variable in
+                <code style="white-space:nowrap;">/etc/sysconfig/subsonic</code>.
+            </p>
+            <p>
+                Note that non-root users are by default not allowed to use ports below 1024. Also make sure to grant the user write permissions in
+                the music directories, otherwise changing album art and tags will fail.
+            </p>
+
             <p><b>Advanced configuration</b></p>
             <p>
                 To change the port number, Java memory settings or other startup parameters, edit the SUBSONIC_ARGS variable in
                 <code style="white-space:nowrap;">/etc/sysconfig/subsonic</code>. To restart Subsonic, do
                 <code style="white-space:nowrap;">sudo service subsonic restart</code>
             </p>
+
             <p><b>Troubleshooting</b></p>
             <p>
                 Check the logs in <code style="white-space:nowrap;">/var/subsonic</code>.
