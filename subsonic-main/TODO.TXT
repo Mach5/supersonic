@@ -28,12 +28,10 @@ Build two versions of subsonic-agent.exe, one with run-as admin.
 REST: Added getAvatar.
 Email forgotten password, using subsonic backend service.  Reset password.
 Use media file IDs in rest api.
+Display warning if running as root user.
 
 TODO IN 4.7
 -----------------
-Make it easier to run as non-root in rpm.
-  https://mail.google.com/mail/?shva=1#inbox/134fac2d57a0c334
-  Give warning in gettingStarted.jsp?
 Elevation broken.
   Try with ProcessBuilder builder = new ProcessBuilder(new String[] { "cmd.exe", "/C", fileToExecute });
 Use media file IDs in web interface etc.

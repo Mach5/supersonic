@@ -19,6 +19,10 @@
 
 <fmt:message key="gettingStarted.text"/>
 
+<c:if test="${model.runningAsRoot}">
+    <h2 class="warning"><fmt:message key="gettingStarted.root"/></h2>
+</c:if>
+
 <table style="padding-top:1em;padding-bottom:2em;width:60%">
     <tr>
         <td style="font-size:26pt;padding:20pt">1</td>
