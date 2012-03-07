@@ -145,7 +145,7 @@ public class SettingsPanel extends JPanel implements SubsonicListener {
         saveButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    subsonicAgent.checkElevation("-settings " + getMemoryLimit() + "," + getPort() + "," + getHttpsPort() + "," + getContextPath());
+                    subsonicAgent.checkElevation("-settings", getMemoryLimit() + "," + getPort() + "," + getHttpsPort() + "," + getContextPath());
                     saveSettings(getMemoryLimit(), getPort(), getHttpsPort(), getContextPath());
                 } catch (Exception x) {
                     JOptionPane.showMessageDialog(SettingsPanel.this, x.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
