@@ -138,17 +138,14 @@ public class MainController extends ParameterizableViewController {
     }
 
     private List<MediaFile> getMediaFiles(HttpServletRequest request) {
-        String[] paths = request.getParameterValues("path");
-        int[] ids = ServletRequestUtils.getIntParameters(request, "id");
-
         List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
-        for (String path : paths) {
+        for (String path : ServletRequestUtils.getStringParameters(request, "path")) {
             MediaFile mediaFile = mediaFileService.getMediaFile(path);
             if (mediaFile != null) {
                 mediaFiles.add(mediaFile);
             }
         }
-        for (int id : ids) {
+        for (int id : ServletRequestUtils.getIntParameters(request, "id")) {
             MediaFile mediaFile = mediaFileService.getMediaFile(id);
             if (mediaFile != null) {
                 mediaFiles.add(mediaFile);

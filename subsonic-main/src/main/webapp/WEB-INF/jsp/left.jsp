@@ -43,7 +43,7 @@
     <c:forEach items="${model.shortcuts}" var="shortcut">
         <p class="dense" style="padding-left:0.5em">
             <sub:url value="main.view" var="mainUrl">
-                <sub:param name="path" value="${shortcut.path}"/>
+                <sub:param name="id" value="${shortcut.id}"/>
             </sub:url>
             <a target="main" href="${mainUrl}">${shortcut.name}</a>
         </p>
@@ -84,16 +84,9 @@
         <p class="dense" style="padding-left:0.5em">
             <span title="${artist.name}">
                 <sub:url value="main.view" var="mainUrl">
-                    <c:choose>
-                        <c:when test="${model.organizeByFolderStructure}">
-                            <c:forEach items="${artist.mediaFiles}" var="mediaFile">
-                                <sub:param name="path" value="${mediaFile.path}"/>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <sub:param name="artist" value="${artist.name}"/>
-                        </c:otherwise>
-                    </c:choose>
+                    <c:forEach items="${artist.mediaFiles}" var="mediaFile">
+                        <sub:param name="id" value="${mediaFile.id}"/>
+                    </c:forEach>
                 </sub:url>
                 <a target="main" href="${mainUrl}"><str:truncateNicely upper="${model.captionCutoff}">${artist.name}</str:truncateNicely></a>
             </span>
