@@ -34,8 +34,6 @@ TODO IN 4.7
 -----------------
 Use media file IDs in web interface etc.
 Make it work with 64-bit Java 7.  Problem with exe4j?
-Change description of apps in More page.
-Change description of donate in about page.
 Test with a big collection on a network disk.
 Change random implementation.
 Better error message if media file not found.
