@@ -59,7 +59,6 @@ public abstract class MetaDataParser {
             title = guessTitle(file);
         }
 
-        title = removeTrackNumberFromTitle(title, metaData.getTrackNumber());
         metaData.setArtist(artist);
         metaData.setAlbumName(album);
         metaData.setTitle(title);
