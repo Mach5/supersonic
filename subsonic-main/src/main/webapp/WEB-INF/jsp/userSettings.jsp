@@ -121,7 +121,7 @@
         </tr>
     </table>
 
-    <c:if test="${not command.new and not command.admin}">
+    <c:if test="${not command['new'] and not command.admin}">
         <table class="indent">
             <tr>
                 <td><form:checkbox path="delete" id="delete" cssClass="checkbox"/></td>
@@ -141,7 +141,7 @@
     </c:if>
 
     <c:choose>
-        <c:when test="${command.new}">
+        <c:when test="${command['new']}">
 
             <table class="indent">
                 <tr>

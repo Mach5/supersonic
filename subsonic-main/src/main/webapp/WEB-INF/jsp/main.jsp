@@ -231,10 +231,10 @@
                 <%--@elvariable id="child" type="net.sourceforge.subsonic.domain.MediaFile"--%>
                 <c:choose>
                     <c:when test="${loopStatus.count % 2 == 1}">
-                        <c:set var="class" value="class='bgcolor2'"/>
+                        <c:set var="htmlClass" value="class='bgcolor2'"/>
                     </c:when>
                     <c:otherwise>
-                        <c:set var="class" value=""/>
+                        <c:set var="htmlClass" value=""/>
                     </c:otherwise>
                 </c:choose>
 
@@ -259,62 +259,62 @@
                         </c:when>
 
                         <c:otherwise>
-                            <td ${class} style="padding-left:0.25em"><input type="checkbox" class="checkbox" id="songIndex${loopStatus.count - 1}"></td>
+                            <td ${htmlClass} style="padding-left:0.25em"><input type="checkbox" class="checkbox" id="songIndex${loopStatus.count - 1}"></td>
 
                             <c:if test="${model.visibility.trackNumberVisible}">
-                                <td ${class} style="padding-right:0.5em;text-align:right">
+                                <td ${htmlClass} style="padding-right:0.5em;text-align:right">
                                     <span class="detail">${child.trackNumber}</span>
                                 </td>
                             </c:if>
 
-                            <td ${class} style="padding-right:1.25em;white-space:nowrap">
+                            <td ${htmlClass} style="padding-right:1.25em;white-space:nowrap">
                                 <span title="${child.title}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(child.title)}</str:truncateNicely></span>
                             </td>
 
                             <c:if test="${model.visibility.albumVisible}">
-                                <td ${class} style="padding-right:1.25em;white-space:nowrap">
+                                <td ${htmlClass} style="padding-right:1.25em;white-space:nowrap">
                                     <span class="detail" title="${child.albumName}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(child.albumName)}</str:truncateNicely></span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.artistVisible and model.multipleArtists}">
-                                <td ${class} style="padding-right:1.25em;white-space:nowrap">
+                                <td ${htmlClass} style="padding-right:1.25em;white-space:nowrap">
                                     <span class="detail" title="${child.artist}"><str:truncateNicely upper="${cutoff}">${fn:escapeXml(child.artist)}</str:truncateNicely></span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.genreVisible}">
-                                <td ${class} style="padding-right:1.25em;white-space:nowrap">
+                                <td ${htmlClass} style="padding-right:1.25em;white-space:nowrap">
                                     <span class="detail">${child.genre}</span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.yearVisible}">
-                                <td ${class} style="padding-right:1.25em">
+                                <td ${htmlClass} style="padding-right:1.25em">
                                     <span class="detail">${child.year}</span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.formatVisible}">
-                                <td ${class} style="padding-right:1.25em">
+                                <td ${htmlClass} style="padding-right:1.25em">
                                     <span class="detail">${fn:toLowerCase(child.format)}</span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.fileSizeVisible}">
-                                <td ${class} style="padding-right:1.25em;text-align:right">
+                                <td ${htmlClass} style="padding-right:1.25em;text-align:right">
                                     <span class="detail"><sub:formatBytes bytes="${child.fileSize}"/></span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.durationVisible}">
-                                <td ${class} style="padding-right:1.25em;text-align:right">
+                                <td ${htmlClass} style="padding-right:1.25em;text-align:right">
                                     <span class="detail">${child.durationString}</span>
                                 </td>
                             </c:if>
 
                             <c:if test="${model.visibility.bitRateVisible}">
-                                <td ${class} style="padding-right:0.25em">
+                                <td ${htmlClass} style="padding-right:0.25em">
                                     <span class="detail">
                                         <c:if test="${not empty child.bitRate}">
                                             ${child.bitRate} Kbps ${child.variableBitRate ? "vbr" : ""}

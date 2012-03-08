@@ -30,10 +30,10 @@
             <c:set var="share" value="${shareInfo.share}"/>
             <c:choose>
                 <c:when test="${loopStatus.count % 2 == 1}">
-                    <c:set var="class" value="class='bgcolor2'"/>
+                    <c:set var="htmlClass" value="class='bgcolor2'"/>
                 </c:when>
                 <c:otherwise>
-                    <c:set var="class" value=""/>
+                    <c:set var="htmlClass" value=""/>
                 </c:otherwise>
             </c:choose>
 
@@ -42,20 +42,20 @@
             </sub:url>
 
             <tr>
-                <td ${class} style="padding-left:1em"><a href="${model.shareBaseUrl}${share.name}" target="_blank">${share.name}</a></td>
-                <td ${class} style="padding-left:1em">${share.username}</td>
-                <td ${class} style="padding-left:1em"><input type="text" name="description[${share.id}]" size="40" value="${share.description}"/></td>
-                <td ${class} style="padding-left:1em"><fmt:formatDate value="${share.expires}" type="date" dateStyle="medium"/></td>
-                <td ${class} style="padding-left:1em"><fmt:formatDate value="${share.lastVisited}" type="date" dateStyle="medium"/></td>
-                <td ${class} style="padding-left:1em; text-align:right">${share.visitCount}</td>
-                <td ${class} style="padding-left:1em"><a href="${albumUrl}" title="${shareInfo.dir.name}"><str:truncateNicely upper="30">${fn:escapeXml(shareInfo.dir.name)}</str:truncateNicely></a></td>
-                <td ${class} style="padding-left:1em">
+                <td ${htmlClass} style="padding-left:1em"><a href="${model.shareBaseUrl}${share.name}" target="_blank">${share.name}</a></td>
+                <td ${htmlClass} style="padding-left:1em">${share.username}</td>
+                <td ${htmlClass} style="padding-left:1em"><input type="text" name="description[${share.id}]" size="40" value="${share.description}"/></td>
+                <td ${htmlClass} style="padding-left:1em"><fmt:formatDate value="${share.expires}" type="date" dateStyle="medium"/></td>
+                <td ${htmlClass} style="padding-left:1em"><fmt:formatDate value="${share.lastVisited}" type="date" dateStyle="medium"/></td>
+                <td ${htmlClass} style="padding-left:1em; text-align:right">${share.visitCount}</td>
+                <td ${htmlClass} style="padding-left:1em"><a href="${albumUrl}" title="${shareInfo.dir.name}"><str:truncateNicely upper="30">${fn:escapeXml(shareInfo.dir.name)}</str:truncateNicely></a></td>
+                <td ${htmlClass} style="padding-left:1em">
                     <label><input type="radio" name="expireIn[${share.id}]" value="7"><fmt:message key="sharesettings.expirein.week"/></label>
                     <label><input type="radio" name="expireIn[${share.id}]" value="30"><fmt:message key="sharesettings.expirein.month"/></label>
                     <label><input type="radio" name="expireIn[${share.id}]" value="365"><fmt:message key="sharesettings.expirein.year"/></label>
                     <label><input type="radio" name="expireIn[${share.id}]" value="0"><fmt:message key="sharesettings.expirein.never"/></label>
                 </td>
-                <td ${class} style="padding-left:1em" align="center" style="padding-left:1em"><input type="checkbox" name="delete[${share.id}]" class="checkbox"/></td>
+                <td ${htmlClass} style="padding-left:1em" align="center" style="padding-left:1em"><input type="checkbox" name="delete[${share.id}]" class="checkbox"/></td>
             </tr>
         </c:forEach>
 
