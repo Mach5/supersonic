@@ -2,16 +2,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html><head>
     <%@ include file="head.jsp" %>
-    <script type="text/javascript" src="<c:url value="/dwr/interface/nowPlayingService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/interface/playlistService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/swfobject.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/range.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/timer.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/slider.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/nowPlayingService.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/playlistService.js"/>"></script>
     <link type="text/css" rel="stylesheet" href="<c:url value="/script/webfx/luna.css"/>">
 </head>
 
