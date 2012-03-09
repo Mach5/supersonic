@@ -47,8 +47,6 @@ Test searching while createing lucene index
 Revisit MetaDataParser.isRoot()
 -
 Maintain track order for offline files in Android. Prepend track number for sortability?
-SubWiji
-  http://forum.subsonic.org/forum/viewtopic.php?f=8&t=8772
 REST: Ensure that podcast dir is included.
 Star support
 
