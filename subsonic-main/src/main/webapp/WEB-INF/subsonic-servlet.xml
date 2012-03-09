@@ -12,7 +12,6 @@
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="musicIndexService" ref="musicIndexService"/>
         <property name="playerService" ref="playerService"/>
-        <property name="musicFolderCache" ref="musicFolderCache"/>
     </bean>
     <bean id="rightController" class="net.sourceforge.subsonic.controller.RightController">
         <property name="viewName" value="right"/>
@@ -279,7 +278,6 @@
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
-        <property name="mediaScannerService" ref="mediaScannerService"/>
     </bean>
     <bean id="videoPlayerController" class="net.sourceforge.subsonic.controller.VideoPlayerController">
         <property name="viewName" value="videoPlayer"/>

@@ -3,6 +3,7 @@ package net.sourceforge.subsonic.booter.agent;
 import java.awt.Desktop;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -106,12 +107,20 @@ public class SubsonicAgent {
     /**
      * If necessary, restart agent with elevated rights.
      */
-    public void checkElevation(String arg) {
+    public void checkElevation(String... args) {
+
         if (isElevationNeeded() && !isElevated()) {
             try {
-                String cmd = "subsonic-agent-elevated.exe " + arg;
-                Runtime.getRuntime().exec(cmd);
-                System.err.println("Executing: " + cmd);
+                List<String> command = new ArrayList<String>();
+                command.add("cmd");
+                command.add("/c");
+                command.add("subsonic-agent-elevated.exe");
+                command.addAll(Arrays.asList(args));
+
+                ProcessBuilder builder = new ProcessBuilder();
+                builder.command(command);
+                System.err.println("Executing: " + command + " with current dir: " + System.getProperty("user.dir"));
+                builder.start();
                 System.exit(0);
             } catch (Exception x) {
                 JOptionPane.showMessageDialog(frame, "Failed to elevate Subsonic Control Panel. " + x, "Error", JOptionPane.WARNING_MESSAGE);

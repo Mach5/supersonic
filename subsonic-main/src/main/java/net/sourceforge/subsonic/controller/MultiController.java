@@ -165,6 +165,7 @@ public class MultiController extends MultiActionController {
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
+        map.put("runningAsRoot", "root".equals(System.getProperty("user.name")));
         return new ModelAndView("gettingStarted", "model", map);
     }
 

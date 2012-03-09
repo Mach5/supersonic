@@ -85,7 +85,7 @@
 
     <c:forEach items="${model.ancestors}" var="ancestor">
         <sub:url value="main.view" var="ancestorUrl">
-            <sub:param name="path" value="${ancestor.path}"/>
+            <sub:param name="id" value="${ancestor.id}"/>
         </sub:url>
         <a href="${ancestorUrl}">${ancestor.name}</a> &raquo;
     </c:forEach>
@@ -105,7 +105,7 @@
 <h2>
     <c:if test="${model.navigateUpAllowed}">
         <sub:url value="main.view" var="upUrl">
-            <sub:param name="path" value="${model.parent.path}"/>
+            <sub:param name="id" value="${model.parent.id}"/>
         </sub:url>
         <a href="${upUrl}"><fmt:message key="main.up"/></a>
         <c:set var="needSep" value="true"/>
@@ -251,7 +251,7 @@
                     <c:choose>
                         <c:when test="${child.directory}">
                             <sub:url value="main.view" var="childUrl">
-                                <sub:param name="path" value="${child.path}"/>
+                                <sub:param name="id" value="${child.id}"/>
                             </sub:url>
                             <td style="padding-left:0.25em" colspan="4">
                                 <a href="${childUrl}" title="${child.name}"><span style="white-space:nowrap;"><str:truncateNicely upper="${cutoff}">${child.name}</str:truncateNicely></span></a>
@@ -404,7 +404,7 @@
 <div style="padding-bottom: 1em">
     <c:if test="${not empty model.previousAlbum}">
         <sub:url value="main.view" var="previousUrl">
-            <sub:param name="path" value="${model.previousAlbum.path}"/>
+            <sub:param name="id" value="${model.previousAlbum.id}"/>
         </sub:url>
         <div class="back" style="float:left;padding-right:10pt"><a href="${previousUrl}" title="${model.previousAlbum.name}">
             <str:truncateNicely upper="30">${fn:escapeXml(model.previousAlbum.name)}</str:truncateNicely>
@@ -412,7 +412,7 @@
     </c:if>
     <c:if test="${not empty model.nextAlbum}">
         <sub:url value="main.view" var="nextUrl">
-            <sub:param name="path" value="${model.nextAlbum.path}"/>
+            <sub:param name="id" value="${model.nextAlbum.id}"/>
         </sub:url>
         <div class="forward" style="float:left"><a href="${nextUrl}" title="${model.nextAlbum.name}">
             <str:truncateNicely upper="30">${fn:escapeXml(model.nextAlbum.name)}</str:truncateNicely>

@@ -60,6 +60,16 @@ public class MediaFileDao extends AbstractDao {
     }
 
     /**
+     * Returns the media file for the given ID.
+     *
+     * @param id The ID.
+     * @return The media file or null.
+     */
+    public MediaFile getMediaFile(int id) {
+        return queryOne("select " + COLUMNS + " from media_file where id=?", rowMapper, id);
+    }
+
+    /**
      * Returns a subset of all media files.
      */
     public List<MediaFile> getMediaFiles(int offset, int size) {
@@ -117,9 +127,7 @@ public class MediaFileDao extends AbstractDao {
                 file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
                 file.getLastModified(), file.getChildrenLastUpdated(), file.isPresent(), VERSION, file.getPath());
 
-        if (n > 0) {
-            LOG.debug("Updated media_file for " + file.getPath());
-        } else {
+        if (n == 0) {
 
             // Copy values from archive.
             MediaFile archived = getArchivedMediaFile(file.getPath());
@@ -139,9 +147,10 @@ public class MediaFileDao extends AbstractDao {
                     file.getChildrenLastUpdated(), file.isPresent(), VERSION);
 
             update("delete from media_file_archive where path=?", file.getPath());
-
-            LOG.debug("Created media_file for " + file.getPath());
         }
+
+        int id = queryForInt("select id from media_file where path=?", null, file.getPath());
+        file.setId(id);
     }
 
     private MediaFile getArchivedMediaFile(String path) {
@@ -271,6 +280,7 @@ public class MediaFileDao extends AbstractDao {
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {
         public MediaFile mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new MediaFile(
+                    rs.getInt(1),
                     rs.getString(2),
                     rs.getString(3),
                     MediaType.valueOf(rs.getString(4)),

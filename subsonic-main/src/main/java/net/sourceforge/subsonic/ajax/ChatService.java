@@ -19,7 +19,6 @@
 package net.sourceforge.subsonic.ajax;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.Cache;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.util.BoundedList;
 import org.apache.commons.lang.StringUtils;
@@ -50,9 +49,8 @@ public class ChatService {
     private static final int MAX_MESSAGES = 10;
     private static final long TTL_MILLIS = 3L * 24L * 60L * 60L * 1000L; // 3 days.
 
-    private LinkedList<Message> messages;
+    private final LinkedList<Message> messages = new BoundedList<Message>(MAX_MESSAGES);
     private SecurityService securityService;
-    private Cache chatCache;
 
     private long revision = System.identityHashCode(this);
 
@@ -60,16 +58,6 @@ public class ChatService {
      * Invoked by Spring.
      */
     public void init() {
-        try {
-            messages = chatCache.getValue(CACHE_KEY);
-            if (messages == null) {
-                messages = new BoundedList<Message>(MAX_MESSAGES);
-            }
-        } catch (Exception x) {
-            LOG.warn("Failed to re-create chat messages.", x);
-            messages = new BoundedList<Message>(MAX_MESSAGES);
-        }
-
         // Delete old messages every hour.
         ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
         Runnable runnable = new Runnable() {
@@ -102,14 +90,12 @@ public class ChatService {
         message = StringUtils.trimToNull(message);
         if (message != null && user != null) {
             messages.addFirst(new Message(message, user, new Date()));
-            chatCache.put(CACHE_KEY, messages);
             revision++;
         }
     }
 
     public synchronized void clearMessages() {
         messages.clear();
-        chatCache.put(CACHE_KEY, messages);
         revision++;
     }
 
@@ -126,10 +112,6 @@ public class ChatService {
 
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
-    }
-
-    public void setChatCache(Cache chatCache) {
-        this.chatCache = chatCache;
     }
 
     public static class Messages implements Serializable {

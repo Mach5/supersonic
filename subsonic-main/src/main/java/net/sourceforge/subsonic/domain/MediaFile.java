@@ -32,6 +32,7 @@ import java.util.Date;
  */
 public class MediaFile {
 
+    private int id;
     private String path;
     private String folder;
     private MediaType mediaType;
@@ -59,11 +60,12 @@ public class MediaFile {
     private Date childrenLastUpdated;
     private boolean present;
 
-    public MediaFile(String path, String folder, MediaType mediaType, String format, String title,
+    public MediaFile(int id, String path, String folder, MediaType mediaType, String format, String title,
                      String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
                      boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
                      String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date lastModified,
                      Date childrenLastUpdated, boolean present) {
+        this.id = id;
         this.path = path;
         this.folder = folder;
         this.mediaType = mediaType;
@@ -93,6 +95,14 @@ public class MediaFile {
     }
 
     public MediaFile() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getPath() {

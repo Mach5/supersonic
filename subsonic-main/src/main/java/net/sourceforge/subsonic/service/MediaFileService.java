@@ -122,6 +122,15 @@ public class MediaFileService {
         return getMediaFile(new File(pathName));
     }
 
+    // TODO: Optimize with memory caching.
+    public MediaFile getMediaFile(int id) {
+        MediaFile mediaFile = mediaFileDao.getMediaFile(id);
+        if (!securityService.isReadAllowed(mediaFile.getFile())) {
+            throw new SecurityException("Access denied to file " + mediaFile);
+        }
+        return mediaFile;
+    }
+
     public MediaFile getParentOf(MediaFile mediaFile) {
         if (mediaFile.getParentPath() == null) {
             return null;

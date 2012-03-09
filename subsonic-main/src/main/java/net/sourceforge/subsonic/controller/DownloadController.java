@@ -36,10 +36,10 @@ import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.Util;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.LongRange;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
@@ -76,13 +76,15 @@ public class DownloadController implements Controller, LastModified {
     private MediaFileService mediaFileService;
 
     public long getLastModified(HttpServletRequest request) {
-        String path = request.getParameter("path");
-        if (StringUtils.isBlank(path)) {
+        try {
+            MediaFile mediaFile = getSingleFile(request);
+            if (mediaFile == null || mediaFile.isDirectory() || mediaFile.getLastModified() == null) {
+                return -1;
+            }
+            return mediaFile.getLastModified().getTime();
+        } catch (ServletRequestBindingException e) {
             return -1;
         }
-
-        File file = new File(path);
-        return file.isFile() && file.exists() ? file.lastModified() : -1;
     }
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -92,14 +94,14 @@ public class DownloadController implements Controller, LastModified {
 
             status = statusService.createDownloadStatus(playerService.getPlayer(request, response, false, false));
 
-            String path = request.getParameter("path");
+            MediaFile mediaFile = getSingleFile(request);
             String dir = request.getParameter("dir");
             String playlistName = request.getParameter("playlist");
             String playerId = request.getParameter("player");
             int[] indexes = ServletRequestUtils.getIntParameters(request, "i");
 
-            if (path != null) {
-                response.setHeader("ETag", StringUtil.utf8HexEncode(path));
+            if (mediaFile != null) {
+                response.setIntHeader("ETag", mediaFile.getId());
                 response.setHeader("Accept-Ranges", "bytes");
             }
 
@@ -109,8 +111,8 @@ public class DownloadController implements Controller, LastModified {
                 LOG.info("Got range: " + range);
             }
 
-            if (path != null) {
-                File file = new File(path);
+            if (mediaFile != null) {
+                File file = mediaFile.getFile();
                 if (!securityService.isReadAllowed(file)) {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     return null;
@@ -150,6 +152,18 @@ public class DownloadController implements Controller, LastModified {
             }
         }
 
+        return null;
+    }
+    
+    private MediaFile getSingleFile(HttpServletRequest request) throws ServletRequestBindingException {
+        String path = request.getParameter("path");
+        if (path != null) {
+            return mediaFileService.getMediaFile(path);
+        }
+        Integer id = ServletRequestUtils.getIntParameter(request, "id");
+        if (id != null) {
+            return mediaFileService.getMediaFile(id);
+        }
         return null;
     }
 

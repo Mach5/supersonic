@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.mach5.supersonic</groupId>
     <artifactId>supersonic</artifactId>
-    <version>4.6</version>
+    <version>4.7.beta1</version>
     <name>Supersonic</name>
     <packaging>pom</packaging>
     <organization>

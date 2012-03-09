@@ -20,9 +20,9 @@ package net.sourceforge.subsonic.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -39,7 +39,6 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.Cache;
 import net.sourceforge.subsonic.domain.InternetRadio;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
@@ -64,19 +63,28 @@ public class LeftController extends ParameterizableViewController implements Las
 
     private static final Logger LOG = Logger.getLogger(LeftController.class);
 
+    // Update this time if you want to force a refresh in clients.
+    private static final Calendar LAST_COMPATIBILITY_TIME = Calendar.getInstance();
+    static {
+        LAST_COMPATIBILITY_TIME.set(2012, Calendar.MARCH, 6, 0, 0, 0);
+        LAST_COMPATIBILITY_TIME.set(Calendar.MILLISECOND, 0);
+    }
+
     private MediaScannerService mediaScannerService;
     private SettingsService settingsService;
     private SecurityService securityService;
     private MediaFileService mediaFileService;
     private MusicIndexService musicIndexService;
     private PlayerService playerService;
-    private Cache musicFolderCache;
+
 
     public long getLastModified(HttpServletRequest request) {
         saveSelectedMusicFolder(request);
 
+        long lastModified = LAST_COMPATIBILITY_TIME.getTimeInMillis();
+
         // When was settings last changed?
-        long lastModified = settingsService.getSettingsChanged();
+        lastModified = Math.max(lastModified, settingsService.getSettingsChanged());
 
         // When was music folder(s) on disk last changed?
         List<MusicFolder> allMusicFolders = settingsService.getAllMusicFolders();
@@ -122,7 +130,7 @@ public class LeftController extends ParameterizableViewController implements Las
         String[] shortcuts = settingsService.getShortcutsAsArray();
         UserSettings userSettings = settingsService.getUserSettings(securityService.getCurrentUsername(request));
 
-        MusicFolderCacheEntry cacheEntry = getCacheEntry(musicFoldersToUse, getLastModified(request));
+        MusicFolderContent musicFolderContent = getMusicFolderContent(musicFoldersToUse);
 
         map.put("player", playerService.getPlayer(request, response));
         map.put("musicFolders", allMusicFolders);
@@ -141,9 +149,9 @@ public class LeftController extends ParameterizableViewController implements Las
             map.put("bytes", StringUtil.formatBytes(bytes, locale));
         }
 
-        map.put("indexedArtists", cacheEntry.indexedArtists);
-        map.put("singleSongs", cacheEntry.singleSongs);
-        map.put("indexes", cacheEntry.indexedArtists.keySet());
+        map.put("indexedArtists", musicFolderContent.indexedArtists);
+        map.put("singleSongs", musicFolderContent.singleSongs);
+        map.put("indexes", musicFolderContent.indexedArtists.keySet());
         map.put("user", securityService.getCurrentUser(request));
 
         ModelAndView result = super.handleRequestInternal(request, response);
@@ -198,28 +206,10 @@ public class LeftController extends ParameterizableViewController implements Las
         return result;
     }
 
-    public MusicFolderCacheEntry getCacheEntry(List<MusicFolder> musicFoldersToUse, long lastModified) throws Exception {
-        StringBuilder musicFolderIds = new StringBuilder();
-        if (musicFoldersToUse.isEmpty()) {
-            musicFolderIds.append("NULL");
-        } else {
-            for (MusicFolder musicFolder : musicFoldersToUse) {
-                musicFolderIds.append(musicFolder.getId()).append(",");
-            }
-            musicFolderIds.setLength(musicFolderIds.length() - 1);
-        }
-        String key = musicFolderIds.toString();
-
-        MusicFolderCacheEntry entry = musicFolderCache.getValue(key);
-
-        if (entry == null || entry.lastModified < lastModified) {
-            SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists = musicIndexService.getIndexedArtists(musicFoldersToUse);
-            List<MediaFile> singleSongs = getSingleSongs(musicFoldersToUse);
-            entry = new MusicFolderCacheEntry(indexedArtists, singleSongs, lastModified);
-            musicFolderCache.put(key, entry);
-        }
-
-        return entry;
+    public MusicFolderContent getMusicFolderContent(List<MusicFolder> musicFoldersToUse) throws Exception {
+        SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists = musicIndexService.getIndexedArtists(musicFoldersToUse);
+        List<MediaFile> singleSongs = getSingleSongs(musicFoldersToUse);
+        return new MusicFolderContent(indexedArtists, singleSongs);
     }
 
     public void setMediaScannerService(MediaScannerService mediaScannerService) {
@@ -242,25 +232,18 @@ public class LeftController extends ParameterizableViewController implements Las
         this.musicIndexService = musicIndexService;
     }
 
-    public void setMusicFolderCache(Cache musicFolderCache) {
-        this.musicFolderCache = musicFolderCache;
-    }
-
     public void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
     }
 
-    public static class MusicFolderCacheEntry implements Serializable {
+    public static class MusicFolderContent {
 
         private final SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists;
         private final List<MediaFile> singleSongs;
-        private final long lastModified;
 
-        public MusicFolderCacheEntry(SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists,
-                List<MediaFile> singleSongs, long lastModified) {
+        public MusicFolderContent(SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists, List<MediaFile> singleSongs) {
             this.indexedArtists = indexedArtists;
             this.singleSongs = singleSongs;
-            this.lastModified = lastModified;
         }
 
         public SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> getIndexedArtists() {
@@ -271,8 +254,5 @@ public class LeftController extends ParameterizableViewController implements Las
             return singleSongs;
         }
 
-        public long getLastModified() {
-            return lastModified;
-        }
     }
 }
