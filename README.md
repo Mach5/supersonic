@@ -8,7 +8,7 @@ The primary application is Java based an runs on Windows, GNU/Linux/BSD and OS X
 ## Credits ##
 Thank you to all of our code contributors for making this project possible.
 
-This project is a *actively synced* fork of the [Subsonic](http://subsonic.org) project [SVN repository](http://subsonic.svn.sourceforge.net/svnroot/subsonic), developed by [Sindre Mehus](mailto:sindre@activeobjects.no).
+This project is an *actively synced* fork of the [Subsonic](http://subsonic.org) project [SVN repository](http://subsonic.svn.sourceforge.net/svnroot/subsonic), developed by [Sindre Mehus](mailto:sindre@activeobjects.no).
 
 ## License information ##
 Supersonic is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License.
