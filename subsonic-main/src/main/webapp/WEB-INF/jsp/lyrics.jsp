@@ -3,9 +3,9 @@
 <html><head>
     <%@ include file="head.jsp" %>
     <title><fmt:message key="lyrics.title"/></title>
-    <script type="text/javascript" src="<c:url value="/dwr/interface/lyricsService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/lyricsService.js"/>"></script>
 
     <script type="text/javascript" language="javascript">
 
