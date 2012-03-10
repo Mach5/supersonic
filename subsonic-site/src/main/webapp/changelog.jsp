@@ -19,7 +19,7 @@
 <a name="4.7.beta1"><h2 class="div">Subsonic 4.7.beta1 - Mar 10, 2012</h2></a>
 <ul>
     <li><span class="bugid">New: </span>Major rewrite of the Subsonic core. It now uses less memory and is significantly faster.</li>
-    <li><span class="bugid">New: </span>Added option <em>Settings &gt; Media folders &gt; Fast access mode</em> which improve performance for network disks.</li>
+    <li><span class="bugid">New: </span>Added option <em>Settings &gt; Media folders &gt; Fast access mode</em> which additionally improves performance for network disks.</li>
     <li><span class="bugid">New: </span>Use ffmpeg rather than lame for downsampling.</li>
     <li><span class="bugid">New: </span>Show media folder scanning status.</li>
     <li><span class="bugid">New: </span>Added Polish translation, courtesy of Micha&#322; Kotas</li>
@@ -30,7 +30,7 @@
     <li><span class="bugid">New: </span>Avoid false alarms from Windows virus scanners.</li>
     <li><span class="bugid">Bugfix: </span>Fixed problem with players being associated to wrong users.</li>
     <li><span class="bugid">Bugfix: </span>Serve generic cover art if failing to scale original.</li>
-    <li><span class="bugid">REST: </span>Suppress content length estimation by default.</li>
+    <li><span class="bugid">REST: </span>Suppress content length estimation by default. Added "estimateContentLength" parameter to stream method.</li>
     <li><span class="bugid">REST: </span>Added getAvatar method.</li>
     <li><span class="bugid">REST: </span>Added "shareRole" to createUser</li>
     <li><span class="bugid">REST: </span>Fixed some JSON conversion problems ("JSON does not allow non-finite numbers")</li>
