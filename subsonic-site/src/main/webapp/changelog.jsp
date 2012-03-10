@@ -16,6 +16,29 @@
 <div id="main-col">
 <h1 class="bottomspace">Subsonic Change Log</h1>
 
+<a name="4.7.beta1"><h2 class="div">Subsonic 4.7.beta1 - Mar 10, 2012</h2></a>
+<ul>
+    <li><span class="bugid">New: </span>Major rewrite of the Subsonic core. It now uses less memory and is significantly faster.</li>
+    <li><span class="bugid">New: </span>Added option <em>Settings &gt; Media folders &gt; Fast access mode</em> which improve performance for network disks.</li>
+    <li><span class="bugid">New: </span>Use ffmpeg rather than lame for downsampling.</li>
+    <li><span class="bugid">New: </span>Show media folder scanning status.</li>
+    <li><span class="bugid">New: </span>Added Polish translation, courtesy of Micha&#322; Kotas</li>
+    <li><span class="bugid">New: </span>Added Catalan translation, courtesy of Josep Santal&oacute;.</li>
+    <li><span class="bugid">New: </span>Added option to reset and email forgotten password or username.</li>
+    <li><span class="bugid">New: </span>Make it configurable to run as a different user than root in Linux RPM.</li>
+    <li><span class="bugid">New: </span>Display warning if running as root user.</li>
+    <li><span class="bugid">New: </span>Avoid false alarms from Windows virus scanners.</li>
+    <li><span class="bugid">Bugfix: </span>Fixed problem with players being associated to wrong users.</li>
+    <li><span class="bugid">Bugfix: </span>Serve generic cover art if failing to scale original.</li>
+    <li><span class="bugid">REST: </span>Suppress content length estimation by default.</li>
+    <li><span class="bugid">REST: </span>Added getAvatar method.</li>
+    <li><span class="bugid">REST: </span>Added "shareRole" to createUser</li>
+    <li><span class="bugid">REST: </span>Fixed some JSON conversion problems ("JSON does not allow non-finite numbers")</li>
+    <li><span class="bugid">REST: </span>Fixed a problem with the "u" and "p" parameters sometimes not being used if the JSESSIONID cookie is present.</li>
+    <li><span class="bugid">REST: </span>Stream method now supports HEAD requests.</li>
+    <li><span class="bugid">REST: </span>Use shorter IDs.</li>
+</ul>
+
 <a name="4.6"><h2 class="div">Subsonic 4.6 - Dec 06, 2011</h2></a>
 <ul>
     <li><span class="bugid">New: </span>Added option to resend license key.</li>
@@ -888,6 +911,7 @@
     <div class="sidebox">
         <h2>Releases</h2>
         <ul class="list">
+            <li><a href="#4.7.beta1">Subsonic 4.7.beta1</a></li>
             <li><a href="#4.6">Subsonic 4.6</a></li>
             <li><a href="#4.6.beta2">Subsonic 4.6.beta2</a></li>
             <li><a href="#4.6.beta1">Subsonic 4.6.beta1</a></li>
