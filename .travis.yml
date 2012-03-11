@@ -1,5 +1,10 @@
 language: java
 
-# blacklist
-except:
+notifications:
+  email:
+    - supersonic-dev@googlegroups.com
+
+# blacklist upstream build since they will not have a TravisCI config
+branches:
+  except:
     - upstream
