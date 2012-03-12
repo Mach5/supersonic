@@ -2,6 +2,7 @@ DONE IN 4.7
 -----------------
 Improvements to lyrics search, courtesy of Juan Carlos Díaz.
 Updated Dutch translation, courtesy of W. van der Heijden.
+Updated Swedish translation, courtesy of Fritte Jensen.
 
 TODO IN 4.7
 -----------------
@@ -103,17 +104,17 @@ Enable fast scrolling of playlists, search results and songs.
 TODO IN ANDROID 3.4
 --------------------
 Show artist list faster, check for invalid cache in background.
-
+ICS theme
+  http://developer.android.com/design/index.html
+  http://forum.subsonic.org/forum/viewtopic.php?f=5&t=8497
+  https://mail.google.com/mail/?tab=cm#inbox/1344527f4abc11af
+https://mail.google.com/mail/?tab=cm#inbox/135bb6c0d53edd42
 Browser / web page widget for Android
 
 Maintain track order for offline files.
 Check for lingering .partial files.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 Don't pause on incoming call if RC.
-ICS theme
-  http://developer.android.com/design/index.html
-  http://forum.subsonic.org/forum/viewtopic.php?f=5&t=8497
-  https://mail.google.com/mail/?tab=cm#inbox/1344527f4abc11af
 PayPal integration
   https://www.x.com/developers/paypal/products/mobile-payment-libraries
 Change generic album art.
