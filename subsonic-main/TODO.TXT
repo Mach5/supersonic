@@ -1,41 +1,13 @@
-
-
 DONE IN 4.7
 -----------------
-Database-backed metadata.
-Serve generic cover art if failing to scale original.
-Use ffmpeg rather than lame for downsampling.
-  Retain track number when doing lame downsampling.
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
-Show scanning status.
-REST: Added "shareRole" to createUser
-REST API authentication & session
-  https://mail.google.com/mail/?shva=1#inbox/1341d1f45f89d15a
-  Update API doc
-  Wrong username/password with BASIC auth gives bad error message "401 LDAP authentication disabled for user"
-  wget --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies  "http://localhost:8080/rest/ping.view?u=admin&p=admin&v=1.6&c=android" -O -
-  wget --auth-no-challenge --http-user=admin --http-password=admin --load-cookies cookies.txt --save-cookies cookies.txt --keep-session-cookies  "http://localhost:8080/rest/ping.view?u=sindre&p=foo&v=1.6&c=android" -O -
-Fix JSON bug
-  https://mail.google.com/mail/?shva=1#inbox/134e21354999d203
-Added Polish translation, courtesy of Micha&#322; Kotas
-Added Catalan translation, courtesy of Josep Santaló.
-Bugfix: Fixed problem with players being associated to wrong users.
-Suppress content length estimation by default.
-Support HEAD request in StreamController
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/134956a3b8ebe166
-Make it configurable to run as a different user than root in RPM.
-Build two versions of subsonic-agent.exe, one with run-as admin.
-REST: Added getAvatar.
-Email forgotten password, using subsonic backend service.  Reset password.
-Use media file IDs in rest api.
-Display warning if running as root user.
+Improvements to lyrics search, courtesy of Juan Carlos Díaz.
+Updated Dutch translation, courtesy of W. van der Heijden.
+Updated Swedish translation, courtesy of Fritte Jensen.
 
 TODO IN 4.7
 -----------------
 Use media file IDs in web interface etc.
 Make it work with 64-bit Java 7.  Problem with exe4j?
-Change description of apps in More page.
-Change description of donate in about page.
 Test with a big collection on a network disk.
 Change random implementation.
 Better error message if media file not found.
@@ -49,8 +21,6 @@ Test searching while createing lucene index
 Revisit MetaDataParser.isRoot()
 -
 Maintain track order for offline files in Android. Prepend track number for sortability?
-SubWiji
-  http://forum.subsonic.org/forum/viewtopic.php?f=8&t=8772
 REST: Ensure that podcast dir is included.
 Star support
 
@@ -134,17 +104,17 @@ Enable fast scrolling of playlists, search results and songs.
 TODO IN ANDROID 3.4
 --------------------
 Show artist list faster, check for invalid cache in background.
-
+ICS theme
+  http://developer.android.com/design/index.html
+  http://forum.subsonic.org/forum/viewtopic.php?f=5&t=8497
+  https://mail.google.com/mail/?tab=cm#inbox/1344527f4abc11af
+https://mail.google.com/mail/?tab=cm#inbox/135bb6c0d53edd42
 Browser / web page widget for Android
 
 Maintain track order for offline files.
 Check for lingering .partial files.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
 Don't pause on incoming call if RC.
-ICS theme
-  http://developer.android.com/design/index.html
-  http://forum.subsonic.org/forum/viewtopic.php?f=5&t=8497
-  https://mail.google.com/mail/?tab=cm#inbox/1344527f4abc11af
 PayPal integration
   https://www.x.com/developers/paypal/products/mobile-payment-libraries
 Change generic album art.
