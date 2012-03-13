@@ -223,7 +223,7 @@
             }
 
             if ($("currentImage" + id) && song.streamUrl == currentStreamUrl) {
-                $("currentImage" + id).show();                
+                $("currentImage" + id).show();
             }
             if ($("title" + id)) {
                 dwr.util.setValue("title" + id, truncate(song.title));
@@ -317,36 +317,6 @@
 
         player.sendEvent("LOAD", list);
         player.sendEvent("PLAY");
-        setNotification(song);
-    }
-    
-    function setNotification(song)
-    {
-       var n;
-
-       if (window.webkitNotifications.checkPermission() != 0)
-       {
-          setAllowNotification();
-          return 0;
-       }
-
-       n = window.webkitNotifications.createNotification('/icons/now_playing.png', song.title, song.artist + ' - ' + song.album);
-       n.ondisplay = function() {
-                setTimeout(function(){
-                   n.cancel();
-                },5000); };
-       n.show();
-    }
-    
-    function setAllowNotification()
-    {
-       window.webkitNotifications.requestPermission(permissionGranted);
-    }
-
-    function permissionGranted()
-    {
-       if (window.webkitNotifications.checkPermission() == 0)
-          setNotification();
     }
 
     function updateCurrentImage() {
