@@ -223,7 +223,7 @@
             }
 
             if ($("currentImage" + id) && song.streamUrl == currentStreamUrl) {
-                $("currentImage" + id).show();
+                $("currentImage" + id).show();                
             }
             if ($("title" + id)) {
                 dwr.util.setValue("title" + id, truncate(song.title));
@@ -324,7 +324,6 @@
     {
        var n;
 
-       //webkitNotifications
        if (window.webkitNotifications.checkPermission() != 0)
        {
           setAllowNotification();
