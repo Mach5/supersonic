@@ -15,7 +15,6 @@
 
     <script type="text/javascript" src="<c:url value="/script/swfobject.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/jwplayer.js"/>"></script>
     <script type="text/javascript" language="javascript">
 
         var player;
