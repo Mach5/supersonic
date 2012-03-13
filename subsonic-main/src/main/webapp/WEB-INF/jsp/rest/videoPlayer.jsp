@@ -15,6 +15,7 @@
 
     <script type="text/javascript" src="<c:url value="/script/swfobject.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/script/jwplayer.js"/>"></script>
     <script type="text/javascript" language="javascript">
 
         var player;
@@ -42,7 +43,7 @@
                 name:"player1"
             };
 
-            swfobject.embedSWF("<c:url value="/flash/jw-player-5.6.swf"/>", "placeholder1", "360", "240", "9.0.0", false, flashvars, params, attributes);
+            swfobject.embedSWF("<c:url value="/flash/jw-player-5.9.swf"/>", "placeholder1", "360", "240", "9.0.0", false, flashvars, params, attributes);
         }
 
         function playerReady(thePlayer) {
