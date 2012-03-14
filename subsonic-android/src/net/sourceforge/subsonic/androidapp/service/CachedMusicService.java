@@ -79,11 +79,14 @@ public class CachedMusicService implements MusicService {
     }
 
     @Override
-    public List<MusicFolder> getMusicFolders(Context context, ProgressListener progressListener) throws Exception {
+    public List<MusicFolder> getMusicFolders(boolean refresh, Context context, ProgressListener progressListener) throws Exception {
         checkSettingsChanged(context);
+        if (refresh) {
+            cachedMusicFolders.clear();
+        }
         List<MusicFolder> result = cachedMusicFolders.get();
         if (result == null) {
-            result = musicService.getMusicFolders(context, progressListener);
+            result = musicService.getMusicFolders(refresh, context, progressListener);
             cachedMusicFolders.set(result);
         }
         return result;
