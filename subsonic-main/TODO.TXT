@@ -6,6 +6,10 @@ Updated Swedish translation, courtesy of Fritte Jensen.
 
 TODO IN 4.7
 -----------------
+Fix CPU problem when doing initial scan.
+  Will getAncestors create problems?
+Support old-style IDs in REST API.
+Automatically start scanning if media folders change.
 Use media file IDs in web interface etc.
 Make it work with 64-bit Java 7.  Problem with exe4j?
 Test with a big collection on a network disk.
@@ -100,10 +104,13 @@ DONE IN ANDROID 3.4
 Ensure readable text in notification when background is dark.
 Fix crash when using fast scrolling.
 Enable fast scrolling of playlists, search results and songs.
+Improve caching of artist list.
 
 TODO IN ANDROID 3.4
 --------------------
-Show artist list faster, check for invalid cache in background.
+Holo theme
+  http://android-developers.blogspot.com/2012/01/holo-everywhere.html
+Update artist list in background.
 ICS theme
   http://developer.android.com/design/index.html
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=8497

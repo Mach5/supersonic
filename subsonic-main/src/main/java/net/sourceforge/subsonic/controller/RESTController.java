@@ -240,8 +240,6 @@ public class RESTController extends MultiActionController {
                 new Attribute("id", dir.getId()),
                 new Attribute("name", dir.getName()));
 
-        File coverArt = mediaFileService.getCoverArt(dir);
-
         for (MediaFile child : mediaFileService.getChildrenOf(dir, true, true, true)) {
             AttributeSet attributes = createAttributesForMediaFile(player, child);
             builder.add("child", attributes, true);

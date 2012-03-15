@@ -165,7 +165,7 @@ public class MediaScannerService {
             settingsService.save(false);
             LOG.info("Scanned media library with " + scanCount + " entries.");
 
-        } catch (Exception x) {
+        } catch (Throwable x) {
             LOG.error("Failed to scan media library.", x);
         } finally {
             scanning = false;
