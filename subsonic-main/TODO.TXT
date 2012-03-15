@@ -3,6 +3,8 @@ DONE IN 4.7
 Improvements to lyrics search, courtesy of Juan Carlos Díaz.
 Updated Dutch translation, courtesy of W. van der Heijden.
 Updated Swedish translation, courtesy of Fritte Jensen.
+Update Lucene index concurrently, not afterwards.
+Fixed missing db table indexes.
 
 TODO IN 4.7
 -----------------
@@ -10,6 +12,7 @@ HSQL: " However, the engine always loads all rows affected during an update into
   large updates impossible without splitting the work into smaller parts."
 Lots of org.hsqldb.DiskNode instances created.
 Many MediaFile and Logger$Entry created too.
+Using a lot of CPU when idling, but only if low on memory.
 
 [2012-03-15 13:36:26,137] ERROR SearchService - Failed to create Lucene search index.
 org.springframework.dao.TransientDataAccessResourceException: PreparedStatementCallback; SQL [select id, path, folder, type, format, title, album, artist, disc_number, track_number, year, genre, bit_rate, variable_bit_rate, duration_seconds, file_size, width, height, cover_art_path, parent_path, play_count, last_played, comment, created, last_modified, children_last_updated, present, version from media_file order by id limit ? offset ?]; out of memory; nested exception is java.sql.SQLException: out of memory
@@ -30,8 +33,8 @@ org.springframework.dao.TransientDataAccessResourceException: PreparedStatementC
         at net.sourceforge.subsonic.service.MediaScannerService$2.run(MediaScannerService.java:135)
 Caused by: java.sql.SQLException: out of memory
 
-[2012-03-15 13:41:02,967] DEBUG AbstractDao - 1306551  select min(id) from media_file
-[2012-03-15 13:41:05,107] DEBUG AbstractDao - 2140067  select max(id) from media_file
+[2012-03-15 13:41:02,967] DEBUG AbstractDao - 1.306.551  select min(id) from media_file
+[2012-03-15 13:41:05,107] DEBUG AbstractDao - 2.140.067  select max(id) from media_file
 
 
 Fix CPU problem when doing initial scan.

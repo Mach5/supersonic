@@ -147,16 +147,14 @@ public class MediaScannerService {
             mediaFileDao.setAllMediaFilesNotPresent();
             scanCount = 0;
 
+            searchService.startIndexing();
+
             // Recurse through all files on disk.
             for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
                 MediaFile root = mediaFileService.getMediaFile(musicFolder.getPath());
                 scanFile(root, musicFolder);
             }
             mediaFileDao.archiveNotPresent();
-
-            // Update Lucene search index.
-            LOG.info("Updating Lucene search index.");
-            searchService.updateIndexes();
 
             // Update statistics
             statistics = mediaFileDao.getStatistics();
@@ -169,6 +167,7 @@ public class MediaScannerService {
             LOG.error("Failed to scan media library.", x);
         } finally {
             scanning = false;
+            searchService.stopIndexing();
         }
     }
 
@@ -178,6 +177,8 @@ public class MediaScannerService {
             LOG.info("Scanned media library with " + scanCount + " entries.");
         }
 
+        searchService.index(file);
+
         // Update the root folder if it has changed.
         if (!musicFolder.getPath().getPath().equals(file.getFolder())) {
             file.setFolder(musicFolder.getPath().getPath());
@@ -186,11 +187,13 @@ public class MediaScannerService {
 
         mediaFileDao.setMediaFilePresent(file.getPath());
 
-        for (MediaFile child : mediaFileService.getChildrenOf(file, true, false, false)) {
-            scanFile(child, musicFolder);
-        }
-        for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false)) {
-            scanFile(child, musicFolder);
+        if (file.isDirectory()) {
+            for (MediaFile child : mediaFileService.getChildrenOf(file, true, false, false)) {
+                scanFile(child, musicFolder);
+            }
+            for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false)) {
+                scanFile(child, musicFolder);
+            }
         }
     }
 
