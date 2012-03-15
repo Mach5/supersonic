@@ -43,6 +43,19 @@ public class SubsonicThemeResolver implements ThemeResolver {
     * @return The current theme name
     */
     public String resolveThemeName(HttpServletRequest request) {
+        String themeId = (String) request.getAttribute("subsonic.theme");
+        if (themeId != null) {
+            return themeId;
+        }
+
+        // Optimization: Cache theme in the request.
+        themeId = doResolveThemeName(request);
+        request.setAttribute("subsonic.theme", themeId);
+
+        return themeId;
+    }
+
+    private String doResolveThemeName(HttpServletRequest request) {
         String themeId = null;
 
         // Look for user-specific theme.

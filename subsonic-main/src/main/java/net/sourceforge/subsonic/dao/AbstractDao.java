@@ -97,11 +97,8 @@ public class AbstractDao {
     }
 
     protected <T> T queryOne(String sql, RowMapper rowMapper, Object... args) {
-        long t = System.nanoTime();
         List<T> list = query(sql, rowMapper, args);
-        T result = list.isEmpty() ? null : list.get(0);
-        log(sql, t);
-        return result;
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public void setDaoHelper(DaoHelper daoHelper) {
