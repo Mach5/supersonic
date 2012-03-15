@@ -73,6 +73,7 @@ public class Schema47 extends Schema {
                     "unique (path))");
 
             template.execute("create index idx_media_file_path on media_file(path)");
+            template.execute("create index idx_media_file_parent_path on media_file(parent_path)");
             template.execute("create index idx_media_file_folder on media_file(folder)");
             template.execute("create index idx_media_file_type on media_file(type)");
             template.execute("create index idx_media_file_album on media_file(album)");
