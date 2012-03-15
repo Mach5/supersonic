@@ -41,7 +41,7 @@ public class Schema47 extends Schema {
 
         if (!tableExists(template, "media_file")) {
             LOG.info("Database table 'media_file' not found.  Creating it.");
-            template.execute("create table media_file (" +
+            template.execute("create cached table media_file (" +
                     "id identity," +
                     "path varchar not null," +
                     "folder varchar," +
@@ -87,7 +87,7 @@ public class Schema47 extends Schema {
 
         if (!tableExists(template, "media_file_archive")) {
             LOG.info("Database table 'media_file_archive' not found.  Creating it.");
-            template.execute("create table media_file_archive (" +
+            template.execute("create cached table media_file_archive (" +
                     "id identity," +
                     "path varchar not null," +
                     "play_count int not null," +
