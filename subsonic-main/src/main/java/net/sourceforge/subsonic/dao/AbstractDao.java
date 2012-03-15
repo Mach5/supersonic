@@ -22,12 +22,16 @@ import java.util.List;
 
 import org.springframework.jdbc.core.*;
 
+import net.sourceforge.subsonic.Logger;
+
 /**
  * Abstract superclass for all DAO's.
  *
  * @author Sindre Mehus
  */
 public class AbstractDao {
+    private static final Logger LOG = Logger.getLogger(AbstractDao.class);
+    
     private DaoHelper daoHelper;
 
     /**
@@ -51,30 +55,53 @@ public class AbstractDao {
     }
 
     protected int update(String sql, Object... args) {
-        return getJdbcTemplate().update(sql, args);
+        long t = System.nanoTime();
+        int result = getJdbcTemplate().update(sql, args);
+        log(sql, t);
+        return result;
+    }
+
+    private void log(String sql, long startTimeNano) {
+        long micros = (System.nanoTime() - startTimeNano) / 1000L;
+        LOG.debug(micros + "  " + sql);
     }
 
     protected <T> List<T> query(String sql, RowMapper rowMapper, Object... args) {
-        return getJdbcTemplate().query(sql, args, rowMapper);
+        long t = System.nanoTime();
+        List<T> result = getJdbcTemplate().query(sql, args, rowMapper);
+        log(sql, t);
+        return result;
     }
 
     protected List<String> queryForStrings(String sql, Object... args) {
-        return getJdbcTemplate().queryForList(sql, args, String.class);
+        long t = System.nanoTime();
+        List<String> result = getJdbcTemplate().queryForList(sql, args, String.class);
+        log(sql, t);
+        return result;
     }
 
     protected Integer queryForInt(String sql, Integer defaultValue, Object... args) {
-        List<Integer> result = getJdbcTemplate().queryForList(sql, args, Integer.class);
-        return result.isEmpty() ? defaultValue : result.get(0) == null ? defaultValue : result.get(0);
+        long t = System.nanoTime();
+        List<Integer> list = getJdbcTemplate().queryForList(sql, args, Integer.class);
+        Integer result = list.isEmpty() ? defaultValue : list.get(0) == null ? defaultValue : list.get(0);
+        log(sql, t);
+        return result;
     }
 
     protected Long queryForLong(String sql, Long defaultValue, Object... args) {
-        List<Long> result = getJdbcTemplate().queryForList(sql, args, Long.class);
-        return result.isEmpty() ? defaultValue : result.get(0) == null ? defaultValue : result.get(0);
+        long t = System.nanoTime();
+        List<Long> list = getJdbcTemplate().queryForList(sql, args, Long.class);
+        Long result = list.isEmpty() ? defaultValue : list.get(0) == null ? defaultValue : list.get(0);
+        log(sql, t);
+        return result;
     }
 
     protected <T> T queryOne(String sql, RowMapper rowMapper, Object... args) {
-        List<T> result = query(sql, rowMapper, args);
-        return result.isEmpty() ? null : result.get(0);
+        long t = System.nanoTime();
+        List<T> list = query(sql, rowMapper, args);
+        T result = list.isEmpty() ? null : list.get(0);
+        log(sql, t);
+        return result;
     }
 
     public void setDaoHelper(DaoHelper daoHelper) {
