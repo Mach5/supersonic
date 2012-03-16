@@ -167,12 +167,14 @@ public class MediaFileDao extends AbstractDao {
         return queryForStrings("select distinct genre from media_file where genre is not null order by genre");
     }
 
+    @Deprecated
     public MediaFile getRandomAlbum() {
         int min = queryForInt("select min(id) from media_file", 0);
         int max = queryForInt("select max(id) from media_file", 0);
         return queryOne("select " + COLUMNS + " from media_file where type=? and id > ? limit 1", rowMapper, ALBUM.name(), Util.randomInt(min, max));
     }
 
+    @Deprecated
     public MediaFile getRandomSong(Integer fromYear, Integer toYear, String genre, String musicFolderPath) {
         Integer min;
         Integer max;
@@ -253,8 +255,15 @@ public class MediaFileDao extends AbstractDao {
         return new MediaLibraryStatistics(artistCount, albumCount, songCount, totalLengthInBytes, totalDurationInSeconds);
     }
 
+    @Deprecated
     public void setAllMediaFilesNotPresent() {
-        update("update media_file set present=false");
+        int minId = queryForInt("select id from media_file where true limit 1", 0);
+        int maxId = queryForInt("select max(id) from media_file", 0);
+
+        final int batchSize = 1000;
+        for (int id = minId; id <= maxId; id += batchSize) {
+            update("update media_file set present=false where id between ? and ?", id, id + batchSize);
+        }
     }
 
     public void setMediaFilePresent(String path) {

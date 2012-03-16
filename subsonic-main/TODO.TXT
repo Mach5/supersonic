@@ -8,37 +8,21 @@ Fixed missing db table indexes.
 
 TODO IN 4.7
 -----------------
-HSQL: " However, the engine always loads all rows affected during an update into the memory. This renders very
-  large updates impossible without splitting the work into smaller parts."
-Lots of org.hsqldb.DiskNode instances created.
-Many MediaFile and Logger$Entry created too.
-Using a lot of CPU when idling, but only if low on memory.
+Use Lucene for random search.
+  http://stackoverflow.com/questions/7201638/lucene-2-9-2-how-to-show-results-in-random-order
+  Only provide a getRandomSongs method.  Albums can be resolved from this.
+Never remove rows from media_file, set present=false instead.
+  Would make IDs really permanent
+  Simplify archiving stuff.
+  Add lastScanned timestamp, use this to set stuff to not present after scanning.
+  Use "present" in album list and other queries. MAKE SURE THESE WORK FIRST!
+  Optionally, create "Clean database" setting
 
-[2012-03-15 13:36:26,137] ERROR SearchService - Failed to create Lucene search index.
-org.springframework.dao.TransientDataAccessResourceException: PreparedStatementCallback; SQL [select id, path, folder, type, format, title, album, artist, disc_number, track_number, year, genre, bit_rate, variable_bit_rate, duration_seconds, file_size, width, height, cover_art_path, parent_path, play_count, last_played, comment, created, last_modified, children_last_updated, present, version from media_file order by id limit ? offset ?]; out of memory; nested exception is java.sql.SQLException: out of memory
-        at org.springframework.jdbc.support.SQLStateSQLExceptionTranslator.doTranslate(SQLStateSQLExceptionTranslator.java:106)
-        at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
-        at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:80)
-        at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:80)
-        at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:607)
-        at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:641)
-        at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:670)
-        at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:678)
-        at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:710)
-        at net.sourceforge.subsonic.dao.AbstractDao.query(AbstractDao.java:71)
-        at net.sourceforge.subsonic.dao.MediaFileDao.getMediaFiles(MediaFileDao.java:76)
-        at net.sourceforge.subsonic.service.SearchService.updateIndexes(SearchService.java:103)
-        at net.sourceforge.subsonic.service.MediaScannerService.doScanLibrary(MediaScannerService.java:159)
-        at net.sourceforge.subsonic.service.MediaScannerService.access$000(MediaScannerService.java:39)
-        at net.sourceforge.subsonic.service.MediaScannerService$2.run(MediaScannerService.java:135)
-Caused by: java.sql.SQLException: out of memory
+Think about how to create REST methods for getting albums and artists etc.
+Remove columns from archive table that is no longer needed.  Rename to something else?
+REST: Use same cover art ID for all songs in same album.
+Using CPU when idling, but only if low on memory?
 
-[2012-03-15 13:41:02,967] DEBUG AbstractDao - 1.306.551  select min(id) from media_file
-[2012-03-15 13:41:05,107] DEBUG AbstractDao - 2.140.067  select max(id) from media_file
-
-
-Fix CPU problem when doing initial scan.
-  Will getAncestors create problems?
 Support old-style IDs in REST API.
 Improve document of REST "download" method.
 Automatically start scanning if media folders change.
