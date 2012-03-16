@@ -76,53 +76,47 @@ public class SearchService {
     private static final Version LUCENE_VERSION = Version.LUCENE_30;
 
     private MediaFileService mediaFileService;
-    private MediaFileDao mediaFileDao;
+
+    private IndexWriter artistWriter;
+    private IndexWriter albumWriter;
+    private IndexWriter songWriter;
 
     public SearchService() {
         removeLocks();
     }
 
-    /**
-     * Updates the
-     */
-    public synchronized void updateIndexes() {
 
-        IndexWriter artistWriter = null;
-        IndexWriter albumWriter = null;
-        IndexWriter songWriter = null;
+    public void startIndexing() {
         try {
             artistWriter = createIndexWriter(ARTIST);
             albumWriter = createIndexWriter(ALBUM);
             songWriter = createIndexWriter(SONG);
+        } catch (Exception x) {
+            LOG.error("Failed to create search index.", x);
+        }
+    }
 
-            // Page through all media files.
-            int offset = 0;
-            final int size = 100;
-
-            while (true) {
-                List<MediaFile> mediaFiles = mediaFileDao.getMediaFiles(offset, size);
-                if (mediaFiles.isEmpty()) {
-                    break;
-                }
-                offset += mediaFiles.size();
-
-                for (MediaFile mediaFile : mediaFiles) {
-                    if (mediaFile.isFile()) {
-                        songWriter.addDocument(SONG.createDocument(mediaFile));
-                    } else if (mediaFile.isAlbum()) {
-                        albumWriter.addDocument(ALBUM.createDocument(mediaFile));
-                    } else {
-                        artistWriter.addDocument(ARTIST.createDocument(mediaFile));
-                    }
-                }
+    public void index(MediaFile mediaFile) {
+        try {
+            if (mediaFile.isFile()) {
+                songWriter.addDocument(SONG.createDocument(mediaFile));
+            } else if (mediaFile.isAlbum()) {
+                albumWriter.addDocument(ALBUM.createDocument(mediaFile));
+            } else {
+                artistWriter.addDocument(ARTIST.createDocument(mediaFile));
             }
+        } catch (Exception x) {
+            LOG.error("Failed to create search index for " + mediaFile, x);
+        }
+    }
 
+    public void stopIndexing() {
+        try {
             artistWriter.optimize();
             albumWriter.optimize();
             songWriter.optimize();
-
-        } catch (Throwable x) {
-            LOG.error("Failed to create Lucene search index.", x);
+        } catch (Exception x) {
+            LOG.error("Failed to create search index.", x);
         } finally {
             FileUtil.closeQuietly(artistWriter);
             FileUtil.closeQuietly(albumWriter);
@@ -202,10 +196,6 @@ public class SearchService {
 
     public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
-    }
-
-    public void setMediaFileDao(MediaFileDao mediaFileDao) {
-        this.mediaFileDao = mediaFileDao;
     }
 
     public static enum IndexType {

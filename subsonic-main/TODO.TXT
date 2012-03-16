@@ -3,9 +3,45 @@ DONE IN 4.7
 Improvements to lyrics search, courtesy of Juan Carlos Díaz.
 Updated Dutch translation, courtesy of W. van der Heijden.
 Updated Swedish translation, courtesy of Fritte Jensen.
+Update Lucene index concurrently, not afterwards.
+Fixed missing db table indexes.
 
 TODO IN 4.7
 -----------------
+HSQL: " However, the engine always loads all rows affected during an update into the memory. This renders very
+  large updates impossible without splitting the work into smaller parts."
+Lots of org.hsqldb.DiskNode instances created.
+Many MediaFile and Logger$Entry created too.
+Using a lot of CPU when idling, but only if low on memory.
+
+[2012-03-15 13:36:26,137] ERROR SearchService - Failed to create Lucene search index.
+org.springframework.dao.TransientDataAccessResourceException: PreparedStatementCallback; SQL [select id, path, folder, type, format, title, album, artist, disc_number, track_number, year, genre, bit_rate, variable_bit_rate, duration_seconds, file_size, width, height, cover_art_path, parent_path, play_count, last_played, comment, created, last_modified, children_last_updated, present, version from media_file order by id limit ? offset ?]; out of memory; nested exception is java.sql.SQLException: out of memory
+        at org.springframework.jdbc.support.SQLStateSQLExceptionTranslator.doTranslate(SQLStateSQLExceptionTranslator.java:106)
+        at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+        at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:80)
+        at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:80)
+        at org.springframework.jdbc.core.JdbcTemplate.execute(JdbcTemplate.java:607)
+        at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:641)
+        at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:670)
+        at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:678)
+        at org.springframework.jdbc.core.JdbcTemplate.query(JdbcTemplate.java:710)
+        at net.sourceforge.subsonic.dao.AbstractDao.query(AbstractDao.java:71)
+        at net.sourceforge.subsonic.dao.MediaFileDao.getMediaFiles(MediaFileDao.java:76)
+        at net.sourceforge.subsonic.service.SearchService.updateIndexes(SearchService.java:103)
+        at net.sourceforge.subsonic.service.MediaScannerService.doScanLibrary(MediaScannerService.java:159)
+        at net.sourceforge.subsonic.service.MediaScannerService.access$000(MediaScannerService.java:39)
+        at net.sourceforge.subsonic.service.MediaScannerService$2.run(MediaScannerService.java:135)
+Caused by: java.sql.SQLException: out of memory
+
+[2012-03-15 13:41:02,967] DEBUG AbstractDao - 1.306.551  select min(id) from media_file
+[2012-03-15 13:41:05,107] DEBUG AbstractDao - 2.140.067  select max(id) from media_file
+
+
+Fix CPU problem when doing initial scan.
+  Will getAncestors create problems?
+Support old-style IDs in REST API.
+Improve document of REST "download" method.
+Automatically start scanning if media folders change.
 Use media file IDs in web interface etc.
 Make it work with 64-bit Java 7.  Problem with exe4j?
 Test with a big collection on a network disk.
@@ -100,10 +136,13 @@ DONE IN ANDROID 3.4
 Ensure readable text in notification when background is dark.
 Fix crash when using fast scrolling.
 Enable fast scrolling of playlists, search results and songs.
+Improve caching of artist list.
 
 TODO IN ANDROID 3.4
 --------------------
-Show artist list faster, check for invalid cache in background.
+Holo theme
+  http://android-developers.blogspot.com/2012/01/holo-everywhere.html
+Update artist list in background.
 ICS theme
   http://developer.android.com/design/index.html
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=8497
@@ -703,9 +742,9 @@ cd subsonic-assembly; mvn assembly:assembly; cd ..
 Deploy
 Check that correct local version is displayed.
 Upload files to SourceForge (in separate shell, REMEMBER TO CHANGE VERSION BELOW).
-  rsync -avP -e ssh subsonic-installer-windows/target/subsonic*-setup.exe  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.6/
-  rsync -avP -e ssh subsonic-assembly/target/subsonic* sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.6/
-  rsync -avP -e ssh subsonic-installer-mac/target/subsonic*.pkg subsonic-installer-debian/target/subsonic*.deb subsonic-installer-rpm/target/subsonic*.rpm sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.6/
+  rsync -avP -e ssh subsonic-installer-windows/target/subsonic*-setup.exe  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.7.beta1/
+  rsync -avP -e ssh subsonic-assembly/target/subsonic* sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.7.beta1/
+  rsync -avP -e ssh subsonic-installer-mac/target/subsonic*.pkg subsonic-installer-debian/target/subsonic*.deb subsonic-installer-rpm/target/subsonic*.rpm sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.7.beta1/
 
 Modify FRS properties
   https://sourceforge.net/projects/subsonic/files/subsonic/
@@ -716,7 +755,7 @@ Upload site (OLD):
 Upload site (NEW):
   rsync -avP -e ssh --exclude ".*" subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps/pages/
 
-svn copy https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk https://subsonic.svn.sourceforge.net/svnroot/subsonic/tags/release-4.6 -m "Tagging 4.6"
+svn copy https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk https://subsonic.svn.sourceforge.net/svnroot/subsonic/tags/release-4.7.beta1 -m "Tagging 4.7.beta1"
 Register at freshmeat.
 Post message on forum.
 Update version number in pom.xml etc.

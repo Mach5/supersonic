@@ -139,7 +139,7 @@ public class OfflineMusicService extends RESTMusicService {
     }
 
     @Override
-    public List<MusicFolder> getMusicFolders(Context context, ProgressListener progressListener) throws Exception {
+    public List<MusicFolder> getMusicFolders(boolean refresh, Context context, ProgressListener progressListener) throws Exception {
         throw new OfflineException("Music folders not available in offline mode");
     }
 
