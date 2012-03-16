@@ -139,6 +139,7 @@ public class MusicIndexService {
 
         for (MusicFolder folder : folders) {
 
+            // TODO: If media library is currently scanning, access DAO directly.
             MediaFile root = mediaFileService.getMediaFile(folder.getPath());
             List<MediaFile> children = mediaFileService.getChildrenOf(root, false, true, true);
             for (MediaFile child : children) {

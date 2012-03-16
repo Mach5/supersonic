@@ -81,6 +81,8 @@ public class LeftController extends ParameterizableViewController implements Las
     public long getLastModified(HttpServletRequest request) {
         saveSelectedMusicFolder(request);
 
+        // TODO: Return -1 if current scanning media library?
+
         long lastModified = LAST_COMPATIBILITY_TIME.getTimeInMillis();
 
         // When was settings last changed?

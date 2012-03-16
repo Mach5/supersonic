@@ -43,6 +43,19 @@ public class SubsonicLocaleResolver implements LocaleResolver {
     * @return The current locale.
     */
     public Locale resolveLocale(HttpServletRequest request) {
+        Locale locale = (Locale) request.getAttribute("subsonic.locale");
+        if (locale != null) {
+            return locale;
+        }
+
+        // Optimization: Cache locale in the request.
+        locale = doResolveLocale(request);
+        request.setAttribute("subsonic.locale", locale);
+
+        return locale;
+    }
+
+    private Locale doResolveLocale(HttpServletRequest request) {
         Locale locale = null;
 
         // Look for user-specific locale.

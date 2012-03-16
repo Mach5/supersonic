@@ -41,7 +41,7 @@ public class Schema47 extends Schema {
 
         if (!tableExists(template, "media_file")) {
             LOG.info("Database table 'media_file' not found.  Creating it.");
-            template.execute("create table media_file (" +
+            template.execute("create cached table media_file (" +
                     "id identity," +
                     "path varchar not null," +
                     "folder varchar," +
@@ -73,6 +73,7 @@ public class Schema47 extends Schema {
                     "unique (path))");
 
             template.execute("create index idx_media_file_path on media_file(path)");
+            template.execute("create index idx_media_file_parent_path on media_file(parent_path)");
             template.execute("create index idx_media_file_folder on media_file(folder)");
             template.execute("create index idx_media_file_type on media_file(type)");
             template.execute("create index idx_media_file_album on media_file(album)");
@@ -87,7 +88,7 @@ public class Schema47 extends Schema {
 
         if (!tableExists(template, "media_file_archive")) {
             LOG.info("Database table 'media_file_archive' not found.  Creating it.");
-            template.execute("create table media_file_archive (" +
+            template.execute("create cached table media_file_archive (" +
                     "id identity," +
                     "path varchar not null," +
                     "play_count int not null," +

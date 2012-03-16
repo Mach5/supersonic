@@ -120,7 +120,7 @@ public class SelectArtistActivity extends SubsonicTabActivity implements Adapter
                 boolean refresh = getIntent().getBooleanExtra(Constants.INTENT_EXTRA_NAME_REFRESH, false);
                 MusicService musicService = MusicServiceFactory.getMusicService(SelectArtistActivity.this);
                 if (!Util.isOffline(SelectArtistActivity.this)) {
-                    musicFolders = musicService.getMusicFolders(SelectArtistActivity.this, this);
+                    musicFolders = musicService.getMusicFolders(refresh, SelectArtistActivity.this, this);
                 }
                 String musicFolderId = Util.getSelectedMusicFolderId(SelectArtistActivity.this);
                 return musicService.getIndexes(musicFolderId, refresh, SelectArtistActivity.this, this);
