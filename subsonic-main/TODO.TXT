@@ -15,15 +15,15 @@ Never remove rows from media_file, set present=false instead.
 
 TODO IN 4.7
 -----------------
+Fix broken REST scrobbling, as reported by Ben.
+Don't throw NPE if requesting non-existent ID in REST.
 Optionally, create "Clean database" setting
 Test: Install 4.6, then upgrade and check that music_file_info is preserved.
 Save statistics in file. Update only when scanning?
 Always use fast access mode in LeftController.
   Refactor accessMode in MediaFileService.
 Never use fast access mode in podcast folder.
-Test recently added albums.
 Think about how to create REST methods for getting albums and artists etc.
-REST: Use same cover art ID for all songs in same album.
 Using CPU when idling, but only if low on memory?
 
 Support old-style IDs in REST API.

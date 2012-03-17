@@ -659,9 +659,9 @@ public class RESTController extends MultiActionController {
         attributes.add("title", mediaFile.getName());
         attributes.add("isDir", mediaFile.isDirectory());
 
-        File coverArt = mediaFileService.getCoverArt(mediaFile);
-        if (coverArt != null) {
-            attributes.add("coverArt", mediaFile.getId());
+        Integer coverArtId = findCoverArt(mediaFile, parent);
+        if (coverArtId != null) {
+            attributes.add("coverArt", coverArtId);
         }
 
         String username = player.getUsername();
@@ -721,12 +721,6 @@ public class RESTController extends MultiActionController {
             }
 
         } else {
-
-            File childCoverArt = mediaFileService.getCoverArt(mediaFile);
-            if (childCoverArt != null) {
-                attributes.add("coverArt", mediaFile.getId());
-            }
-
             String artist = resolveArtist(mediaFile);
             if (artist != null) {
                 attributes.add("artist", artist);
@@ -734,6 +728,14 @@ public class RESTController extends MultiActionController {
 
         }
         return attributes;
+    }
+
+    private Integer findCoverArt(MediaFile mediaFile, MediaFile parent) {
+        MediaFile dir = mediaFile.isDirectory() ? mediaFile : parent;
+        if (dir != null && dir.getCoverArtPath() != null) {
+            return dir.getId();
+        }
+        return null;
     }
 
     private String resolveArtist(MediaFile file) {
