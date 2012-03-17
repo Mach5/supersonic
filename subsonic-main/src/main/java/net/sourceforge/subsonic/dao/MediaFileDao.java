@@ -46,7 +46,7 @@ public class MediaFileDao extends AbstractDao {
     private static final int VERSION = 1;
 
     private final RowMapper rowMapper = new MediaFileMapper();
-    private final RowMapper archiveRowMapper = new ArchivedMediaFileMapper();
+    private final RowMapper musicFileInfoRowMapper = new MusicFileInfoMapper();
 
     /**
      * Returns the media file for the given path.
@@ -121,13 +121,12 @@ public class MediaFileDao extends AbstractDao {
 
         if (n == 0) {
 
-            // Copy values from archive.
-            MediaFile archived = getArchivedMediaFile(file.getPath());
-            if (archived != null) {
-                file.setComment(archived.getComment());
-                file.setLastPlayed(archived.getLastPlayed());
-                file.setPlayCount(archived.getPlayCount());
-                file.setCreated(archived.getCreated());
+            // Copy values from obsolete table music_file_info.
+            MediaFile musicFileInfo = getMusicFileInfo(file.getPath());
+            if (musicFileInfo != null) {
+                file.setComment(musicFileInfo.getComment());
+                file.setLastPlayed(musicFileInfo.getLastPlayed());
+                file.setPlayCount(musicFileInfo.getPlayCount());
             }
 
             update("insert into media_file (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")", null,
@@ -145,8 +144,8 @@ public class MediaFileDao extends AbstractDao {
         file.setId(id);
     }
 
-    private MediaFile getArchivedMediaFile(String path) {
-        return queryOne("select path, play_count, last_played, comment, created from media_file_archive where path=?", archiveRowMapper, path);
+    private MediaFile getMusicFileInfo(String path) {
+        return queryOne("select path, play_count, last_played, comment, created from media_file_archive where path=?", musicFileInfoRowMapper, path);
     }
 
     public List<String> getArtists() {
@@ -274,15 +273,12 @@ public class MediaFileDao extends AbstractDao {
         }
     }
 
-    private static class ArchivedMediaFileMapper implements ParameterizedRowMapper<MediaFile> {
+    private static class MusicFileInfoMapper implements ParameterizedRowMapper<MediaFile> {
         public MediaFile mapRow(ResultSet rs, int rowNum) throws SQLException {
             MediaFile file = new MediaFile();
-            file.setPath(rs.getString(1));
-            file.setPlayCount(rs.getInt(2));
-            file.setLastPlayed(rs.getTimestamp(3));
-            file.setComment(rs.getString(4));
-            file.setCreated(rs.getTimestamp(5));
-
+            file.setPlayCount(rs.getInt(1));
+            file.setLastPlayed(rs.getTimestamp(2));
+            file.setComment(rs.getString(3));
             return file;
         }
     }
