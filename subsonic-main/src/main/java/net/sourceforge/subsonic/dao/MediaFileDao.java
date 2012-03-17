@@ -136,8 +136,6 @@ public class MediaFileDao extends AbstractDao {
                     file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
                     file.getCreated(), file.getLastModified(),
                     file.getChildrenLastUpdated(), file.isPresent(), VERSION);
-
-            update("delete from media_file_archive where path=?", file.getPath());
         }
 
         int id = queryForInt("select id from media_file where path=?", null, file.getPath());
@@ -145,7 +143,7 @@ public class MediaFileDao extends AbstractDao {
     }
 
     private MediaFile getMusicFileInfo(String path) {
-        return queryOne("select path, play_count, last_played, comment, created from media_file_archive where path=?", musicFileInfoRowMapper, path);
+        return queryOne("select play_count, last_played, comment from music_file_info where path=?", musicFileInfoRowMapper, path);
     }
 
     public List<String> getArtists() {
@@ -153,12 +151,7 @@ public class MediaFileDao extends AbstractDao {
     }
 
     public void deleteMediaFile(String path) {
-        // Update archive.
-        update("delete from media_file_archive where path=?", path);
-        update("insert into media_file_archive(path, play_count, last_played, comment, created) " +
-                "select path, play_count, last_played, comment, created from media_file where path=?", path);
-
-        update("delete from media_file where path=?", path);
+        update("update media_file set present=false where path=?", path);
     }
 
     public List<String> getGenres() {
@@ -231,12 +224,8 @@ public class MediaFileDao extends AbstractDao {
         update("update media_file set present=? where path=?", true, path);
     }
 
+    @Deprecated
     public void archiveNotPresent() {
-        update("delete from media_file_archive where exists (select 1 from media_file where media_file.path=media_file_archive.path and not media_file.present)");
-
-        update("insert into media_file_archive(path, play_count, last_played, comment, created) " +
-                "select path, play_count, last_played, comment, created from media_file where not present");
-
         update("delete from media_file where not present");
     }
 
