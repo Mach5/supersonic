@@ -18,16 +18,13 @@
  */
 package net.sourceforge.subsonic.service;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import net.sourceforge.subsonic.dao.MediaFileDao;
+import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MusicFolder;
+import net.sourceforge.subsonic.domain.RandomSearchCriteria;
+import net.sourceforge.subsonic.domain.SearchCriteria;
+import net.sourceforge.subsonic.domain.SearchResult;
+import net.sourceforge.subsonic.util.FileUtil;
 import org.apache.lucene.analysis.ASCIIFoldingFilter;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.LowerCaseFilter;
@@ -38,25 +35,34 @@ import org.apache.lucene.analysis.standard.StandardFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
+import org.apache.lucene.document.NumericField;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.MatchAllDocsQuery;
+import org.apache.lucene.search.NumericRangeQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Searcher;
+import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.SearchCriteria;
-import net.sourceforge.subsonic.domain.SearchResult;
-import net.sourceforge.subsonic.util.FileUtil;
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
-import static net.sourceforge.subsonic.service.SearchService.IndexType.ALBUM;
-import static net.sourceforge.subsonic.service.SearchService.IndexType.ARTIST;
-import static net.sourceforge.subsonic.service.SearchService.IndexType.SONG;
+import static net.sourceforge.subsonic.service.SearchService.IndexType.*;
 
 /**
  * Performs Lucene-based searching and indexing.
@@ -73,9 +79,14 @@ public class SearchService {
     private static final String FIELD_TITLE = "title";
     private static final String FIELD_ALBUM = "album";
     private static final String FIELD_ARTIST = "artist";
+    private static final String FIELD_GENRE = "genre";
+    private static final String FIELD_YEAR = "year";
+    private static final String FIELD_FOLDER = "folder";
+
     private static final Version LUCENE_VERSION = Version.LUCENE_30;
 
     private MediaFileService mediaFileService;
+    private SettingsService settingsService;
 
     private IndexWriter artistWriter;
     private IndexWriter albumWriter;
@@ -159,6 +170,61 @@ public class SearchService {
         return result;
     }
 
+    /**
+     * Returns a number of random songs.
+     *
+     * @param criteria Search criteria.
+     * @return List of random songs.
+     */
+    public List<MediaFile> getRandomSongs(RandomSearchCriteria criteria) {
+        List<MediaFile> result = new ArrayList<MediaFile>();
+
+        String musicFolderPath = null;
+        if (criteria.getMusicFolderId() != null) {
+            MusicFolder musicFolder = settingsService.getMusicFolderById(criteria.getMusicFolderId());
+            musicFolderPath = musicFolder.getPath().getPath();
+        }
+
+        IndexReader reader = null;
+        try {
+            reader = createIndexReader(SONG);
+            Searcher searcher = new IndexSearcher(reader);
+
+            BooleanQuery booleanQuery = new BooleanQuery();
+            if (criteria.getGenre() != null) {
+                booleanQuery.add(new TermQuery(new Term(FIELD_GENRE, criteria.getGenre().toLowerCase())), BooleanClause.Occur.MUST);
+            }
+            if (criteria.getFromYear() != null || criteria.getToYear() != null) {
+                NumericRangeQuery<Integer> rangeQuery = NumericRangeQuery.newIntRange(FIELD_YEAR, criteria.getFromYear(), criteria.getToYear(), true, true);
+                booleanQuery.add(rangeQuery, BooleanClause.Occur.MUST);
+            }
+            if (musicFolderPath != null) {
+                booleanQuery.add(new TermQuery(new Term(FIELD_FOLDER, musicFolderPath)), BooleanClause.Occur.MUST);
+            }
+
+            Query query = booleanQuery.clauses().isEmpty() ? new MatchAllDocsQuery() : booleanQuery;
+            TopDocs topDocs = searcher.search(query, null, Integer.MAX_VALUE);
+            Random random = new Random(System.currentTimeMillis());
+
+            for (int i = 0; i < Math.min(criteria.getCount(), topDocs.totalHits); i++) {
+                int index = random.nextInt(topDocs.totalHits);
+                Document doc = searcher.doc(topDocs.scoreDocs[index].doc);
+                String path = doc.getField(FIELD_PATH).stringValue();
+                try {
+                    result.add(mediaFileService.getMediaFile(path));
+                } catch (Exception x) {
+                    LOG.warn("Failed to get media file " + path);
+                }
+            }
+
+        } catch (Throwable x) {
+            LOG.error("Failed to execute Lucene search.", x);
+        } finally {
+            FileUtil.closeQuietly(reader);
+        }
+        return result;
+    }
+
     private IndexWriter createIndexWriter(IndexType indexType) throws IOException {
         File dir = getIndexDirectory(indexType);
         return new IndexWriter(FSDirectory.open(dir), new SubsonicAnalyzer(), true, new IndexWriter.MaxFieldLength(10));
@@ -198,20 +264,32 @@ public class SearchService {
         this.mediaFileService = mediaFileService;
     }
 
+    public void setSettingsService(SettingsService settingsService) {
+        this.settingsService = settingsService;
+    }
+
     public static enum IndexType {
 
         SONG(new String[]{FIELD_TITLE, FIELD_ARTIST}, FIELD_TITLE) {
-
             @Override
             public Document createDocument(MediaFile mediaFile) {
                 Document doc = new Document();
                 doc.add(new Field(FIELD_PATH, mediaFile.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
 
+                if (mediaFile.getTitle() != null) {
+                    doc.add(new Field(FIELD_TITLE, mediaFile.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
+                }
                 if (mediaFile.getArtist() != null) {
                     doc.add(new Field(FIELD_ARTIST, mediaFile.getArtist(), Field.Store.YES, Field.Index.ANALYZED));
                 }
-                if (mediaFile.getTitle() != null) {
-                    doc.add(new Field(FIELD_TITLE, mediaFile.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
+                if (mediaFile.getGenre() != null) {
+                    doc.add(new Field(FIELD_GENRE, mediaFile.getGenre(), Field.Store.NO, Field.Index.ANALYZED));
+                }
+                if (mediaFile.getYear() != null) {
+                    doc.add(new NumericField(FIELD_YEAR, Field.Store.NO, true).setIntValue(mediaFile.getYear()));
+                }
+                if (mediaFile.getFolder() != null) {
+                    doc.add(new Field(FIELD_FOLDER, mediaFile.getFolder(), Field.Store.NO, Field.Index.NOT_ANALYZED_NO_NORMS));
                 }
 
                 return doc;
@@ -219,7 +297,6 @@ public class SearchService {
         },
 
         ALBUM(new String[]{FIELD_ALBUM, FIELD_ARTIST}, FIELD_ALBUM) {
-
             @Override
             public Document createDocument(MediaFile mediaFile) {
                 Document doc = new Document();
@@ -237,7 +314,6 @@ public class SearchService {
         },
 
         ARTIST(new String[]{FIELD_ARTIST}, null) {
-
             @Override
             public Document createDocument(MediaFile mediaFile) {
                 Document doc = new Document();

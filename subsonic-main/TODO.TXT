@@ -14,12 +14,17 @@ Use Lucene for random search.
 Never remove rows from media_file, set present=false instead.
   Would make IDs really permanent
   Simplify archiving stuff.
+  Don't need media_file_archive longer.  Copy from music_file_info when creating new rows.
   Add lastScanned timestamp, use this to set stuff to not present after scanning.
   Use "present" in album list and other queries. MAKE SURE THESE WORK FIRST!
   Optionally, create "Clean database" setting
 
+Reload right.jsp when starting a scan.
+Always use fast access mode in LeftController.
+  Refactor accessMode in MediaFileService.
+Never use fast access mode in podcast folder.
+Test recently added albums.
 Think about how to create REST methods for getting albums and artists etc.
-Remove columns from archive table that is no longer needed.  Rename to something else?
 REST: Use same cover art ID for all songs in same album.
 Using CPU when idling, but only if low on memory?
 

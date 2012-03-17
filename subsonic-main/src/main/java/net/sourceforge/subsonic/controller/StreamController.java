@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.SearchService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.math.LongRange;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -47,7 +48,6 @@ import net.sourceforge.subsonic.io.PlaylistInputStream;
 import net.sourceforge.subsonic.io.RangeOutputStream;
 import net.sourceforge.subsonic.io.ShoutCastOutputStream;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
-import net.sourceforge.subsonic.service.MediaScannerService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
 import net.sourceforge.subsonic.service.SecurityService;
@@ -75,6 +75,7 @@ public class StreamController implements Controller {
     private TranscodingService transcodingService;
     private AudioScrobblerService audioScrobblerService;
     private MediaFileService mediaFileService;
+    private SearchService searchService;
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -171,7 +172,7 @@ public class StreamController implements Controller {
             status = statusService.createStreamStatus(player);
 
             in = new PlaylistInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, transcodingService,
-                    audioScrobblerService, mediaFileService);
+                    audioScrobblerService, mediaFileService, searchService);
             OutputStream out = RangeOutputStream.wrap(response.getOutputStream(), range);
 
             // Enabled SHOUTcast, if requested.
@@ -410,5 +411,9 @@ public class StreamController implements Controller {
 
     public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
+    }
+
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
     }
 }

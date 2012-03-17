@@ -115,7 +115,7 @@ public class MediaFileService {
      * Returns a media file instance for the given path name. If possible, a cached value is returned.
      *
      * @param pathName A path name for a file on the local file system.
-     * @return A memdia file instance.
+     * @return A media file instance.
      * @throws SecurityException If access is denied to the given file.
      */
     public MediaFile getMediaFile(String pathName) {
@@ -241,40 +241,6 @@ public class MediaFileService {
             }
         }
         return result;
-    }
-
-    /**
-     * Returns a number of random songs.
-     *
-     * @param criteria Search criteria.
-     * @return List of random songs.
-     */
-    public List<MediaFile> getRandomSongs(RandomSearchCriteria criteria) {
-        List<MediaFile> result = new ArrayList<MediaFile>();
-
-        String musicFolderPath = null;
-        if (criteria.getMusicFolderId() != null) {
-            MusicFolder musicFolder = settingsService.getMusicFolderById(criteria.getMusicFolderId());
-            musicFolderPath = musicFolder.getPath().getPath();
-        }
-
-        // Note: To avoid duplicates, we iterate over more than the requested number of items.
-        for (int i = 0; i < criteria.getCount() * 5; i++) {
-
-            MediaFile song = mediaFileDao.getRandomSong(criteria.getFromYear(), criteria.getToYear(), criteria.getGenre(), musicFolderPath);
-            if (song != null && securityService.isReadAllowed(song.getFile())) {
-                if (!result.contains(song)) {
-                    result.add(song);
-
-                    // Enough items found?
-                    if (result.size() >= criteria.getCount()) {
-                        break;
-                    }
-                }
-            }
-        }
-        return result;
-
     }
 
     /**
