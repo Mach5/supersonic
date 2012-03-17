@@ -24,7 +24,6 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
-import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
