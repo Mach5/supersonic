@@ -54,7 +54,7 @@ public class MusicFolderSettingsController extends SimpleFormController {
         command.setScanning(mediaScannerService.isScanning());
         command.setMusicFolders(wrap(settingsService.getAllMusicFolders(true, true)));
         command.setNewMusicFolder(new MusicFolderSettingsCommand.MusicFolderInfo());
-        command.setReload(request.getParameter("reload") != null);
+        command.setReload(request.getParameter("reload") != null || request.getParameter("scanNow") != null);
         return command;
     }
 

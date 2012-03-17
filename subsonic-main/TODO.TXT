@@ -15,12 +15,9 @@ Never remove rows from media_file, set present=false instead.
 
 TODO IN 4.7
 -----------------
-  Optionally, create "Clean database" setting
-
-Recently added only shows 70 albums.
+Optionally, create "Clean database" setting
 Test: Install 4.6, then upgrade and check that music_file_info is preserved.
-Save statistics in file. Update only when scanning.
-Reload right.jsp when starting a scan.
+Save statistics in file. Update only when scanning?
 Always use fast access mode in LeftController.
   Refactor accessMode in MediaFileService.
 Never use fast access mode in podcast folder.
