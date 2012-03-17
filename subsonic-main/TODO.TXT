@@ -12,9 +12,28 @@ Never remove rows from media_file, set present=false instead.
   Don't need media_file_archive longer.  Copy from music_file_info when creating new rows.
   Add lastScanned timestamp, use this to set stuff to not present after scanning.
   Use "present" in album list and other queries. MAKE SURE THESE WORK FIRST!
+Support old-style IDs in REST API.
 
 TODO IN 4.7
 -----------------
+
+artist
+  id
+  name
+  coverArtPath?
+  albumCount
+
+album
+  id
+  artistName
+  albumName
+  coverArtPath?
+  songCount
+  duration
+
+Analyze existing REST methods, e.g., getAlbumList, search
+getMusicDirectory create media_file for the requested file, even if it doesn't exist.
+
 Fix broken REST scrobbling, as reported by Ben.
 Don't throw NPE if requesting non-existent ID in REST.
 Optionally, create "Clean database" setting
@@ -25,23 +44,16 @@ Always use fast access mode in LeftController.
 Never use fast access mode in podcast folder.
 Think about how to create REST methods for getting albums and artists etc.
 Using CPU when idling, but only if low on memory?
-
-Support old-style IDs in REST API.
 Improve document of REST "download" method.
 Automatically start scanning if media folders change.
 Use media file IDs in web interface etc.
 Make it work with 64-bit Java 7.  Problem with exe4j?
 Test with a big collection on a network disk.
-Change random implementation.
 Better error message if media file not found.
 Document MediaFileService.
 Support per-artist cover art.
 Check file I/O.
 Optimize MediaFile getters.
-Measure time for media scanning, clean and incremental.
-Test performance of MusicFileDao.
-Test searching while createing lucene index
-Revisit MetaDataParser.isRoot()
 -
 Maintain track order for offline files in Android. Prepend track number for sortability?
 REST: Ensure that podcast dir is included.

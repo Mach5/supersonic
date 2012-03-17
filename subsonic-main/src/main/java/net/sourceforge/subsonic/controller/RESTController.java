@@ -1306,9 +1306,28 @@ public class RESTController extends MultiActionController {
                     return playerId;
                 }
 
+                // Support old style ID parameters.
+                if ("id".equals(name)) {
+                    return mapId(request.getParameter("id"));
+                }
+
                 return super.getParameter(name);
             }
         };
+    }
+
+    private String mapId(String id) {
+        if (id == null || StringUtils.isNumeric(id)) {
+            return id;
+        }
+
+        try {
+            String path = StringUtil.utf8HexDecode(id);
+            MediaFile mediaFile = mediaFileService.getMediaFile(path);
+            return String.valueOf(mediaFile.getId());
+        } catch (Exception x) {
+            return id;
+        }
     }
 
     private String getErrorMessage(Exception x) {
