@@ -215,34 +215,6 @@ public class MediaFileService {
         return mediaFileDao.getGenres();
     }
 
-
-    /**
-     * Returns a number of random albums.
-     *
-     * @param count Maximum number of albums to return.
-     * @return List of random albums.
-     */
-    public List<MediaFile> getRandomAlbums(int count) {
-        List<MediaFile> result = new ArrayList<MediaFile>(count);
-
-        // Note: To avoid duplicates, we iterate over more than the requested number of items.
-        for (int i = 0; i < count * 5; i++) {
-
-            MediaFile album = mediaFileDao.getRandomAlbum();
-            if (album != null && securityService.isReadAllowed(album.getFile())) {
-                if (!result.contains(album)) {
-                    result.add(album);
-
-                    // Enough items found?
-                    if (result.size() >= count) {
-                        break;
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
     /**
      * Returns the most frequently played albums.
      *

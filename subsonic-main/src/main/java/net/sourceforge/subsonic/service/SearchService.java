@@ -218,7 +218,44 @@ public class SearchService {
             }
 
         } catch (Throwable x) {
-            LOG.error("Failed to execute Lucene search.", x);
+            LOG.error("Failed to search or random songs.", x);
+        } finally {
+            FileUtil.closeQuietly(reader);
+        }
+        return result;
+    }
+
+    /**
+     * Returns a number of random albums.
+     *
+     * @param count Number of albums to return.
+     * @return List of random albums.
+     */
+    public List<MediaFile> getRandomAlbums(int count) {
+        List<MediaFile> result = new ArrayList<MediaFile>();
+
+        IndexReader reader = null;
+        try {
+            reader = createIndexReader(ALBUM);
+            Searcher searcher = new IndexSearcher(reader);
+
+            Query query = new MatchAllDocsQuery();
+            TopDocs topDocs = searcher.search(query, null, Integer.MAX_VALUE);
+            Random random = new Random(System.currentTimeMillis());
+
+            for (int i = 0; i < Math.min(count, topDocs.totalHits); i++) {
+                int index = random.nextInt(topDocs.totalHits);
+                Document doc = searcher.doc(topDocs.scoreDocs[index].doc);
+                String path = doc.getField(FIELD_PATH).stringValue();
+                try {
+                    result.add(mediaFileService.getMediaFile(path));
+                } catch (Exception x) {
+                    LOG.warn("Failed to get media file " + path);
+                }
+            }
+
+        } catch (Throwable x) {
+            LOG.error("Failed to search for random albums.", x);
         } finally {
             FileUtil.closeQuietly(reader);
         }

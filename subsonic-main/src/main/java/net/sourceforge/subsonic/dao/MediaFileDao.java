@@ -21,7 +21,6 @@ package net.sourceforge.subsonic.dao;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
-import net.sourceforge.subsonic.util.Util;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
@@ -165,13 +164,6 @@ public class MediaFileDao extends AbstractDao {
 
     public List<String> getGenres() {
         return queryForStrings("select distinct genre from media_file where genre is not null order by genre");
-    }
-
-    @Deprecated
-    public MediaFile getRandomAlbum() {
-        int min = queryForInt("select min(id) from media_file", 0);
-        int max = queryForInt("select max(id) from media_file", 0);
-        return queryOne("select " + COLUMNS + " from media_file where type=? and id > ? limit 1", rowMapper, ALBUM.name(), Util.randomInt(min, max));
     }
 
     /**

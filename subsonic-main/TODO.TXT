@@ -5,10 +5,10 @@ Updated Dutch translation, courtesy of W. van der Heijden.
 Updated Swedish translation, courtesy of Fritte Jensen.
 Update Lucene index concurrently, not afterwards.
 Fixed missing db table indexes.
+Use Lucene for random song/album search.
 
 TODO IN 4.7
 -----------------
-Use Lucene for random search.
   http://stackoverflow.com/questions/7201638/lucene-2-9-2-how-to-show-results-in-random-order
   Only provide a getRandomSongs method.  Albums can be resolved from this.
 Never remove rows from media_file, set present=false instead.

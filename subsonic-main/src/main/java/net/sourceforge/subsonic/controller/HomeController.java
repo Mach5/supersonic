@@ -24,6 +24,7 @@ import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.MediaScannerService;
 import net.sourceforge.subsonic.service.RatingService;
+import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import org.springframework.web.servlet.ModelAndView;
@@ -59,6 +60,7 @@ public class HomeController extends ParameterizableViewController {
     private RatingService ratingService;
     private SecurityService securityService;
     private MediaFileService mediaFileService;
+    private SearchService searchService;
 
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -163,7 +165,7 @@ public class HomeController extends ParameterizableViewController {
 
     List<Album> getRandom(int count) throws IOException {
         List<Album> result = new ArrayList<Album>();
-        for (MediaFile file : mediaFileService.getRandomAlbums(count)) {
+        for (MediaFile file : searchService.getRandomAlbums(count)) {
             Album album = createAlbum(file);
             if (album != null) {
                 result.add(album);
@@ -226,6 +228,9 @@ public class HomeController extends ParameterizableViewController {
         this.mediaFileService = mediaFileService;
     }
 
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
+    }
 
     /**
      * Contains info for a single album.
