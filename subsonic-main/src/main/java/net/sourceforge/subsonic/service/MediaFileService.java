@@ -324,13 +324,15 @@ public class MediaFileService {
 
     private MediaFile createMediaFile(File file) {
         MediaFile mediaFile = new MediaFile();
+        Date now = new Date();
         mediaFile.setPath(file.getPath());
         mediaFile.setFolder(securityService.getRootFolderForFile(file));
         mediaFile.setParentPath(file.getParent());
         mediaFile.setLastModified(new Date(FileUtil.lastModified(file)));
+        mediaFile.setLastScanned(now);
         mediaFile.setPlayCount(0);
         mediaFile.setChildrenLastUpdated(new Date(0));
-        mediaFile.setCreated(new Date());
+        mediaFile.setCreated(now);
         mediaFile.setMediaType(DIRECTORY);
         mediaFile.setPresent(true);
 

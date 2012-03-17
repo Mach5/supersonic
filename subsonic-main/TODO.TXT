@@ -6,19 +6,20 @@ Updated Swedish translation, courtesy of Fritte Jensen.
 Update Lucene index concurrently, not afterwards.
 Fixed missing db table indexes.
 Use Lucene for random song/album search.
-
-TODO IN 4.7
------------------
-  http://stackoverflow.com/questions/7201638/lucene-2-9-2-how-to-show-results-in-random-order
-  Only provide a getRandomSongs method.  Albums can be resolved from this.
 Never remove rows from media_file, set present=false instead.
   Would make IDs really permanent
   Simplify archiving stuff.
   Don't need media_file_archive longer.  Copy from music_file_info when creating new rows.
   Add lastScanned timestamp, use this to set stuff to not present after scanning.
   Use "present" in album list and other queries. MAKE SURE THESE WORK FIRST!
+
+TODO IN 4.7
+-----------------
   Optionally, create "Clean database" setting
 
+Recently added only shows 70 albums.
+Test: Install 4.6, then upgrade and check that music_file_info is preserved.
+Save statistics in file. Update only when scanning.
 Reload right.jsp when starting a scan.
 Always use fast access mode in LeftController.
   Refactor accessMode in MediaFileService.

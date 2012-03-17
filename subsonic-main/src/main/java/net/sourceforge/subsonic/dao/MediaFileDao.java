@@ -26,6 +26,7 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import static net.sourceforge.subsonic.domain.MediaFile.MediaType;
@@ -41,7 +42,7 @@ public class MediaFileDao extends AbstractDao {
     private static final Logger LOG = Logger.getLogger(MediaFileDao.class);
     private static final String COLUMNS = "id, path, folder, type, format, title, album, artist, disc_number, " +
             "track_number, year, genre, bit_rate, variable_bit_rate, duration_seconds, file_size, width, height, cover_art_path, " +
-            "parent_path, play_count, last_played, comment, created, last_modified, children_last_updated, present, version";
+            "parent_path, play_count, last_played, comment, created, last_modified, last_scanned, children_last_updated, present, version";
 
     private static final int VERSION = 1;
 
@@ -55,7 +56,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The media file or null.
      */
     public MediaFile getMediaFile(String path) {
-        return queryOne("select " + COLUMNS + " from media_file where path=?", rowMapper, path);
+        return queryOne("select " + COLUMNS + " from media_file where path=? and present", rowMapper, path);
     }
 
     /**
@@ -65,7 +66,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The media file or null.
      */
     public MediaFile getMediaFile(int id) {
-        return queryOne("select " + COLUMNS + " from media_file where id=?", rowMapper, id);
+        return queryOne("select " + COLUMNS + " from media_file where id=? and present", rowMapper, id);
     }
 
     /**
@@ -75,7 +76,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The list of children.
      */
     public List<MediaFile> getChildrenOf(String path) {
-        return query("select " + COLUMNS + " from media_file where parent_path=?", rowMapper, path);
+        return query("select " + COLUMNS + " from media_file where parent_path=? and present", rowMapper, path);
     }
 
     /**
@@ -107,6 +108,7 @@ public class MediaFileDao extends AbstractDao {
                 "last_played=?," +
                 "comment=?," +
                 "last_modified=?," +
+                "last_scanned=?," +
                 "children_last_updated=?," +
                 "present=?, " +
                 "version=? " +
@@ -117,7 +119,7 @@ public class MediaFileDao extends AbstractDao {
                 file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
                 file.isVariableBitRate(), file.getDurationSeconds(), file.getFileSize(), file.getWidth(), file.getHeight(),
                 file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
-                file.getLastModified(), file.getChildrenLastUpdated(), file.isPresent(), VERSION, file.getPath());
+                file.getLastModified(), file.getLastScanned(), file.getChildrenLastUpdated(), file.isPresent(), VERSION, file.getPath());
 
         if (n == 0) {
 
@@ -134,7 +136,7 @@ public class MediaFileDao extends AbstractDao {
                     file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
                     file.isVariableBitRate(), file.getDurationSeconds(), file.getFileSize(), file.getWidth(), file.getHeight(),
                     file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
-                    file.getCreated(), file.getLastModified(),
+                    file.getCreated(), file.getLastModified(), file.getLastScanned(),
                     file.getChildrenLastUpdated(), file.isPresent(), VERSION);
         }
 
@@ -147,7 +149,7 @@ public class MediaFileDao extends AbstractDao {
     }
 
     public List<String> getArtists() {
-        return queryForStrings("select distinct artist from media_file where artist is not null order by artist");
+        return queryForStrings("select distinct artist from media_file where artist is not null and present order by artist");
     }
 
     public void deleteMediaFile(String path) {
@@ -155,7 +157,7 @@ public class MediaFileDao extends AbstractDao {
     }
 
     public List<String> getGenres() {
-        return queryForStrings("select distinct genre from media_file where genre is not null order by genre");
+        return queryForStrings("select distinct genre from media_file where genre is not null and present order by genre");
     }
 
     /**
@@ -166,7 +168,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The most frequently played albums.
      */
     public List<MediaFile> getMostFrequentlyPlayedAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where type=? and play_count > 0 " +
+        return query("select " + COLUMNS + " from media_file where type=? and play_count > 0 and present " +
                 "order by play_count desc limit ? offset ?", rowMapper, ALBUM.name(), count, offset);
     }
 
@@ -178,7 +180,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The most recently played albums.
      */
     public List<MediaFile> getMostRecentlyPlayedAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where type=? and last_played is not null " +
+        return query("select " + COLUMNS + " from media_file where type=? and last_played is not null and present " +
                 "order by last_played desc limit ? offset ?", rowMapper, ALBUM.name(), count, offset);
     }
 
@@ -190,7 +192,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The most recently added albums.
      */
     public List<MediaFile> getNewestAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where type=? order by created desc limit ? offset ?", rowMapper,
+        return query("select " + COLUMNS + " from media_file where type=? and present order by created desc limit ? offset ?", rowMapper,
                 ALBUM.name(), count, offset);
     }
 
@@ -200,33 +202,27 @@ public class MediaFileDao extends AbstractDao {
      * @return Media library statistics.
      */
     public MediaLibraryStatistics getStatistics() {
-        int artistCount = queryForInt("select count(distinct artist) from media_file", 0);
-        int albumCount = queryForInt("select count(distinct album) from media_file", 0);
-        int songCount = queryForInt("select count(id) from media_file where type in (?, ?)", 0, VIDEO.name(), AUDIO.name());
-        long totalLengthInBytes = queryForLong("select sum(file_size) from media_file", 0L);
-        long totalDurationInSeconds = queryForLong("select sum(duration_seconds) from media_file", 0L);
+        int artistCount = queryForInt("select count(distinct artist) from media_file where present", 0);
+        int albumCount = queryForInt("select count(distinct album) from media_file where present", 0);
+        int songCount = queryForInt("select count(id) from media_file where type in (?, ?) and present", 0, VIDEO.name(), AUDIO.name());
+        long totalLengthInBytes = queryForLong("select sum(file_size) from media_file where present", 0L);
+        long totalDurationInSeconds = queryForLong("select sum(duration_seconds) from media_file where present", 0L);
 
         return new MediaLibraryStatistics(artistCount, albumCount, songCount, totalLengthInBytes, totalDurationInSeconds);
     }
 
-    @Deprecated
-    public void setAllMediaFilesNotPresent() {
+    public void markPresent(String path, Date lastScanned) {
+        update("update media_file set present=?, last_scanned=? where path=?", true, lastScanned, path);
+    }
+
+    public void markNonPresent(Date lastScanned) {
         int minId = queryForInt("select id from media_file where true limit 1", 0);
         int maxId = queryForInt("select max(id) from media_file", 0);
 
         final int batchSize = 1000;
         for (int id = minId; id <= maxId; id += batchSize) {
-            update("update media_file set present=false where id between ? and ?", id, id + batchSize);
+            update("update media_file set present=false where id between ? and ? and last_scanned != ?", id, id + batchSize, lastScanned);
         }
-    }
-
-    public void setMediaFilePresent(String path) {
-        update("update media_file set present=? where path=?", true, path);
-    }
-
-    @Deprecated
-    public void archiveNotPresent() {
-        update("delete from media_file where not present");
     }
 
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {
@@ -258,7 +254,8 @@ public class MediaFileDao extends AbstractDao {
                     rs.getTimestamp(24),
                     rs.getTimestamp(25),
                     rs.getTimestamp(26),
-                    rs.getBoolean(27));
+                    rs.getTimestamp(27),
+                    rs.getBoolean(28));
         }
     }
 

@@ -57,13 +57,14 @@ public class MediaFile {
     private String comment;
     private Date created;
     private Date lastModified;
+    private Date lastScanned;
     private Date childrenLastUpdated;
     private boolean present;
 
     public MediaFile(int id, String path, String folder, MediaType mediaType, String format, String title,
                      String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
                      boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
-                     String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date lastModified,
+                     String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date lastModified, Date lastScanned,
                      Date childrenLastUpdated, boolean present) {
         this.id = id;
         this.path = path;
@@ -90,6 +91,7 @@ public class MediaFile {
         this.comment = comment;
         this.created = created;
         this.lastModified = lastModified;
+        this.lastScanned = lastScanned;
         this.childrenLastUpdated = childrenLastUpdated;
         this.present = present;
     }
@@ -369,6 +371,14 @@ public class MediaFile {
 
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public Date getLastScanned() {
+        return lastScanned;
+    }
+
+    public void setLastScanned(Date lastScanned) {
+        this.lastScanned = lastScanned;
     }
 
     /**
