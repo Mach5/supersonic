@@ -92,8 +92,10 @@ public class HomeController extends ParameterizableViewController {
             albums = getMostRecent(listOffset, listSize);
         } else if ("newest".equals(listType)) {
             albums = getNewest(listOffset, listSize);
-        } else {
+        } else if ("random".equals(listType)) {
             albums = getRandom(listSize);
+        } else {
+            albums = getAlphabetical(listOffset, listSize);
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -166,6 +168,17 @@ public class HomeController extends ParameterizableViewController {
     List<Album> getRandom(int count) throws IOException {
         List<Album> result = new ArrayList<Album>();
         for (MediaFile file : searchService.getRandomAlbums(count)) {
+            Album album = createAlbum(file);
+            if (album != null) {
+                result.add(album);
+            }
+        }
+        return result;
+    }
+
+    List<Album> getAlphabetical(int offset, int count) throws IOException {
+        List<Album> result = new ArrayList<Album>();
+        for (MediaFile file : mediaFileService.getAlphabetialAlbums(offset, count)) {
             Album album = createAlbum(file);
             if (album != null) {
                 result.add(album);

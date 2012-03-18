@@ -163,8 +163,8 @@ public class MediaFileDao extends AbstractDao {
     /**
      * Returns the most frequently played albums.
      *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
      * @return The most frequently played albums.
      */
     public List<MediaFile> getMostFrequentlyPlayedAlbums(int offset, int count) {
@@ -175,8 +175,8 @@ public class MediaFileDao extends AbstractDao {
     /**
      * Returns the most recently played albums.
      *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
      * @return The most recently played albums.
      */
     public List<MediaFile> getMostRecentlyPlayedAlbums(int offset, int count) {
@@ -187,13 +187,25 @@ public class MediaFileDao extends AbstractDao {
     /**
      * Returns the most recently added albums.
      *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
      * @return The most recently added albums.
      */
     public List<MediaFile> getNewestAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where type=? and present order by created desc limit ? offset ?", rowMapper,
-                ALBUM.name(), count, offset);
+        return query("select " + COLUMNS + " from media_file where type=? and present order by created desc limit ? offset ?",
+                rowMapper, ALBUM.name(), count, offset);
+    }
+
+    /**
+     * Returns albums in alphabetical order.
+     *
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
+     * @return Albums in alphabetical order.
+     */
+    public List<MediaFile> getAlphabetialAlbums(int offset, int count) {
+        return query("select " + COLUMNS + " from media_file where type=? and artist != '' and present order by artist, album limit ? offset ?",
+                rowMapper, ALBUM.name(), count, offset);
     }
 
     /**

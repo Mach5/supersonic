@@ -546,7 +546,6 @@ public class RESTController extends MultiActionController {
             int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
 
             size = Math.max(0, Math.min(size, 500));
-            offset = Math.max(0, Math.min(offset, 5000));
 
             String type = ServletRequestUtils.getRequiredStringParameter(request, "type");
 
@@ -559,6 +558,8 @@ public class RESTController extends MultiActionController {
                 albums = homeController.getMostRecent(offset, size);
             } else if ("newest".equals(type)) {
                 albums = homeController.getNewest(offset, size);
+            } else if ("alphabetical".equals(type)) {
+                albums = homeController.getAlphabetical(offset, size);
             } else {
                 albums = homeController.getRandom(size);
             }

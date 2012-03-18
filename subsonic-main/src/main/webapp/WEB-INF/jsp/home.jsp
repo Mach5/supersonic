@@ -21,7 +21,7 @@
 </c:if>
 
 <h2>
-    <c:forTokens items="random newest highest frequent recent users" delims=" " var="cat" varStatus="loopStatus">
+    <c:forTokens items="random newest highest frequent recent alphabetical users" delims=" " var="cat" varStatus="loopStatus">
         <c:if test="${loopStatus.count > 1}">&nbsp;|&nbsp;</c:if>
         <sub:url var="url" value="home.view">
             <sub:param name="listSize" value="${model.listSize}"/>

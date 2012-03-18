@@ -244,8 +244,8 @@ public class MediaFileService {
     /**
      * Returns the most frequently played albums.
      *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
      * @return The most frequently played albums.
      */
     public List<MediaFile> getMostFrequentlyPlayedAlbums(int offset, int count) {
@@ -255,8 +255,8 @@ public class MediaFileService {
     /**
      * Returns the most recently played albums.
      *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
      * @return The most recently played albums.
      */
     public List<MediaFile> getMostRecentlyPlayedAlbums(int offset, int count) {
@@ -266,12 +266,23 @@ public class MediaFileService {
     /**
      * Returns the most recently added albums.
      *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
      * @return The most recently added albums.
      */
     public List<MediaFile> getNewestAlbums(int offset, int count) {
         return mediaFileDao.getNewestAlbums(offset, count);
+    }
+
+    /**
+     * Returns albums in alphabetial order.
+     *
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
+     * @return Albums in alphabetical order.
+     */
+    public List<MediaFile> getAlphabetialAlbums(int offset, int count) {
+        return mediaFileDao.getAlphabetialAlbums(offset, count);
     }
 
     private void updateChildren(MediaFile parent) {

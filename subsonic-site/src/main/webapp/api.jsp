@@ -1070,8 +1070,9 @@
         <td>Yes</td>
         <td></td>
         <td>The list type. Must be one of the following: <code>random</code>, <code>newest</code>,
-            <code>highest</code>, <code>frequent</code>, <code>recent</code>.
-        </td>
+            <code>highest</code>, <code>frequent</code>, <code>recent</code>. Since <a href="#versions">1.8.0</a>
+            you can also use <code>alphabetical</code> to page through all albums sorted alphabetically by artist
+            and album name.</td>
     </tr>
     <tr>
         <td><code>size</code></td>
@@ -1083,7 +1084,7 @@
         <td><code>offset</code></td>
         <td>No</td>
         <td>0</td>
-        <td>The list offset. Useful if you for example want to page through the list of newest albums. Max 5000.</td>
+        <td>The list offset. Useful if you for example want to page through the list of newest albums.</td>
     </tr>
 </table>
 <p>

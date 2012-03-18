@@ -13,14 +13,17 @@ Never remove rows from media_file, set present=false instead.
   Add lastScanned timestamp, use this to set stuff to not present after scanning.
   Use "present" in album list and other queries. MAKE SURE THESE WORK FIRST!
 Support old-style IDs in REST API.
+Always use fast access mode in LeftController.
+  Refactor accessMode in MediaFileService.
+Create new album list type: alphabetic.
 
 TODO IN 4.7
 -----------------
+MetaDataParer.guessArtist etc: Don't return empty strings.
 wget "http://localhost:8080/rest/getMusicDirectory.view?u=admin&p=admin&v=1.6&c=android&id=2f55736572732f73696e6472652f4d757369632f4c756e67732043442031000000" -O -
 Test getPlaylist vs old-style IDs.
 Test that Fast access mode works.
-Always use fast access mode in LeftController.
-  Refactor accessMode in MediaFileService.
+Move statistcs to About page?
 
 artist
   id
@@ -35,6 +38,10 @@ album
   coverArtPath?
   songCount
   duration
+  comment
+  playCount
+  lastPlayed
+  added
 
 Analyze existing REST methods, e.g., getAlbumList, search
 
