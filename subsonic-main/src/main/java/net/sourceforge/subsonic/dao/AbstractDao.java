@@ -55,9 +55,9 @@ public class AbstractDao {
     }
 
     protected int update(String sql, Object... args) {
-        long t = System.nanoTime();
+        //long t = System.nanoTime();
         int result = getJdbcTemplate().update(sql, args);
-        log(sql, t);
+        //log(sql, t);
         return result;
     }
 
@@ -67,32 +67,32 @@ public class AbstractDao {
     }
 
     protected <T> List<T> query(String sql, RowMapper rowMapper, Object... args) {
-        long t = System.nanoTime();
+        //long t = System.nanoTime();
         List<T> result = getJdbcTemplate().query(sql, args, rowMapper);
-        log(sql, t);
+        //log(sql, t);
         return result;
     }
 
     protected List<String> queryForStrings(String sql, Object... args) {
-        long t = System.nanoTime();
+        //long t = System.nanoTime();
         List<String> result = getJdbcTemplate().queryForList(sql, args, String.class);
-        log(sql, t);
+        //log(sql, t);
         return result;
     }
 
     protected Integer queryForInt(String sql, Integer defaultValue, Object... args) {
-        long t = System.nanoTime();
+        //long t = System.nanoTime();
         List<Integer> list = getJdbcTemplate().queryForList(sql, args, Integer.class);
         Integer result = list.isEmpty() ? defaultValue : list.get(0) == null ? defaultValue : list.get(0);
-        log(sql, t);
+        //log(sql, t);
         return result;
     }
 
     protected Long queryForLong(String sql, Long defaultValue, Object... args) {
-        long t = System.nanoTime();
+        //long t = System.nanoTime();
         List<Long> list = getJdbcTemplate().queryForList(sql, args, Long.class);
         Long result = list.isEmpty() ? defaultValue : list.get(0) == null ? defaultValue : list.get(0);
-        log(sql, t);
+        //log(sql, t);
         return result;
     }
 
