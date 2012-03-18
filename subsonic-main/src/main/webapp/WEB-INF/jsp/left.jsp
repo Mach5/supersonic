@@ -9,6 +9,13 @@
 <body class="bgcolor2 leftframe">
 <a name="top"></a>
 
+<c:if test="${model.scanning}">
+    <div style="padding-bottom:1.0em">
+        <div class="warning"><fmt:message key="left.scanning"/></div>
+        <div class="forward"><a href="left.view"><fmt:message key="common.refresh"/></a></div>
+    </div>
+</c:if>
+
 <div style="padding-bottom:0.5em">
     <c:forEach items="${model.indexes}" var="index">
         <a href="#${index.index}" accesskey="${index.index}">${index.index}</a>

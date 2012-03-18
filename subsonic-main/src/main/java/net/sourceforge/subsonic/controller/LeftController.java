@@ -137,6 +137,7 @@ public class LeftController extends ParameterizableViewController implements Las
         MusicFolderContent musicFolderContent = getMusicFolderContent(musicFoldersToUse);
 
         map.put("player", playerService.getPlayer(request, response));
+        map.put("scanning", mediaScannerService.isScanning());
         map.put("musicFolders", allMusicFolders);
         map.put("selectedMusicFolder", selectedMusicFolder);
         map.put("radios", settingsService.getAllInternetRadios());

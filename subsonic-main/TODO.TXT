@@ -18,8 +18,9 @@ TODO IN 4.7
 -----------------
 wget "http://localhost:8080/rest/getMusicDirectory.view?u=admin&p=admin&v=1.6&c=android&id=2f55736572732f73696e6472652f4d757369632f4c756e67732043442031000000" -O -
 Test getPlaylist vs old-style IDs.
-Add Refresh button in left.jsp if currently scanning.
 Test that Fast access mode works.
+Always use fast access mode in LeftController.
+  Refactor accessMode in MediaFileService.
 
 artist
   id
@@ -42,8 +43,6 @@ Don't throw NPE if requesting non-existent ID in REST.
 Optionally, create "Clean database" setting
 Test: Install 4.6, then upgrade and check that music_file_info is preserved.
 Save statistics in file. Update only when scanning?
-Always use fast access mode in LeftController.
-  Refactor accessMode in MediaFileService.
 Never use fast access mode in podcast folder.
 Think about how to create REST methods for getting albums and artists etc.
 Using CPU when idling, but only if low on memory?
