@@ -151,9 +151,9 @@ public class LeftController extends ParameterizableViewController implements Las
             map.put("bytes", StringUtil.formatBytes(bytes, locale));
         }
 
-        map.put("indexedArtists", musicFolderContent.indexedArtists);
-        map.put("singleSongs", musicFolderContent.singleSongs);
-        map.put("indexes", musicFolderContent.indexedArtists.keySet());
+        map.put("indexedArtists", musicFolderContent.getIndexedArtists());
+        map.put("singleSongs", musicFolderContent.getSingleSongs());
+        map.put("indexes", musicFolderContent.getIndexedArtists().keySet());
         map.put("user", securityService.getCurrentUser(request));
 
         ModelAndView result = super.handleRequestInternal(request, response);

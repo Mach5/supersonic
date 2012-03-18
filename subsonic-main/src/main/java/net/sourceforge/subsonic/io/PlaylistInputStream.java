@@ -22,6 +22,7 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Playlist;
@@ -52,10 +53,11 @@ public class PlaylistInputStream extends InputStream {
     private final MediaFileService mediaFileService;
     private MediaFile currentFile;
     private InputStream currentInputStream;
+    private SearchService searchService;
 
     public PlaylistInputStream(Player player, TransferStatus status, Integer maxBitRate, String preferredTargetFormat,
                                VideoTranscodingSettings videoTranscodingSettings, TranscodingService transcodingService,
-                               AudioScrobblerService audioScrobblerService, MediaFileService mediaFileService) {
+                               AudioScrobblerService audioScrobblerService, MediaFileService mediaFileService, SearchService searchService) {
         this.player = player;
         this.status = status;
         this.maxBitRate = maxBitRate;
@@ -64,6 +66,7 @@ public class PlaylistInputStream extends InputStream {
         this.transcodingService = transcodingService;
         this.audioScrobblerService = audioScrobblerService;
         this.mediaFileService = mediaFileService;
+        this.searchService = searchService;
     }
 
     @Override
@@ -129,7 +132,7 @@ public class PlaylistInputStream extends InputStream {
     }
 
     private void populateRandomPlaylist(Playlist playlist) throws IOException {
-        List<MediaFile> files = mediaFileService.getRandomSongs(playlist.getRandomSearchCriteria());
+        List<MediaFile> files = searchService.getRandomSongs(playlist.getRandomSearchCriteria());
         playlist.addFiles(false, files);
         LOG.info("Recreated random playlist with " + playlist.size() + " songs.");
     }

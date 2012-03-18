@@ -144,7 +144,7 @@ public class MediaScannerService {
         LOG.info("Starting to scan media library.");
 
         try {
-            mediaFileDao.setAllMediaFilesNotPresent();
+            Date lastScanned = new Date();
             scanCount = 0;
 
             searchService.startIndexing();
@@ -152,14 +152,14 @@ public class MediaScannerService {
             // Recurse through all files on disk.
             for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
                 MediaFile root = mediaFileService.getMediaFile(musicFolder.getPath());
-                scanFile(root, musicFolder);
+                scanFile(root, musicFolder, lastScanned);
             }
-            mediaFileDao.archiveNotPresent();
+            mediaFileDao.markNonPresent(lastScanned);
 
             // Update statistics
             statistics = mediaFileDao.getStatistics();
 
-            settingsService.setLastScanned(new Date());
+            settingsService.setLastScanned(lastScanned);
             settingsService.save(false);
             LOG.info("Scanned media library with " + scanCount + " entries.");
 
@@ -171,7 +171,7 @@ public class MediaScannerService {
         }
     }
 
-    private void scanFile(MediaFile file, MusicFolder musicFolder) {
+    private void scanFile(MediaFile file, MusicFolder musicFolder, Date lastScanned) {
         scanCount++;
         if (scanCount % 250 == 0) {
             LOG.info("Scanned media library with " + scanCount + " entries.");
@@ -185,16 +185,15 @@ public class MediaScannerService {
             mediaFileDao.createOrUpdateMediaFile(file);
         }
 
-        mediaFileDao.setMediaFilePresent(file.getPath());
-
         if (file.isDirectory()) {
             for (MediaFile child : mediaFileService.getChildrenOf(file, true, false, false)) {
-                scanFile(child, musicFolder);
+                scanFile(child, musicFolder, lastScanned);
             }
             for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false)) {
-                scanFile(child, musicFolder);
+                scanFile(child, musicFolder, lastScanned);
             }
         }
+        mediaFileDao.markPresent(file.getPath(), lastScanned);
     }
 
     /**

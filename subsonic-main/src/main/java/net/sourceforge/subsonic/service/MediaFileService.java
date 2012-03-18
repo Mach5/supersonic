@@ -24,7 +24,6 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
-import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.service.metadata.MetaData;
 import net.sourceforge.subsonic.service.metadata.MetaDataParser;
@@ -115,7 +114,7 @@ public class MediaFileService {
      * Returns a media file instance for the given path name. If possible, a cached value is returned.
      *
      * @param pathName A path name for a file on the local file system.
-     * @return A memdia file instance.
+     * @return A media file instance.
      * @throws SecurityException If access is denied to the given file.
      */
     public MediaFile getMediaFile(String pathName) {
@@ -213,68 +212,6 @@ public class MediaFileService {
      */
     public List<String> getGenres() {
         return mediaFileDao.getGenres();
-    }
-
-
-    /**
-     * Returns a number of random albums.
-     *
-     * @param count Maximum number of albums to return.
-     * @return List of random albums.
-     */
-    public List<MediaFile> getRandomAlbums(int count) {
-        List<MediaFile> result = new ArrayList<MediaFile>(count);
-
-        // Note: To avoid duplicates, we iterate over more than the requested number of items.
-        for (int i = 0; i < count * 5; i++) {
-
-            MediaFile album = mediaFileDao.getRandomAlbum();
-            if (album != null && securityService.isReadAllowed(album.getFile())) {
-                if (!result.contains(album)) {
-                    result.add(album);
-
-                    // Enough items found?
-                    if (result.size() >= count) {
-                        break;
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Returns a number of random songs.
-     *
-     * @param criteria Search criteria.
-     * @return List of random songs.
-     */
-    public List<MediaFile> getRandomSongs(RandomSearchCriteria criteria) {
-        List<MediaFile> result = new ArrayList<MediaFile>();
-
-        String musicFolderPath = null;
-        if (criteria.getMusicFolderId() != null) {
-            MusicFolder musicFolder = settingsService.getMusicFolderById(criteria.getMusicFolderId());
-            musicFolderPath = musicFolder.getPath().getPath();
-        }
-
-        // Note: To avoid duplicates, we iterate over more than the requested number of items.
-        for (int i = 0; i < criteria.getCount() * 5; i++) {
-
-            MediaFile song = mediaFileDao.getRandomSong(criteria.getFromYear(), criteria.getToYear(), criteria.getGenre(), musicFolderPath);
-            if (song != null && securityService.isReadAllowed(song.getFile())) {
-                if (!result.contains(song)) {
-                    result.add(song);
-
-                    // Enough items found?
-                    if (result.size() >= criteria.getCount()) {
-                        break;
-                    }
-                }
-            }
-        }
-        return result;
-
     }
 
     /**
@@ -386,13 +323,15 @@ public class MediaFileService {
 
     private MediaFile createMediaFile(File file) {
         MediaFile mediaFile = new MediaFile();
+        Date now = new Date();
         mediaFile.setPath(file.getPath());
         mediaFile.setFolder(securityService.getRootFolderForFile(file));
         mediaFile.setParentPath(file.getParent());
         mediaFile.setLastModified(new Date(FileUtil.lastModified(file)));
+        mediaFile.setLastScanned(now);
         mediaFile.setPlayCount(0);
         mediaFile.setChildrenLastUpdated(new Date(0));
-        mediaFile.setCreated(new Date());
+        mediaFile.setCreated(now);
         mediaFile.setMediaType(DIRECTORY);
         mediaFile.setPresent(true);
 

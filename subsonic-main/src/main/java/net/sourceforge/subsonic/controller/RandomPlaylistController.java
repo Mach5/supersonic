@@ -23,6 +23,7 @@ import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
+import net.sourceforge.subsonic.service.SearchService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,6 +45,7 @@ public class RandomPlaylistController extends ParameterizableViewController {
     private PlayerService playerService;
     private List<ReloadFrame> reloadFrames;
     private MediaFileService mediaFileService;
+    private SearchService searchService;
 
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -72,7 +74,7 @@ public class RandomPlaylistController extends ParameterizableViewController {
         Playlist playlist = player.getPlaylist();
 
         RandomSearchCriteria criteria = new RandomSearchCriteria(size, genre, fromYear, toYear, musicFolderId);
-        playlist.addFiles(false, mediaFileService.getRandomSongs(criteria));
+        playlist.addFiles(false, searchService.getRandomSongs(criteria));
 
         if (request.getParameter("autoRandom") != null) {
             playlist.setRandomSearchCriteria(criteria);
@@ -96,5 +98,9 @@ public class RandomPlaylistController extends ParameterizableViewController {
 
     public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
+    }
+
+    public void setSearchService(SearchService searchService) {
+        this.searchService = searchService;
     }
 }

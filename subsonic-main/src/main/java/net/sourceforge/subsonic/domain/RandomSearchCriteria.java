@@ -22,7 +22,7 @@ package net.sourceforge.subsonic.domain;
  * Defines criteria used when generating random playlists.
  *
  * @author Sindre Mehus
- * @see net.sourceforge.subsonic.service.MediaFileService#getRandomSongs
+ * @see net.sourceforge.subsonic.service.SearchService#getRandomSongs
  */
 public class RandomSearchCriteria {
     private final int count;

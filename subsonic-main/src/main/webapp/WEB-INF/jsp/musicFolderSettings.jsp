@@ -102,6 +102,7 @@
     <script type="text/javascript">
         parent.frames.upper.location.href="top.view?";
         parent.frames.left.location.href="left.view?";
+        parent.frames.right.location.href="right.view?";
     </script>
 </c:if>
 
