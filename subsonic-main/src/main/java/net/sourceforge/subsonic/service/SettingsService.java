@@ -60,12 +60,13 @@ import net.sourceforge.subsonic.util.Util;
  * Provides persistent storage of application settings and preferences.
  *
  * @author Sindre Mehus
+ * @author Mach5
  */
 public class SettingsService {
 
     // Subsonic home directory.
-    private static final File SUBSONIC_HOME_WINDOWS = new File("c:/subsonic");
-    private static final File SUBSONIC_HOME_OTHER = new File("/var/subsonic");
+    private static final File SUBSONIC_HOME_WINDOWS = new File("c:/supersonic");
+    private static final File SUBSONIC_HOME_OTHER = new File("/var/supersonic");
 
     // Global settings.
     private static final String KEY_INDEX_STRING = "IndexString";

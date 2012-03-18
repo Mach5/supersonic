@@ -20,10 +20,11 @@ import net.sourceforge.subsonic.booter.deployer.DeploymentStatus;
 import net.sourceforge.subsonic.booter.deployer.SubsonicDeployerService;
 
 /**
- * Responsible for deploying the Subsonic web app in
+ * Responsible for deploying the Supersonic web app in
  * the embedded Jetty container.
  *
  * @author Sindre Mehus
+ * @author Mach5
  */
 public class SubsonicAgent {
 
@@ -85,7 +86,7 @@ public class SubsonicAgent {
     }
 
     private String getServiceStatus() throws Exception {
-        Process process = Runtime.getRuntime().exec("subsonic-service.exe -status");
+        Process process = Runtime.getRuntime().exec("supersonic-service.exe -status");
         return IOUtils.toString(process.getInputStream());
     }
 
@@ -95,7 +96,7 @@ public class SubsonicAgent {
 
     public void startOrStopService(boolean start) {
         try {
-            String cmd = "subsonic-service.exe " + (start ? "-start" : "-stop");
+            String cmd = "supersonic-service.exe " + (start ? "-start" : "-stop");
             System.err.println("Executing: " + cmd);
 
             Runtime.getRuntime().exec(cmd);
@@ -114,7 +115,7 @@ public class SubsonicAgent {
                 List<String> command = new ArrayList<String>();
                 command.add("cmd");
                 command.add("/c");
-                command.add("subsonic-agent-elevated.exe");
+                command.add("supersonic-agent-elevated.exe");
                 command.addAll(Arrays.asList(args));
 
                 ProcessBuilder builder = new ProcessBuilder();
@@ -123,7 +124,7 @@ public class SubsonicAgent {
                 builder.start();
                 System.exit(0);
             } catch (Exception x) {
-                JOptionPane.showMessageDialog(frame, "Failed to elevate Subsonic Control Panel. " + x, "Error", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Failed to elevate Supersonic Control Panel. " + x, "Error", JOptionPane.WARNING_MESSAGE);
                 x.printStackTrace();
             }
         }

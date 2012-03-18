@@ -27,7 +27,7 @@ public class SubsonicFrame extends JFrame {
     private JButton closeButton;
 
     public SubsonicFrame(SubsonicAgent subsonicAgent, StatusPanel statusPanel, SettingsPanel settingsPanel) {
-        super("Subsonic Control Panel");
+        super("Supersonic Control Panel");
         this.subsonicAgent = subsonicAgent;
         this.statusPanel = statusPanel;
         this.settingsPanel = settingsPanel;

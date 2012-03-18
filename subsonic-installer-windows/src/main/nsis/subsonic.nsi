@@ -6,14 +6,14 @@
 !insertmacro VersionCompare
 
 # The name of the installer
-Name "Subsonic"
+Name "Supersonic"
 
 # The default installation directory
-InstallDir $PROGRAMFILES\Subsonic
+InstallDir $PROGRAMFILES\Supersonic
 
 # Registry key to check for directory (so if you install again, it will
 # overwrite the old one automatically)
-InstallDirRegKey HKLM "Software\Subsonic" "Install_Dir"
+InstallDirRegKey HKLM "Software\Supersonic" "Install_Dir"
 
 #--------------------------------
 #Interface Configuration
@@ -55,34 +55,34 @@ Section "Subsonic"
   ExecWait '"$INSTDIR\uninstall.exe" /S _?=$INSTDIR'
 
   # Remove previous Jetty temp directory.
-  RMDir /r "c:\subsonic\jetty"
+  RMDir /r "c:\supersonic\jetty"
 
   # Set output path to the installation directory.
   SetOutPath $INSTDIR
 
   # Write files.
-  File ..\..\..\target\subsonic-agent.exe
+  File ..\..\..\target\supersonic-agent.exe
   File ..\..\..\target\subsonic-agent.exe.vmoptions
-  File ..\..\..\target\subsonic-agent-elevated.exe
+  File ..\..\..\target\supersonic-agent-elevated.exe
   File ..\..\..\target\subsonic-agent-elevated.exe.vmoptions
-  File ..\..\..\target\subsonic-service.exe
+  File ..\..\..\target\supersonic-service.exe
   File ..\..\..\target\subsonic-service.exe.vmoptions
-  File ..\..\..\..\subsonic-booter\target\subsonic-booter-jar-with-dependencies.jar
+  File ..\..\..\..\subsonic-booter\target\supersonic-booter-jar-with-dependencies.jar
   File ..\..\..\..\subsonic-main\README.TXT
   File ..\..\..\..\subsonic-main\LICENSE.TXT
   File "..\..\..\..\subsonic-main\Getting Started.html"
-  File ..\..\..\..\subsonic-main\target\subsonic.war
+  File ..\..\..\..\subsonic-main\target\supersonic.war
   File ..\..\..\..\subsonic-main\target\classes\version.txt
   File ..\..\..\..\subsonic-main\target\classes\build_number.txt
 
   # Write the installation path into the registry
-  WriteRegStr HKLM SOFTWARE\Subsonic "Install_Dir" "$INSTDIR"
+  WriteRegStr HKLM SOFTWARE\Supersonic "Install_Dir" "$INSTDIR"
 
   # Write the uninstall keys for Windows
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Subsonic" "DisplayName" "Subsonic"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Subsonic" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Subsonic" "NoModify" 1
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Subsonic" "NoRepair" 1
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Supersonic" "DisplayName" "Supersonic"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Supersonic" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Supersonic" "NoModify" 1
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Supersonic" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
 
   # Restore subsonic-service.exe.vmoptions
@@ -90,37 +90,37 @@ Section "Subsonic"
   Delete $TEMP\subsonic-service.exe.vmoptions
 
   # Write transcoding pack files.
-  SetOutPath "c:\subsonic\transcode"
+  SetOutPath "c:\supersonic\transcode"
   File ..\..\..\..\subsonic-transcode\windows\*.*
 
   # Add Windows Firewall exception.
   # (Requires NSIS plugin found on http://nsis.sourceforge.net/NSIS_Simple_Firewall_Plugin to be installed
   # as NSIS_HOME/Plugins/SimpleFC.dll)
-  SimpleFC::AddApplication "Subsonic Service" "$INSTDIR\subsonic-service.exe" 0 2 "" 1
-  SimpleFC::AddApplication "Subsonic Agent" "$INSTDIR\subsonic-agent.exe" 0 2 "" 1
-  SimpleFC::AddApplication "Subsonic Agent (Elevated)" "$INSTDIR\subsonic-agent-elevated.exe" 0 2 "" 1
+  SimpleFC::AddApplication "Supersonic Service" "$INSTDIR\supersonic-service.exe" 0 2 "" 1
+  SimpleFC::AddApplication "Supersonic Agent" "$INSTDIR\supersonic-agent.exe" 0 2 "" 1
+  SimpleFC::AddApplication "Supersonic Agent (Elevated)" "$INSTDIR\supersonic-agent-elevated.exe" 0 2 "" 1
 
   # Install and start service.
-  ExecWait '"$INSTDIR\subsonic-service.exe" -install'
-  ExecWait '"$INSTDIR\subsonic-service.exe" -start'
+  ExecWait '"$INSTDIR\supersonic-service.exe" -install'
+  ExecWait '"$INSTDIR\supersonic-service.exe" -start'
 
   # Start agent.
-  Exec '"$INSTDIR\subsonic-agent-elevated.exe" -balloon'
+  Exec '"$INSTDIR\supersonic-agent-elevated.exe" -balloon'
 
 SectionEnd
 
 
 Section "Start Menu Shortcuts"
 
-  CreateDirectory "$SMPROGRAMS\Subsonic"
-  CreateShortCut "$SMPROGRAMS\Subsonic\Open Subsonic.lnk"          "$INSTDIR\subsonic.url"         ""         "$INSTDIR\subsonic-agent.exe"  0
-  CreateShortCut "$SMPROGRAMS\Subsonic\Subsonic Tray Icon.lnk"     "$INSTDIR\subsonic-agent.exe"   "-balloon" "$INSTDIR\subsonic-agent.exe"  0
-  CreateShortCut "$SMPROGRAMS\Subsonic\Start Subsonic Service.lnk" "$INSTDIR\subsonic-service.exe" "-start"   "$INSTDIR\subsonic-service.exe"  0
-  CreateShortCut "$SMPROGRAMS\Subsonic\Stop Subsonic Service.lnk"  "$INSTDIR\subsonic-service.exe" "-stop"    "$INSTDIR\subsonic-service.exe"  0
-  CreateShortCut "$SMPROGRAMS\Subsonic\Uninstall Subsonic.lnk"     "$INSTDIR\uninstall.exe"        ""         "$INSTDIR\uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\Subsonic\Getting Started.lnk"        "$INSTDIR\Getting Started.html" ""         "$INSTDIR\Getting Started.html" 0
+  CreateDirectory "$SMPROGRAMS\Supersonic"
+  CreateShortCut "$SMPROGRAMS\Supersonic\Open Supersonic.lnk"          "$INSTDIR\supersonic.url"         ""         "$INSTDIR\supersonic-agent.exe"  0
+  CreateShortCut "$SMPROGRAMS\Supersonic\Supersonic Tray Icon.lnk"     "$INSTDIR\supersonic-agent.exe"   "-balloon" "$INSTDIR\supersonic-agent.exe"  0
+  CreateShortCut "$SMPROGRAMS\Supersonic\Start Supersonic Service.lnk" "$INSTDIR\supersonic-service.exe" "-start"   "$INSTDIR\supersonic-service.exe"  0
+  CreateShortCut "$SMPROGRAMS\Supersonic\Stop Supersonic Service.lnk"  "$INSTDIR\supersonic-service.exe" "-stop"    "$INSTDIR\supersonic-service.exe"  0
+  CreateShortCut "$SMPROGRAMS\Supersonic\Uninstall Supersonic.lnk"     "$INSTDIR\uninstall.exe"        ""         "$INSTDIR\uninstall.exe" 0
+  CreateShortCut "$SMPROGRAMS\Supersonic\Getting Started.lnk"        "$INSTDIR\Getting Started.html" ""         "$INSTDIR\Getting Started.html" 0
 
-  CreateShortCut "$SMSTARTUP\Subsonic.lnk"                         "$INSTDIR\subsonic-agent.exe"   ""         "$INSTDIR\subsonic-agent.exe"  0
+  CreateShortCut "$SMSTARTUP\Supersonic.lnk"                         "$INSTDIR\supersonic-agent.exe"   ""         "$INSTDIR\supersonic-agent.exe"  0
 
 SectionEnd
 
@@ -133,37 +133,37 @@ Section "Uninstall"
   SetShellVarContext "all"
 
   # Stop and uninstall service if present.
-  ExecWait '"$INSTDIR\subsonic-service.exe" -stop'
-  ExecWait '"$INSTDIR\subsonic-service.exe" -uninstall'
+  ExecWait '"$INSTDIR\supersonic-service.exe" -stop'
+  ExecWait '"$INSTDIR\supersonic-service.exe" -uninstall'
 
   # Stop agent by killing it.
   # (Requires NSIS plugin found on http://nsis.sourceforge.net/Processes_plug-in to be installed
   # as NSIS_HOME/Plugins/Processes.dll)
-  Processes::KillProcess "subsonic-agent"
-  Processes::KillProcess "subsonic-agent-elevated"
+  Processes::KillProcess "supersonic-agent"
+  Processes::KillProcess "supersonic-agent-elevated"
   Processes::KillProcess "ffmpeg"
   Processes::KillProcess "lame"
 
   # Remove registry keys
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Subsonic"
-  DeleteRegKey HKLM SOFTWARE\Subsonic
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Supersonic"
+  DeleteRegKey HKLM SOFTWARE\Supersonic
 
   # Remove files.
-  Delete "$SMSTARTUP\Subsonic.lnk"
-  RMDir /r "$SMPROGRAMS\Subsonic"
+  Delete "$SMSTARTUP\Supersonic.lnk"
+  RMDir /r "$SMPROGRAMS\Supersonic"
   Delete "$INSTDIR\build_number.txt"
   Delete "$INSTDIR\elevate.exe"
   Delete "$INSTDIR\Getting Started.html"
   Delete "$INSTDIR\LICENSE.TXT"
   Delete "$INSTDIR\README.TXT"
-  Delete "$INSTDIR\subsonic.url"
-  Delete "$INSTDIR\subsonic.war"
-  Delete "$INSTDIR\subsonic-agent.exe"
+  Delete "$INSTDIR\supersonic.url"
+  Delete "$INSTDIR\supersonic.war"
+  Delete "$INSTDIR\supersonic-agent.exe"
   Delete "$INSTDIR\subsonic-agent.exe.vmoptions"
-  Delete "$INSTDIR\subsonic-agent-elevated.exe"
+  Delete "$INSTDIR\supersonic-agent-elevated.exe"
   Delete "$INSTDIR\subsonic-agent-elevated.exe.vmoptions"
-  Delete "$INSTDIR\subsonic-booter-jar-with-dependencies.jar"
-  Delete "$INSTDIR\subsonic-service.exe"
+  Delete "$INSTDIR\supersonic-booter-jar-with-dependencies.jar"
+  Delete "$INSTDIR\supersonic-service.exe"
   Delete "$INSTDIR\subsonic-service.exe.vmoptions"
   Delete "$INSTDIR\uninstall.exe"
   Delete "$INSTDIR\version.txt"
@@ -174,9 +174,9 @@ Section "Uninstall"
   # (Requires NSIS plugin found on http://nsis.sourceforge.net/NSIS_Simple_Firewall_Plugin to be installed
   # as NSIS_HOME/Plugins/SimpleFC.dll)
   SimpleFC::RemoveApplication "$INSTDIR\elevate.exe"
-  SimpleFC::RemoveApplication "$INSTDIR\subsonic-service.exe"
-  SimpleFC::RemoveApplication "$INSTDIR\subsonic-agent.exe"
-  SimpleFC::RemoveApplication "$INSTDIR\subsonic-agent-elevated.exe"
+  SimpleFC::RemoveApplication "$INSTDIR\supersonic-service.exe"
+  SimpleFC::RemoveApplication "$INSTDIR\supersonic-agent.exe"
+  SimpleFC::RemoveApplication "$INSTDIR\supersonic-agent-elevated.exe"
 
 SectionEnd
 

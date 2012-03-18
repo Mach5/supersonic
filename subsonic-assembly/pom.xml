@@ -2,21 +2,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.sourceforge.subsonic</groupId>
-    <artifactId>subsonic-assembly</artifactId>
+    <groupId>com.github.mach5.supersonic</groupId>
+    <artifactId>supersonic-assembly</artifactId>
     <packaging>pom</packaging>
-    <name>Subsonic Assembly</name>
+    <name>Supersonic Assembly</name>
 
     <parent>
-        <groupId>net.sourceforge.subsonic</groupId>
-        <artifactId>subsonic</artifactId>
+        <groupId>com.github.mach5.supersonic</groupId>
+        <artifactId>supersonic</artifactId>
         <version>4.7.beta1</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>net.sourceforge.subsonic</groupId>
-            <artifactId>subsonic-main</artifactId>
+            <groupId>com.github.mach5.supersonic</groupId>
+            <artifactId>supersonic-main</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
@@ -24,7 +24,7 @@
     </dependencies>
 
     <build>
-        <finalName>subsonic-${project.version}</finalName>
+        <finalName>supersonic-${project.version}</finalName>
         <plugins>
 
             <!-- Configuration of assembly plugin for creating the distributions. -->

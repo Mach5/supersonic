@@ -43,13 +43,13 @@ public class SubsonicDeployer implements SubsonicDeployerService {
     public static final int DEFAULT_HTTPS_PORT = 0;
     public static final int DEFAULT_MEMORY_LIMIT = 100;
     public static final String DEFAULT_CONTEXT_PATH = "/";
-    public static final String DEFAULT_WAR = "subsonic.war";
+    public static final String DEFAULT_WAR = "supersonic.war";
     private static final int MAX_IDLE_TIME_MILLIS = 7 * 24 * 60 * 60 * 1000; // One week.
     private static final int HEADER_BUFFER_SIZE = 64 * 1024;
 
     // Subsonic home directory.
-    private static final File SUBSONIC_HOME_WINDOWS = new File("c:/subsonic");
-    private static final File SUBSONIC_HOME_OTHER = new File("/var/subsonic");
+    private static final File SUBSONIC_HOME_WINDOWS = new File("c:/supersonic");
+    private static final File SUBSONIC_HOME_OTHER = new File("/var/supersonic");
 
     private Throwable exception;
     private File subsonicHome;
@@ -69,13 +69,13 @@ public class SubsonicDeployer implements SubsonicDeployerService {
         if ("true".equals(System.getProperty("subsonic.createLinkFile"))) {
             Writer writer = null;
             try {
-                writer = new FileWriter("subsonic.url");
+                writer = new FileWriter("supersonic.url");
                 writer.append("[InternetShortcut]");
                 writer.append(System.getProperty("line.separator"));
                 writer.append("URL=").append(getUrl());
                 writer.flush();
             } catch (Throwable x) {
-                System.err.println("Failed to create subsonic.url.");
+                System.err.println("Failed to create supersonic.url.");
                 x.printStackTrace();
             } finally {
                 if (writer != null) {
@@ -187,7 +187,7 @@ public class SubsonicDeployer implements SubsonicDeployerService {
 
 
     private String getWar() {
-        String war = System.getProperty("subsonic.war");
+        String war = System.getProperty("supersonic.war");
         if (war == null) {
             war = DEFAULT_WAR;
         }
