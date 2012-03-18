@@ -27,7 +27,7 @@
             <directory>../subsonic-booter/target</directory>
             <outputDirectory/>
             <includes>
-                <include>subsonic-booter-jar-with-dependencies.jar</include>
+                <include>supersonic-booter-jar-with-dependencies.jar</include>
             </includes>
         </fileSet>
         <fileSet>

@@ -2,14 +2,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.sourceforge.subsonic</groupId>
-    <artifactId>subsonic-installer-windows</artifactId>
+    <groupId>com.github.mach5.supersonic</groupId>
+    <artifactId>supersonic-installer-windows</artifactId>
     <packaging>pom</packaging>
-    <name>Subsonic Installer for Windows</name>
+    <name>Supersonic Installer for Windows</name>
 
     <parent>
-        <groupId>net.sourceforge.subsonic</groupId>
-        <artifactId>subsonic</artifactId>
+        <groupId>com.github.mach5.supersonic</groupId>
+        <artifactId>supersonic</artifactId>
         <version>4.7.beta1</version>
     </parent>
 
@@ -21,15 +21,15 @@
     <dependencies>
 
         <dependency>
-            <groupId>net.sourceforge.subsonic</groupId>
-            <artifactId>subsonic-main</artifactId>
+            <groupId>com.github.mach5.supersonic</groupId>
+            <artifactId>supersonic-main</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
 
         <dependency>
-            <groupId>net.sourceforge.subsonic</groupId>
-            <artifactId>subsonic-booter</artifactId>
+            <groupId>com.github.mach5.supersonic</groupId>
+            <artifactId>supersonic-booter</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -87,7 +87,7 @@
                                         <mkdir dir="${project.build.directory}"/>
                                         <exec executable="${nsis.home}/makensis">
                                             <arg value="${basedir}/src/main/nsis/subsonic.nsi"/>
-                                            <arg value="-XOutFile ${project.build.directory}/subsonic-${project.version}-setup.exe"/>
+                                            <arg value="-XOutFile ${project.build.directory}/supersonic-${project.version}-setup.exe"/>
                                         </exec>
                                     </target>
                                 </configuration>

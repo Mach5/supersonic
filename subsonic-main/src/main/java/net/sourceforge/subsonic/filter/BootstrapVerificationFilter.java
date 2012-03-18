@@ -32,14 +32,15 @@ import java.io.IOException;
 
 /**
  * This filter is executed very early in the filter chain. It verifies that
- * the Subsonic home directory (c:\subsonic or /var/subsonic) exists and
+ * the Supersonic home directory (c:\supersonic or /var/supersonic) exists and
  * is writable. If not, a proper error message is given to the user.
  * <p/>
- * (The Subsonic home directory is usually created automatically, but a common
+ * (The Supersonic home directory is usually created automatically, but a common
  * problem on Linux is that the Tomcat user does not have the necessary
  * privileges).
  *
  * @author Sindre Mehus
+ * @author Mach5
  */
 public class BootstrapVerificationFilter implements Filter {
 
@@ -91,9 +92,9 @@ public class BootstrapVerificationFilter implements Filter {
     private void error(ServletResponse res, String error) throws IOException {
         ServletOutputStream out = res.getOutputStream();
         out.println("<html>" +
-                    "<head><title>Subsonic Error</title></head>" +
+                    "<head><title>Supersonic Error</title></head>" +
                     "<body>" +
-                    "<h2>Subsonic Error</h2>" +
+                    "<h2>Supersonic Error</h2>" +
                     error +
                     "</body>" +
                     "</html>");

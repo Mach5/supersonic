@@ -15,9 +15,10 @@ import javax.swing.Action;
 import net.sourceforge.subsonic.booter.deployer.DeploymentStatus;
 
 /**
- * Controls the Subsonic tray icon.
+ * Controls the Supersonic tray icon.
  *
  * @author Sindre Mehus
+ * @author Mach5
  */
 public class TrayController implements SubsonicListener {
 
@@ -44,18 +45,18 @@ public class TrayController implements SubsonicListener {
     }
 
     public void showMessage() {
-        trayIcon.displayMessage("Subsonic", "Subsonic is now running. Click this balloon to get started.",
+        trayIcon.displayMessage("Supersonic", "Supersonic is now running. Click this balloon to get started.",
                 TrayIcon.MessageType.INFO);
     }
 
     private void createActions() {
-        openAction = new AbstractAction("Open Subsonic in Browser") {
+        openAction = new AbstractAction("Open Supersonic in Browser") {
             public void actionPerformed(ActionEvent e) {
                 subsonicAgent.openBrowser();
             }
         };
 
-        controlPanelAction = new AbstractAction("Subsonic Control Panel") {
+        controlPanelAction = new AbstractAction("Supersonic Control Panel") {
             public void actionPerformed(ActionEvent e) {
                 subsonicAgent.showStatusPanel();
             }
@@ -79,7 +80,7 @@ public class TrayController implements SubsonicListener {
         menu.addSeparator();
         menu.add(createMenuItem(hideAction));
 
-        trayIcon = new TrayIcon(stoppedImage, "Subsonic Music Streamer", menu);
+        trayIcon = new TrayIcon(stoppedImage, "Supersonic Media Streamer", menu);
     }
 
     private Image createImage(String resourceName) {

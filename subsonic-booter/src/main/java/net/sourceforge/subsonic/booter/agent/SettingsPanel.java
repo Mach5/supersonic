@@ -267,7 +267,7 @@ public class SettingsPanel extends JPanel implements SubsonicListener {
         writeLines(file, newLines);
 
         JOptionPane.showMessageDialog(SettingsPanel.this,
-                "Please restart Subsonic for the new settings to take effect.",
+                "Please restart Supersonic for the new settings to take effect.",
                 "Settings changed", JOptionPane.INFORMATION_MESSAGE);
 
     }
