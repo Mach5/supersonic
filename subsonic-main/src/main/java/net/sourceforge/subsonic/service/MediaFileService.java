@@ -67,7 +67,7 @@ public class MediaFileService {
      * Returns a media file instance for the given file.  If possible, a cached value is returned.
      *
      * @param file A file on the local file system.
-     * @return A media file instance.
+     * @return A media file instance, or null if not found.
      * @throws SecurityException If access is denied to the given file.
      */
     public MediaFile getMediaFile(File file) {
@@ -91,7 +91,10 @@ public class MediaFileService {
             return result;
         }
 
-        // Not found, must read from disk.
+        if (!FileUtil.exists(file)) {
+            return null;
+        }
+        // Not found in database, must read from disk.
         result = createMediaFile(file);
 
         // Put in cache and database.
