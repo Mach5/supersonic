@@ -151,7 +151,7 @@ public class MediaScannerService {
 
             // Recurse through all files on disk.
             for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
-                MediaFile root = mediaFileService.getMediaFile(musicFolder.getPath());
+                MediaFile root = mediaFileService.getMediaFile(musicFolder.getPath(), false);
                 scanFile(root, musicFolder, lastScanned);
             }
             mediaFileDao.markNonPresent(lastScanned);
@@ -186,10 +186,10 @@ public class MediaScannerService {
         }
 
         if (file.isDirectory()) {
-            for (MediaFile child : mediaFileService.getChildrenOf(file, true, false, false)) {
+            for (MediaFile child : mediaFileService.getChildrenOf(file, true, false, false, false)) {
                 scanFile(child, musicFolder, lastScanned);
             }
-            for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false)) {
+            for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false, false)) {
                 scanFile(child, musicFolder, lastScanned);
             }
         }

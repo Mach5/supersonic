@@ -59,7 +59,6 @@ public class MediaFileService {
 
     private SecurityService securityService;
     private SettingsService settingsService;
-    private MediaScannerService mediaScannerService;
     private MediaFileDao mediaFileDao;
     private MetaDataParserFactory metaDataParserFactory;
 
@@ -71,6 +70,17 @@ public class MediaFileService {
      * @throws SecurityException If access is denied to the given file.
      */
     public MediaFile getMediaFile(File file) {
+        return getMediaFile(file, settingsService.isFastCacheEnabled());
+    }
+
+    /**
+     * Returns a media file instance for the given file.  If possible, a cached value is returned.
+     *
+     * @param file A file on the local file system.
+     * @return A media file instance, or null if not found.
+     * @throws SecurityException If access is denied to the given file.
+     */
+    public MediaFile getMediaFile(File file, boolean useFastCache) {
 
         // Look in fast memory cache first.
         Element element = mediaFileMemoryCache.get(file);
@@ -86,7 +96,7 @@ public class MediaFileService {
         // Secondly, look in database.
         result = mediaFileDao.getMediaFile(file.getPath());
         if (result != null) {
-            result = checkLastModified(result);
+            result = checkLastModified(result, useFastCache);
             mediaFileMemoryCache.put(new Element(file, result));
             return result;
         }
@@ -104,8 +114,8 @@ public class MediaFileService {
         return result;
     }
 
-    private MediaFile checkLastModified(MediaFile mediaFile) {
-        if (useFastCache() || mediaFile.getLastModified().getTime() >= FileUtil.lastModified(mediaFile.getFile())) {
+    private MediaFile checkLastModified(MediaFile mediaFile, boolean useFastCache) {
+        if (useFastCache || mediaFile.getLastModified().getTime() >= FileUtil.lastModified(mediaFile.getFile())) {
             return mediaFile;
         }
         mediaFile = createMediaFile(mediaFile.getFile());
@@ -157,17 +167,31 @@ public class MediaFileService {
      * @return All children media files.
      */
     public List<MediaFile> getChildrenOf(MediaFile parent, boolean includeFiles, boolean includeDirectories, boolean sort) {
+        return getChildrenOf(parent, includeFiles, includeDirectories, sort, settingsService.isFastCacheEnabled());
+    }
+
+    /**
+     * Returns all media files that are children of a given media file.
+     *
+     * @param includeFiles       Whether files should be included in the result.
+     * @param includeDirectories Whether directories should be included in the result.
+     * @param sort               Whether to sort files in the same directory.
+     * @return All children media files.
+     */
+    public List<MediaFile> getChildrenOf(MediaFile parent, boolean includeFiles, boolean includeDirectories, boolean sort, boolean useFastCache) {
 
         if (!parent.isDirectory()) {
             return Collections.emptyList();
         }
 
         // Make sure children are stored and up-to-date in the database.
-        updateChildren(parent);
+        if (!useFastCache) {
+            updateChildren(parent);
+        }
 
         List<MediaFile> result = new ArrayList<MediaFile>();
         for (MediaFile child : mediaFileDao.getChildrenOf(parent.getPath())) {
-            child = checkLastModified(child);
+            child = checkLastModified(child, useFastCache);
             if (child.isDirectory() && includeDirectories) {
                 result.add(child);
             }
@@ -403,10 +427,6 @@ public class MediaFileService {
         return mediaFile;
     }
 
-    private boolean useFastCache() {
-        return settingsService.isFastCacheEnabled() && !mediaScannerService.isScanning();
-    }
-
     public void refreshMediaFile(MediaFile mediaFile) {
         mediaFile = createMediaFile(mediaFile.getFile());
         mediaFileDao.createOrUpdateMediaFile(mediaFile);
@@ -460,10 +480,6 @@ public class MediaFileService {
 
     public void setMediaFileMemoryCache(Ehcache mediaFileMemoryCache) {
         this.mediaFileMemoryCache = mediaFileMemoryCache;
-    }
-
-    public void setMediaScannerService(MediaScannerService mediaScannerService) {
-        this.mediaScannerService = mediaScannerService;
     }
 
     public void setMediaFileDao(MediaFileDao mediaFileDao) {

@@ -81,7 +81,9 @@ public class LeftController extends ParameterizableViewController implements Las
     public long getLastModified(HttpServletRequest request) {
         saveSelectedMusicFolder(request);
 
-        // TODO: Return -1 if current scanning media library?
+        if (mediaScannerService.isScanning()) {
+            return -1L;
+        }
 
         long lastModified = LAST_COMPATIBILITY_TIME.getTimeInMillis();
 
@@ -187,8 +189,8 @@ public class LeftController extends ParameterizableViewController implements Las
     protected List<MediaFile> getSingleSongs(List<MusicFolder> folders) throws IOException {
         List<MediaFile> result = new ArrayList<MediaFile>();
         for (MusicFolder folder : folders) {
-            MediaFile parent = mediaFileService.getMediaFile(folder.getPath());
-            result.addAll(mediaFileService.getChildrenOf(parent, true, false, true));
+            MediaFile parent = mediaFileService.getMediaFile(folder.getPath(), true);
+            result.addAll(mediaFileService.getChildrenOf(parent, true, false, true, true));
         }
         return result;
     }
@@ -200,7 +202,7 @@ public class LeftController extends ParameterizableViewController implements Las
             for (MusicFolder musicFolder : musicFoldersToUse) {
                 File file = new File(musicFolder.getPath(), shortcut);
                 if (FileUtil.exists(file)) {
-                    result.add(mediaFileService.getMediaFile(file));
+                    result.add(mediaFileService.getMediaFile(file, true));
                 }
             }
         }
