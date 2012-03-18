@@ -2,29 +2,29 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.sourceforge.subsonic</groupId>
-    <artifactId>subsonic-installer-mac</artifactId>
+    <groupId>com.github.mach5.supersonic</groupId>
+    <artifactId>supersonic-installer-mac</artifactId>
     <packaging>pom</packaging>
-    <name>Subsonic Installer for Mac</name>
+    <name>Supersonic Installer for Mac</name>
 
     <parent>
-        <groupId>net.sourceforge.subsonic</groupId>
-        <artifactId>subsonic</artifactId>
+        <groupId>com.github.mach5.supersonic</groupId>
+        <artifactId>supersonic</artifactId>
         <version>4.7.beta1</version>
     </parent>
 
     <dependencies>
 
         <dependency>
-            <groupId>net.sourceforge.subsonic</groupId>
-            <artifactId>subsonic-main</artifactId>
+            <groupId>com.github.mach5.supersonic</groupId>
+            <artifactId>supersonic-main</artifactId>
             <version>${project.version}</version>
             <type>war</type>
         </dependency>
 
         <dependency>
-            <groupId>net.sourceforge.subsonic</groupId>
-            <artifactId>subsonic-booter</artifactId>
+            <groupId>com.github.mach5.supersonic</groupId>
+            <artifactId>supersonic-booter</artifactId>
             <version>${project.version}</version>
         </dependency>
 

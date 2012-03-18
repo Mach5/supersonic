@@ -2,14 +2,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.sourceforge.subsonic</groupId>
-    <artifactId>subsonic-installer-rpm</artifactId>
+    <groupId>com.github.mach5.supersonic</groupId>
+    <artifactId>supersonic-installer-rpm</artifactId>
     <packaging>pom</packaging>
-    <name>Subsonic Installer for RPM</name>
+    <name>Supersonic Installer for RPM</name>
 
     <parent>
-        <groupId>net.sourceforge.subsonic</groupId>
-        <artifactId>subsonic</artifactId>
+        <groupId>com.github.mach5.supersonic</groupId>
+        <artifactId>supersonic</artifactId>
         <version>4.7.beta1</version>
     </parent>
 
