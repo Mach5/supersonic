@@ -41,8 +41,8 @@
                                             </filterset>
                                         </copy>
 
-                                        <copy file="../subsonic-booter/src/main/script/subsonic.sh" todir="${project.build.directory}/deb/usr/share/supersonic"/>
-                                        <copy file="../subsonic-booter/target/subsonic-booter-jar-with-dependencies.jar" todir="${project.build.directory}/deb/usr/share/supersonic"/>
+                                        <copy file="../subsonic-booter/src/main/script/supersonic.sh" todir="${project.build.directory}/deb/usr/share/supersonic"/>
+                                        <copy file="../subsonic-booter/target/supersonic-booter-jar-with-dependencies.jar" todir="${project.build.directory}/deb/usr/share/supersonic"/>
                                         <copy file="../subsonic-main/target/supersonic.war" todir="${project.build.directory}/deb/usr/share/supersonic"/>
                                         <copy file="../subsonic-transcode/linux/ffmpeg" todir="${project.build.directory}/deb/var/supersonic/transcode"/>
                                         <copy file="../subsonic-transcode/linux/lame" todir="${project.build.directory}/deb/var/supersonic/transcode"/>
@@ -53,7 +53,7 @@
                                             <arg value="${project.build.directory}/deb/DEBIAN/postinst"/>
                                             <arg value="${project.build.directory}/deb/DEBIAN/prerm"/>
                                             <arg value="${project.build.directory}/deb/DEBIAN/postrm"/>
-                                            <arg value="${project.build.directory}/deb/usr/share/supersonic/subsonic.sh"/>
+                                            <arg value="${project.build.directory}/deb/usr/share/supersonic/supersonic.sh"/>
                                             <arg value="${project.build.directory}/deb/etc/init.d/supersonic"/>
                                             <arg value="${project.build.directory}/deb/var/supersonic/transcode/ffmpeg"/>
                                             <arg value="${project.build.directory}/deb/var/supersonic/transcode/lame"/>

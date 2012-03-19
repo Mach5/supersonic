@@ -34,8 +34,8 @@
             <directory>../subsonic-booter/src/main/script</directory>
             <outputDirectory/>
             <includes>
-                <include>subsonic.sh</include>
-                <include>subsonic.bat</include>
+                <include>supersonic.sh</include>
+                <include>supersonic.bat</include>
             </includes>
             <fileMode>0777</fileMode>
         </fileSet>
