@@ -19,7 +19,9 @@
 package net.sourceforge.subsonic.service;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.ArtistDao;
 import net.sourceforge.subsonic.dao.MediaFileDao;
+import net.sourceforge.subsonic.domain.Artist;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import net.sourceforge.subsonic.domain.MusicFolder;
@@ -49,6 +51,7 @@ public class MediaScannerService {
     private SearchService searchService;
     private MediaFileService mediaFileService;
     private MediaFileDao mediaFileDao;
+    private ArtistDao artistDao;
     private int scanCount;
 
     public void init() {
@@ -155,6 +158,7 @@ public class MediaScannerService {
                 scanFile(root, musicFolder, lastScanned);
             }
             mediaFileDao.markNonPresent(lastScanned);
+            artistDao.markNonPresent(lastScanned);
 
             // Update statistics
             statistics = mediaFileDao.getStatistics();
@@ -192,8 +196,17 @@ public class MediaScannerService {
             for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false, false)) {
                 scanFile(child, musicFolder, lastScanned);
             }
+        } else if (file.getArtist() != null) {
+            if (artistDao.getArtist(file.getArtist()) == null) {
+                Artist artist = new Artist();
+                artist.setName(file.getArtist());
+                artist.setLastScanned(lastScanned);
+                artistDao.createOrUpdateArtist(artist);
+            }
         }
+
         mediaFileDao.markPresent(file.getPath(), lastScanned);
+        artistDao.markPresent(file.getArtist(), lastScanned);
     }
 
     /**
@@ -248,5 +261,9 @@ public class MediaScannerService {
 
     public void setMediaFileDao(MediaFileDao mediaFileDao) {
         this.mediaFileDao = mediaFileDao;
+    }
+
+    public void setArtistDao(ArtistDao artistDao) {
+        this.artistDao = artistDao;
     }
 }

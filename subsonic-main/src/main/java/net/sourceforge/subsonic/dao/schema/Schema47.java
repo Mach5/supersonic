@@ -75,17 +75,32 @@ public class Schema47 extends Schema {
 
             template.execute("create index idx_media_file_path on media_file(path)");
             template.execute("create index idx_media_file_parent_path on media_file(parent_path)");
-//            template.execute("create index idx_media_file_folder on media_file(folder)");
             template.execute("create index idx_media_file_type on media_file(type)");
             template.execute("create index idx_media_file_album on media_file(album)");
             template.execute("create index idx_media_file_artist on media_file(artist)");
-//            template.execute("create index idx_media_file_year on media_file(year)");
             template.execute("create index idx_media_file_present on media_file(present)");
             template.execute("create index idx_media_file_genre on media_file(genre)");
             template.execute("create index idx_media_file_play_count on media_file(play_count)");
             template.execute("create index idx_media_file_last_played on media_file(last_played)");
 
             LOG.info("Database table 'media_file' was created successfully.");
+        }
+
+        if (!tableExists(template, "artist")) {
+            LOG.info("Database table 'artist' not found.  Creating it.");
+            template.execute("create cached table artist (" +
+                    "id identity," +
+                    "name varchar not null," +
+                    "cover_art_path varchar," +
+                    "album_count int default 0 not null," +
+                    "last_scanned datetime not null," +
+                    "present boolean not null," +
+                    "unique (name))");
+
+            template.execute("create index idx_artist_name on artist(name)");
+            template.execute("create index idx_artist_present on artist(present)");
+
+            LOG.info("Database table 'artist' was created successfully.");
         }
     }
 }

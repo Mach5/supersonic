@@ -11,7 +11,11 @@
     </bean>
 
     <bean id="mediaFileDao" class="net.sourceforge.subsonic.dao.MediaFileDao">
-    <property name="daoHelper" ref="daoHelper"/>
+        <property name="daoHelper" ref="daoHelper"/>
+    </bean>
+
+    <bean id="artistDao" class="net.sourceforge.subsonic.dao.ArtistDao">
+        <property name="daoHelper" ref="daoHelper"/>
     </bean>
 
     <bean id="internetRadioDao" class="net.sourceforge.subsonic.dao.InternetRadioDao">
@@ -77,6 +81,7 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
+        <property name="artistDao" ref="artistDao"/>
         <property name="searchService" ref="searchService"/>
     </bean>
 
