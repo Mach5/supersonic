@@ -180,12 +180,14 @@ public class MusicIndexService {
     }
 
     private String createSortableName(String name, String[] ignoredArticles) {
+        name = name.replaceAll("[^\\p{L}\\p{N} ]+"," ").trim();
         String uppercaseName = name.toUpperCase();
         for (String article : ignoredArticles) {
             if (uppercaseName.startsWith(article.toUpperCase() + " ")) {
                 return name.substring(article.length() + 1) + ", " + article;
             }
         }
+
         return name;
     }
 
