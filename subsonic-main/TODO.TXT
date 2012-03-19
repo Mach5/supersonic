@@ -19,10 +19,10 @@ Create new album list type: alphabetic.
 
 TODO IN 4.7
 -----------------
+Top Rated is broken.
 minisub
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
   Bundle it?
-Revisit HomeController.createAlbum()
 MetaDataParer.guessArtist etc: Don't return empty strings.
 wget "http://localhost:8080/rest/getMusicDirectory.view?u=admin&p=admin&v=1.6&c=android&id=2f55736572732f73696e6472652f4d757369632f4c756e67732043442031000000" -O -
 Test getPlaylist vs old-style IDs.

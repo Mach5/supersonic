@@ -201,24 +201,12 @@ public class HomeController extends ParameterizableViewController {
     }
 
     private void resolveArtistAndAlbumTitle(Album album, MediaFile file) throws IOException {
-
-        // If directory, find  title and artist from metadata in child.
-        if (file.isDirectory()) {
-            file = mediaFileService.getFirstChildOf(file);
-            if (file == null) {
-                return;
-            }
-        }
-
         album.setArtist(file.getArtist());
         album.setAlbumTitle(file.getAlbumName());
     }
 
     private void resolveCoverArt(Album album, MediaFile file) {
-        File coverArt = mediaFileService.getCoverArt(file);
-        if (coverArt != null) {
-            album.setCoverArtPath(coverArt.getPath());
-        }
+        album.setCoverArtPath(file.getCoverArtPath());
     }
 
     public void setSettingsService(SettingsService settingsService) {
