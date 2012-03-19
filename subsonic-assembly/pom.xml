@@ -57,6 +57,19 @@
                 </executions>
             </plugin>
 
+            <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>downloads-maven-plugin</artifactId>
+                <version>0.4</version>
+                <configuration>
+                    <description>Supersonic ${project.version}-SNAPSHOT Stand-alone (all platforms)</description>
+                    <override>true</override>
+                    <includes>
+                        <include>*-standalone.tar.gz</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 

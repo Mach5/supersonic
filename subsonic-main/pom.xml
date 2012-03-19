@@ -306,18 +306,20 @@
     <build>
         <finalName>supersonic</finalName>
         <plugins>
+
             <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>downloads-maven-plugin</artifactId>
                 <version>0.4</version>
                 <configuration>
-                    <description>Latest Supersonic ${project.version}-SNAPSHOT</description>
+                    <description>Supersonic ${project.version}-SNAPSHOT WAR (all platforms)</description>
                     <override>true</override>
                     <includes>
                         <include>*.war</include>
                     </includes>
                 </configuration>
-               </plugin>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
