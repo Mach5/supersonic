@@ -105,10 +105,10 @@ public abstract class MetaDataParser {
     public String guessArtist(File file) {
         File parent = file.getParentFile();
         if (isRoot(parent)) {
-            return "";
+            return null;
         }
         File grandParent = parent.getParentFile();
-        return isRoot(grandParent) ? "" : grandParent.getName();
+        return isRoot(grandParent) ? null : grandParent.getName();
     }
 
     /**
@@ -116,8 +116,8 @@ public abstract class MetaDataParser {
      */
     public String guessAlbum(File file, String artist) {
         File parent = file.getParentFile();
-        String album = isRoot(parent) ? "" : parent.getName();
-        if (artist != null) {
+        String album = isRoot(parent) ? null : parent.getName();
+        if (artist != null && album != null) {
             album = album.replace(artist + " - ", "");
         }
         return album;
