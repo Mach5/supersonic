@@ -13,7 +13,7 @@ providing access to your music collection wherever you are. Use it
 to share your music with friends, or to listen to your music while away
 from home.
 
-Apps for Android, iPhone and Windows Phone 7 are also available.
+Apps for Android, iPhone and Windows Phone are also available.
 
 Java 1.6 or higher is required to run Subsonic.
 

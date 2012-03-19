@@ -25,7 +25,7 @@
 </p>
 <ul>
     <li>A personal web address for your Subsonic server (<em>yourname</em>.subsonic.org).</li>
-    <li>Streaming music to Android, iPhone and Windows Phone&nbsp;7.</li>
+    <li>Streaming music to Android, iPhone and Windows Phone.</li>
     <li>Video streaming.</li>
     <li>No ads in the Subsonic web interface.</li>
     <li>Free access to new premium features.</li>

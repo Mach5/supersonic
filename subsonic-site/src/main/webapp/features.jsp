@@ -51,7 +51,7 @@
         <div class="description">
             <ul class="list">
                 <li>Stream or download music directly to your phone. Apps available for <a href="apps.jsp">Android</a>,
-                    <a href="apps.jsp">iPhone</a> and <a href="apps.jsp">Windows Phone&nbsp;7</a></li>
+                    <a href="apps.jsp">iPhone</a> and <a href="apps.jsp">Windows Phone</a></li>
                 <li>Use the AIR desktop application, <a href="apps.jsp">SubAir</a>.</li>
                 <li>Control Subsonic from any mobile phone or PDA, using the WAP interface.</li>
                 <li>Supports multiple simultaneous players. Manage any player from any location.</li>

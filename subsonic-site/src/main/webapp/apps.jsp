@@ -25,7 +25,7 @@
             <div class="floatcontainer margin10-t margin10-b">
                 <ul class="stars column-left">
                     <li><a href="#android">Subsonic</a> for Android</li>
-                    <li><a href="#winphone">Subsonic</a> for Windows Phone 7</li>
+                    <li><a href="#winphone">Subsonic</a> for Windows Phone</li>
                     <li><a href="#isub">iSub</a> for iPhone/iPad</li>
                 </ul>
                 <ul class="stars column-right">
@@ -228,7 +228,7 @@
             <div class="featureitem">
                 <a name="winphone"></a>
 
-                <div class="heading">Subsonic for Windows Phone 7 <a href="#top" class="backtotop" title="Top"><img src="inc/img/top.gif" alt="" height="16" width="16"/></a></div>
+                <div class="heading">Subsonic for Windows Phone <a href="#top" class="backtotop" title="Top"><img src="inc/img/top.gif" alt="" height="16" width="16"/></a></div>
                 <div class="content">
                     <div class="wide-content">
                         <p>
@@ -265,7 +265,7 @@
                         <p>
                             Support: <a href="mailto:anton@avzuylen.com">anton@avzuylen.com</a>
                         </p>
-                        <p>Go get it on the <a href="http://redirect.zune.net/redirect?type=phoneApp&id=2eb445a5-ca04-e011-9264-00237de2db9e&source=WP7applist">Windows Phone 7 Marketplace</a>!</p>
+                        <p>Go get it on the <a href="http://redirect.zune.net/redirect?type=phoneApp&id=2eb445a5-ca04-e011-9264-00237de2db9e&source=WP7applist">Windows Phone Marketplace</a>!</p>
 
                     </div>
                 </div>

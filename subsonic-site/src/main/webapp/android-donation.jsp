@@ -20,7 +20,7 @@
     As a donor you get the following benefits:
 </p>
 <ul>
-    <li>Stream music to Android, iPhone and Windows Phone 7.</li>
+    <li>Stream music to Android, iPhone and Windows Phone.</li>
     <li>Video streaming.</li>
     <li>A personal web address for your Subsonic server (<em>yourname</em>.subsonic.org).</li>
     <li>No ads in the Subsonic web interface.</li>

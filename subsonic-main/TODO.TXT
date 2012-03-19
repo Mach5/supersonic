@@ -46,6 +46,7 @@ album
   playCount
   lastPlayed
   added
+  ratingStuff
 
 Analyze existing REST methods, e.g., getAlbumList, search
 
@@ -55,13 +56,11 @@ Optionally, create "Clean database" setting
 Test: Install 4.6, then upgrade and check that music_file_info is preserved.
 Save statistics in file. Update only when scanning?
 Never use fast access mode in podcast folder.
-Think about how to create REST methods for getting albums and artists etc.
 Using CPU when idling, but only if low on memory?
 Improve document of REST "download" method.
 Automatically start scanning if media folders change.
 Use media file IDs in web interface etc.
 Make it work with 64-bit Java 7.  Problem with exe4j?
-Test with a big collection on a network disk.
 Better error message if media file not found.
 Document MediaFileService.
 Support per-artist cover art.

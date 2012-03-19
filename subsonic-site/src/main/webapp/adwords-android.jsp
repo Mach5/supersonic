@@ -15,7 +15,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 
 <h1>Subsonic Music Streamer</h1>
 <p>
-    Stream and download music from your home computer to Android, iPhone and Windows Phone&nbsp;7.
+    Stream and download music from your home computer to Android, iPhone and Windows Phone.
     All your music - anywhere, anytime! Never sync again.
     Supports most audio formats, including mp3, ogg, aac, flac, wma.
 </p>
