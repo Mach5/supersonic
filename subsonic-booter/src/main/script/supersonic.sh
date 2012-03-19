@@ -20,7 +20,7 @@ SUPERSONIC_DEFAULT_PLAYLIST_FOLDER=/var/playlists
 quiet=0
 
 usage() {
-    echo "Usage: subsonic.sh [options]"
+    echo "Usage: supersonic.sh [options]"
     echo "  --help               This small usage guide."
     echo "  --home=DIR           The directory where Supersonic will create files."
     echo "                       Make sure it is writable. Default: /var/supersonic"
@@ -121,7 +121,7 @@ ${JAVA} -Xmx${SUPERSONIC_MAX_MEMORY}m \
   -Dsubsonic.defaultPlaylistFolder=${SUPERSONIC_DEFAULT_PLAYLIST_FOLDER} \
   -Djava.awt.headless=true \
   -verbose:gc \
-  -jar subsonic-booter-jar-with-dependencies.jar > ${LOG} 2>&1 &
+  -jar supersonic-booter-jar-with-dependencies.jar > ${LOG} 2>&1 &
 
 # Write pid to pidfile if it is defined.
 if [ $SUPERSONIC_PIDFILE ]; then

@@ -20,5 +20,5 @@ set SUPERSONIC_CONTEXT_PATH=/
 REM  The memory limit (max Java heap size) in megabytes.
 set MAX_MEMORY=100
 
-java -Xmx%MAX_MEMORY%m  -Dsubsonic.home=%SUPERSONIC_HOME% -Dsubsonic.host=%SUPERSONIC_HOST% -Dsubsonic.port=%SUPERSONIC_PORT%  -Dsubsonic.httpsPort=%SUPERSONIC_HTTPS_PORT% -Dsubsonic.contextPath=%SUPERSONIC_CONTEXT_PATH% -jar subsonic-booter-jar-with-dependencies.jar
+java -Xmx%MAX_MEMORY%m  -Dsubsonic.home=%SUPERSONIC_HOME% -Dsubsonic.host=%SUPERSONIC_HOST% -Dsubsonic.port=%SUPERSONIC_PORT%  -Dsubsonic.httpsPort=%SUPERSONIC_HTTPS_PORT% -Dsubsonic.contextPath=%SUPERSONIC_CONTEXT_PATH% -jar supersonic-booter-jar-with-dependencies.jar
 
