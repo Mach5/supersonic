@@ -163,6 +163,8 @@ public class MediaScannerService {
             mediaFileDao.markNonPresent(lastScanned);
             artistDao.markNonPresent(lastScanned);
             albumDao.markNonPresent(lastScanned);
+            albumDao.updateSongCountAndDurationAndCoverArt();
+            artistDao.updateAlbumCountAndCoverArt();
 
             // Update statistics
             statistics = mediaFileDao.getStatistics();

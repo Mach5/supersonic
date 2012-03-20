@@ -29,8 +29,8 @@ public class Album {
     private int id;
     private String name;
     private String artist;
-    private int songCount;
-    private int durationSeconds;
+    private Integer songCount;
+    private Integer durationSeconds;
     private String coverArtPath;
     private int playCount;
     private Date lastPlayed;
@@ -42,7 +42,7 @@ public class Album {
     public Album() {
     }
 
-    public Album(int id, String name, String artist, int songCount, int durationSeconds, String coverArtPath,
+    public Album(int id, String name, String artist, Integer songCount, Integer durationSeconds, String coverArtPath,
             int playCount, Date lastPlayed, String comment, Date created, Date lastScanned, boolean present) {
         this.id = id;
         this.name = name;
@@ -82,19 +82,19 @@ public class Album {
         this.artist = artist;
     }
 
-    public int getSongCount() {
+    public Integer getSongCount() {
         return songCount;
     }
 
-    public void setSongCount(int songCount) {
+    public void setSongCount(Integer songCount) {
         this.songCount = songCount;
     }
 
-    public int getDurationSeconds() {
+    public Integer getDurationSeconds() {
         return durationSeconds;
     }
 
-    public void setDurationSeconds(int durationSeconds) {
+    public void setDurationSeconds(Integer durationSeconds) {
         this.durationSeconds = durationSeconds;
     }
 

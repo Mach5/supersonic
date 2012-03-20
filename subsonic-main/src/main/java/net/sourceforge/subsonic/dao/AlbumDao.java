@@ -110,6 +110,16 @@ public class AlbumDao extends AbstractDao {
         }
     }
 
+    public void updateSongCountAndDurationAndCoverArt() {
+        update("update album set song_count = (select count(1) from media_file where " +
+                "album.name=media_file.album and media_file.present)");
+        update("update album set duration_seconds = (select sum(duration_seconds) from media_file where " +
+                "album.artist=media_file.artist and album.name=media_file.album and media_file.present)");
+        update("update album set cover_art_path = (select top 1 cover_art_path from media_file where " +
+                "media_file.type='ALBUM' and album.artist=media_file.artist and album.name=media_file.album " +
+                "and media_file.present order by id)");
+    }
+
     private static class AlbumMapper implements ParameterizedRowMapper<Album> {
         public Album mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Album(

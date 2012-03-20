@@ -101,6 +101,12 @@ public class ArtistDao extends AbstractDao {
         }
     }
 
+    public void updateAlbumCountAndCoverArt() {
+        update("update artist set album_count = (select count(1) from album where artist.name=album.artist and album.present)");
+        update("update artist set cover_art_path = (select top 1 cover_art_path from album where " +
+                "album.artist=artist.name and album.present order by id)");
+    }
+    
     private static class ArtistMapper implements ParameterizedRowMapper<Artist> {
         public Artist mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Artist(

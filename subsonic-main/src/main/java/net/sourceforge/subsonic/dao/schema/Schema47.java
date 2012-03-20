@@ -109,8 +109,8 @@ public class Schema47 extends Schema {
                     "id identity," +
                     "name varchar not null," +
                     "artist varchar not null," +
-                    "song_count int default 0 not null," +
-                    "duration_seconds int default 0 not null," +
+                    "song_count int," +
+                    "duration_seconds int," +
                     "cover_art_path varchar," +
                     "play_count int default 0 not null," +
                     "last_played datetime," +
