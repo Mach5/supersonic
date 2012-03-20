@@ -102,5 +102,30 @@ public class Schema47 extends Schema {
 
             LOG.info("Database table 'artist' was created successfully.");
         }
+
+        if (!tableExists(template, "album")) {
+            LOG.info("Database table 'album' not found.  Creating it.");
+            template.execute("create cached table album (" +
+                    "id identity," +
+                    "name varchar not null," +
+                    "artist varchar not null," +
+                    "song_count int default 0 not null," +
+                    "duration_seconds int default 0 not null," +
+                    "cover_art_path varchar," +
+                    "play_count int default 0 not null," +
+                    "last_played datetime," +
+                    "comment varchar," +
+                    "created datetime not null," +
+                    "last_scanned datetime not null," +
+                    "present boolean not null," +
+                    "unique (artist, name))");
+
+            template.execute("create index idx_album_artist_name on album(artist, name)");
+            template.execute("create index idx_album_play_count on album(play_count)");
+            template.execute("create index idx_album_last_played on album(last_played)");
+            template.execute("create index idx_album_present on album(present)");
+
+            LOG.info("Database table 'album' was created successfully.");
+        }
     }
 }
