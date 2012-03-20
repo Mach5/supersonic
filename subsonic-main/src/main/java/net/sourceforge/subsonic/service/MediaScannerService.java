@@ -19,8 +19,10 @@
 package net.sourceforge.subsonic.service;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.AlbumDao;
 import net.sourceforge.subsonic.dao.ArtistDao;
 import net.sourceforge.subsonic.dao.MediaFileDao;
+import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.Artist;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
@@ -52,6 +54,7 @@ public class MediaScannerService {
     private MediaFileService mediaFileService;
     private MediaFileDao mediaFileDao;
     private ArtistDao artistDao;
+    private AlbumDao albumDao;
     private int scanCount;
 
     public void init() {
@@ -159,6 +162,7 @@ public class MediaScannerService {
             }
             mediaFileDao.markNonPresent(lastScanned);
             artistDao.markNonPresent(lastScanned);
+            albumDao.markNonPresent(lastScanned);
 
             // Update statistics
             statistics = mediaFileDao.getStatistics();
@@ -203,10 +207,21 @@ public class MediaScannerService {
                 artist.setLastScanned(lastScanned);
                 artistDao.createOrUpdateArtist(artist);
             }
+            if (file.getAlbumName() != null) {
+                if (albumDao.getAlbum(file.getArtist(), file.getAlbumName()) == null) {
+                    Album album = new Album();
+                    album.setName(file.getAlbumName());
+                    album.setArtist(file.getArtist());
+                    album.setLastScanned(lastScanned);
+                    album.setCreated(lastScanned);
+                    albumDao.createOrUpdateAlbum(album);
+                }
+            }
         }
 
         mediaFileDao.markPresent(file.getPath(), lastScanned);
         artistDao.markPresent(file.getArtist(), lastScanned);
+        albumDao.markPresent(file.getArtist(), file.getAlbumName(), lastScanned);
     }
 
     /**
@@ -265,5 +280,9 @@ public class MediaScannerService {
 
     public void setArtistDao(ArtistDao artistDao) {
         this.artistDao = artistDao;
+    }
+
+    public void setAlbumDao(AlbumDao albumDao) {
+        this.albumDao = albumDao;
     }
 }

@@ -49,7 +49,7 @@ public class AlbumDao extends AbstractDao {
      * @param albumName The album name.
      * @return The album or null.
      */
-    public Album getArtist(String artistName, String albumName) {
+    public Album getAlbum(String artistName, String albumName) {
         return queryOne("select " + COLUMNS + " from album where artist=? and name=? and present", rowMapper, artistName, albumName);
     }
 
