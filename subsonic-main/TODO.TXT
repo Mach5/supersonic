@@ -22,6 +22,8 @@ Added "created" to Child in REST xsd
 
 TODO IN 4.7
 -----------------
+JSON exception with ampersand.
+minisub doesn't play.
 minisub
   http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
   Bundle it?
