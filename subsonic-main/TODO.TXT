@@ -18,6 +18,7 @@ Always use fast access mode in LeftController.
 Create new album list type: alphabetic.
 Top Rated is broken.
 MetaDataParer.guessArtist etc: Don't return empty strings.
+Added "created" to Child in REST xsd
 
 TODO IN 4.7
 -----------------

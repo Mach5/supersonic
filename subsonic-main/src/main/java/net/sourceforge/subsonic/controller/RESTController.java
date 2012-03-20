@@ -722,6 +722,10 @@ public class RESTController extends MultiActionController {
             }
 
         } else {
+            Date created = mediaFile.getCreated();
+            if (created != null) {
+                attributes.add("created", StringUtil.toISO8601(created));
+            }
             String artist = resolveArtist(mediaFile);
             if (artist != null) {
                 attributes.add("artist", artist);
