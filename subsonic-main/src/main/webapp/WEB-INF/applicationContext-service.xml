@@ -64,6 +64,7 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileMemoryCache" ref="mediaFileMemoryCache"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
+        <property name="albumDao" ref="albumDao"/>
         <property name="metaDataParserFactory" ref="metaDataParserFactory"/>
     </bean>
 

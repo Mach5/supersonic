@@ -19,12 +19,14 @@ Create new album list type: alphabetic.
 Top Rated is broken.
 MetaDataParer.guessArtist etc: Don't return empty strings.
 Added "created" to Child in REST xsd
+Update playCount, lastPlayed in Album table.
 
 TODO IN 4.7
 -----------------
-Update comment, playCount, lastPlayed etc in Album table.
+Update comment in Album table.
 Create REST methods getArtists, getArtist, getSong etc.
 Analyze existing REST methods, e.g., getAlbumList, search
+Don't include videos in album lists and random song selection.
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
 Inconsistent resolution of artist/album.
 JSON exception with ampersand.

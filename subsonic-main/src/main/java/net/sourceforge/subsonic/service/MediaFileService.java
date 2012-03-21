@@ -21,7 +21,9 @@ package net.sourceforge.subsonic.service;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.AlbumDao;
 import net.sourceforge.subsonic.dao.MediaFileDao;
+import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
@@ -60,6 +62,7 @@ public class MediaFileService {
     private SecurityService securityService;
     private SettingsService settingsService;
     private MediaFileDao mediaFileDao;
+    private AlbumDao albumDao;
     private MetaDataParserFactory metaDataParserFactory;
 
     /**
@@ -537,19 +540,31 @@ public class MediaFileService {
 
     /**
      * Increments the play count and last played date for the given media file and its
-     * directory.
+     * directory and album.
      */
     public void incrementPlayCount(MediaFile file) {
-        file.setLastPlayed(new Date());
+        Date now = new Date();
+        file.setLastPlayed(now);
         file.setPlayCount(file.getPlayCount() + 1);
         updateMediaFile(file);
 
         MediaFile parent = getParentOf(file);
         if (!isRoot(parent)) {
-            parent.setLastPlayed(new Date());
+            parent.setLastPlayed(now);
             parent.setPlayCount(parent.getPlayCount() + 1);
             updateMediaFile(parent);
         }
+
+        Album album = albumDao.getAlbum(file.getArtist(), file.getAlbumName());
+        if (album != null) {
+            album.setLastPlayed(now);
+            album.setPlayCount(album.getPlayCount() + 1);
+            albumDao.createOrUpdateAlbum(album);
+        }
+    }
+
+    public void setAlbumDao(AlbumDao albumDao) {
+        this.albumDao = albumDao;
     }
 
     /**
