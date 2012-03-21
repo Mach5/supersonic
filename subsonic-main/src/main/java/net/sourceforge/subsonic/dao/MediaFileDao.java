@@ -56,7 +56,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The media file or null.
      */
     public MediaFile getMediaFile(String path) {
-        return queryOne("select " + COLUMNS + " from media_file where path=? and present", rowMapper, path);
+        return queryOne("select " + COLUMNS + " from media_file where path=?", rowMapper, path);
     }
 
     /**
@@ -66,7 +66,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The media file or null.
      */
     public MediaFile getMediaFile(int id) {
-        return queryOne("select " + COLUMNS + " from media_file where id=? and present", rowMapper, id);
+        return queryOne("select " + COLUMNS + " from media_file where id=?", rowMapper, id);
     }
 
     /**

@@ -47,7 +47,7 @@ public class ArtistDao extends AbstractDao {
      * @return The artist or null.
      */
     public Artist getArtist(String artistName) {
-        return queryOne("select " + COLUMNS + " from artist where name=? and present", rowMapper, artistName);
+        return queryOne("select " + COLUMNS + " from artist where name=?", rowMapper, artistName);
     }
 
     /**
@@ -63,8 +63,7 @@ public class ArtistDao extends AbstractDao {
                 "present=? " +
                 "where name=?";
 
-        int n = update(sql,
-                artist.getCoverArtPath(), artist.getAlbumCount(), artist.getLastScanned(), artist.isPresent());
+        int n = update(sql, artist.getCoverArtPath(), artist.getAlbumCount(), artist.getLastScanned(), artist.isPresent(), artist.getName());
 
         if (n == 0) {
 
@@ -101,12 +100,6 @@ public class ArtistDao extends AbstractDao {
         }
     }
 
-    public void updateAlbumCountAndCoverArt() {
-        update("update artist set album_count = (select count(1) from album where artist.name=album.artist and album.present)");
-        update("update artist set cover_art_path = (select top 1 cover_art_path from album where " +
-                "album.artist=artist.name and album.present order by id)");
-    }
-    
     private static class ArtistMapper implements ParameterizedRowMapper<Artist> {
         public Artist mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Artist(
