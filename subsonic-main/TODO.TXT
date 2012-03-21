@@ -22,6 +22,9 @@ Added "created" to Child in REST xsd
 
 TODO IN 4.7
 -----------------
+Update comment, playCount, lastPlayed etc in Album table.
+Create REST methods getArtists, getArtist, getSong etc.
+Analyze existing REST methods, e.g., getAlbumList, search
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
 Inconsistent resolution of artist/album.
 JSON exception with ampersand.
@@ -34,7 +37,6 @@ Test getPlaylist vs old-style IDs.
 Test that Fast access mode works.
 Move statistcs to About page?
 
-Analyze existing REST methods, e.g., getAlbumList, search
 
 Fix broken REST scrobbling, as reported by Ben.
 Don't throw NPE if requesting non-existent ID in REST.
