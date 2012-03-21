@@ -1,4 +1,4 @@
-Name:           subsonic
+Name:           supersonic
 Version:        @VERSION@
 Release:        @BUILD_NUMBER@
 Summary:        A web-based music streamer, jukebox and Podcast receiver
@@ -8,7 +8,7 @@ License:        GPLv3
 URL:            http://subsonic.org
 
 %description
-Subsonic is a web-based music streamer, jukebox and Podcast receiver,
+Supersonic is a web-based music streamer, jukebox and Podcast receiver,
 providing access to your music collection wherever you are. Use it
 to share your music with friends, or to listen to your music while away
 from home.
@@ -21,18 +21,18 @@ Subsonic can be found at http://subsonic.org
 
 %files
 %defattr(644,root,root,755)
-/usr/share/subsonic/subsonic-booter-jar-with-dependencies.jar
-/usr/share/subsonic/subsonic.war
-%attr(755,root,root) /usr/share/subsonic/subsonic.sh
-%attr(755,root,root) /etc/init.d/subsonic
-%attr(755,root,root) /var/subsonic/transcode/ffmpeg
-%attr(755,root,root) /var/subsonic/transcode/lame
-%config(noreplace) /etc/sysconfig/subsonic
+/usr/share/supersonic/supersonic-booter-jar-with-dependencies.jar
+/usr/share/supersonic/supersonic.war
+%attr(755,root,root) /usr/share/supersonic/supersonic.sh
+%attr(755,root,root) /etc/init.d/supersonic
+%attr(755,root,root) /var/supersonic/transcode/ffmpeg
+%attr(755,root,root) /var/supersonic/transcode/lame
+%config(noreplace) /etc/sysconfig/supersonic
 
 %pre
 # Stop Subsonic service.
-if [ -e /etc/init.d/subsonic ]; then
-  service subsonic stop
+if [ -e /etc/init.d/supersonic ]; then
+  service supersonic stop
 fi
 
 exit 0

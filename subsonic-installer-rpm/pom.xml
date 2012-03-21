@@ -52,7 +52,7 @@
                                     <target>
                                         <echo>Creating RPM package...</echo>
 
-                                        <copy file="${basedir}/src/subsonic.spec"
+                                        <copy file="${basedir}/src/supersonic.spec"
                                               todir="${project.build.directory}/rpm/SPECS">
                                             <filterset>
                                                 <filter token="VERSION" value="${project.version}"/>
@@ -61,27 +61,27 @@
                                         </copy>
 
                                         <!--Remove ".beta" suffix from version tag.-->
-                                        <replace file="${project.build.directory}/rpm/SPECS/subsonic.spec">
+                                        <replace file="${project.build.directory}/rpm/SPECS/supersonic.spec">
                                             <replacetoken>.beta1</replacetoken>
                                             <replacetoken>.beta2</replacetoken>
                                             <replacetoken>.beta3</replacetoken>
                                             <replacetoken>.beta4</replacetoken>
                                         </replace>
 
-                                        <copy file="${basedir}/src/etc/init.d/subsonic"
+                                        <copy file="${basedir}/src/etc/init.d/supersonic"
                                               todir="${project.build.directory}/rpm/buildroot/etc/init.d"/>
-                                        <copy file="${basedir}/src/etc/sysconfig/subsonic"
+                                        <copy file="${basedir}/src/etc/sysconfig/supersonic"
                                               todir="${project.build.directory}/rpm/buildroot/etc/sysconfig"/>
-                                        <copy file="../subsonic-booter/src/main/script/subsonic.sh"
-                                              todir="${project.build.directory}/rpm/buildroot/usr/share/subsonic"/>
-                                        <copy file="../subsonic-booter/target/subsonic-booter-jar-with-dependencies.jar"
-                                              todir="${project.build.directory}/rpm/buildroot/usr/share/subsonic"/>
-                                        <copy file="../subsonic-main/target/subsonic.war"
-                                              todir="${project.build.directory}/rpm/buildroot/usr/share/subsonic"/>
+                                        <copy file="../subsonic-booter/src/main/script/supersonic.sh"
+                                              todir="${project.build.directory}/rpm/buildroot/usr/share/supersonic"/>
+                                        <copy file="../subsonic-booter/target/supersonic-booter-jar-with-dependencies.jar"
+                                              todir="${project.build.directory}/rpm/buildroot/usr/share/supersonic"/>
+                                        <copy file="../subsonic-main/target/supersonic.war"
+                                              todir="${project.build.directory}/rpm/buildroot/usr/share/supersonic"/>
                                         <copy file="../subsonic-transcode/linux/ffmpeg"
-                                              todir="${project.build.directory}/rpm/buildroot/var/subsonic/transcode"/>
+                                              todir="${project.build.directory}/rpm/buildroot/var/supersonic/transcode"/>
                                         <copy file="../subsonic-transcode/linux/lame"
-                                              todir="${project.build.directory}/rpm/buildroot/var/subsonic/transcode"/>
+                                              todir="${project.build.directory}/rpm/buildroot/var/supersonic/transcode"/>
 
                                         <exec executable="rpmbuild">
                                             <arg value="-bb"/>
@@ -91,17 +91,17 @@
                                             <arg value="_topdir ${project.build.directory}/rpm"/>
                                             <arg value="--target"/>
                                             <arg value="i386"/>
-                                            <arg value="${project.build.directory}/rpm/SPECS/subsonic.spec"/>
+                                            <arg value="${project.build.directory}/rpm/SPECS/supersonic.spec"/>
                                         </exec>
 
-                                        <copy tofile="${project.build.directory}/subsonic-${project.version}.rpm">
+                                        <copy tofile="${project.build.directory}/supersonic-${project.version}.rpm">
                                             <fileset dir="${project.build.directory}/rpm/RPMS/i386">
                                                 <include name="*.rpm"/>
                                             </fileset>
                                         </copy>
 
                                         <exec executable="rpmlint">
-                                            <arg value="${project.build.directory}/subsonic-${project.version}.rpm"/>
+                                            <arg value="${project.build.directory}/supersonic-${project.version}.rpm"/>
                                         </exec>
                                     </target>
                                 </configuration>
