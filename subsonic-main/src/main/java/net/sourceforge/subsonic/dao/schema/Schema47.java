@@ -81,6 +81,7 @@ public class Schema47 extends Schema {
             template.execute("create index idx_media_file_present on media_file(present)");
             template.execute("create index idx_media_file_genre on media_file(genre)");
             template.execute("create index idx_media_file_play_count on media_file(play_count)");
+            template.execute("create index idx_media_file_created on media_file(created)");
             template.execute("create index idx_media_file_last_played on media_file(last_played)");
 
             LOG.info("Database table 'media_file' was created successfully.");
