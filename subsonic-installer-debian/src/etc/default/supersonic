@@ -3,7 +3,7 @@
 # (/etc/init.d/supersonic)
 #
 # To change the startup parameters of Supersonic, modify
-# the Subsonic_ARGS variable below.
+# the SUBSONIC_ARGS variable below.
 #
 # Type "supersonic --help" on the command line to read an
 # explanation of the different options.
@@ -12,9 +12,9 @@
 # and 443 (for https), and use a Java memory heap size of 120 MB, use
 # the following:
 #
-# Subsonic_ARGS="--port=80 --https-port=443 --max-memory=120"
+# SUBSONIC_ARGS="--port=80 --https-port=443 --max-memory=120"
 
-Subsonic_ARGS="--max-memory=100"
+SUBSONIC_ARGS="--max-memory=100"
 
 
 # The user which should run the Supersonic process. Default "root".
@@ -22,4 +22,4 @@ Subsonic_ARGS="--max-memory=100"
 # below 1024. Also make sure to grant the user write permissions in
 # the music directories, otherwise changing album art and tags will fail.
 
-Subsonic_USER=root
+SUBSONIC_USER=root
