@@ -224,9 +224,11 @@ public class MediaScannerService {
             album.setArtist(file.getArtist());
             album.setCreated(file.getLastModified());
         }
-        // TODO: Get cover art (from parent?) Or set cover art for all media_files.
         if (album.getCoverArtPath() == null) {
-            album.setCoverArtPath(file.getCoverArtPath());
+            MediaFile parent = mediaFileService.getMediaFile(file.getParentPath());
+            if (parent != null) {
+                album.setCoverArtPath(parent.getCoverArtPath());
+            }
         }
         if (!lastScanned.equals(album.getLastScanned())) {
             album.setDurationSeconds(0);
@@ -256,9 +258,11 @@ public class MediaScannerService {
             artist = new Artist();
             artist.setName(file.getArtist());
         }
-        // TODO: Get cover art (from parent?) Or set cover art for all media_files.
         if (artist.getCoverArtPath() == null) {
-            artist.setCoverArtPath(file.getCoverArtPath());
+            MediaFile parent = mediaFileService.getMediaFile(file.getParentPath());
+            if (parent != null) {
+                artist.setCoverArtPath(parent.getCoverArtPath());
+            }
         }
         Integer n = albumCount.get(artist.getName());
         artist.setAlbumCount(n == null ? 0 : n);

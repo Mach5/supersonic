@@ -22,7 +22,6 @@ Added "created" to Child in REST xsd
 
 TODO IN 4.7
 -----------------
-Set cover art path for all media_files
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
 Inconsistent resolution of artist/album.
 JSON exception with ampersand.
