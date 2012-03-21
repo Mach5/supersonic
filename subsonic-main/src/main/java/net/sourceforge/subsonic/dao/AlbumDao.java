@@ -96,10 +96,6 @@ public class AlbumDao extends AbstractDao {
         return query("select " + COLUMNS + " from album where present order by artist, name limit ? offset ?", rowMapper, count, offset);
     }
 
-    public void markPresent(String artistName, String albumName, Date lastScanned) {
-        update("update album set present=?, last_scanned=? where artist=? and name=?", true, lastScanned, artistName, albumName);
-    }
-
     public void markNonPresent(Date lastScanned) {
         int minId = queryForInt("select id from album where true limit 1", 0);
         int maxId = queryForInt("select max(id) from album", 0);
@@ -108,16 +104,6 @@ public class AlbumDao extends AbstractDao {
         for (int id = minId; id <= maxId; id += batchSize) {
             update("update album set present=false where id between ? and ? and last_scanned != ?", id, id + batchSize, lastScanned);
         }
-    }
-
-    public void updateSongCountAndDurationAndCoverArt() {
-        update("update album set song_count = (select count(1) from media_file where " +
-                "album.name=media_file.album and media_file.present)");
-        update("update album set duration_seconds = (select sum(duration_seconds) from media_file where " +
-                "album.artist=media_file.artist and album.name=media_file.album and media_file.present)");
-        update("update album set cover_art_path = (select top 1 cover_art_path from media_file where " +
-                "media_file.type='ALBUM' and album.artist=media_file.artist and album.name=media_file.album " +
-                "and media_file.present order by id)");
     }
 
     private static class AlbumMapper implements ParameterizedRowMapper<Album> {

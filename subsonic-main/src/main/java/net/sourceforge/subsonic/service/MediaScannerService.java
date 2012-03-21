@@ -18,22 +18,21 @@
  */
 package net.sourceforge.subsonic.service;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.dao.AlbumDao;
-import net.sourceforge.subsonic.dao.ArtistDao;
-import net.sourceforge.subsonic.dao.MediaFileDao;
-import net.sourceforge.subsonic.domain.Album;
-import net.sourceforge.subsonic.domain.Artist;
-import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
-import net.sourceforge.subsonic.domain.MusicFolder;
-import net.sourceforge.subsonic.util.FileUtil;
-
 import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.AlbumDao;
+import net.sourceforge.subsonic.dao.ArtistDao;
+import net.sourceforge.subsonic.dao.MediaFileDao;
+import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
+import net.sourceforge.subsonic.domain.MusicFolder;
+import net.sourceforge.subsonic.util.FileUtil;
 
 /**
  * Provides services for scanning the music library.
@@ -163,7 +162,6 @@ public class MediaScannerService {
             mediaFileDao.markNonPresent(lastScanned);
             artistDao.markNonPresent(lastScanned);
             albumDao.markNonPresent(lastScanned);
-            albumDao.updateSongCountAndDurationAndCoverArt();
             artistDao.updateAlbumCountAndCoverArt();
 
             // Update statistics
@@ -202,28 +200,52 @@ public class MediaScannerService {
             for (MediaFile child : mediaFileService.getChildrenOf(file, false, true, false, false)) {
                 scanFile(child, musicFolder, lastScanned);
             }
-        } else if (file.getArtist() != null) {
-            if (artistDao.getArtist(file.getArtist()) == null) {
-                Artist artist = new Artist();
-                artist.setName(file.getArtist());
-                artist.setLastScanned(lastScanned);
-                artistDao.createOrUpdateArtist(artist);
-            }
-            if (file.getAlbumName() != null) {
-                if (albumDao.getAlbum(file.getArtist(), file.getAlbumName()) == null) {
-                    Album album = new Album();
-                    album.setName(file.getAlbumName());
-                    album.setArtist(file.getArtist());
-                    album.setLastScanned(lastScanned);
-                    album.setCreated(lastScanned);
-                    albumDao.createOrUpdateAlbum(album);
+        } else {
+            if (file.getArtist() != null) {
+
+
+//                if (artistDao.getArtist(file.getArtist()) == null) {
+//                    Artist artist = new Artist();
+//                    artist.setName(file.getArtist());
+//                    artist.setLastScanned(lastScanned);
+//                    artistDao.createOrUpdateArtist(artist);
+//                }
+                if (file.getAlbumName() != null) {
+                    updateAlbum(file, lastScanned);
                 }
             }
         }
 
         mediaFileDao.markPresent(file.getPath(), lastScanned);
         artistDao.markPresent(file.getArtist(), lastScanned);
-        albumDao.markPresent(file.getArtist(), file.getAlbumName(), lastScanned);
+    }
+
+    private void updateAlbum(MediaFile file, Date lastScanned) {
+        Album album = albumDao.getAlbum(file.getArtist(), file.getAlbumName());
+        if (album == null) {
+            album = new Album();
+            album.setName(file.getAlbumName());
+            album.setArtist(file.getArtist());
+            album.setCreated(file.getLastModified());
+        }
+        // TODO: Get cover art (from parent?) Or set cover art for all media_files.
+        if (album.getCoverArtPath() == null) {
+            album.setCoverArtPath(file.getCoverArtPath());
+        }
+        if (!lastScanned.equals(album.getLastScanned())) {
+            album.setDurationSeconds(0);
+            album.setSongCount(0);
+        }
+        if (file.getDurationSeconds() != null) {
+            album.setDurationSeconds(album.getDurationSeconds() + file.getDurationSeconds());
+        }
+        if (file.getMediaType() == MediaFile.MediaType.AUDIO) {
+            album.setSongCount(album.getSongCount() + 1);
+        }
+
+        album.setLastScanned(lastScanned);
+        album.setPresent(true);
+        albumDao.createOrUpdateAlbum(album);
     }
 
     /**
