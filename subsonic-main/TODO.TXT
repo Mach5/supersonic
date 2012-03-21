@@ -23,12 +23,19 @@ Update playCount, lastPlayed in Album table.
 
 TODO IN 4.7
 -----------------
-Update comment in Album table.
+Inconsistent resolution of artist/album.
+How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
 Create REST methods getArtists, getArtist, getSong etc.
 Analyze existing REST methods, e.g., getAlbumList, search
+New playlist implementation.
+  - Shared/private
+  - Admin can change owner.
+  - No import/export in first version.
+  - Keep existing playlist role, but make it enabled by default.
+  - REST support
+
+Support comment and ratings for Album table.
 Don't include videos in album lists and random song selection.
-How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
-Inconsistent resolution of artist/album.
 JSON exception with ampersand.
 minisub doesn't play.
 minisub
