@@ -26,21 +26,27 @@ Create MediaType music, audiobook and podcast.
 
 TODO IN 4.7
 -----------------
-test that getRandomSongs doesn't return audiobooks and podcast.
-Add mediaType to REST also.
-Inconsistent resolution of artist/album.
-  Check all ALBUMs in media_file
-  Some albums have no artist.
-How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
-Add coverart to existing getIndexes method?
-Create REST methods getArtists, getArtist, getSong etc.
-Analyze existing REST methods, e.g., getAlbumList, search
 New playlist implementation.
+  - Create database schema
+  - Cascading delete when user is deleted.
+  - Update "present" when scanning media library?
+  - Initally import existing playlists if table is empty.
+  - Change appendPlaylist and loadPlaylist page, show meta data (owner, public/private, #songs, duration, created date).
+  - Create new Playlists button in top frame.
+  - managePlaylist -> Play, Download, Export (m3u), Delete, Private/Shared, Change owner
   - Shared/private
   - Admin can change owner.
   - No import/export in first version.
   - Keep existing playlist role, but make it enabled by default.
   - REST support
+
+Bug: Playlist frame > Combo box > Selected songs > * are broken.
+test that getRandomSongs doesn't return audiobooks and podcast.
+Add mediaType to REST also.
+How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
+Add coverart to existing getIndexes method?
+Create REST methods getArtists, getArtist, getSong etc.
+Analyze existing REST methods, e.g., getAlbumList, search
 Support comment and ratings for Album table.
 Don't include videos in album lists and random song selection.
 JSON exception with ampersand.
@@ -74,7 +80,6 @@ Maintain track order for offline files in Android. Prepend track number for sort
 REST: Ensure that podcast dir is included.
 Star support
 
-Store playlists in database. Private/shared playlists.
 Support ISO files.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
