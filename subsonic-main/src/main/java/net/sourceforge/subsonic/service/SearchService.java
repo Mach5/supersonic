@@ -192,7 +192,7 @@ public class SearchService {
             Searcher searcher = new IndexSearcher(reader);
 
             BooleanQuery query = new BooleanQuery();
-            query.add(new TermQuery(new Term(FIELD_MEDIA_TYPE, MediaFile.MediaType.MUSIC.name())), BooleanClause.Occur.MUST);
+            query.add(new TermQuery(new Term(FIELD_MEDIA_TYPE, MediaFile.MediaType.MUSIC.name().toLowerCase())), BooleanClause.Occur.MUST);
             if (criteria.getGenre() != null) {
                 query.add(new TermQuery(new Term(FIELD_GENRE, criteria.getGenre().toLowerCase())), BooleanClause.Occur.MUST);
             }
