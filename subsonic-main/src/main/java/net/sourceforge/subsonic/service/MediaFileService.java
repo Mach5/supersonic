@@ -221,6 +221,7 @@ public class MediaFileService {
      *
      * @return The first child, or <code>null</code> if not found.
      */
+    @Deprecated
     public MediaFile getFirstChildOf(MediaFile parent) {
         List<MediaFile> children = getChildrenOf(parent, true, false, true);
         return children.isEmpty() ? null : children.get(0);
