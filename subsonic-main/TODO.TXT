@@ -21,10 +21,13 @@ MetaDataParer.guessArtist etc: Don't return empty strings.
 Added "created" to Child in REST xsd
 Update playCount, lastPlayed in Album table.
 Remove MediaFileService.getFirstChild.
+Create MediaType music, audiobook and podcast.
 
 
 TODO IN 4.7
 -----------------
+test that getRandomSongs doesn't return audiobooks and podcast.
+Add mediaType to REST also.
 Inconsistent resolution of artist/album.
   Check all ALBUMs in media_file
   Some albums have no artist.
@@ -38,10 +41,6 @@ New playlist implementation.
   - No import/export in first version.
   - Keep existing playlist role, but make it enabled by default.
   - REST support
-Create MediaType music, audiobook and podcast.
-  Exclude from random song, also exclude video.
-  Add to REST also.
-  Look at path+genre to guess.
 Support comment and ratings for Album table.
 Don't include videos in album lists and random song selection.
 JSON exception with ampersand.

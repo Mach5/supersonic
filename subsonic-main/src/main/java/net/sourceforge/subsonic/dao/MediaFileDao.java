@@ -216,7 +216,7 @@ public class MediaFileDao extends AbstractDao {
     public MediaLibraryStatistics getStatistics() {
         int artistCount = queryForInt("select count(1) from artist where present", 0);
         int albumCount = queryForInt("select count(1) from album where present", 0);
-        int songCount = queryForInt("select count(1) from media_file where type in (?, ?) and present", 0, VIDEO.name(), AUDIO.name());
+        int songCount = queryForInt("select count(1) from media_file where type in (?, ?, ?, ?) and present", 0, VIDEO.name(), MUSIC.name(), AUDIO_BOOK.name(), PODCAST.name());
         long totalLengthInBytes = queryForLong("select sum(file_size) from media_file where present", 0L);
         long totalDurationInSeconds = queryForLong("select sum(duration_seconds) from media_file where present", 0L);
 

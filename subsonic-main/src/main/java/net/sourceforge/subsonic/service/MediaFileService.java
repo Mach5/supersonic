@@ -318,14 +318,14 @@ public class MediaFileService {
         List<File> result = new ArrayList<File>();
         for (File candidate : candidates) {
             String suffix = FilenameUtils.getExtension(candidate.getName()).toLowerCase();
-            if (!isExcluded(candidate) && (FileUtil.isDirectory(candidate) || isMusicFile(suffix) || isVideoFile(suffix))) {
+            if (!isExcluded(candidate) && (FileUtil.isDirectory(candidate) || isAudioFile(suffix) || isVideoFile(suffix))) {
                 result.add(candidate);
             }
         }
         return result;
     }
 
-    private boolean isMusicFile(String suffix) {
+    private boolean isAudioFile(String suffix) {
         for (String s : settingsService.getMusicFileTypesAsArray()) {
             if (suffix.equals(s.toLowerCase())) {
                 return true;
@@ -371,10 +371,6 @@ public class MediaFileService {
         mediaFile.setPresent(true);
 
         if (file.isFile()) {
-            String format = StringUtils.trimToNull(StringUtils.lowerCase(FilenameUtils.getExtension(mediaFile.getPath())));
-            mediaFile.setFormat(format);
-            mediaFile.setFileSize(FileUtil.length(file));
-            mediaFile.setMediaType(isMusicFile(format) ? AUDIO : VIDEO);
 
             MetaDataParser parser = metaDataParserFactory.getParser(file);
             if (parser != null) {
@@ -392,6 +388,10 @@ public class MediaFileService {
                 mediaFile.setHeight(metaData.getHeight());
                 mediaFile.setWidth(metaData.getWidth());
             }
+            String format = StringUtils.trimToNull(StringUtils.lowerCase(FilenameUtils.getExtension(mediaFile.getPath())));
+            mediaFile.setFormat(format);
+            mediaFile.setFileSize(FileUtil.length(file));
+            mediaFile.setMediaType(getMediaType(mediaFile));
 
         } else {
 
@@ -436,6 +436,21 @@ public class MediaFileService {
         return mediaFile;
     }
 
+    private MediaFile.MediaType getMediaType(MediaFile mediaFile) {
+        if (isVideoFile(mediaFile.getFormat())) {
+            return VIDEO;
+        }
+        String path = mediaFile.getPath().toLowerCase();
+        String genre = StringUtils.trimToEmpty(mediaFile.getGenre()).toLowerCase();
+        if (path.contains("podcast") || genre.contains("podcast")) {
+            return PODCAST;
+        }
+        if (path.contains("audiobook") || genre.contains("audiobook") || path.contains("audio book") || genre.contains("audio book")) {
+            return AUDIO_BOOK;
+        }
+        return MUSIC;
+    }
+    
     public void refreshMediaFile(MediaFile mediaFile) {
         mediaFile = createMediaFile(mediaFile.getFile());
         mediaFileDao.createOrUpdateMediaFile(mediaFile);

@@ -239,7 +239,7 @@ public class MediaScannerService {
         if (file.getDurationSeconds() != null) {
             album.setDurationSeconds(album.getDurationSeconds() + file.getDurationSeconds());
         }
-        if (file.getMediaType() == MediaFile.MediaType.AUDIO) {
+        if (file.isAudio()) {
             album.setSongCount(album.getSongCount() + 1);
         }
 

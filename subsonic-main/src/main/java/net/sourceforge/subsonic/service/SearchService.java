@@ -81,6 +81,7 @@ public class SearchService {
     private static final String FIELD_ARTIST = "artist";
     private static final String FIELD_GENRE = "genre";
     private static final String FIELD_YEAR = "year";
+    private static final String FIELD_MEDIA_TYPE = "mediaType";
     private static final String FIELD_FOLDER = "folder";
 
     private static final Version LUCENE_VERSION = Version.LUCENE_30;
@@ -190,19 +191,19 @@ public class SearchService {
             reader = createIndexReader(SONG);
             Searcher searcher = new IndexSearcher(reader);
 
-            BooleanQuery booleanQuery = new BooleanQuery();
+            BooleanQuery query = new BooleanQuery();
+            query.add(new TermQuery(new Term(FIELD_MEDIA_TYPE, MediaFile.MediaType.MUSIC.name())), BooleanClause.Occur.MUST);
             if (criteria.getGenre() != null) {
-                booleanQuery.add(new TermQuery(new Term(FIELD_GENRE, criteria.getGenre().toLowerCase())), BooleanClause.Occur.MUST);
+                query.add(new TermQuery(new Term(FIELD_GENRE, criteria.getGenre().toLowerCase())), BooleanClause.Occur.MUST);
             }
             if (criteria.getFromYear() != null || criteria.getToYear() != null) {
                 NumericRangeQuery<Integer> rangeQuery = NumericRangeQuery.newIntRange(FIELD_YEAR, criteria.getFromYear(), criteria.getToYear(), true, true);
-                booleanQuery.add(rangeQuery, BooleanClause.Occur.MUST);
+                query.add(rangeQuery, BooleanClause.Occur.MUST);
             }
             if (musicFolderPath != null) {
-                booleanQuery.add(new TermQuery(new Term(FIELD_FOLDER, musicFolderPath)), BooleanClause.Occur.MUST);
+                query.add(new TermQuery(new Term(FIELD_FOLDER, musicFolderPath)), BooleanClause.Occur.MUST);
             }
 
-            Query query = booleanQuery.clauses().isEmpty() ? new MatchAllDocsQuery() : booleanQuery;
             TopDocs topDocs = searcher.search(query, null, Integer.MAX_VALUE);
             Random random = new Random(System.currentTimeMillis());
 
@@ -312,6 +313,7 @@ public class SearchService {
             public Document createDocument(MediaFile mediaFile) {
                 Document doc = new Document();
                 doc.add(new Field(FIELD_PATH, mediaFile.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
+                doc.add(new Field(FIELD_MEDIA_TYPE, mediaFile.getMediaType().name(), Field.Store.NO, Field.Index.ANALYZED_NO_NORMS));
 
                 if (mediaFile.getTitle() != null) {
                     doc.add(new Field(FIELD_TITLE, mediaFile.getTitle(), Field.Store.YES, Field.Index.ANALYZED));
