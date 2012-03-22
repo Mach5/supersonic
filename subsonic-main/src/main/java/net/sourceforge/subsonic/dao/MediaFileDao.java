@@ -148,6 +148,7 @@ public class MediaFileDao extends AbstractDao {
         return queryOne("select play_count, last_played, comment from music_file_info where path=?", musicFileInfoRowMapper, path);
     }
 
+    @Deprecated
     public List<String> getArtists() {
         return queryForStrings("select distinct artist from media_file where artist is not null and present order by artist");
     }

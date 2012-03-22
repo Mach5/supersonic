@@ -13,6 +13,7 @@
             <xs:element name="musicFolders" type="sub:MusicFolders" minOccurs="1" maxOccurs="1"/>
             <xs:element name="indexes" type="sub:Indexes" minOccurs="1" maxOccurs="1"/>
             <xs:element name="directory" type="sub:Directory" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="artists" type="sub:ArtistsID3" minOccurs="1" maxOccurs="1"/>
             <xs:element name="nowPlaying" type="sub:NowPlaying" minOccurs="1" maxOccurs="1"/>
             <xs:element name="searchResult" type="sub:SearchResult" minOccurs="1" maxOccurs="1"/>
             <xs:element name="searchResult2" type="sub:SearchResult2" minOccurs="1" maxOccurs="1"/>
@@ -77,6 +78,19 @@
     <xs:complexType name="Artist">
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="ArtistsID3">
+        <xs:sequence>
+            <xs:element name="artist" type="sub:ArtistID3" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ArtistID3">
+        <xs:attribute name="id" type="xs:string" use="required"/>
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="coverArt" type="xs:string" use="optional"/>
+        <xs:attribute name="albumCount" type="xs:int" use="required"/>
     </xs:complexType>
 
     <xs:complexType name="Directory">
