@@ -20,12 +20,12 @@ Top Rated is broken.
 MetaDataParer.guessArtist etc: Don't return empty strings.
 Added "created" to Child in REST xsd
 Update playCount, lastPlayed in Album table.
+Remove MediaFileService.getFirstChild.
 
 
 TODO IN 4.7
 -----------------
 Inconsistent resolution of artist/album.
-  Remove MediaFileInfo.getFirstChild.
   Check all ALBUMs in media_file
   Some albums have no artist.
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist.

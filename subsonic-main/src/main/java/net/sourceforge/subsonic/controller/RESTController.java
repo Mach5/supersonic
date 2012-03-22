@@ -151,9 +151,7 @@ public class RESTController extends MultiActionController {
         for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
             AttributeSet attributes = new AttributeSet();
             attributes.add("id", musicFolder.getId());
-            if (musicFolder.getName() != null) {
-                attributes.add("name", musicFolder.getName());
-            }
+            attributes.add("name", musicFolder.getName());
             builder.add("musicFolder", attributes, true);
         }
         builder.endAll();
@@ -633,9 +631,7 @@ public class RESTController extends MultiActionController {
                     AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
                     attributes.add("username", username);
                     attributes.add("playerId", player.getId());
-                    if (player.getName() != null) {
-                        attributes.add("playerName", player.getName());
-                    }
+                    attributes.add("playerName", player.getName());
                     attributes.add("minutesAgo", minutesAgo);
                     builder.add("entry", attributes, true);
                 }
@@ -658,79 +654,36 @@ public class RESTController extends MultiActionController {
             // Ignored.
         }
         attributes.add("title", mediaFile.getName());
+        attributes.add("album", mediaFile.getAlbumName());
+        attributes.add("artist", mediaFile.getArtist());
         attributes.add("isDir", mediaFile.isDirectory());
-
-        Integer coverArtId = findCoverArt(mediaFile, parent);
-        if (coverArtId != null) {
-            attributes.add("coverArt", coverArtId);
-        }
+        attributes.add("coverArt", findCoverArt(mediaFile, parent));
+        attributes.add("created", StringUtil.toISO8601(mediaFile.getCreated()));
 
         String username = player.getUsername();
         if (username != null) {
-            Integer rating = ratingService.getRatingForUser(username, mediaFile);
-            if (rating != null) {
-                attributes.add("userRating", rating);
-            }
-            Double avgRating = ratingService.getAverageRating(mediaFile);
-            if (avgRating != null) {
-                attributes.add("averageRating", avgRating);
-            }
+            attributes.add("userRating", ratingService.getRatingForUser(username, mediaFile));
+            attributes.add("averageRating", ratingService.getAverageRating(mediaFile));
         }
 
         if (mediaFile.isFile()) {
-            attributes.add("album", mediaFile.getAlbumName());
-            attributes.add("artist", mediaFile.getArtist());
-            Integer duration = mediaFile.getDurationSeconds();
-            if (duration != null) {
-                attributes.add("duration", duration);
-            }
-            Integer bitRate = mediaFile.getBitRate();
-            if (bitRate != null) {
-                attributes.add("bitRate", bitRate);
-            }
-
-            Integer track = mediaFile.getTrackNumber();
-            if (track != null) {
-                attributes.add("track", track);
-            }
-
-            Integer year = mediaFile.getYear();
-            if (year != null) {
-                attributes.add("year", year);
-            }
-
-            String genre = mediaFile.getGenre();
-            if (genre != null) {
-                attributes.add("genre", genre);
-            }
-
+            attributes.add("duration", mediaFile.getDurationSeconds());
+            attributes.add("bitRate", mediaFile.getBitRate());
+            attributes.add("track", mediaFile.getTrackNumber());
+            attributes.add("year", mediaFile.getYear());
+            attributes.add("genre", mediaFile.getGenre());
             attributes.add("size", mediaFile.getFileSize());
             String suffix = mediaFile.getFormat();
             attributes.add("suffix", suffix);
             attributes.add("contentType", StringUtil.getMimeType(suffix));
             attributes.add("isVideo", mediaFile.isVideo());
+            attributes.add("path", getRelativePath(mediaFile));
 
             if (transcodingService.isTranscodingRequired(mediaFile, player)) {
                 String transcodedSuffix = transcodingService.getSuffix(player, mediaFile, null);
                 attributes.add("transcodedSuffix", transcodedSuffix);
                 attributes.add("transcodedContentType", StringUtil.getMimeType(transcodedSuffix));
             }
-
-            String path = getRelativePath(mediaFile);
-            if (path != null) {
-                attributes.add("path", path);
-            }
-
-        } else {
-            Date created = mediaFile.getCreated();
-            if (created != null) {
-                attributes.add("created", StringUtil.toISO8601(created));
-            }
-            String artist = resolveArtist(mediaFile);
-            if (artist != null) {
-                attributes.add("artist", artist);
-            }
-
         }
         return attributes;
     }
@@ -741,18 +694,6 @@ public class RESTController extends MultiActionController {
             return dir.getId();
         }
         return null;
-    }
-
-    private String resolveArtist(MediaFile file) {
-
-        // If directory, find artist from metadata in child.
-        if (file.isDirectory()) {
-            file = mediaFileService.getFirstChildOf(file);
-            if (file == null) {
-                return null;
-            }
-        }
-        return file.getArtist();
     }
 
     private String getRelativePath(MediaFile musicFile) {
@@ -851,15 +792,9 @@ public class RESTController extends MultiActionController {
             channelAttrs.add("id", channel.getId());
             channelAttrs.add("url", channel.getUrl());
             channelAttrs.add("status", channel.getStatus().toString().toLowerCase());
-            if (channel.getTitle() != null) {
-                channelAttrs.add("title", channel.getTitle());
-            }
-            if (channel.getDescription() != null) {
-                channelAttrs.add("description", channel.getDescription());
-            }
-            if (channel.getErrorMessage() != null) {
-                channelAttrs.add("errorMessage", channel.getErrorMessage());
-            }
+            channelAttrs.add("title", channel.getTitle());
+            channelAttrs.add("description", channel.getDescription());
+            channelAttrs.add("errorMessage", channel.getErrorMessage());
             builder.add("channel", channelAttrs, false);
 
             List<PodcastEpisode> episodes = podcastService.getEpisodes(channel.getId(), false);
@@ -875,16 +810,9 @@ public class RESTController extends MultiActionController {
 
                 episodeAttrs.add("id", episode.getId());  // Overwrites the previous "id" attribute.
                 episodeAttrs.add("status", episode.getStatus().toString().toLowerCase());
-
-                if (episode.getTitle() != null) {
-                    episodeAttrs.add("title", episode.getTitle());
-                }
-                if (episode.getDescription() != null) {
-                    episodeAttrs.add("description", episode.getDescription());
-                }
-                if (episode.getPublishDate() != null) {
-                    episodeAttrs.add("publishDate", episode.getPublishDate());
-                }
+                episodeAttrs.add("title", episode.getTitle());
+                episodeAttrs.add("description", episode.getDescription());
+                episodeAttrs.add("publishDate", episode.getPublishDate());
 
                 builder.add("episode", episodeAttrs, true);
             }
@@ -1265,12 +1193,8 @@ public class RESTController extends MultiActionController {
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
         AttributeSet attributes = new AttributeSet();
-        if (lyrics.getArtist() != null) {
-            attributes.add("artist", lyrics.getArtist());
-        }
-        if (lyrics.getTitle() != null) {
-            attributes.add("title", lyrics.getTitle());
-        }
+        attributes.add("artist", lyrics.getArtist());
+        attributes.add("title", lyrics.getTitle());
         builder.add("lyrics", attributes, lyrics.getLyrics(), true);
 
         builder.endAll();

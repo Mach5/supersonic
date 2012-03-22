@@ -216,18 +216,6 @@ public class MediaFileService {
     }
 
     /**
-     * Returns the first direct child (excluding directories).
-     * This is a convenience method.
-     *
-     * @return The first child, or <code>null</code> if not found.
-     */
-    @Deprecated
-    public MediaFile getFirstChildOf(MediaFile parent) {
-        List<MediaFile> children = getChildrenOf(parent, true, false, true);
-        return children.isEmpty() ? null : children.get(0);
-    }
-
-    /**
      * Returns whether the given file is the root of a media folder.
      *
      * @see MusicFolder
