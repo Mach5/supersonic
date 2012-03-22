@@ -424,8 +424,9 @@ public class MediaFileService {
                     // Guess artist/album name.
                     MetaDataParser parser = metaDataParserFactory.getParser(firstChild);
                     if (parser != null) {
-                        mediaFile.setArtist(parser.guessArtist(firstChild));
-                        mediaFile.setAlbumName(parser.guessAlbum(firstChild, mediaFile.getArtist()));
+                        MetaData metaData = parser.getMetaData(firstChild);
+                        mediaFile.setArtist(metaData.getArtist());
+                        mediaFile.setAlbumName(metaData.getAlbumName());
                     }
 
                     // Look for cover art.

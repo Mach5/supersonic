@@ -21,12 +21,15 @@ MetaDataParer.guessArtist etc: Don't return empty strings.
 Added "created" to Child in REST xsd
 Update playCount, lastPlayed in Album table.
 
+
 TODO IN 4.7
 -----------------
 Inconsistent resolution of artist/album.
   Remove MediaFileInfo.getFirstChild.
   Check all ALBUMs in media_file
+  Some albums have no artist.
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
+Add coverart to existing getIndexes method?
 Create REST methods getArtists, getArtist, getSong etc.
 Analyze existing REST methods, e.g., getAlbumList, search
 New playlist implementation.
@@ -65,7 +68,6 @@ Use media file IDs in web interface etc.
 Make it work with 64-bit Java 7.  Problem with exe4j?
 Better error message if media file not found.
 Document MediaFileService.
-Support per-artist cover art.
 Check file I/O.
 Optimize MediaFile getters.
 -
