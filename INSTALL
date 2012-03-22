@@ -1,0 +1,79 @@
+To build and install from source there are different steps depending on what platform your're on and how you want the resulting binary packaged.
+
+
+Linux
+=====
+
+First install the packages needed to build supersonic. It depends on Java 6 and the Maven build environment:
+
+
+Debian/Ubuntu/Mint
+sudo apt-get install maven2 openjdk-6-jdk
+
+RedHat/Fedora
+su -c "yum install java-1.6.0-openjdk-devel maven2"
+
+OpenSUSE
+sudo zypper install java-1_6_0-openjdk-devel-1.6.0 maven2
+
+ArchLinux
+sudo pacman -Sy  openjdk6
+You will then have to get maven from AUR: https://aur.archlinux.org/packages.php?ID=44684
+
+
+After this change directory into the folder which holds the subsonic sourcecode and run maven to install a binary package for your distribution:
+
+cd <supersonic source folder>
+mvn clean -P full; mvn install -P full
+
+
+Then install the now built binary package for your distribution:
+
+Debian/Ubuntu/Mint
+sudo dpkg -i subsonic-installer-debian/target/supersonic-<version number>.deb
+
+Fedora/RedHat
+su -c "rpm -i subsonic-installer-rpm/supersonic-<version number>.rpm"
+
+OpenSUSE
+sudo zypper install subsonic-installer-rpm/supersonic-<version number>.rpm
+
+Archlinux
+We currently do not know what mvn builds results in on Archlinux, please correct this file if you do and submit the changes to supersonic on github.
+
+
+Starting Supersonic:
+Once supersonic is installed it could be automaticly started or not depending on your specific distro, but we will make sure it starts either way:
+
+Debian/Ubuntu/Mint/OpenSUSE
+sudo /etc/init.d/supersonic restart
+
+Fedora/RedHat
+su -c "service supersonic restart"
+
+Archlinux
+sudo /etc/rc.d/supersonic restart
+
+
+Windows
+=======
+
+Download and install Java JDK from Oracle: http://www.oracle.com/technetwork/java/javase/downloads/index.html
+
+Download and install Apache Maven: http://maven.apache.org/
+Installation instructions: http://maven.apache.org/download.html#Installation_Instructions
+
+
+Build the sourcecode with maven, this assumes that you have fallowed the installation instructions provided above for maven:
+
+Open the start menu and enter: 
+cmd
+
+When the command prompt appears switch to the folder in which you downloaded the supersonic sourcecode:
+cd <folder containing subsonic>
+
+Then build supersonic with:
+mvn install
+
+
+Here needs to fallow instructions on what to do with which compiled file in order to start up the newly compiled application. Please fill this in if you know how to proceed.
