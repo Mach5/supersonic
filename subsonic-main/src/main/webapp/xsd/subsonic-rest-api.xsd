@@ -15,6 +15,7 @@
             <xs:element name="directory" type="sub:Directory" minOccurs="1" maxOccurs="1"/>
             <xs:element name="artists" type="sub:ArtistsID3" minOccurs="1" maxOccurs="1"/>
             <xs:element name="artist" type="sub:ArtistWithAlbumsID3" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="album" type="sub:AlbumWithSongsID3" minOccurs="1" maxOccurs="1"/>
             <xs:element name="nowPlaying" type="sub:NowPlaying" minOccurs="1" maxOccurs="1"/>
             <xs:element name="searchResult" type="sub:SearchResult" minOccurs="1" maxOccurs="1"/>
             <xs:element name="searchResult2" type="sub:SearchResult2" minOccurs="1" maxOccurs="1"/>
@@ -104,7 +105,6 @@
         </xs:complexContent>
     </xs:complexType>
 
-    <!--// TODO-->
     <xs:complexType name="AlbumID3">
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="name" type="xs:string" use="required"/>
@@ -113,6 +113,17 @@
         <xs:attribute name="created" type="xs:dateTime" use="required"/>
         <xs:attribute name="duration" type="xs:int" use="required"/>
     </xs:complexType>
+
+    <xs:complexType name="AlbumWithSongsID3">
+        <xs:complexContent>
+            <xs:extension base="sub:AlbumID3">
+                <xs:sequence>
+                    <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
 
     <xs:complexType name="Directory">
         <xs:sequence>

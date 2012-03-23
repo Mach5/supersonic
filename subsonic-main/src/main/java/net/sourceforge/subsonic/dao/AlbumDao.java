@@ -53,6 +53,14 @@ public class AlbumDao extends AbstractDao {
         return queryOne("select " + COLUMNS + " from album where artist=? and name=?", rowMapper, artistName, albumName);
     }
 
+    public Album getAlbum(int id) {
+        return queryOne("select " + COLUMNS + " from album where id=?", rowMapper, id);
+    }
+
+    public List<Album> getAlbumsForArtist(String artist) {
+        return query("select " + COLUMNS + " from album where artist=? and present order by name", rowMapper, artist);
+    }
+
     /**
      * Creates or updates an album.
      *
@@ -104,10 +112,6 @@ public class AlbumDao extends AbstractDao {
         for (int id = minId; id <= maxId; id += batchSize) {
             update("update album set present=false where id between ? and ? and last_scanned != ?", id, id + batchSize, lastScanned);
         }
-    }
-
-    public List<Album> getAlbumsForArtist(String artist) {
-        return query("select " + COLUMNS + " from album where artist=? and present order by name", rowMapper, artist);
     }
 
     private static class AlbumMapper implements ParameterizedRowMapper<Album> {

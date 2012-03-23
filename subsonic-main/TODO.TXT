@@ -41,14 +41,21 @@ New playlist implementation.
   - Keep existing playlist role, but make it enabled by default.
   - REST support
 
-Add some prefix to cover art ID.
-Document new REST methods.
+REST
+  - wrong songcount for album (should not include subdirs)
+  - add mediaType, albumId, artistId
+  - add artist name/id to album?
+  - create song
+  - Support prefixed cover art ID.
+  - Document in api.jsp
+  - Add example links to demo server.
+  - Add getSong?
+
+Handle albums without artist. Don't create them?
 Bug: Playlist frame > Combo box > Selected songs > * are broken.
 test that getRandomSongs doesn't return audiobooks and podcast.
-Add mediaType to REST also.
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
 Add coverart to existing getIndexes method?
-Create REST methods getArtists, getArtist, getSong etc.
 Analyze existing REST methods, e.g., getAlbumList, search
 Support comment and ratings for Album table.
 Don't include videos in album lists and random song selection.

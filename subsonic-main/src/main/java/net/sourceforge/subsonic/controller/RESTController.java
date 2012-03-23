@@ -47,6 +47,7 @@ import net.sourceforge.subsonic.ajax.LyricsService;
 import net.sourceforge.subsonic.command.UserSettingsCommand;
 import net.sourceforge.subsonic.dao.AlbumDao;
 import net.sourceforge.subsonic.dao.ArtistDao;
+import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.Artist;
 import net.sourceforge.subsonic.domain.MediaFile;
@@ -119,6 +120,7 @@ public class RESTController extends MultiActionController {
     private PodcastService podcastService;
     private RatingService ratingService;
     private SearchService searchService;
+    private MediaFileDao mediaFileDao;
     private ArtistDao artistDao;
     private AlbumDao albumDao;
             
@@ -234,18 +236,23 @@ public class RESTController extends MultiActionController {
 
         List<Artist> artists = artistDao.getAlphabetialArtists(0, Integer.MAX_VALUE);
         for (Artist artist : artists) {
-            AttributeSet attributes = new AttributeSet();
-            attributes.add("id", artist.getId());
-            attributes.add("name", artist.getName());
-            if (artist.getCoverArtPath() != null) {
-                attributes.add("coverArt", "ar-" + artist.getId());
-            }
-            attributes.add("albumCount", artist.getAlbumCount());
+            AttributeSet attributes = createAttributesForArtist(artist);
             builder.add("artist", attributes, true);
         }
 
         builder.endAll();
         response.getWriter().print(builder);
+    }
+
+    private AttributeSet createAttributesForArtist(Artist artist) {
+        AttributeSet attributes = new AttributeSet();
+        attributes.add("id", artist.getId());
+        attributes.add("name", artist.getName());
+        if (artist.getCoverArtPath() != null) {
+            attributes.add("coverArt", "ar-" + artist.getId());
+        }
+        attributes.add("albumCount", artist.getAlbumCount());
+        return attributes;
     }
 
     public void getArtist(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -256,34 +263,59 @@ public class RESTController extends MultiActionController {
         try {
             int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
             artist = artistDao.getArtist(id);
+            if (artist == null) {
+                throw new Exception();
+            }
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
             error(request, response, ErrorCode.NOT_FOUND, "Artist not found.");
             return;
         }
 
-        List<Album> albums = albumDao.getAlbumsForArtist(artist.getName());
-
-        AttributeSet attributes = new AttributeSet();
-        attributes.add("id", artist.getId());
-        attributes.add("name", artist.getName());
-        if (artist.getCoverArtPath() != null) {
-            attributes.add("coverArt", "ar-" + artist.getId());
+        builder.add("artist", createAttributesForArtist(artist), false);
+        for (Album album : albumDao.getAlbumsForArtist(artist.getName())) {
+            builder.add("album", createAttributesForAlbum(album), true);
         }
-        attributes.add("albumCount", albums.size());
-        builder.add("artist", attributes, false);
 
-        for (Album album : albums) {
-            attributes = new AttributeSet();
-            attributes.add("id", album.getId());
-            attributes.add("name", album.getName());
-            if (album.getCoverArtPath() != null) {
-                attributes.add("coverArt", "al-" + album.getId());
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+
+    private AttributeSet createAttributesForAlbum(Album album) {
+        AttributeSet attributes;
+        attributes = new AttributeSet();
+        attributes.add("id", album.getId());
+        attributes.add("name", album.getName());
+        if (album.getCoverArtPath() != null) {
+            attributes.add("coverArt", "al-" + album.getId());
+        }
+        attributes.add("songCount", album.getSongCount());
+        attributes.add("created", StringUtil.toISO8601(album.getCreated()));
+        attributes.add("duration", album.getDurationSeconds());
+        return attributes;
+    }
+
+    public void getAlbum(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        Player player = playerService.getPlayer(request, response);
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        Album album;
+        try {
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            album = albumDao.getAlbum(id);
+            if (album == null) {
+                throw new Exception();
             }
-            attributes.add("songCount", album.getSongCount());
-            attributes.add("created", StringUtil.toISO8601(album.getCreated()));
-            attributes.add("duration", album.getDurationSeconds());
-            builder.add("album", attributes, true);
+        } catch (Exception x) {
+            LOG.warn("Error in REST API.", x);
+            error(request, response, ErrorCode.NOT_FOUND, "Album not found.");
+            return;
+        }
+
+        builder.add("album", createAttributesForAlbum(album), false);
+        for (MediaFile mediaFile : mediaFileDao.getSongsForAlbum(album.getArtist(), album.getName())) {
+            builder.add("song", createAttributesForMediaFile(player, mediaFile) , true);
         }
 
         builder.endAll();
@@ -1496,6 +1528,10 @@ public class RESTController extends MultiActionController {
 
     public void setAlbumDao(AlbumDao albumDao) {
         this.albumDao = albumDao;
+    }
+
+    public void setMediaFileDao(MediaFileDao mediaFileDao) {
+        this.mediaFileDao = mediaFileDao;
     }
 
     public static enum ErrorCode {

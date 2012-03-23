@@ -79,6 +79,10 @@ public class MediaFileDao extends AbstractDao {
         return query("select " + COLUMNS + " from media_file where parent_path=? and present", rowMapper, path);
     }
 
+    public List<MediaFile> getSongsForAlbum(String artist, String album) {
+        return query("select " + COLUMNS + " from media_file where artist=? and album=? and present order by track_number", rowMapper, artist, album);
+    }
+
     /**
      * Creates or updates a media file.
      *
