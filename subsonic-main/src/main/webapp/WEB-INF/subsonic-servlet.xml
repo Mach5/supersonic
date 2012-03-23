@@ -342,6 +342,8 @@
         <property name="lyricsService" ref="ajaxLyricsService"/>
         <property name="podcastService" ref="podcastService"/>
         <property name="shareService" ref="shareService"/>
+        <property name="artistDao" ref="artistDao"/>
+        <property name="albumDao" ref="albumDao"/>
         <property name="downloadController" ref="downloadController"/>
         <property name="streamController" ref="streamController"/>
         <property name="coverArtController" ref="coverArtController"/>

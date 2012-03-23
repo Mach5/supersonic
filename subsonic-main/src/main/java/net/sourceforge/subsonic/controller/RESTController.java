@@ -45,6 +45,9 @@ import net.sourceforge.subsonic.ajax.ChatService;
 import net.sourceforge.subsonic.ajax.LyricsInfo;
 import net.sourceforge.subsonic.ajax.LyricsService;
 import net.sourceforge.subsonic.command.UserSettingsCommand;
+import net.sourceforge.subsonic.dao.AlbumDao;
+import net.sourceforge.subsonic.dao.ArtistDao;
+import net.sourceforge.subsonic.domain.Artist;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
@@ -115,6 +118,9 @@ public class RESTController extends MultiActionController {
     private PodcastService podcastService;
     private RatingService ratingService;
     private SearchService searchService;
+    private ArtistDao artistDao;
+    private AlbumDao albumDao;
+            
 
     public void ping(HttpServletRequest request, HttpServletResponse response) throws Exception {
         XMLBuilder builder = createXMLBuilder(request, response, true).endAll();
@@ -213,6 +219,28 @@ public class RESTController extends MultiActionController {
         List<MediaFile> singleSongs = leftController.getSingleSongs(musicFolders);
         for (MediaFile singleSong : singleSongs) {
             builder.add("child", createAttributesForMediaFile(player, singleSong), true);
+        }
+
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+
+    public void getArtists(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        builder.add("artists", false);
+
+        List<Artist> artists = artistDao.getAlphabetialArtists(0, Integer.MAX_VALUE);
+        for (Artist artist : artists) {
+            AttributeSet attributes = new AttributeSet();
+            attributes.add("id", artist.getId());
+            attributes.add("name", artist.getName());
+            if (artist.getCoverArtPath() != null) {
+                attributes.add("coverArt", "ar-" + artist.getId());
+            }
+            attributes.add("albumCount", artist.getAlbumCount());
+            builder.add("artist", attributes, true);
         }
 
         builder.endAll();
@@ -1417,6 +1445,14 @@ public class RESTController extends MultiActionController {
 
     public void setAvatarController(AvatarController avatarController) {
         this.avatarController = avatarController;
+    }
+
+    public void setArtistDao(ArtistDao artistDao) {
+        this.artistDao = artistDao;
+    }
+
+    public void setAlbumDao(AlbumDao albumDao) {
+        this.albumDao = albumDao;
     }
 
     public static enum ErrorCode {
