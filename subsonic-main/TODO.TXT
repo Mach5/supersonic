@@ -43,22 +43,20 @@ New playlist implementation.
 
 REST
   - wrong songcount for album (should not include subdirs)
-  - add mediaType, albumId, artistId
+  - add mediaType, albumId, artistId. Deprecate isVideo, isDir.
   - add artist name/id to album?
-  - create song
+  - add getSong method
   - Support prefixed cover art ID.
   - Document in api.jsp
   - Add example links to demo server.
-  - Add getSong?
+  - Analyze existing REST methods, e.g., getAlbumList, search
+  - Add coverart to existing getIndexes method?
 
 Handle albums without artist. Don't create them?
 Bug: Playlist frame > Combo box > Selected songs > * are broken.
 test that getRandomSongs doesn't return audiobooks and podcast.
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
-Add coverart to existing getIndexes method?
-Analyze existing REST methods, e.g., getAlbumList, search
 Support comment and ratings for Album table.
-Don't include videos in album lists and random song selection.
 JSON exception with ampersand.
 minisub doesn't play.
 wget "http://localhost:8080/rest/getMusicDirectory.view?u=admin&p=admin&v=1.6&c=android&id=2f55736572732f73696e6472652f4d757369632f4c756e67732043442031000000" -O -

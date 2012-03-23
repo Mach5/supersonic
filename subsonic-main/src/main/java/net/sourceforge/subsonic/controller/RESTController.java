@@ -322,6 +322,30 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
 
+    public void getSong(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        Player player = playerService.getPlayer(request, response);
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        MediaFile song;
+        try {
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            song = mediaFileDao.getMediaFile(id);
+            if (song == null || song.isDirectory()) {
+                throw new Exception();
+            }
+        } catch (Exception x) {
+            LOG.warn("Error in REST API.", x);
+            error(request, response, ErrorCode.NOT_FOUND, "Song not found.");
+            return;
+        }
+
+        builder.add("song", createAttributesForMediaFile(player, song), true);
+
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+
     public void getMusicDirectory(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
