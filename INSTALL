@@ -5,7 +5,7 @@ platform you are on and how you want the resulting binary packaged.
 Linux
 =====
 
-First install the packages needed to build Supersonic. It depends on Java 6 and
+First install the packages needed to build Supersonic. It depends on Java and
 the Maven build environment:
 
 
