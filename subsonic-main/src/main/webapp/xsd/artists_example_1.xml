@@ -3,7 +3,6 @@
 <subsonic-response xmlns="http://subsonic.org/restapi"
                    status="ok" version="1.8.0">
     <artists>
-        <artist id="3640" name="A" coverArt="ar-3640" albumCount="1"/>
         <artist id="3642" name="A-Ha" coverArt="ar-3642" albumCount="4"/>
         <artist id="3614" name="ABBA" coverArt="ar-3614" albumCount="6"/>
         <artist id="3625" name="AC/DC" coverArt="ar-3625" albumCount="15"/>

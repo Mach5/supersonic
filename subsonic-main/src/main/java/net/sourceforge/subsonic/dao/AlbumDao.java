@@ -106,6 +106,10 @@ public class AlbumDao extends AbstractDao {
         }
     }
 
+    public List<Album> getAlbumsForArtist(String artist) {
+        return query("select " + COLUMNS + " from album where artist=? and present order by name", rowMapper, artist);
+    }
+
     private static class AlbumMapper implements ParameterizedRowMapper<Album> {
         public Album mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Album(

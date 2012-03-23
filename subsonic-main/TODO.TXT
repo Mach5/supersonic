@@ -26,6 +26,8 @@ Create MediaType music, audiobook and podcast.
 
 TODO IN 4.7
 -----------------
+Avoid long db startup. Reduce hsql log size?
+Blacklist abusers of my email.
 New playlist implementation.
   - Create database schema
   - Cascading delete when user is deleted.
@@ -40,6 +42,7 @@ New playlist implementation.
   - REST support
 
 Add some prefix to cover art ID.
+Document new REST methods.
 Bug: Playlist frame > Combo box > Selected songs > * are broken.
 test that getRandomSongs doesn't return audiobooks and podcast.
 Add mediaType to REST also.

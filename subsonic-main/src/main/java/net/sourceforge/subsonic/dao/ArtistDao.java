@@ -51,6 +51,16 @@ public class ArtistDao extends AbstractDao {
     }
 
     /**
+     * Returns the artist with the given ID.
+     *
+     * @param id The artist ID.
+     * @return The artist or null.
+     */
+    public Artist getArtist(int id) {
+        return queryOne("select " + COLUMNS + " from artist where id=?", rowMapper, id);
+    }
+
+    /**
      * Creates or updates an artist.
      *
      * @param artist The artist to create/update.

@@ -47,6 +47,7 @@ import net.sourceforge.subsonic.ajax.LyricsService;
 import net.sourceforge.subsonic.command.UserSettingsCommand;
 import net.sourceforge.subsonic.dao.AlbumDao;
 import net.sourceforge.subsonic.dao.ArtistDao;
+import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.Artist;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
@@ -241,6 +242,48 @@ public class RESTController extends MultiActionController {
             }
             attributes.add("albumCount", artist.getAlbumCount());
             builder.add("artist", attributes, true);
+        }
+
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+
+    public void getArtist(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        Artist artist;
+        try {
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            artist = artistDao.getArtist(id);
+        } catch (Exception x) {
+            LOG.warn("Error in REST API.", x);
+            error(request, response, ErrorCode.NOT_FOUND, "Artist not found.");
+            return;
+        }
+
+        List<Album> albums = albumDao.getAlbumsForArtist(artist.getName());
+
+        AttributeSet attributes = new AttributeSet();
+        attributes.add("id", artist.getId());
+        attributes.add("name", artist.getName());
+        if (artist.getCoverArtPath() != null) {
+            attributes.add("coverArt", "ar-" + artist.getId());
+        }
+        attributes.add("albumCount", albums.size());
+        builder.add("artist", attributes, false);
+
+        for (Album album : albums) {
+            attributes = new AttributeSet();
+            attributes.add("id", album.getId());
+            attributes.add("name", album.getName());
+            if (album.getCoverArtPath() != null) {
+                attributes.add("coverArt", "al-" + album.getId());
+            }
+            attributes.add("songCount", album.getSongCount());
+            attributes.add("created", StringUtil.toISO8601(album.getCreated()));
+            attributes.add("duration", album.getDurationSeconds());
+            builder.add("album", attributes, true);
         }
 
         builder.endAll();
