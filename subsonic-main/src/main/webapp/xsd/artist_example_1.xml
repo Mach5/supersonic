@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<subsonic-response xmlns="http://subsonic.org/restapi"
+                   status="ok" version="1.8.0">
+
+    <artist id="3625" name="AC/DC" coverArt="ar-3625" albumCount="15">
+        <album id="7555" name="Back In Black" coverArt="al-7555" songCount="10" created="2004-11-08T23:33:11" duration="2534"/>
+        <album id="7556" name="Black Ice" coverArt="al-7556" songCount="15" created="2008-10-30T09:20:52" duration="3332"/>
+        <album id="7557" name="Blow up your Video" coverArt="al-7557" songCount="10" created="2004-11-27T19:22:45" duration="2578"/>
+        <album id="7558" name="Flick Of The Switch" coverArt="al-7558" songCount="10" created="2004-11-27T19:22:51" duration="2222"/>
+        <album id="7559" name="Fly On The Wall" coverArt="al-7559" songCount="10" created="2004-11-27T19:22:57" duration="2405"/>
+        <album id="7560" name="For Those About To Rock" coverArt="al-7560" songCount="10" created="2004-11-08T23:35:02" duration="2403"/>
+        <album id="7561" name="High Voltage" coverArt="al-7561" songCount="8" created="2004-11-27T20:23:32" duration="2414"/>
+        <album id="6997" name="Highway To Hell" coverArt="al-6997" songCount="11" created="2009-06-15T09:41:54" duration="2542"/>
+        <album id="7562" name="If You Want Blood..." coverArt="al-7562" songCount="1" created="2004-11-27T20:23:32" duration="304"/>
+        <album id="7564" name="Let There Be Rock" coverArt="al-7564" songCount="8" created="2004-11-27T20:33:40" duration="2449"/>
+        <album id="7565" name="Live - Special Collector&apos;s Edition" coverArt="al-7565" songCount="22" created="2004-11-08T23:37:09" duration="6999"/>
+        <album id="7566" name="Powerage" coverArt="al-7566" songCount="9" created="2004-11-27T20:33:41" duration="2380"/>
+        <album id="7567" name="Stiff Upper Lip" coverArt="al-7567" songCount="11" created="2004-11-08T23:41:13" duration="2595"/>
+        <album id="7568" name="The Razors Edge" coverArt="al-7568" songCount="12" created="2004-11-27T20:33:42" duration="2787"/>
+        <album id="7569" name="Who Made Who" coverArt="al-7569" songCount="9" created="2004-11-08T23:43:18" duration="2291"/>
+    </artist>
+
+</subsonic-response>

@@ -12,44 +12,82 @@ Never remove rows from media_file, set present=false instead.
   Don't need media_file_archive longer.  Copy from music_file_info when creating new rows.
   Add lastScanned timestamp, use this to set stuff to not present after scanning.
   Use "present" in album list and other queries. MAKE SURE THESE WORK FIRST!
+Support old-style IDs in REST API.
+Always use fast access mode in LeftController.
+  Refactor accessMode in MediaFileService.
+Create new album list type: alphabetic.
+Top Rated is broken.
+MetaDataParer.guessArtist etc: Don't return empty strings.
+Added "created" to Child in REST xsd
+Update playCount, lastPlayed in Album table.
+Remove MediaFileService.getFirstChild.
+Create MediaType music, audiobook and podcast.
+
 
 TODO IN 4.7
 -----------------
+Avoid long db startup. Reduce hsql log size?
+Blacklist abusers of my email.
+New playlist implementation.
+  - Create database schema
+  - Cascading delete when user is deleted.
+  - Update "present" when scanning media library?
+  - Initally import existing playlists if table is empty.
+  - Change appendPlaylist and loadPlaylist page, show meta data (owner, public/private, #songs, duration, created date, comment).
+  - Create new Playlists button in top frame.
+  - managePlaylist -> Play, Download, Export (m3u), Delete, Private/Shared, Change owner
+  - Shared/private
+  - Admin can change owner.
+  - Keep existing playlist role, but make it enabled by default.
+  - REST support
+
+REST
+  - wrong songcount for album (should not include subdirs)
+  - add mediaType, albumId, artistId. Deprecate isVideo, isDir.
+  - add artist name/id to album?
+  - add getSong method
+  - Support prefixed cover art ID.
+  - Document in api.jsp
+  - Add example links to demo server.
+  - Analyze existing REST methods, e.g., getAlbumList, search
+  - Add coverart to existing getIndexes method?
+
+Handle albums without artist. Don't create them?
+Bug: Playlist frame > Combo box > Selected songs > * are broken.
+test that getRandomSongs doesn't return audiobooks and podcast.
+How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
+Support comment and ratings for Album table.
+JSON exception with ampersand.
+minisub doesn't play.
+wget "http://localhost:8080/rest/getMusicDirectory.view?u=admin&p=admin&v=1.6&c=android&id=2f55736572732f73696e6472652f4d757369632f4c756e67732043442031000000" -O -
+wget "http://localhost:8080/rest/getArtists.view?u=admin&p=admin&v=1.6&c=android" -O -
+Test getPlaylist vs old-style IDs.
+Test that Fast access mode works.
+Move statistcs to About page?
+Include minisub
+    http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
+
 Fix broken REST scrobbling, as reported by Ben.
 Don't throw NPE if requesting non-existent ID in REST.
 Optionally, create "Clean database" setting
 Test: Install 4.6, then upgrade and check that music_file_info is preserved.
 Save statistics in file. Update only when scanning?
-Always use fast access mode in LeftController.
-  Refactor accessMode in MediaFileService.
 Never use fast access mode in podcast folder.
-Think about how to create REST methods for getting albums and artists etc.
 Using CPU when idling, but only if low on memory?
-
-Support old-style IDs in REST API.
 Improve document of REST "download" method.
 Automatically start scanning if media folders change.
 Use media file IDs in web interface etc.
 Make it work with 64-bit Java 7.  Problem with exe4j?
-Test with a big collection on a network disk.
-Change random implementation.
 Better error message if media file not found.
 Document MediaFileService.
-Support per-artist cover art.
 Check file I/O.
 Optimize MediaFile getters.
-Measure time for media scanning, clean and incremental.
-Test performance of MusicFileDao.
-Test searching while createing lucene index
-Revisit MetaDataParser.isRoot()
 -
 Maintain track order for offline files in Android. Prepend track number for sortability?
 REST: Ensure that podcast dir is included.
 Star support
 
 Support ISO files.
-minisub
-  http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
   http://forum.subsonic.org/forum/viewtopic.php?f=3&t=3270&p=34114#p34114
@@ -127,6 +165,9 @@ Improve caching of artist list.
 
 TODO IN ANDROID 3.4
 --------------------
+Music controls in notification.
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/136242ab25baddad
+Support Bluetooth play/pause buttons in ICS.
 Holo theme
   http://android-developers.blogspot.com/2012/01/holo-everywhere.html
 Update artist list in background.
@@ -134,6 +175,7 @@ ICS theme
   http://developer.android.com/design/index.html
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=8497
   https://mail.google.com/mail/?tab=cm#inbox/1344527f4abc11af
+  http://android-developers.blogspot.com/2012/01/say-goodbye-to-menu-button.html
 https://mail.google.com/mail/?tab=cm#inbox/135bb6c0d53edd42
 Browser / web page widget for Android
 

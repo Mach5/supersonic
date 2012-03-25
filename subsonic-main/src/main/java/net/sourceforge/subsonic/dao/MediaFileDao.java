@@ -56,7 +56,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The media file or null.
      */
     public MediaFile getMediaFile(String path) {
-        return queryOne("select " + COLUMNS + " from media_file where path=? and present", rowMapper, path);
+        return queryOne("select " + COLUMNS + " from media_file where path=?", rowMapper, path);
     }
 
     /**
@@ -66,7 +66,7 @@ public class MediaFileDao extends AbstractDao {
      * @return The media file or null.
      */
     public MediaFile getMediaFile(int id) {
-        return queryOne("select " + COLUMNS + " from media_file where id=? and present", rowMapper, id);
+        return queryOne("select " + COLUMNS + " from media_file where id=?", rowMapper, id);
     }
 
     /**
@@ -77,6 +77,10 @@ public class MediaFileDao extends AbstractDao {
      */
     public List<MediaFile> getChildrenOf(String path) {
         return query("select " + COLUMNS + " from media_file where parent_path=? and present", rowMapper, path);
+    }
+
+    public List<MediaFile> getSongsForAlbum(String artist, String album) {
+        return query("select " + COLUMNS + " from media_file where artist=? and album=? and present order by track_number", rowMapper, artist, album);
     }
 
     /**
@@ -148,6 +152,7 @@ public class MediaFileDao extends AbstractDao {
         return queryOne("select play_count, last_played, comment from music_file_info where path=?", musicFileInfoRowMapper, path);
     }
 
+    @Deprecated
     public List<String> getArtists() {
         return queryForStrings("select distinct artist from media_file where artist is not null and present order by artist");
     }
@@ -163,8 +168,8 @@ public class MediaFileDao extends AbstractDao {
     /**
      * Returns the most frequently played albums.
      *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
      * @return The most frequently played albums.
      */
     public List<MediaFile> getMostFrequentlyPlayedAlbums(int offset, int count) {
@@ -175,8 +180,8 @@ public class MediaFileDao extends AbstractDao {
     /**
      * Returns the most recently played albums.
      *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
      * @return The most recently played albums.
      */
     public List<MediaFile> getMostRecentlyPlayedAlbums(int offset, int count) {
@@ -187,13 +192,25 @@ public class MediaFileDao extends AbstractDao {
     /**
      * Returns the most recently added albums.
      *
-     * @param offset Number of files to skip.
-     * @param count  Maximum number of elements to return.
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
      * @return The most recently added albums.
      */
     public List<MediaFile> getNewestAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where type=? and present order by created desc limit ? offset ?", rowMapper,
-                ALBUM.name(), count, offset);
+        return query("select " + COLUMNS + " from media_file where type=? and present order by created desc limit ? offset ?",
+                rowMapper, ALBUM.name(), count, offset);
+    }
+
+    /**
+     * Returns albums in alphabetical order.
+     *
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
+     * @return Albums in alphabetical order.
+     */
+    public List<MediaFile> getAlphabetialAlbums(int offset, int count) {
+        return query("select " + COLUMNS + " from media_file where type=? and artist != '' and present order by artist, album limit ? offset ?",
+                rowMapper, ALBUM.name(), count, offset);
     }
 
     /**
@@ -202,9 +219,9 @@ public class MediaFileDao extends AbstractDao {
      * @return Media library statistics.
      */
     public MediaLibraryStatistics getStatistics() {
-        int artistCount = queryForInt("select count(distinct artist) from media_file where present", 0);
-        int albumCount = queryForInt("select count(distinct album) from media_file where present", 0);
-        int songCount = queryForInt("select count(id) from media_file where type in (?, ?) and present", 0, VIDEO.name(), AUDIO.name());
+        int artistCount = queryForInt("select count(1) from artist where present", 0);
+        int albumCount = queryForInt("select count(1) from album where present", 0);
+        int songCount = queryForInt("select count(1) from media_file where type in (?, ?, ?, ?) and present", 0, VIDEO.name(), MUSIC.name(), AUDIO_BOOK.name(), PODCAST.name());
         long totalLengthInBytes = queryForLong("select sum(file_size) from media_file where present", 0L);
         long totalDurationInSeconds = queryForLong("select sum(duration_seconds) from media_file where present", 0L);
 
@@ -221,7 +238,7 @@ public class MediaFileDao extends AbstractDao {
 
         final int batchSize = 1000;
         for (int id = minId; id <= maxId; id += batchSize) {
-            update("update media_file set present=false where id between ? and ? and last_scanned != ?", id, id + batchSize, lastScanned);
+            update("update media_file set present=false where last_scanned != ?", lastScanned);
         }
     }
 

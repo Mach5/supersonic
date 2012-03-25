@@ -139,9 +139,8 @@ public class MusicIndexService {
 
         for (MusicFolder folder : folders) {
 
-            // TODO: If media library is currently scanning, access DAO directly.
-            MediaFile root = mediaFileService.getMediaFile(folder.getPath());
-            List<MediaFile> children = mediaFileService.getChildrenOf(root, false, true, true);
+            MediaFile root = mediaFileService.getMediaFile(folder.getPath(), true);
+            List<MediaFile> children = mediaFileService.getChildrenOf(root, false, true, true, true);
             for (MediaFile child : children) {
                 if (shortcutSet.contains(child.getName())) {
                     continue;

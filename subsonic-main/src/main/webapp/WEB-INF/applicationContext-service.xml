@@ -11,7 +11,15 @@
     </bean>
 
     <bean id="mediaFileDao" class="net.sourceforge.subsonic.dao.MediaFileDao">
-    <property name="daoHelper" ref="daoHelper"/>
+        <property name="daoHelper" ref="daoHelper"/>
+    </bean>
+
+    <bean id="artistDao" class="net.sourceforge.subsonic.dao.ArtistDao">
+        <property name="daoHelper" ref="daoHelper"/>
+    </bean>
+
+    <bean id="albumDao" class="net.sourceforge.subsonic.dao.AlbumDao">
+        <property name="daoHelper" ref="daoHelper"/>
     </bean>
 
     <bean id="internetRadioDao" class="net.sourceforge.subsonic.dao.InternetRadioDao">
@@ -54,9 +62,9 @@
     <bean id="mediaFileService" class="net.sourceforge.subsonic.service.MediaFileService">
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
-        <property name="mediaScannerService" ref="mediaScannerService"/>
         <property name="mediaFileMemoryCache" ref="mediaFileMemoryCache"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
+        <property name="albumDao" ref="albumDao"/>
         <property name="metaDataParserFactory" ref="metaDataParserFactory"/>
     </bean>
 
@@ -78,6 +86,8 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
+        <property name="artistDao" ref="artistDao"/>
+        <property name="albumDao" ref="albumDao"/>
         <property name="searchService" ref="searchService"/>
     </bean>
 

@@ -47,14 +47,11 @@ public class ChangeCoverArtController extends ParameterizableViewController {
         String album = request.getParameter("album");
         MediaFile dir = mediaFileService.getMediaFile(path);
 
-        MediaFile child = mediaFileService.getFirstChildOf(dir);
-        if (child != null) {
-            if (artist == null) {
-                artist = child.getArtist();
-            }
-            if (album == null) {
-                album = child.getAlbumName();
-            }
+        if (artist == null) {
+            artist = dir.getArtist();
+        }
+        if (album == null) {
+            album = dir.getAlbumName();
         }
 
         Map<String, Object> map = new HashMap<String, Object>();

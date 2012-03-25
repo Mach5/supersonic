@@ -45,6 +45,11 @@ import net.sourceforge.subsonic.ajax.ChatService;
 import net.sourceforge.subsonic.ajax.LyricsInfo;
 import net.sourceforge.subsonic.ajax.LyricsService;
 import net.sourceforge.subsonic.command.UserSettingsCommand;
+import net.sourceforge.subsonic.dao.AlbumDao;
+import net.sourceforge.subsonic.dao.ArtistDao;
+import net.sourceforge.subsonic.dao.MediaFileDao;
+import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.domain.Artist;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
@@ -115,6 +120,10 @@ public class RESTController extends MultiActionController {
     private PodcastService podcastService;
     private RatingService ratingService;
     private SearchService searchService;
+    private MediaFileDao mediaFileDao;
+    private ArtistDao artistDao;
+    private AlbumDao albumDao;
+            
 
     public void ping(HttpServletRequest request, HttpServletResponse response) throws Exception {
         XMLBuilder builder = createXMLBuilder(request, response, true).endAll();
@@ -151,9 +160,7 @@ public class RESTController extends MultiActionController {
         for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
             AttributeSet attributes = new AttributeSet();
             attributes.add("id", musicFolder.getId());
-            if (musicFolder.getName() != null) {
-                attributes.add("name", musicFolder.getName());
-            }
+            attributes.add("name", musicFolder.getName());
             builder.add("musicFolder", attributes, true);
         }
         builder.endAll();
@@ -216,6 +223,124 @@ public class RESTController extends MultiActionController {
         for (MediaFile singleSong : singleSongs) {
             builder.add("child", createAttributesForMediaFile(player, singleSong), true);
         }
+
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+
+    public void getArtists(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        builder.add("artists", false);
+
+        List<Artist> artists = artistDao.getAlphabetialArtists(0, Integer.MAX_VALUE);
+        for (Artist artist : artists) {
+            AttributeSet attributes = createAttributesForArtist(artist);
+            builder.add("artist", attributes, true);
+        }
+
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+
+    private AttributeSet createAttributesForArtist(Artist artist) {
+        AttributeSet attributes = new AttributeSet();
+        attributes.add("id", artist.getId());
+        attributes.add("name", artist.getName());
+        if (artist.getCoverArtPath() != null) {
+            attributes.add("coverArt", "ar-" + artist.getId());
+        }
+        attributes.add("albumCount", artist.getAlbumCount());
+        return attributes;
+    }
+
+    public void getArtist(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        Artist artist;
+        try {
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            artist = artistDao.getArtist(id);
+            if (artist == null) {
+                throw new Exception();
+            }
+        } catch (Exception x) {
+            LOG.warn("Error in REST API.", x);
+            error(request, response, ErrorCode.NOT_FOUND, "Artist not found.");
+            return;
+        }
+
+        builder.add("artist", createAttributesForArtist(artist), false);
+        for (Album album : albumDao.getAlbumsForArtist(artist.getName())) {
+            builder.add("album", createAttributesForAlbum(album), true);
+        }
+
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+
+    private AttributeSet createAttributesForAlbum(Album album) {
+        AttributeSet attributes;
+        attributes = new AttributeSet();
+        attributes.add("id", album.getId());
+        attributes.add("name", album.getName());
+        if (album.getCoverArtPath() != null) {
+            attributes.add("coverArt", "al-" + album.getId());
+        }
+        attributes.add("songCount", album.getSongCount());
+        attributes.add("created", StringUtil.toISO8601(album.getCreated()));
+        attributes.add("duration", album.getDurationSeconds());
+        return attributes;
+    }
+
+    public void getAlbum(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        Player player = playerService.getPlayer(request, response);
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        Album album;
+        try {
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            album = albumDao.getAlbum(id);
+            if (album == null) {
+                throw new Exception();
+            }
+        } catch (Exception x) {
+            LOG.warn("Error in REST API.", x);
+            error(request, response, ErrorCode.NOT_FOUND, "Album not found.");
+            return;
+        }
+
+        builder.add("album", createAttributesForAlbum(album), false);
+        for (MediaFile mediaFile : mediaFileDao.getSongsForAlbum(album.getArtist(), album.getName())) {
+            builder.add("song", createAttributesForMediaFile(player, mediaFile) , true);
+        }
+
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+
+    public void getSong(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        Player player = playerService.getPlayer(request, response);
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        MediaFile song;
+        try {
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            song = mediaFileDao.getMediaFile(id);
+            if (song == null || song.isDirectory()) {
+                throw new Exception();
+            }
+        } catch (Exception x) {
+            LOG.warn("Error in REST API.", x);
+            error(request, response, ErrorCode.NOT_FOUND, "Song not found.");
+            return;
+        }
+
+        builder.add("song", createAttributesForMediaFile(player, song), true);
 
         builder.endAll();
         response.getWriter().print(builder);
@@ -546,7 +671,6 @@ public class RESTController extends MultiActionController {
             int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
 
             size = Math.max(0, Math.min(size, 500));
-            offset = Math.max(0, Math.min(offset, 5000));
 
             String type = ServletRequestUtils.getRequiredStringParameter(request, "type");
 
@@ -559,6 +683,8 @@ public class RESTController extends MultiActionController {
                 albums = homeController.getMostRecent(offset, size);
             } else if ("newest".equals(type)) {
                 albums = homeController.getNewest(offset, size);
+            } else if ("alphabetical".equals(type)) {
+                albums = homeController.getAlphabetical(offset, size);
             } else {
                 albums = homeController.getRandom(size);
             }
@@ -632,9 +758,7 @@ public class RESTController extends MultiActionController {
                     AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
                     attributes.add("username", username);
                     attributes.add("playerId", player.getId());
-                    if (player.getName() != null) {
-                        attributes.add("playerName", player.getName());
-                    }
+                    attributes.add("playerName", player.getName());
                     attributes.add("minutesAgo", minutesAgo);
                     builder.add("entry", attributes, true);
                 }
@@ -657,75 +781,36 @@ public class RESTController extends MultiActionController {
             // Ignored.
         }
         attributes.add("title", mediaFile.getName());
+        attributes.add("album", mediaFile.getAlbumName());
+        attributes.add("artist", mediaFile.getArtist());
         attributes.add("isDir", mediaFile.isDirectory());
-
-        Integer coverArtId = findCoverArt(mediaFile, parent);
-        if (coverArtId != null) {
-            attributes.add("coverArt", coverArtId);
-        }
+        attributes.add("coverArt", findCoverArt(mediaFile, parent));
+        attributes.add("created", StringUtil.toISO8601(mediaFile.getCreated()));
 
         String username = player.getUsername();
         if (username != null) {
-            Integer rating = ratingService.getRatingForUser(username, mediaFile);
-            if (rating != null) {
-                attributes.add("userRating", rating);
-            }
-            Double avgRating = ratingService.getAverageRating(mediaFile);
-            if (avgRating != null) {
-                attributes.add("averageRating", avgRating);
-            }
+            attributes.add("userRating", ratingService.getRatingForUser(username, mediaFile));
+            attributes.add("averageRating", ratingService.getAverageRating(mediaFile));
         }
 
         if (mediaFile.isFile()) {
-            attributes.add("album", mediaFile.getAlbumName());
-            attributes.add("artist", mediaFile.getArtist());
-            Integer duration = mediaFile.getDurationSeconds();
-            if (duration != null) {
-                attributes.add("duration", duration);
-            }
-            Integer bitRate = mediaFile.getBitRate();
-            if (bitRate != null) {
-                attributes.add("bitRate", bitRate);
-            }
-
-            Integer track = mediaFile.getTrackNumber();
-            if (track != null) {
-                attributes.add("track", track);
-            }
-
-            Integer year = mediaFile.getYear();
-            if (year != null) {
-                attributes.add("year", year);
-            }
-
-            String genre = mediaFile.getGenre();
-            if (genre != null) {
-                attributes.add("genre", genre);
-            }
-
+            attributes.add("duration", mediaFile.getDurationSeconds());
+            attributes.add("bitRate", mediaFile.getBitRate());
+            attributes.add("track", mediaFile.getTrackNumber());
+            attributes.add("year", mediaFile.getYear());
+            attributes.add("genre", mediaFile.getGenre());
             attributes.add("size", mediaFile.getFileSize());
             String suffix = mediaFile.getFormat();
             attributes.add("suffix", suffix);
             attributes.add("contentType", StringUtil.getMimeType(suffix));
             attributes.add("isVideo", mediaFile.isVideo());
+            attributes.add("path", getRelativePath(mediaFile));
 
             if (transcodingService.isTranscodingRequired(mediaFile, player)) {
                 String transcodedSuffix = transcodingService.getSuffix(player, mediaFile, null);
                 attributes.add("transcodedSuffix", transcodedSuffix);
                 attributes.add("transcodedContentType", StringUtil.getMimeType(transcodedSuffix));
             }
-
-            String path = getRelativePath(mediaFile);
-            if (path != null) {
-                attributes.add("path", path);
-            }
-
-        } else {
-            String artist = resolveArtist(mediaFile);
-            if (artist != null) {
-                attributes.add("artist", artist);
-            }
-
         }
         return attributes;
     }
@@ -736,18 +821,6 @@ public class RESTController extends MultiActionController {
             return dir.getId();
         }
         return null;
-    }
-
-    private String resolveArtist(MediaFile file) {
-
-        // If directory, find artist from metadata in child.
-        if (file.isDirectory()) {
-            file = mediaFileService.getFirstChildOf(file);
-            if (file == null) {
-                return null;
-            }
-        }
-        return file.getArtist();
     }
 
     private String getRelativePath(MediaFile musicFile) {
@@ -846,15 +919,9 @@ public class RESTController extends MultiActionController {
             channelAttrs.add("id", channel.getId());
             channelAttrs.add("url", channel.getUrl());
             channelAttrs.add("status", channel.getStatus().toString().toLowerCase());
-            if (channel.getTitle() != null) {
-                channelAttrs.add("title", channel.getTitle());
-            }
-            if (channel.getDescription() != null) {
-                channelAttrs.add("description", channel.getDescription());
-            }
-            if (channel.getErrorMessage() != null) {
-                channelAttrs.add("errorMessage", channel.getErrorMessage());
-            }
+            channelAttrs.add("title", channel.getTitle());
+            channelAttrs.add("description", channel.getDescription());
+            channelAttrs.add("errorMessage", channel.getErrorMessage());
             builder.add("channel", channelAttrs, false);
 
             List<PodcastEpisode> episodes = podcastService.getEpisodes(channel.getId(), false);
@@ -870,16 +937,9 @@ public class RESTController extends MultiActionController {
 
                 episodeAttrs.add("id", episode.getId());  // Overwrites the previous "id" attribute.
                 episodeAttrs.add("status", episode.getStatus().toString().toLowerCase());
-
-                if (episode.getTitle() != null) {
-                    episodeAttrs.add("title", episode.getTitle());
-                }
-                if (episode.getDescription() != null) {
-                    episodeAttrs.add("description", episode.getDescription());
-                }
-                if (episode.getPublishDate() != null) {
-                    episodeAttrs.add("publishDate", episode.getPublishDate());
-                }
+                episodeAttrs.add("title", episode.getTitle());
+                episodeAttrs.add("description", episode.getDescription());
+                episodeAttrs.add("publishDate", episode.getPublishDate());
 
                 builder.add("episode", episodeAttrs, true);
             }
@@ -1260,12 +1320,8 @@ public class RESTController extends MultiActionController {
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
         AttributeSet attributes = new AttributeSet();
-        if (lyrics.getArtist() != null) {
-            attributes.add("artist", lyrics.getArtist());
-        }
-        if (lyrics.getTitle() != null) {
-            attributes.add("title", lyrics.getTitle());
-        }
+        attributes.add("artist", lyrics.getArtist());
+        attributes.add("title", lyrics.getTitle());
         builder.add("lyrics", attributes, lyrics.getLyrics(), true);
 
         builder.endAll();
@@ -1306,9 +1362,28 @@ public class RESTController extends MultiActionController {
                     return playerId;
                 }
 
+                // Support old style ID parameters.
+                if ("id".equals(name)) {
+                    return mapId(request.getParameter("id"));
+                }
+
                 return super.getParameter(name);
             }
         };
+    }
+
+    private String mapId(String id) {
+        if (id == null || StringUtils.isNumeric(id)) {
+            return id;
+        }
+
+        try {
+            String path = StringUtil.utf8HexDecode(id);
+            MediaFile mediaFile = mediaFileService.getMediaFile(path);
+            return String.valueOf(mediaFile.getId());
+        } catch (Exception x) {
+            return id;
+        }
     }
 
     private String getErrorMessage(Exception x) {
@@ -1469,6 +1544,18 @@ public class RESTController extends MultiActionController {
 
     public void setAvatarController(AvatarController avatarController) {
         this.avatarController = avatarController;
+    }
+
+    public void setArtistDao(ArtistDao artistDao) {
+        this.artistDao = artistDao;
+    }
+
+    public void setAlbumDao(AlbumDao albumDao) {
+        this.albumDao = albumDao;
+    }
+
+    public void setMediaFileDao(MediaFileDao mediaFileDao) {
+        this.mediaFileDao = mediaFileDao;
     }
 
     public static enum ErrorCode {

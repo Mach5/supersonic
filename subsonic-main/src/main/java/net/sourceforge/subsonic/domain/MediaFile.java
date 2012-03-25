@@ -144,6 +144,10 @@ public class MediaFile {
         return mediaType == MediaType.VIDEO;
     }
 
+    public boolean isAudio() {
+        return mediaType == MediaType.MUSIC || mediaType == MediaType.AUDIO_BOOK || mediaType == MediaType.PODCAST;
+    }
+
     public String getFormat() {
         return format;
     }
@@ -157,7 +161,7 @@ public class MediaFile {
     }
 
     public boolean isFile() {
-        return mediaType == MediaType.AUDIO || mediaType == MediaType.VIDEO;
+        return mediaType != MediaType.DIRECTORY && mediaType != MediaType.ALBUM;
     }
 
     public boolean isAlbum() {
@@ -421,7 +425,9 @@ public class MediaFile {
     }
 
     public static enum MediaType {
-        AUDIO,
+        MUSIC,
+        PODCAST,
+        AUDIO_BOOK,
         VIDEO,
         DIRECTORY,
         ALBUM

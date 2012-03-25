@@ -92,8 +92,10 @@ public class HomeController extends ParameterizableViewController {
             albums = getMostRecent(listOffset, listSize);
         } else if ("newest".equals(listType)) {
             albums = getNewest(listOffset, listSize);
-        } else {
+        } else if ("random".equals(listType)) {
             albums = getRandom(listSize);
+        } else {
+            albums = getAlphabetical(listOffset, listSize);
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -174,6 +176,17 @@ public class HomeController extends ParameterizableViewController {
         return result;
     }
 
+    List<Album> getAlphabetical(int offset, int count) throws IOException {
+        List<Album> result = new ArrayList<Album>();
+        for (MediaFile file : mediaFileService.getAlphabetialAlbums(offset, count)) {
+            Album album = createAlbum(file);
+            if (album != null) {
+                result.add(album);
+            }
+        }
+        return result;
+    }
+
     private Album createAlbum(MediaFile file) {
         Album album = new Album();
         album.setPath(file.getPath());
@@ -188,24 +201,12 @@ public class HomeController extends ParameterizableViewController {
     }
 
     private void resolveArtistAndAlbumTitle(Album album, MediaFile file) throws IOException {
-
-        // If directory, find  title and artist from metadata in child.
-        if (file.isDirectory()) {
-            file = mediaFileService.getFirstChildOf(file);
-            if (file == null) {
-                return;
-            }
-        }
-
         album.setArtist(file.getArtist());
         album.setAlbumTitle(file.getAlbumName());
     }
 
     private void resolveCoverArt(Album album, MediaFile file) {
-        File coverArt = mediaFileService.getCoverArt(file);
-        if (coverArt != null) {
-            album.setCoverArtPath(coverArt.getPath());
-        }
+        album.setCoverArtPath(file.getCoverArtPath());
     }
 
     public void setSettingsService(SettingsService settingsService) {

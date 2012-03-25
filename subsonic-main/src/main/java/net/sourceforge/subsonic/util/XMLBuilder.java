@@ -309,7 +309,9 @@ public class XMLBuilder {
         }
 
         public void add(String key, Object value) {
-            add(new Attribute(key, value));
+            if (key != null && value != null) {
+                add(new Attribute(key, value));
+            }
         }
 
         public void addAll(Iterable<Attribute> attributes) {
