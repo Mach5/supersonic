@@ -250,7 +250,7 @@ public class RESTController extends MultiActionController {
         attributes.add("id", artist.getId());
         attributes.add("name", artist.getName());
         if (artist.getCoverArtPath() != null) {
-            attributes.add("coverArt", "ar-" + artist.getId());
+            attributes.add("coverArt", CoverArtController.ARTIST_COVERART_PREFIX + artist.getId());
         }
         attributes.add("albumCount", artist.getAlbumCount());
         return attributes;
@@ -288,7 +288,7 @@ public class RESTController extends MultiActionController {
         attributes.add("id", album.getId());
         attributes.add("name", album.getName());
         if (album.getCoverArtPath() != null) {
-            attributes.add("coverArt", "al-" + album.getId());
+            attributes.add("coverArt", CoverArtController.ALBUM_COVERART_PREFIX + album.getId());
         }
         attributes.add("songCount", album.getSongCount());
         attributes.add("created", StringUtil.toISO8601(album.getCreated()));
@@ -1409,7 +1409,8 @@ public class RESTController extends MultiActionController {
     }
 
     private String mapId(String id) {
-        if (id == null || StringUtils.isNumeric(id)) {
+        if (id == null || id.startsWith(CoverArtController.ALBUM_COVERART_PREFIX) ||
+                id.startsWith(CoverArtController.ARTIST_COVERART_PREFIX) || StringUtils.isNumeric(id)) {
             return id;
         }
 
