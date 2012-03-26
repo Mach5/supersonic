@@ -213,7 +213,7 @@ public class MediaScannerService {
     }
 
     private void updateAlbum(MediaFile file, Date lastScanned, Map<String, Integer> albumCount) {
-        if (file.getAlbumName() == null || file.getArtist() == null) {
+        if (file.getAlbumName() == null || file.getArtist() == null || !file.isAudio()) {
             return;
         }
 
@@ -249,7 +249,7 @@ public class MediaScannerService {
     }
 
     private void updateArtist(MediaFile file, Date lastScanned, Map<String, Integer> albumCount) {
-        if (file.getArtist() == null) {
+        if (file.getArtist() == null || !file.isAudio()) {
             return;
         }
 

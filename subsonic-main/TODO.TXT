@@ -42,15 +42,16 @@ New playlist implementation.
   - REST support
 
 REST
-  - wrong songcount for album (should not include subdirs)
   - add mediaType, albumId, artistId. Deprecate isVideo, isDir.
   - add artist name/id to album?
-  - add getSong method
   - Support prefixed cover art ID.
   - Document in api.jsp
   - Add example links to demo server.
   - Analyze existing REST methods, e.g., getAlbumList, search
   - Add coverart to existing getIndexes method?
+  - Create SongID3, make MediaFile extend it?
+  - Create Video
+  - How to handle video? Separate method?
 
 Handle albums without artist. Don't create them?
 Bug: Playlist frame > Combo box > Selected songs > * are broken.

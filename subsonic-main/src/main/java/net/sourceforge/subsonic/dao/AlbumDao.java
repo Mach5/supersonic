@@ -28,6 +28,11 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.domain.MediaFile;
+
+import static net.sourceforge.subsonic.domain.MediaFile.MediaType.AUDIO_BOOK;
+import static net.sourceforge.subsonic.domain.MediaFile.MediaType.MUSIC;
+import static net.sourceforge.subsonic.domain.MediaFile.MediaType.PODCAST;
 
 /**
  * Provides database services for artists.
