@@ -109,6 +109,8 @@
     <xs:complexType name="AlbumID3">
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="artist" type="xs:string" use="optional"/>
+        <xs:attribute name="artistId" type="xs:string" use="optional"/>
         <xs:attribute name="coverArt" type="xs:string" use="optional"/>
         <xs:attribute name="songCount" type="xs:int" use="required"/>
         <xs:attribute name="created" type="xs:dateTime" use="required"/>
