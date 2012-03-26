@@ -42,7 +42,6 @@ New playlist implementation.
   - REST support
 
 REST
-  - add mediaType, albumId, artistId. Deprecate isVideo, isDir.
   - add artist name/id to album?
   - Support prefixed cover art ID.
   - Document in api.jsp

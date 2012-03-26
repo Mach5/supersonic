@@ -82,6 +82,7 @@ import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.XMLBuilder;
 
+import static net.sourceforge.subsonic.domain.MediaFile.MediaType.MUSIC;
 import static net.sourceforge.subsonic.security.RESTRequestParameterProcessingFilter.decrypt;
 import static net.sourceforge.subsonic.util.XMLBuilder.Attribute;
 import static net.sourceforge.subsonic.util.XMLBuilder.AttributeSet;
@@ -805,6 +806,32 @@ public class RESTController extends MultiActionController {
             attributes.add("contentType", StringUtil.getMimeType(suffix));
             attributes.add("isVideo", mediaFile.isVideo());
             attributes.add("path", getRelativePath(mediaFile));
+
+            if (mediaFile.getArtist() != null && mediaFile.getAlbumName() != null) {
+                Album album = albumDao.getAlbum(mediaFile.getArtist(), mediaFile.getAlbumName());
+                if (album != null) {
+                    attributes.add("albumId", album.getId());
+                }
+            }
+            if (mediaFile.getArtist() != null) {
+                Artist artist = artistDao.getArtist(mediaFile.getArtist());
+                if (artist != null) {
+                    attributes.add("artistId", artist.getId());
+                }
+            }
+            switch (mediaFile.getMediaType()) {
+                case MUSIC:
+                    attributes.add("type", "music");
+                    break;
+                case PODCAST:
+                    attributes.add("type", "podcast");
+                    break;
+                case AUDIOBOOK:
+                    attributes.add("type", "audiobook");
+                    break;
+                default:
+                    break;
+            }
 
             if (transcodingService.isTranscodingRequired(mediaFile, player)) {
                 String transcodedSuffix = transcodingService.getSuffix(player, mediaFile, null);

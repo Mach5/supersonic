@@ -446,7 +446,7 @@ public class MediaFileService {
             return PODCAST;
         }
         if (path.contains("audiobook") || genre.contains("audiobook") || path.contains("audio book") || genre.contains("audio book")) {
-            return AUDIO_BOOK;
+            return AUDIOBOOK;
         }
         return MUSIC;
     }
