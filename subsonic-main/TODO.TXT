@@ -47,9 +47,9 @@ REST
   - Add example links to demo server.
   - Analyze existing REST methods, e.g., getAlbumList, search
   - Add coverart to existing getIndexes method?
-  - Create SongID3, make MediaFile extend it?
   - Create Video
   - How to handle video? Separate method?
+  - Test video streaming to Android.
 
 Handle albums without artist. Don't create them?
 Bug: Playlist frame > Combo box > Selected songs > * are broken.
