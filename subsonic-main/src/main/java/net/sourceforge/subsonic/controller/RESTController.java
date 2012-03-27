@@ -713,9 +713,7 @@ public class RESTController extends MultiActionController {
         try {
             int size = ServletRequestUtils.getIntParameter(request, "size", 10);
             int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
-
             size = Math.max(0, Math.min(size, 500));
-
             String type = ServletRequestUtils.getRequiredStringParameter(request, "type");
 
             List<HomeController.Album> albums;
@@ -737,6 +735,44 @@ public class RESTController extends MultiActionController {
                 MediaFile mediaFile = mediaFileService.getMediaFile(album.getPath());
                 AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
                 builder.add("album", attributes, true);
+            }
+            builder.endAll();
+            response.getWriter().print(builder);
+        } catch (ServletRequestBindingException x) {
+            error(request, response, ErrorCode.MISSING_PARAMETER, getErrorMessage(x));
+        } catch (Exception x) {
+            LOG.warn("Error in REST API.", x);
+            error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
+        }
+    }
+
+    public void getAlbumList2(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+        builder.add("albumList2", false);
+
+        try {
+            int size = ServletRequestUtils.getIntParameter(request, "size", 10);
+            int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
+            size = Math.max(0, Math.min(size, 500));
+            String type = ServletRequestUtils.getRequiredStringParameter(request, "type");
+
+            List<Album> albums;
+            if ("frequent".equals(type)) {
+                albums = albumDao.getMostFrequentlyPlayedAlbums(offset, size);
+            } else if ("recent".equals(type)) {
+                albums = albumDao.getMostRecentlyPlayedAlbums(offset, size);
+            } else if ("newest".equals(type)) {
+                albums = albumDao.getNewestAlbums(offset, size);
+            } else if ("alphabetical".equals(type)) {
+                albums = albumDao.getAlphabetialAlbums(offset, size);
+            } else {
+                albums = searchService.getRandomAlbumsId3(size);
+            }
+
+            for (Album album : albums) {
+                builder.add("album", createAttributesForAlbum(album), true);
             }
             builder.endAll();
             response.getWriter().print(builder);

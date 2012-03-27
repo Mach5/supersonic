@@ -297,7 +297,44 @@ public class SearchService {
                 try {
                     addIfNotNull(mediaFileService.getMediaFile(id), result);
                 } catch (Exception x) {
-                    LOG.warn("Failed to get media file " + id);
+                    LOG.warn("Failed to get media file " + id, x);
+                }
+            }
+
+        } catch (Throwable x) {
+            LOG.error("Failed to search for random albums.", x);
+        } finally {
+            FileUtil.closeQuietly(reader);
+        }
+        return result;
+    }
+
+    /**
+     * Returns a number of random albums, using ID3 tag.
+     *
+     * @param count Number of albums to return.
+     * @return List of random albums.
+     */
+    public List<Album> getRandomAlbumsId3(int count) {
+        List<Album> result = new ArrayList<Album>();
+
+        IndexReader reader = null;
+        try {
+            reader = createIndexReader(ALBUM_ID3);
+            Searcher searcher = new IndexSearcher(reader);
+
+            Query query = new MatchAllDocsQuery();
+            TopDocs topDocs = searcher.search(query, null, Integer.MAX_VALUE);
+            Random random = new Random(System.currentTimeMillis());
+
+            for (int i = 0; i < Math.min(count, topDocs.totalHits); i++) {
+                int index = random.nextInt(topDocs.totalHits);
+                Document doc = searcher.doc(topDocs.scoreDocs[index].doc);
+                int id = Integer.valueOf(doc.get(FIELD_ID));
+                try {
+                    addIfNotNull(albumDao.getAlbum(id), result);
+                } catch (Exception x) {
+                    LOG.warn("Failed to get album file " + id, x);
                 }
             }
 

@@ -104,6 +104,42 @@ public class AlbumDao extends AbstractDao {
         return query("select " + COLUMNS + " from album where present order by artist, name limit ? offset ?", rowMapper, count, offset);
     }
 
+    /**
+     * Returns the most frequently played albums.
+     *
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
+     * @return The most frequently played albums.
+     */
+    public List<Album> getMostFrequentlyPlayedAlbums(int offset, int count) {
+        return query("select " + COLUMNS + " from album where play_count > 0 and present " +
+                "order by play_count desc limit ? offset ?", rowMapper, count, offset);
+    }
+
+    /**
+     * Returns the most recently played albums.
+     *
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
+     * @return The most recently played albums.
+     */
+    public List<Album> getMostRecentlyPlayedAlbums(int offset, int count) {
+        return query("select " + COLUMNS + " from album where last_played is not null and present " +
+                "order by last_played desc limit ? offset ?", rowMapper, count, offset);
+    }
+
+    /**
+     * Returns the most recently added albums.
+     *
+     * @param offset Number of albums to skip.
+     * @param count  Maximum number of albums to return.
+     * @return The most recently added albums.
+     */
+    public List<Album> getNewestAlbums(int offset, int count) {
+        return query("select " + COLUMNS + " from album where present order by created desc limit ? offset ?",
+                rowMapper, count, offset);
+    }
+
     public void markNonPresent(Date lastScanned) {
         int minId = queryForInt("select id from album where true limit 1", 0);
         int maxId = queryForInt("select max(id) from album", 0);

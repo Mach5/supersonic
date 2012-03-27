@@ -29,6 +29,7 @@
             <xs:element name="user" type="sub:User" minOccurs="1" maxOccurs="1"/>
             <xs:element name="chatMessages" type="sub:ChatMessages" minOccurs="1" maxOccurs="1"/>
             <xs:element name="albumList" type="sub:AlbumList" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="albumList2" type="sub:AlbumList2" minOccurs="1" maxOccurs="1"/>
             <xs:element name="randomSongs" type="sub:RandomSongs" minOccurs="1" maxOccurs="1"/>
             <xs:element name="lyrics" type="sub:Lyrics" minOccurs="1" maxOccurs="1"/>
             <xs:element name="podcasts" type="sub:Podcasts" minOccurs="1" maxOccurs="1"/>
@@ -283,6 +284,12 @@
     <xs:complexType name="AlbumList">
         <xs:sequence>
             <xs:element name="album" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AlbumList2">
+        <xs:sequence>
+            <xs:element name="album" type="sub:AlbumID3" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
