@@ -26,8 +26,13 @@ Create MediaType music, audiobook and podcast.
 
 TODO IN 4.7
 -----------------
+Performance test before Easter!
+Update subsonic-tools.
+Build Windows installer.
+Test upgrade 4.6->4.7
 Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
+
 New playlist implementation.
   - Create database schema
   - Cascading delete when user is deleted.
@@ -47,6 +52,7 @@ REST
   - How to handle video? Separate method?
   - Add coverart to existing getIndexes method?
   - Test video streaming to Android.
+  - Analyze remaining methods.
 
 Create example for albumList2.
 Shortcuts display ID3 names
@@ -74,7 +80,7 @@ Test: Install 4.6, then upgrade and check that music_file_info is preserved.
 Save statistics in file. Update only when scanning?
 Never use fast access mode in podcast folder.
 Using CPU when idling, but only if low on memory?
-Improve document of REST "download" method.
+Improve documentation of REST "download" method.
 Automatically start scanning if media folders change.
 Use media file IDs in web interface etc.
 Make it work with 64-bit Java 7.  Problem with exe4j?
