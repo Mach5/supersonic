@@ -43,6 +43,8 @@ public class DownloadServiceLifecycleSupport {
 
     private static final String TAG = DownloadServiceLifecycleSupport.class.getSimpleName();
     private static final String FILENAME_DOWNLOADS_SER = "downloadstate.ser";
+    private static final int KEYCODE_MEDIA_PLAY = 126;
+    private static final int KEYCODE_MEDIA_PAUSE = 127;
 
     private final DownloadServiceImpl downloadService;
     private ScheduledExecutorService executorService;
@@ -210,12 +212,12 @@ public class DownloadServiceLifecycleSupport {
             case KeyEvent.KEYCODE_MEDIA_STOP:
                 downloadService.reset();
                 break;
-            case KeyEvent.KEYCODE_MEDIA_PLAY:
-            		downloadService.play();
-            		break;
-            case KeyEvent.KEYCODE_MEDIA_PAUSE:
-            		downloadService.pause();
-            		break;
+            case KEYCODE_MEDIA_PLAY: //KeyEvent.KEYCODE_MEDIA_PLAY: // Not added until API version 11
+            	downloadService.play();
+            	break;
+            case KEYCODE_MEDIA_PAUSE: //KeyEvent.KEYCODE_MEDIA_PAUSE: // Not added until API version 11
+            	downloadService.pause();
+            	break;
             default:
                 break;
         }
