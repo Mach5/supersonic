@@ -46,11 +46,14 @@ REST
   - Document in api.jsp
   - Add example links to demo server.
   - Analyze existing REST methods, e.g., getAlbumList, search
-  - Add coverart to existing getIndexes method?
-  - Create Video
   - How to handle video? Separate method?
+  - Add coverart to existing getIndexes method?
   - Test video streaming to Android.
 
+Shortcuts display ID3 names
+
+
+Encourage users to save email addresses, also for admin.  Explain why.
 Handle albums without artist. Don't create them?
 Bug: Playlist frame > Combo box > Selected songs > * are broken.
 test that getRandomSongs doesn't return audiobooks and podcast.
@@ -802,6 +805,10 @@ Upgrade Subsonic backend: CHANGE DATE BELOW
   scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/ROOT.war
   scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/demo.war
   rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/pages
+
+
+  Blacklist abusers of my email.
+
 
   Checkpoint database (db.view)
   ssh root@subsonic.org

@@ -82,7 +82,6 @@ import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.XMLBuilder;
 
-import static net.sourceforge.subsonic.domain.MediaFile.MediaType.MUSIC;
 import static net.sourceforge.subsonic.security.RESTRequestParameterProcessingFilter.decrypt;
 import static net.sourceforge.subsonic.util.XMLBuilder.Attribute;
 import static net.sourceforge.subsonic.util.XMLBuilder.AttributeSet;
@@ -459,6 +458,41 @@ public class RESTController extends MultiActionController {
         for (MediaFile mediaFile : songs.getMediaFiles()) {
             AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
             builder.add("song", attributes, true);
+        }
+
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+    
+    public void search3(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+        Player player = playerService.getPlayer(request, response);
+
+        builder.add("searchResult3", false);
+
+        String query = request.getParameter("query");
+        SearchCriteria criteria = new SearchCriteria();
+        criteria.setQuery(StringUtils.trimToEmpty(query));
+        criteria.setCount(ServletRequestUtils.getIntParameter(request, "artistCount", 20));
+        criteria.setOffset(ServletRequestUtils.getIntParameter(request, "artistOffset", 0));
+        SearchResult searchResult = searchService.search(criteria, SearchService.IndexType.ARTIST_ID3);
+        for (Artist artist : searchResult.getArtists()) {
+            builder.add("artist", createAttributesForArtist(artist), true);
+        }
+
+        criteria.setCount(ServletRequestUtils.getIntParameter(request, "albumCount", 20));
+        criteria.setOffset(ServletRequestUtils.getIntParameter(request, "albumOffset", 0));
+        searchResult = searchService.search(criteria, SearchService.IndexType.ALBUM_ID3);
+        for (Album album : searchResult.getAlbums()) {
+            builder.add("album", createAttributesForAlbum(album), true);
+        }
+
+        criteria.setCount(ServletRequestUtils.getIntParameter(request, "songCount", 20));
+        criteria.setOffset(ServletRequestUtils.getIntParameter(request, "songOffset", 0));
+        searchResult = searchService.search(criteria, SearchService.IndexType.SONG);
+        for (MediaFile song : searchResult.getMediaFiles()) {
+            builder.add("song", createAttributesForMediaFile(player, song), true);
         }
 
         builder.endAll();

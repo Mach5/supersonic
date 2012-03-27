@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.subsonic.service.MediaScannerService;
@@ -31,7 +32,10 @@ import net.sourceforge.subsonic.service.SearchService;
  */
 public class SearchResult {
 
-    private List<MediaFile> mediaFiles;
+    private final List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
+    private final List<Artist> artists = new ArrayList<Artist>();
+    private final List<Album> albums = new ArrayList<Album>();
+
     private int offset;
     private int totalHits;
 
@@ -39,8 +43,12 @@ public class SearchResult {
         return mediaFiles;
     }
 
-    public void setMediaFiles(List<MediaFile> mediaFiles) {
-        this.mediaFiles = mediaFiles;
+    public List<Artist> getArtists() {
+        return artists;
+    }
+
+    public List<Album> getAlbums() {
+        return albums;
     }
 
     public int getOffset() {

@@ -20,6 +20,7 @@
             <xs:element name="nowPlaying" type="sub:NowPlaying" minOccurs="1" maxOccurs="1"/>
             <xs:element name="searchResult" type="sub:SearchResult" minOccurs="1" maxOccurs="1"/>
             <xs:element name="searchResult2" type="sub:SearchResult2" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="searchResult3" type="sub:SearchResult3" minOccurs="1" maxOccurs="1"/>
             <xs:element name="playlists" type="sub:Playlists" minOccurs="1" maxOccurs="1"/>
             <xs:element name="playlist" type="sub:Playlist" minOccurs="1" maxOccurs="1"/>
             <xs:element name="jukeboxStatus" type="sub:JukeboxStatus" minOccurs="1" maxOccurs="1"/>
@@ -217,6 +218,14 @@
         <xs:sequence>
             <xs:element name="artist" type="sub:Artist" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="album" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SearchResult3">
+        <xs:sequence>
+            <xs:element name="artist" type="sub:ArtistID3" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="album" type="sub:AlbumID3" minOccurs="0" maxOccurs="unbounded"/>
             <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>

@@ -230,7 +230,8 @@ public class MediaScannerService {
                 album.setCoverArtPath(parent.getCoverArtPath());
             }
         }
-        if (!lastScanned.equals(album.getLastScanned())) {
+        boolean firstEncounter = !lastScanned.equals(album.getLastScanned());
+        if (firstEncounter) {
             album.setDurationSeconds(0);
             album.setSongCount(0);
             Integer n = albumCount.get(file.getArtist());
@@ -246,6 +247,9 @@ public class MediaScannerService {
         album.setLastScanned(lastScanned);
         album.setPresent(true);
         albumDao.createOrUpdateAlbum(album);
+        if (firstEncounter) {
+            searchService.index(album);
+        }
     }
 
     private void updateArtist(MediaFile file, Date lastScanned, Map<String, Integer> albumCount) {
@@ -264,12 +268,18 @@ public class MediaScannerService {
                 artist.setCoverArtPath(parent.getCoverArtPath());
             }
         }
+        boolean firstEncounter = !lastScanned.equals(artist.getLastScanned());
+
         Integer n = albumCount.get(artist.getName());
         artist.setAlbumCount(n == null ? 0 : n);
 
         artist.setLastScanned(lastScanned);
         artist.setPresent(true);
         artistDao.createOrUpdateArtist(artist);
+
+        if (firstEncounter) {
+            searchService.index(artist);
+        }
     }
 
     /**

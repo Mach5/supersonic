@@ -19,6 +19,10 @@
 package net.sourceforge.subsonic.service;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.AlbumDao;
+import net.sourceforge.subsonic.dao.ArtistDao;
+import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.domain.Artist;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.RandomSearchCriteria;
@@ -63,6 +67,7 @@ import java.util.Map;
 import java.util.Random;
 
 import static net.sourceforge.subsonic.service.SearchService.IndexType.*;
+import static net.sourceforge.subsonic.service.SearchService.IndexType.SONG;
 
 /**
  * Performs Lucene-based searching and indexing.
@@ -75,7 +80,7 @@ public class SearchService {
 
     private static final Logger LOG = Logger.getLogger(SearchService.class);
 
-    private static final String FIELD_PATH = "path";
+    private static final String FIELD_ID = "id";
     private static final String FIELD_TITLE = "title";
     private static final String FIELD_ALBUM = "album";
     private static final String FIELD_ARTIST = "artist";
@@ -88,9 +93,13 @@ public class SearchService {
 
     private MediaFileService mediaFileService;
     private SettingsService settingsService;
+    private ArtistDao artistDao;
+    private AlbumDao albumDao;
 
     private IndexWriter artistWriter;
+    private IndexWriter artistId3Writer;
     private IndexWriter albumWriter;
+    private IndexWriter albumId3Writer;
     private IndexWriter songWriter;
 
     public SearchService() {
@@ -101,7 +110,9 @@ public class SearchService {
     public void startIndexing() {
         try {
             artistWriter = createIndexWriter(ARTIST);
+            artistId3Writer = createIndexWriter(ARTIST_ID3);
             albumWriter = createIndexWriter(ALBUM);
+            albumId3Writer = createIndexWriter(ALBUM_ID3);
             songWriter = createIndexWriter(SONG);
         } catch (Exception x) {
             LOG.error("Failed to create search index.", x);
@@ -122,27 +133,45 @@ public class SearchService {
         }
     }
 
+    public void index(Artist artist) {
+        try {
+            artistId3Writer.addDocument(ARTIST_ID3.createDocument(artist));
+        } catch (Exception x) {
+            LOG.error("Failed to create search index for " + artist, x);
+        }
+    }
+
+    public void index(Album album) {
+        try {
+            albumId3Writer.addDocument(ALBUM_ID3.createDocument(album));
+        } catch (Exception x) {
+            LOG.error("Failed to create search index for " + album, x);
+        }
+    }
+
     public void stopIndexing() {
         try {
             artistWriter.optimize();
+            artistId3Writer.optimize();
             albumWriter.optimize();
+            albumId3Writer.optimize();
             songWriter.optimize();
         } catch (Exception x) {
             LOG.error("Failed to create search index.", x);
         } finally {
+            FileUtil.closeQuietly(artistId3Writer);
             FileUtil.closeQuietly(artistWriter);
             FileUtil.closeQuietly(albumWriter);
+            FileUtil.closeQuietly(albumId3Writer);
             FileUtil.closeQuietly(songWriter);
         }
     }
 
     public SearchResult search(SearchCriteria criteria, IndexType indexType) {
         SearchResult result = new SearchResult();
-        List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
         int offset = criteria.getOffset();
         int count = criteria.getCount();
         result.setOffset(offset);
-        result.setMediaFiles(mediaFiles);
 
         IndexReader reader = null;
         try {
@@ -160,7 +189,24 @@ public class SearchService {
             int end = Math.min(start + count, topDocs.totalHits);
             for (int i = start; i < end; i++) {
                 Document doc = searcher.doc(topDocs.scoreDocs[i].doc);
-                mediaFiles.add(mediaFileService.getMediaFile(doc.getField(FIELD_PATH).stringValue()));
+                switch (indexType) {
+                    case SONG:
+                    case ARTIST:
+                    case ALBUM:
+                        MediaFile mediaFile = mediaFileService.getMediaFile(Integer.valueOf(doc.get(FIELD_ID)));
+                        addIfNotNull(mediaFile, result.getMediaFiles());
+                        break;
+                    case ARTIST_ID3:
+                        Artist artist = artistDao.getArtist(Integer.valueOf(doc.get(FIELD_ID)));
+                        addIfNotNull(artist, result.getArtists());
+                        break;
+                    case ALBUM_ID3:
+                        Album album = albumDao.getAlbum(Integer.valueOf(doc.get(FIELD_ID)));
+                        addIfNotNull(album, result.getAlbums());
+                        break;
+                    default:
+                        break;
+                }
             }
 
         } catch (Throwable x) {
@@ -210,11 +256,11 @@ public class SearchService {
             for (int i = 0; i < Math.min(criteria.getCount(), topDocs.totalHits); i++) {
                 int index = random.nextInt(topDocs.totalHits);
                 Document doc = searcher.doc(topDocs.scoreDocs[index].doc);
-                String path = doc.getField(FIELD_PATH).stringValue();
+                int id = Integer.valueOf(doc.get(FIELD_ID));
                 try {
-                    result.add(mediaFileService.getMediaFile(path));
+                    result.add(mediaFileService.getMediaFile(id));
                 } catch (Exception x) {
-                    LOG.warn("Failed to get media file " + path);
+                    LOG.warn("Failed to get media file " + id);
                 }
             }
 
@@ -247,11 +293,11 @@ public class SearchService {
             for (int i = 0; i < Math.min(count, topDocs.totalHits); i++) {
                 int index = random.nextInt(topDocs.totalHits);
                 Document doc = searcher.doc(topDocs.scoreDocs[index].doc);
-                String path = doc.getField(FIELD_PATH).stringValue();
+                int id = Integer.valueOf(doc.get(FIELD_ID));
                 try {
-                    result.add(mediaFileService.getMediaFile(path));
+                    addIfNotNull(mediaFileService.getMediaFile(id), result);
                 } catch (Exception x) {
-                    LOG.warn("Failed to get media file " + path);
+                    LOG.warn("Failed to get media file " + id);
                 }
             }
 
@@ -263,6 +309,11 @@ public class SearchService {
         return result;
     }
 
+    private <T> void addIfNotNull(T value, List<T> list) {
+        if (value != null) {
+            list.add(value);
+        }
+    }
     private IndexWriter createIndexWriter(IndexType indexType) throws IOException {
         File dir = getIndexDirectory(indexType);
         return new IndexWriter(FSDirectory.open(dir), new SubsonicAnalyzer(), true, new IndexWriter.MaxFieldLength(10));
@@ -274,7 +325,7 @@ public class SearchService {
     }
 
     private File getIndexRootDirectory() {
-        return new File(SettingsService.getSubsonicHome(), "lucene");
+        return new File(SettingsService.getSubsonicHome(), "lucene2");
     }
 
     private File getIndexDirectory(IndexType indexType) {
@@ -306,13 +357,21 @@ public class SearchService {
         this.settingsService = settingsService;
     }
 
+    public void setArtistDao(ArtistDao artistDao) {
+        this.artistDao = artistDao;
+    }
+
+    public void setAlbumDao(AlbumDao albumDao) {
+        this.albumDao = albumDao;
+    }
+
     public static enum IndexType {
 
         SONG(new String[]{FIELD_TITLE, FIELD_ARTIST}, FIELD_TITLE) {
             @Override
             public Document createDocument(MediaFile mediaFile) {
                 Document doc = new Document();
-                doc.add(new Field(FIELD_PATH, mediaFile.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
+                doc.add(new NumericField(FIELD_ID, Field.Store.YES, false).setIntValue(mediaFile.getId()));
                 doc.add(new Field(FIELD_MEDIA_TYPE, mediaFile.getMediaType().name(), Field.Store.NO, Field.Index.ANALYZED_NO_NORMS));
 
                 if (mediaFile.getTitle() != null) {
@@ -339,7 +398,7 @@ public class SearchService {
             @Override
             public Document createDocument(MediaFile mediaFile) {
                 Document doc = new Document();
-                doc.add(new Field(FIELD_PATH, mediaFile.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
+                doc.add(new NumericField(FIELD_ID, Field.Store.YES, false).setIntValue(mediaFile.getId()));
 
                 if (mediaFile.getArtist() != null) {
                     doc.add(new Field(FIELD_ARTIST, mediaFile.getArtist(), Field.Store.YES, Field.Index.ANALYZED));
@@ -352,15 +411,43 @@ public class SearchService {
             }
         },
 
+        ALBUM_ID3(new String[]{FIELD_ALBUM, FIELD_ARTIST}, FIELD_ALBUM) {
+            @Override
+            public Document createDocument(Album album) {
+                Document doc = new Document();
+                doc.add(new NumericField(FIELD_ID, Field.Store.YES, false).setIntValue(album.getId()));
+
+                if (album.getArtist() != null) {
+                    doc.add(new Field(FIELD_ARTIST, album.getArtist(), Field.Store.YES, Field.Index.ANALYZED));
+                }
+                if (album.getName() != null) {
+                    doc.add(new Field(FIELD_ALBUM, album.getName(), Field.Store.YES, Field.Index.ANALYZED));
+                }
+
+                return doc;
+            }
+        },
+
         ARTIST(new String[]{FIELD_ARTIST}, null) {
             @Override
             public Document createDocument(MediaFile mediaFile) {
                 Document doc = new Document();
-                doc.add(new Field(FIELD_PATH, mediaFile.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED_NO_NORMS));
+                doc.add(new NumericField(FIELD_ID, Field.Store.YES, false).setIntValue(mediaFile.getId()));
 
                 if (mediaFile.getArtist() != null) {
                     doc.add(new Field(FIELD_ARTIST, mediaFile.getArtist(), Field.Store.YES, Field.Index.ANALYZED));
                 }
+
+                return doc;
+            }
+        },
+
+        ARTIST_ID3(new String[]{FIELD_ARTIST}, null) {
+            @Override
+            public Document createDocument(Artist artist) {
+                Document doc = new Document();
+                doc.add(new NumericField(FIELD_ID, Field.Store.YES, false).setIntValue(artist.getId()));
+                doc.add(new Field(FIELD_ARTIST, artist.getName(), Field.Store.YES, Field.Index.ANALYZED));
 
                 return doc;
             }
@@ -381,7 +468,17 @@ public class SearchService {
             return fields;
         }
 
-        public abstract Document createDocument(MediaFile mediaFile);
+        protected Document createDocument(MediaFile mediaFile) {
+            throw new UnsupportedOperationException();
+        }
+
+        protected Document createDocument(Artist artist) {
+            throw new UnsupportedOperationException();
+        }
+
+        protected Document createDocument(Album album) {
+            throw new UnsupportedOperationException();
+        }
 
         public Map<String, Float> getBoosts() {
             return boosts;
