@@ -18,16 +18,15 @@
  */
 package net.sourceforge.subsonic.dao;
 
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.Album;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
-
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.Album;
 
 /**
  * Provides database services for artists.
@@ -46,7 +45,7 @@ public class AlbumDao extends AbstractDao {
      * Returns the album with the given artist and album name.
      *
      * @param artistName The artist name.
-     * @param albumName The album name.
+     * @param albumName  The album name.
      * @return The album or null.
      */
     public Album getAlbum(String artistName, String albumName) {
@@ -140,6 +139,21 @@ public class AlbumDao extends AbstractDao {
                 rowMapper, count, offset);
     }
 
+    /**
+     * Returns the most recently starred albums.
+     *
+     * @param offset   Number of albums to skip.
+     * @param count    Maximum number of albums to return.
+     * @param username Returns albums starred by this user.
+     * @return The most recently starred albums for this user.
+     */
+    public List<Album> getStarredAlbums(int offset, int count, String username) {
+        // TODO: check performance
+        return query("select " + prefix(COLUMNS, "album") + " from album, starred_album where album.id = starred_album.album_id and " +
+                "album.present and starred_album.username=? order by starred_album.created desc limit ? offset ?",
+                rowMapper, username, count, offset);
+    }
+
     public void markNonPresent(Date lastScanned) {
         int minId = queryForInt("select id from album where true limit 1", 0);
         int maxId = queryForInt("select max(id) from album", 0);
@@ -148,6 +162,19 @@ public class AlbumDao extends AbstractDao {
         for (int id = minId; id <= maxId; id += batchSize) {
             update("update album set present=false where id between ? and ? and last_scanned != ? and present", id, id + batchSize, lastScanned);
         }
+    }
+
+    public void starAlbum(int albumId, String username) {
+        unstarAlbum(albumId, username);
+        update("insert into starred_album(album_id, username, created) values (?,?,?)", albumId, username, new Date());
+    }
+
+    public void unstarAlbum(int albumId, String username) {
+        update("delete from starred_album where album_id=? and username=?", albumId, username);
+    }
+
+    public Date getAlbumStarredDate(int albumId, String username) {
+        return queryForDate("select created from starred_album where album_id=? and username=?", null, albumId, username);
     }
 
     private static class AlbumMapper implements ParameterizedRowMapper<Album> {

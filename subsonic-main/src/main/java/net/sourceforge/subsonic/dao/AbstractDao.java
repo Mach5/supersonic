@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.jdbc.core.*;
@@ -54,6 +55,17 @@ public class AbstractDao {
         return builder.toString();
     }
 
+    protected String prefix(String columns, String prefix) {
+        StringBuilder builder = new StringBuilder();
+        for (String s : columns.split(", ")) {
+            builder.append(prefix).append(".").append(s).append(",");
+        }
+        if (builder.length() > 0) {
+            builder.setLength(builder.length() - 1);
+        }
+        return builder.toString();
+    }
+
     protected int update(String sql, Object... args) {
         long t = System.nanoTime();
         int result = getJdbcTemplate().update(sql, args);
@@ -84,6 +96,14 @@ public class AbstractDao {
         long t = System.nanoTime();
         List<Integer> list = getJdbcTemplate().queryForList(sql, args, Integer.class);
         Integer result = list.isEmpty() ? defaultValue : list.get(0) == null ? defaultValue : list.get(0);
+        log(sql, t);
+        return result;
+    }
+
+    protected Date queryForDate(String sql, Date defaultValue, Object... args) {
+        long t = System.nanoTime();
+        List<Date> list = getJdbcTemplate().queryForList(sql, args, Date.class);
+        Date result = list.isEmpty() ? defaultValue : list.get(0) == null ? defaultValue : list.get(0);
         log(sql, t);
         return result;
     }

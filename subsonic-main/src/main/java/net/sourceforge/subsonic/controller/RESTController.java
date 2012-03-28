@@ -258,6 +258,7 @@ public class RESTController extends MultiActionController {
         request = wrapRequest(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
+        String username = securityService.getCurrentUsername(request);
         Artist artist;
         try {
             int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
@@ -273,14 +274,14 @@ public class RESTController extends MultiActionController {
 
         builder.add("artist", createAttributesForArtist(artist), false);
         for (Album album : albumDao.getAlbumsForArtist(artist.getName())) {
-            builder.add("album", createAttributesForAlbum(album), true);
+            builder.add("album", createAttributesForAlbum(album, username), true);
         }
 
         builder.endAll();
         response.getWriter().print(builder);
     }
 
-    private AttributeSet createAttributesForAlbum(Album album) {
+    private AttributeSet createAttributesForAlbum(Album album, String username) {
         AttributeSet attributes;
         attributes = new AttributeSet();
         attributes.add("id", album.getId());
@@ -296,8 +297,9 @@ public class RESTController extends MultiActionController {
             attributes.add("coverArt", CoverArtController.ALBUM_COVERART_PREFIX + album.getId());
         }
         attributes.add("songCount", album.getSongCount());
-        attributes.add("created", StringUtil.toISO8601(album.getCreated()));
         attributes.add("duration", album.getDurationSeconds());
+        attributes.add("created", StringUtil.toISO8601(album.getCreated()));
+        attributes.add("starred", StringUtil.toISO8601(albumDao.getAlbumStarredDate(album.getId(), username)));
 
         return attributes;
     }
@@ -320,7 +322,8 @@ public class RESTController extends MultiActionController {
             return;
         }
 
-        builder.add("album", createAttributesForAlbum(album), false);
+        String username = securityService.getCurrentUsername(request);
+        builder.add("album", createAttributesForAlbum(album, username), false);
         for (MediaFile mediaFile : mediaFileDao.getSongsForAlbum(album.getArtist(), album.getName())) {
             builder.add("song", createAttributesForMediaFile(player, mediaFile) , true);
         }
@@ -469,6 +472,7 @@ public class RESTController extends MultiActionController {
         request = wrapRequest(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
 
         builder.add("searchResult3", false);
 
@@ -486,7 +490,7 @@ public class RESTController extends MultiActionController {
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "albumOffset", 0));
         searchResult = searchService.search(criteria, SearchService.IndexType.ALBUM_ID3);
         for (Album album : searchResult.getAlbums()) {
-            builder.add("album", createAttributesForAlbum(album), true);
+            builder.add("album", createAttributesForAlbum(album, username), true);
         }
 
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "songCount", 20));
@@ -729,8 +733,10 @@ public class RESTController extends MultiActionController {
                 albums = homeController.getNewest(offset, size);
             } else if ("alphabetical".equals(type)) {
                 albums = homeController.getAlphabetical(offset, size);
-            } else {
+            } else if ("random".equals(type)) {
                 albums = homeController.getRandom(size);
+            } else {
+                throw new Exception("Invalid list type: " + type);
             }
 
             for (HomeController.Album album : albums) {
@@ -759,6 +765,7 @@ public class RESTController extends MultiActionController {
             int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
             size = Math.max(0, Math.min(size, 500));
             String type = ServletRequestUtils.getRequiredStringParameter(request, "type");
+            String username = securityService.getCurrentUsername(request);
 
             List<Album> albums;
             if ("frequent".equals(type)) {
@@ -769,12 +776,15 @@ public class RESTController extends MultiActionController {
                 albums = albumDao.getNewestAlbums(offset, size);
             } else if ("alphabetical".equals(type)) {
                 albums = albumDao.getAlphabetialAlbums(offset, size);
-            } else {
+            } else if ("starred".equals(type)) {
+                albums = albumDao.getStarredAlbums(offset, size, securityService.getCurrentUser(request).getUsername());
+            } else if ("random".equals(type)) {
                 albums = searchService.getRandomAlbumsId3(size);
+            } else {
+                throw new Exception("Invalid list type: " + type);
             }
-
             for (Album album : albums) {
-                builder.add("album", createAttributesForAlbum(album), true);
+                builder.add("album", createAttributesForAlbum(album, username), true);
             }
             builder.endAll();
             response.getWriter().print(builder);
@@ -1032,6 +1042,43 @@ public class RESTController extends MultiActionController {
             }
             boolean submission = ServletRequestUtils.getBooleanParameter(request, "submission", true);
             audioScrobblerService.register(file, player.getUsername(), submission);
+        } catch (Exception x) {
+            LOG.warn("Error in REST API.", x);
+            error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
+            return;
+        }
+
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+
+    public void star(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        starOrUnstar(request, response, true);
+    }
+
+    public void unstar(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        starOrUnstar(request, response, false);
+    }
+
+    private void starOrUnstar(HttpServletRequest request, HttpServletResponse response, boolean star) throws Exception {
+        request = wrapRequest(request);
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        // TODO: Support artist and media_file.
+        try {
+            String username = securityService.getCurrentUser(request).getUsername();
+            for (int albumId : ServletRequestUtils.getIntParameters(request, "albumId")) {
+                Album album = albumDao.getAlbum(albumId);
+                if (album == null) {
+                    error(request, response, ErrorCode.NOT_FOUND, "Album not found: " + albumId);
+                    return;
+                }
+                if (star) {
+                    albumDao.starAlbum(albumId, username);
+                } else {
+                    albumDao.unstarAlbum(albumId, username);
+                }
+            }
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
             error(request, response, ErrorCode.GENERIC, getErrorMessage(x));

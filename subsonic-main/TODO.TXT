@@ -48,10 +48,12 @@ Cascading delete.
 Add type to getAlbumList and getAlbumList2.
 Add getStarred() (songCount, songOffset, albumCount, ....)
 Add getStarred2()
-Add star(songId, albumId, artistId)
-Add starredDate attribute to Album, Artist and MediaFile.
+Add star(songId, albumId, artistId) and unstar(..)
+Add starred attribute to Album, Artist and MediaFile.
 StarService
 Web support.
+Performance test.
+Test REST starring with multiple users, and with non-present albums.
 
 Update subsonic-tools.
 Test upgrade 4.6->4.7
