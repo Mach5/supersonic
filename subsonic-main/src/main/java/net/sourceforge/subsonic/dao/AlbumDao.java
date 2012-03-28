@@ -146,7 +146,7 @@ public class AlbumDao extends AbstractDao {
 
         final int batchSize = 1000;
         for (int id = minId; id <= maxId; id += batchSize) {
-            update("update album set present=false where id between ? and ? and last_scanned != ?", id, id + batchSize, lastScanned);
+            update("update album set present=false where id between ? and ? and last_scanned != ? and present", id, id + batchSize, lastScanned);
         }
     }
 

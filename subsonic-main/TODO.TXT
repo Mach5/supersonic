@@ -27,6 +27,7 @@ Create MediaType music, audiobook and podcast.
 TODO IN 4.7
 -----------------
 Performance test before Easter!
+  Checkpoint after index?
 Update subsonic-tools.
 Build Windows installer.
 Test upgrade 4.6->4.7
