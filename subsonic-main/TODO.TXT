@@ -18,7 +18,7 @@ Always use fast access mode in LeftController.
 Create new album list type: alphabetic.
 Top Rated is broken.
 MetaDataParer.guessArtist etc: Don't return empty strings.
-Added "created" to Child in REST xsd
+Added "created" and "discNumber" to Child in REST xsd
 Update playCount, lastPlayed in Album table.
 Remove MediaFileService.getFirstChild.
 Create MediaType music, audiobook and podcast.
@@ -26,10 +26,7 @@ Create MediaType music, audiobook and podcast.
 
 TODO IN 4.7
 -----------------
-Performance test before Easter!
-  Checkpoint after index?
 Update subsonic-tools.
-Build Windows installer.
 Test upgrade 4.6->4.7
 Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
@@ -51,9 +48,7 @@ REST
   - Document in api.jsp
   - Add example links to demo server.
   - Create example for videos.
-  - Add coverart to existing getIndexes method?
   - Test video streaming to Android.
-  - Add disc number
 
 Shortcuts display ID3 names
 

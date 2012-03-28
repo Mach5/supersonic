@@ -900,6 +900,7 @@ public class RESTController extends MultiActionController {
             attributes.add("duration", mediaFile.getDurationSeconds());
             attributes.add("bitRate", mediaFile.getBitRate());
             attributes.add("track", mediaFile.getTrackNumber());
+            attributes.add("discNumber", mediaFile.getDiscNumber());
             attributes.add("year", mediaFile.getYear());
             attributes.add("genre", mediaFile.getGenre());
             attributes.add("size", mediaFile.getFileSize());
