@@ -60,7 +60,7 @@
 
     <modules>
         <module>subsonic-main</module>
-        <module>subsonic-android</module>
+        <!-- <module>subsonic-android</module> -->
         <!--  <module>supersonic-android-it</module> -->
     </modules>
 
