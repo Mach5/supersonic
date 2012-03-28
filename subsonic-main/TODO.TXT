@@ -26,6 +26,33 @@ Create MediaType music, audiobook and podcast.
 
 TODO IN 4.7
 -----------------
+
+Starring
+
+starred_media_file
+  username
+  media_file_id
+  created
+
+starred_artist
+  username
+  artist_id
+  created
+
+starred_album
+  username
+  album_id
+  created
+
+Cascading delete.
+Add type to getAlbumList and getAlbumList2.
+Add getStarred() (songCount, songOffset, albumCount, ....)
+Add getStarred2()
+Add star(songId, albumId, artistId)
+Add starredDate attribute to Album, Artist and MediaFile.
+StarService
+Web support.
+
 Update subsonic-tools.
 Test upgrade 4.6->4.7
 Avoid long db startup. Reduce hsql log size?
@@ -54,7 +81,7 @@ Shortcuts display ID3 names
 
 Encourage users to save email addresses, also for admin.  Explain why.
 Handle albums without artist. Don't create them?
-Bug: Playlist frame > Combo box > Selected songs > * are broken.
+Bug: Playlist frame > Combo box > Selected songs > Add to playlist is broken.
 test that getRandomSongs doesn't return audiobooks and podcast.
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
 Support comment and ratings for Album table.
