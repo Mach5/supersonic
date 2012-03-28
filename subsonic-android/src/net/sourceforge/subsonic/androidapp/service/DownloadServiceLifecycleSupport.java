@@ -18,6 +18,11 @@
  */
 package net.sourceforge.subsonic.androidapp.service;
 
+import static net.sourceforge.subsonic.androidapp.domain.PlayerState.COMPLETED;
+import static net.sourceforge.subsonic.androidapp.domain.PlayerState.IDLE;
+import static net.sourceforge.subsonic.androidapp.domain.PlayerState.PAUSED;
+import static net.sourceforge.subsonic.androidapp.domain.PlayerState.STOPPED;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +37,7 @@ import android.content.IntentFilter;
 import android.util.Log;
 import android.view.KeyEvent;
 import net.sourceforge.subsonic.androidapp.domain.MusicDirectory;
+import net.sourceforge.subsonic.androidapp.domain.PlayerState;
 import net.sourceforge.subsonic.androidapp.util.CacheCleaner;
 import net.sourceforge.subsonic.androidapp.util.FileUtil;
 import net.sourceforge.subsonic.androidapp.util.Util;
@@ -51,6 +57,7 @@ public class DownloadServiceLifecycleSupport {
     private BroadcastReceiver headsetEventReceiver;
     private BroadcastReceiver ejectEventReceiver;
     private boolean externalStorageAvailable= true;
+    private PlayerState playerState;
 
     /**
      * This receiver manages the intent that could come from other applications.
@@ -213,7 +220,12 @@ public class DownloadServiceLifecycleSupport {
                 downloadService.reset();
                 break;
             case KEYCODE_MEDIA_PLAY: //KeyEvent.KEYCODE_MEDIA_PLAY: // Not added until API version 11
-            	downloadService.play();
+            	playerState = downloadService.getPlayerState();
+            	if (playerState == PAUSED || playerState == COMPLETED) {
+            		downloadService.start();
+                } else if (playerState == STOPPED || playerState == IDLE) {
+                	downloadService.play();
+                }
             	break;
             case KEYCODE_MEDIA_PAUSE: //KeyEvent.KEYCODE_MEDIA_PAUSE: // Not added until API version 11
             	downloadService.pause();
