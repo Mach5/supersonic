@@ -62,8 +62,8 @@ public class AbstractDao {
     }
 
     private void log(String sql, long startTimeNano) {
-        long micros = (System.nanoTime() - startTimeNano) / 1000L;
-        LOG.debug(micros + "  " + sql);
+//        long micros = (System.nanoTime() - startTimeNano) / 1000L;
+//        LOG.debug(micros + "  " + sql);
     }
 
     protected <T> List<T> query(String sql, RowMapper rowMapper, Object... args) {
