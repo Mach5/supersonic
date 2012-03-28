@@ -239,7 +239,7 @@ public class MediaFileDao extends AbstractDao {
 
         final int batchSize = 1000;
         for (int id = minId; id <= maxId; id += batchSize) {
-            update("update media_file set present=false where last_scanned != ?", lastScanned);
+            update("update media_file set present=false where id between ? and ? last_scanned != ?", id, id + batchSize, lastScanned);
         }
     }
 
