@@ -286,20 +286,19 @@ public class RESTController extends MultiActionController {
         attributes = new AttributeSet();
         attributes.add("id", album.getId());
         attributes.add("name", album.getName());
-        if (album.getCoverArtPath() != null) {
-            attributes.add("coverArt", CoverArtController.ALBUM_COVERART_PREFIX + album.getId());
-        }
-        attributes.add("songCount", album.getSongCount());
-        attributes.add("created", StringUtil.toISO8601(album.getCreated()));
-        attributes.add("duration", album.getDurationSeconds());
         attributes.add("artist", album.getArtist());
-
         if (album.getArtist() != null) {
             Artist artist = artistDao.getArtist(album.getArtist());
             if (artist != null) {
                 attributes.add("artistId", artist.getId());
             }
         }
+        if (album.getCoverArtPath() != null) {
+            attributes.add("coverArt", CoverArtController.ALBUM_COVERART_PREFIX + album.getId());
+        }
+        attributes.add("songCount", album.getSongCount());
+        attributes.add("created", StringUtil.toISO8601(album.getCreated()));
+        attributes.add("duration", album.getDurationSeconds());
 
         return attributes;
     }

@@ -55,7 +55,6 @@ REST
   - Test video streaming to Android.
   - Analyze remaining methods.
 
-Create example for albumList2.
 Shortcuts display ID3 names
 
 Encourage users to save email addresses, also for admin.  Explain why.
