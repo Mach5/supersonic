@@ -84,6 +84,11 @@ public class MediaFileDao extends AbstractDao {
                 artist, album, MUSIC.name(), AUDIOBOOK.name(), PODCAST.name());
     }
 
+    public List<MediaFile> getVideos(int size, int offset) {
+        return query("select " + COLUMNS + " from media_file where type=? and present order by title limit ? offset ?", rowMapper,
+                VIDEO.name(), size, offset);
+    }
+
     /**
      * Creates or updates a media file.
      *

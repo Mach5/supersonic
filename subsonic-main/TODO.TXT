@@ -50,9 +50,10 @@ New playlist implementation.
 REST
   - Document in api.jsp
   - Add example links to demo server.
-  - How to handle video? Separate method?
+  - Create example for videos.
   - Add coverart to existing getIndexes method?
   - Test video streaming to Android.
+  - Add disc number
 
 Shortcuts display ID3 names
 

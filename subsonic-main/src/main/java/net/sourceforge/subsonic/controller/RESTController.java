@@ -815,6 +815,27 @@ public class RESTController extends MultiActionController {
             error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
         }
     }
+    
+    public void getVideos(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        Player player = playerService.getPlayer(request, response);
+
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+        builder.add("videos", false);
+        try {
+            int size = ServletRequestUtils.getIntParameter(request, "size", Integer.MAX_VALUE);
+            int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
+
+            for (MediaFile mediaFile : mediaFileDao.getVideos(size, offset)) {
+                builder.add("video", createAttributesForMediaFile(player, mediaFile), true);
+            }
+            builder.endAll();
+            response.getWriter().print(builder);
+        } catch (Exception x) {
+            LOG.warn("Error in REST API.", x);
+            error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
+        }
+    }
 
     public void getNowPlaying(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);

@@ -17,6 +17,7 @@
             <xs:element name="artist" type="sub:ArtistWithAlbumsID3" minOccurs="1" maxOccurs="1"/>
             <xs:element name="album" type="sub:AlbumWithSongsID3" minOccurs="1" maxOccurs="1"/>
             <xs:element name="song" type="sub:Child" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="videos" type="sub:Videos" minOccurs="1" maxOccurs="1"/>
             <xs:element name="nowPlaying" type="sub:NowPlaying" minOccurs="1" maxOccurs="1"/>
             <xs:element name="searchResult" type="sub:SearchResult" minOccurs="1" maxOccurs="1"/>
             <xs:element name="searchResult2" type="sub:SearchResult2" minOccurs="1" maxOccurs="1"/>
@@ -127,6 +128,12 @@
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="Videos">
+        <xs:sequence>
+            <xs:element name="video" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="Directory">
