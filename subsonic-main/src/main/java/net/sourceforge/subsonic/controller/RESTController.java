@@ -124,7 +124,6 @@ public class RESTController extends MultiActionController {
     private ArtistDao artistDao;
     private AlbumDao albumDao;
             
-
     public void ping(HttpServletRequest request, HttpServletResponse response) throws Exception {
         XMLBuilder builder = createXMLBuilder(request, response, true).endAll();
         response.getWriter().print(builder);
@@ -362,9 +361,12 @@ public class RESTController extends MultiActionController {
         try {
             int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
             dir = mediaFileService.getMediaFile(id);
+            if (dir == null) {
+                throw new Exception();
+            }
         } catch (Exception x) {
             LOG.warn("Error in REST API.", x);
-            error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
+            error(request, response, ErrorCode.NOT_FOUND, "Directory not found");
             return;
         }
 
@@ -523,7 +525,8 @@ public class RESTController extends MultiActionController {
             String id = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
             File file = playlistService.getSavedPlaylist(id);
             if (file == null) {
-                throw new Exception("Playlist not found.");
+                error(request, response, ErrorCode.NOT_FOUND, "Playlist not found: " + id);
+                return;
             }
             Playlist playlist = new Playlist();
             playlistService.loadPlaylist(playlist, id);
@@ -1001,6 +1004,10 @@ public class RESTController extends MultiActionController {
         try {
             int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
             MediaFile file = mediaFileService.getMediaFile(id);
+            if (file == null) {
+                error(request, response, ErrorCode.NOT_FOUND, "File not found: " + id);
+                return;
+            }
             boolean submission = ServletRequestUtils.getBooleanParameter(request, "submission", true);
             audioScrobblerService.register(file, player.getUsername(), submission);
         } catch (Exception x) {
@@ -1443,6 +1450,11 @@ public class RESTController extends MultiActionController {
 
             int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
             MediaFile mediaFile = mediaFileService.getMediaFile(id);
+            if (mediaFile == null) {
+                error(request, response, ErrorCode.NOT_FOUND, "File not found: " + id);
+                return;
+            }
+
             String username = securityService.getCurrentUsername(request);
             ratingService.setRatingForUser(username, mediaFile, rating);
 
