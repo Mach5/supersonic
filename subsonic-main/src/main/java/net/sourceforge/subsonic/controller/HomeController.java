@@ -165,6 +165,17 @@ public class HomeController extends ParameterizableViewController {
         return result;
     }
 
+    List<Album> getStarred(int offset, int count, String username) throws IOException {
+        List<Album> result = new ArrayList<Album>();
+        for (MediaFile file : mediaFileService.getStarredAlbums(offset, count, username)) {
+            Album album = createAlbum(file);
+            if (album != null) {
+                result.add(album);
+            }
+        }
+        return result;
+    }
+
     List<Album> getRandom(int count) throws IOException {
         List<Album> result = new ArrayList<Album>();
         for (MediaFile file : searchService.getRandomAlbums(count)) {

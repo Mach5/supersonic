@@ -15,7 +15,7 @@ Never remove rows from media_file, set present=false instead.
 Support old-style IDs in REST API.
 Always use fast access mode in LeftController.
   Refactor accessMode in MediaFileService.
-Create new album list type: alphabetic.
+Create new album list type: alphabetic, starred
 Top Rated is broken.
 MetaDataParer.guessArtist etc: Don't return empty strings.
 Added "created" and "discNumber" to Child in REST xsd
@@ -33,6 +33,7 @@ Add star(songId, albumId, artistId) and unstar(..)
 Add starred attribute to MediaFile.
 StarService
 Web support.
+Add "Starred" to album list in home.jsp
 
 Update subsonic-tools.
 Test upgrade 4.6->4.7

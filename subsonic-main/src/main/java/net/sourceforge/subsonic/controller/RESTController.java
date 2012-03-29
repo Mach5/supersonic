@@ -218,9 +218,11 @@ public class RESTController extends MultiActionController {
 
         // Add children
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
         List<MediaFile> singleSongs = leftController.getSingleSongs(musicFolders);
+
         for (MediaFile singleSong : singleSongs) {
-            builder.add("child", createAttributesForMediaFile(player, singleSong), true);
+            builder.add("child", createAttributesForMediaFile(player, singleSong, username), true);
         }
 
         builder.endAll();
@@ -309,6 +311,7 @@ public class RESTController extends MultiActionController {
     public void getAlbum(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
         Album album;
@@ -324,10 +327,9 @@ public class RESTController extends MultiActionController {
             return;
         }
 
-        String username = securityService.getCurrentUsername(request);
         builder.add("album", createAttributesForAlbum(album, username), false);
         for (MediaFile mediaFile : mediaFileDao.getSongsForAlbum(album.getArtist(), album.getName())) {
-            builder.add("song", createAttributesForMediaFile(player, mediaFile) , true);
+            builder.add("song", createAttributesForMediaFile(player, mediaFile, username) , true);
         }
 
         builder.endAll();
@@ -337,6 +339,7 @@ public class RESTController extends MultiActionController {
     public void getSong(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
         MediaFile song;
@@ -352,7 +355,7 @@ public class RESTController extends MultiActionController {
             return;
         }
 
-        builder.add("song", createAttributesForMediaFile(player, song), true);
+        builder.add("song", createAttributesForMediaFile(player, song, username), true);
 
         builder.endAll();
         response.getWriter().print(builder);
@@ -361,6 +364,7 @@ public class RESTController extends MultiActionController {
     public void getMusicDirectory(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
 
         MediaFile dir;
         try {
@@ -381,7 +385,7 @@ public class RESTController extends MultiActionController {
                 new Attribute("name", dir.getName()));
 
         for (MediaFile child : mediaFileService.getChildrenOf(dir, true, true, true)) {
-            AttributeSet attributes = createAttributesForMediaFile(player, child);
+            AttributeSet attributes = createAttributesForMediaFile(player, child, username);
             builder.add("child", attributes, true);
         }
         builder.endAll();
@@ -393,6 +397,7 @@ public class RESTController extends MultiActionController {
         request = wrapRequest(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
 
         String any = request.getParameter("any");
         String artist = request.getParameter("artist");
@@ -424,7 +429,7 @@ public class RESTController extends MultiActionController {
                 new Attribute("totalHits", result.getTotalHits()));
 
         for (MediaFile mediaFile : result.getMediaFiles()) {
-            AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
+            AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
             builder.add("match", attributes, true);
         }
         builder.endAll();
@@ -435,6 +440,7 @@ public class RESTController extends MultiActionController {
         request = wrapRequest(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
 
         builder.add("searchResult2", false);
 
@@ -454,7 +460,7 @@ public class RESTController extends MultiActionController {
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "albumOffset", 0));
         SearchResult albums = searchService.search(criteria, SearchService.IndexType.ALBUM);
         for (MediaFile mediaFile : albums.getMediaFiles()) {
-            AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
+            AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
             builder.add("album", attributes, true);
         }
 
@@ -462,7 +468,7 @@ public class RESTController extends MultiActionController {
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "songOffset", 0));
         SearchResult songs = searchService.search(criteria, SearchService.IndexType.SONG);
         for (MediaFile mediaFile : songs.getMediaFiles()) {
-            AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
+            AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
             builder.add("song", attributes, true);
         }
 
@@ -499,7 +505,7 @@ public class RESTController extends MultiActionController {
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "songOffset", 0));
         searchResult = searchService.search(criteria, SearchService.IndexType.SONG);
         for (MediaFile song : searchResult.getMediaFiles()) {
-            builder.add("song", createAttributesForMediaFile(player, song), true);
+            builder.add("song", createAttributesForMediaFile(player, song, username), true);
         }
 
         builder.endAll();
@@ -524,6 +530,7 @@ public class RESTController extends MultiActionController {
     public void getPlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
@@ -544,7 +551,7 @@ public class RESTController extends MultiActionController {
                 result = playlist.getFiles();
             }
             for (MediaFile mediaFile : result) {
-                AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
+                AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
                 builder.add("entry", attributes, true);
             }
             builder.endAll();
@@ -612,6 +619,7 @@ public class RESTController extends MultiActionController {
             XMLBuilder builder = createXMLBuilder(request, response, true);
 
             Player player = playerService.getPlayer(request, response);
+            String username = securityService.getCurrentUsername(request);
             Player jukeboxPlayer = jukeboxService.getPlayer();
             boolean controlsJukebox = jukeboxPlayer != null && jukeboxPlayer.getId().equals(player.getId());
             Playlist playlist = player.getPlaylist();
@@ -629,7 +637,7 @@ public class RESTController extends MultiActionController {
                     result = playlist.getFiles();
                 }
                 for (MediaFile mediaFile : result) {
-                    AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
+                    AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
                     builder.add("entry", attributes, true);
                 }
             } else {
@@ -714,6 +722,7 @@ public class RESTController extends MultiActionController {
     public void getAlbumList(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
         builder.add("albumList", false);
@@ -733,6 +742,8 @@ public class RESTController extends MultiActionController {
                 albums = homeController.getMostRecent(offset, size);
             } else if ("newest".equals(type)) {
                 albums = homeController.getNewest(offset, size);
+            } else if ("starred".equals(type)) {
+                albums = homeController.getStarred(offset, size, username);
             } else if ("alphabetical".equals(type)) {
                 albums = homeController.getAlphabetical(offset, size);
             } else if ("random".equals(type)) {
@@ -743,7 +754,7 @@ public class RESTController extends MultiActionController {
 
             for (HomeController.Album album : albums) {
                 MediaFile mediaFile = mediaFileService.getMediaFile(album.getPath());
-                AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
+                AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
                 builder.add("album", attributes, true);
             }
             builder.endAll();
@@ -801,6 +812,7 @@ public class RESTController extends MultiActionController {
     public void getRandomSongs(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
         builder.add("randomSongs", false);
@@ -815,7 +827,7 @@ public class RESTController extends MultiActionController {
             RandomSearchCriteria criteria = new RandomSearchCriteria(size, genre, fromYear, toYear, musicFolderId);
 
             for (MediaFile mediaFile : searchService.getRandomSongs(criteria)) {
-                AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
+                AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
                 builder.add("song", attributes, true);
             }
             builder.endAll();
@@ -831,6 +843,7 @@ public class RESTController extends MultiActionController {
     public void getVideos(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
         builder.add("videos", false);
@@ -839,7 +852,7 @@ public class RESTController extends MultiActionController {
             int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
 
             for (MediaFile mediaFile : mediaFileDao.getVideos(size, offset)) {
-                builder.add("video", createAttributesForMediaFile(player, mediaFile), true);
+                builder.add("video", createAttributesForMediaFile(player, mediaFile, username), true);
             }
             builder.endAll();
             response.getWriter().print(builder);
@@ -870,7 +883,7 @@ public class RESTController extends MultiActionController {
 
                 long minutesAgo = status.getMillisSinceLastUpdate() / 1000L / 60L;
                 if (minutesAgo < 60) {
-                    AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
+                    AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
                     attributes.add("username", username);
                     attributes.add("playerId", player.getId());
                     attributes.add("playerName", player.getName());
@@ -884,7 +897,7 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
 
-    private AttributeSet createAttributesForMediaFile(Player player, MediaFile mediaFile) {
+    private AttributeSet createAttributesForMediaFile(Player player, MediaFile mediaFile, String username) {
         MediaFile parent = mediaFileService.getParentOf(mediaFile);
         AttributeSet attributes = new AttributeSet();
         attributes.add("id", mediaFile.getId());
@@ -901,12 +914,9 @@ public class RESTController extends MultiActionController {
         attributes.add("isDir", mediaFile.isDirectory());
         attributes.add("coverArt", findCoverArt(mediaFile, parent));
         attributes.add("created", StringUtil.toISO8601(mediaFile.getCreated()));
-
-        String username = player.getUsername();
-        if (username != null) {
-            attributes.add("userRating", ratingService.getRatingForUser(username, mediaFile));
-            attributes.add("averageRating", ratingService.getAverageRating(mediaFile));
-        }
+        attributes.add("starred", StringUtil.toISO8601(mediaFileDao.getMediaFileStarredDate(mediaFile.getId(), username)));
+        attributes.add("userRating", ratingService.getRatingForUser(username, mediaFile));
+        attributes.add("averageRating", ratingService.getAverageRating(mediaFile));
 
         if (mediaFile.isFile()) {
             attributes.add("duration", mediaFile.getDurationSeconds());
@@ -1066,9 +1076,20 @@ public class RESTController extends MultiActionController {
         request = wrapRequest(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
-        // TODO: Support media_file.
         try {
             String username = securityService.getCurrentUser(request).getUsername();
+            for (int id : ServletRequestUtils.getIntParameters(request, "id")) {
+                MediaFile mediaFile = mediaFileDao.getMediaFile(id);
+                if (mediaFile == null) {
+                    error(request, response, ErrorCode.NOT_FOUND, "Media file not found: " + id);
+                    return;
+                }
+                if (star) {
+                    mediaFileDao.starMediaFile(id, username);
+                } else {
+                    mediaFileDao.unstarMediaFile(id, username);
+                }
+            }
             for (int albumId : ServletRequestUtils.getIntParameters(request, "albumId")) {
                 Album album = albumDao.getAlbum(albumId);
                 if (album == null) {
@@ -1106,6 +1127,8 @@ public class RESTController extends MultiActionController {
     public void getPodcasts(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
+
         XMLBuilder builder = createXMLBuilder(request, response, true);
         builder.add("podcasts", false);
 
@@ -1126,7 +1149,7 @@ public class RESTController extends MultiActionController {
                 String path = episode.getPath();
                 if (path != null) {
                     MediaFile mediaFile = mediaFileService.getMediaFile(path);
-                    episodeAttrs.addAll(createAttributesForMediaFile(player, mediaFile));
+                    episodeAttrs.addAll(createAttributesForMediaFile(player, mediaFile, username));
                     episodeAttrs.add("streamId", mediaFile.getId());
                 }
 
@@ -1148,6 +1171,7 @@ public class RESTController extends MultiActionController {
     public void getShares(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
 
         User user = securityService.getCurrentUser(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
@@ -1157,7 +1181,7 @@ public class RESTController extends MultiActionController {
             builder.add("share", createAttributesForShare(share), false);
 
             for (MediaFile mediaFile : shareService.getSharedFiles(share.getId())) {
-                AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
+                AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
                 builder.add("entry", attributes, true);
             }
 
@@ -1170,6 +1194,7 @@ public class RESTController extends MultiActionController {
     public void createShare(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
 
         User user = securityService.getCurrentUser(request);
         if (!user.isShareRole()) {
@@ -1205,7 +1230,7 @@ public class RESTController extends MultiActionController {
             builder.add("share", createAttributesForShare(share), false);
 
             for (MediaFile mediaFile : shareService.getSharedFiles(share.getId())) {
-                AttributeSet attributes = createAttributesForMediaFile(player, mediaFile);
+                AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
                 builder.add("entry", attributes, true);
             }
 

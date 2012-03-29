@@ -220,6 +220,34 @@ public class MediaFileDao extends AbstractDao {
     }
 
     /**
+     * Returns the most recently starred albums.
+     *
+     * @param offset   Number of albums to skip.
+     * @param count    Maximum number of albums to return.
+     * @param username Returns albums starred by this user.
+     * @return The most recently starred albums for this user.
+     */
+    public List<MediaFile> getStarredAlbums(int offset, int count, String username) {
+        // TODO: Check performance.
+        return query("select " + prefix(COLUMNS, "media_file") + " from media_file, starred_media_file where media_file.id = starred_media_file.media_file_id and " +
+                "media_file.present and media_file.type=? and starred_media_file.username=? order by starred_media_file.created desc limit ? offset ?",
+                rowMapper, ALBUM.name(), username, count, offset);
+    }
+
+    public void starMediaFile(int id, String username) {
+        unstarMediaFile(id, username);
+        update("insert into starred_media_file(media_file_id, username, created) values (?,?,?)", id, username, new Date());
+    }
+
+    public void unstarMediaFile(int id, String username) {
+        update("delete from starred_media_file where media_file_id=? and username=?", id, username);
+    }
+
+    public Date getMediaFileStarredDate(int id, String username) {
+        return queryForDate("select created from starred_media_file where media_file_id=? and username=?", null, id, username);
+    }
+
+    /**
      * Returns media library statistics, including the number of artists, albums and songs.
      *
      * @return Media library statistics.

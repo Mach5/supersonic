@@ -272,6 +272,18 @@ public class MediaFileService {
     }
 
     /**
+     * Returns the most recently starred albums.
+     *
+     * @param offset   Number of albums to skip.
+     * @param count    Maximum number of albums to return.
+     * @param username Returns albums starred by this user.
+     * @return The most recently starred albums for this user.
+     */
+    public List<MediaFile> getStarredAlbums(int offset, int count, String username) {
+        return mediaFileDao.getStarredAlbums(offset, count, username);
+    }
+
+    /**
      * Returns albums in alphabetial order.
      *
      * @param offset Number of albums to skip.
