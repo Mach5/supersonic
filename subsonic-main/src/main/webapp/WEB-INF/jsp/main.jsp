@@ -70,6 +70,14 @@
         }
     }
 
+    function toggleStar() {
+        if ($("starImage").src.indexOf("<spring:theme code="starOnImage"/>") != -1) {
+            $("starImage").src = "<spring:theme code="starOffImage"/>";
+        } else {
+            $("starImage").src = "<spring:theme code="starOnImage"/>";
+        }
+    }
+
 </script>
 
 <c:if test="${model.updateNowPlaying}">
@@ -81,14 +89,16 @@
 </c:if>
 
 <h1>
-    <c:choose>
-        <c:when test="${model.starred}">
-            <img src="<spring:theme code="starOnImage"/>" alt="">
-        </c:when>
-        <c:otherwise>
-            <img src="<spring:theme code="starOffImage"/>" alt="">
-        </c:otherwise>
-    </c:choose>
+    <a href="#" onclick="toggleStar(); return false;">
+        <c:choose>
+            <c:when test="${model.starred}">
+                <img id="starImage" src="<spring:theme code="starOnImage"/>" alt="">
+            </c:when>
+            <c:otherwise>
+                <img id="starImage" src="<spring:theme code="starOffImage"/>" alt="">
+            </c:otherwise>
+        </c:choose>
+    </a>
 
     <c:forEach items="${model.ancestors}" var="ancestor">
         <sub:url value="main.view" var="ancestorUrl">
