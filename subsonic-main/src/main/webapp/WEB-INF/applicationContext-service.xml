@@ -209,6 +209,11 @@
         <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
 
+    <bean id="ajaxStarService" class="net.sourceforge.subsonic.ajax.StarService">
+        <property name="securityService" ref="securityService"/>
+        <property name="mediaFileDao" ref="mediaFileDao"/>
+    </bean>
+
     <bean id="ajaxTagService" class="net.sourceforge.subsonic.ajax.TagService">
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="metaDataParserFactory" ref="metaDataParserFactory"/>

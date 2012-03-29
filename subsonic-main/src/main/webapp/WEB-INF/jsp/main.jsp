@@ -9,6 +9,7 @@
         <meta http-equiv="refresh" content="180;URL=nowPlaying.view?">
     </c:if>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/starService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/scriptaculous.js?load=effects"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
@@ -73,8 +74,10 @@
     function toggleStar() {
         if ($("starImage").src.indexOf("<spring:theme code="starOnImage"/>") != -1) {
             $("starImage").src = "<spring:theme code="starOffImage"/>";
+            starService.unstar(${model.dir.id});
         } else {
             $("starImage").src = "<spring:theme code="starOnImage"/>";
+            starService.star(${model.dir.id});
         }
     }
 
