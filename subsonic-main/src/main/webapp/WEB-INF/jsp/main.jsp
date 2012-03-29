@@ -71,13 +71,13 @@
         }
     }
 
-    function toggleStar() {
-        if ($("starImage").src.indexOf("<spring:theme code="starOnImage"/>") != -1) {
-            $("starImage").src = "<spring:theme code="starOffImage"/>";
-            starService.unstar(${model.dir.id});
+    function toggleStar(mediaFileId, imageId) {
+        if ($(imageId).src.indexOf("<spring:theme code="starOnImage"/>") != -1) {
+            $(imageId).src = "<spring:theme code="starOffImage"/>";
+            starService.unstar(mediaFileId);
         } else {
-            $("starImage").src = "<spring:theme code="starOnImage"/>";
-            starService.star(${model.dir.id});
+            $(imageId).src = "<spring:theme code="starOnImage"/>";
+            starService.star(mediaFileId);
         }
     }
 
@@ -92,7 +92,7 @@
 </c:if>
 
 <h1>
-    <a href="#" onclick="toggleStar(); return false;">
+    <a href="#" onclick="toggleStar(${model.dir.id}, 'starImage'); return false;">
         <c:choose>
             <c:when test="${model.starred}">
                 <img id="starImage" src="<spring:theme code="starOnImage"/>" alt="">
@@ -266,6 +266,7 @@
                         <c:param name="playEnabled" value="${model.user.streamRole and not model.partyMode}"/>
                         <c:param name="addEnabled" value="${model.user.streamRole and (not model.partyMode or not child.directory)}"/>
                         <c:param name="downloadEnabled" value="${model.user.downloadRole and not model.partyMode}"/>
+                        <c:param name="starEnabled" value="true"/>
                         <c:param name="asTable" value="true"/>
                     </c:import>
 

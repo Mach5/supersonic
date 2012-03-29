@@ -28,12 +28,10 @@ TODO IN 4.7
 -----------------
 Add getStarred() (songCount, songOffset, albumCount, ....)
 Add getStarred2()
-StarService
-Rewrite playAddDownload to use id.
-  TODO: podcastReceiver.jsp
 Web support for starring individual songs.
 Web support for showing starred stuff.
 Find nicer icons.
+Set "starred" in playAddDownload.
 
 Update subsonic-tools.
 Test upgrade 4.6->4.7
