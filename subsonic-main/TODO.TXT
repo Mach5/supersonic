@@ -30,7 +30,6 @@ Add getStarred() (songCount, songOffset, albumCount, ....)
 Add getStarred2()
 StarService
 Web support.  In first version, just show star.
-Add "Starred" to album list in home.jsp
 Find nicer icons.
 
 Update subsonic-tools.

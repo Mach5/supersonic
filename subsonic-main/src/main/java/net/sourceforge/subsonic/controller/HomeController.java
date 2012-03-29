@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -92,10 +93,14 @@ public class HomeController extends ParameterizableViewController {
             albums = getMostRecent(listOffset, listSize);
         } else if ("newest".equals(listType)) {
             albums = getNewest(listOffset, listSize);
+        } else if ("starred".equals(listType)) {
+            albums = getStarred(listOffset, listSize, user.getUsername());
         } else if ("random".equals(listType)) {
             albums = getRandom(listSize);
-        } else {
+        } else if ("alphabetical".equals(listType)) {
             albums = getAlphabetical(listOffset, listSize);
+        } else {
+            albums = Collections.emptyList();
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
