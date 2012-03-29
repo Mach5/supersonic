@@ -181,6 +181,7 @@ public class PodcastService {
      */
     public List<PodcastEpisode> getEpisodes(int channelId, boolean includeDeleted) {
         List<PodcastEpisode> all = podcastDao.getEpisodes(channelId);
+        addMediaFileIdToEpisodes(all);
         if (includeDeleted) {
             return all;
         }
@@ -202,7 +203,19 @@ public class PodcastService {
         if (episode.getStatus() == PodcastStatus.DELETED && !includeDeleted) {
             return null;
         }
+        addMediaFileIdToEpisodes(Arrays.asList(episode));
         return episode;
+    }
+
+    private void addMediaFileIdToEpisodes(List<PodcastEpisode> episodes) {
+        for (PodcastEpisode episode : episodes) {
+            if (episode.getPath() != null) {
+                MediaFile mediaFile = mediaFileService.getMediaFile(episode.getPath());
+                if (mediaFile != null) {
+                    episode.setMediaFileId(mediaFile.getId());
+                }
+            }
+        }
     }
 
     private PodcastEpisode getEpisode(int channelId, String url) {

@@ -3,7 +3,8 @@
 
 <%--
 PARAMETERS
-  path: Path to album.
+  id: ID of file.
+  path: Path to file (deprecated).
   video: Whether the file is a video (default false).
   playEnabled: Whether the current user is allowed to play songs (default true).
   addEnabled: Whether the current user is allowed to add songs to the playlist (default true).
@@ -12,7 +13,7 @@ PARAMETERS
 --%>
 
 <sub:url value="/download.view" var="downloadUrl">
-    <sub:param name="path" value="${param.path}"/>
+    <sub:param name="id" value="${param.id}"/>
 </sub:url>
 <c:set var="path">
     <sub:escapeJavaScript string="${param.path}"/>
