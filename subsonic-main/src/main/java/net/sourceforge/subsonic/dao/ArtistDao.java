@@ -96,6 +96,20 @@ public class ArtistDao extends AbstractDao {
         return query("select " + COLUMNS + " from artist where present order by name limit ? offset ?", rowMapper, count, offset);
     }
 
+    /**
+     * Returns the most recently starred artists.
+     *
+     * @param offset   Number of artists to skip.
+     * @param count    Maximum number of artists to return.
+     * @param username Returns artists starred by this user.
+     * @return The most recently starred artists for this user.
+     */
+    public List<Artist> getStarredArtists(int offset, int count, String username) {
+        return query("select " + prefix(COLUMNS, "artist") + " from artist, starred_artist where artist.id = starred_artist.artist_id and " +
+                "artist.present and starred_artist.username=? order by starred_artist.created desc limit ? offset ?",
+                rowMapper, username, count, offset);
+    }
+
     public void markPresent(String artistName, Date lastScanned) {
         update("update artist set present=?, last_scanned=? where name=?", true, lastScanned, artistName);
     }
@@ -108,6 +122,19 @@ public class ArtistDao extends AbstractDao {
         for (int id = minId; id <= maxId; id += batchSize) {
             update("update artist set present=false where id between ? and ? and last_scanned != ? and present", id, id + batchSize, lastScanned);
         }
+    }
+
+    public void starArtist(int artistId, String username) {
+        unstarArtist(artistId, username);
+        update("insert into starred_artist(artist_id, username, created) values (?,?,?)", artistId, username, new Date());
+    }
+
+    public void unstarArtist(int artistId, String username) {
+        update("delete from starred_artist where artist_id=? and username=?", artistId, username);
+    }
+
+    public Date getArtistStarredDate(int artistId, String username) {
+        return queryForDate("select created from starred_artist where artist_id=? and username=?", null, artistId, username);
     }
 
     private static class ArtistMapper implements ParameterizedRowMapper<Artist> {

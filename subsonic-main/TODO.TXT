@@ -26,34 +26,13 @@ Create MediaType music, audiobook and podcast.
 
 TODO IN 4.7
 -----------------
-
-Starring
-
-starred_media_file
-  username
-  media_file_id
-  created
-
-starred_artist
-  username
-  artist_id
-  created
-
-starred_album
-  username
-  album_id
-  created
-
-Cascading delete.
 Add type to getAlbumList and getAlbumList2.
 Add getStarred() (songCount, songOffset, albumCount, ....)
 Add getStarred2()
 Add star(songId, albumId, artistId) and unstar(..)
-Add starred attribute to Album, Artist and MediaFile.
+Add starred attribute to MediaFile.
 StarService
 Web support.
-Performance test.
-Test REST starring with multiple users, and with non-present albums.
 
 Update subsonic-tools.
 Test upgrade 4.6->4.7

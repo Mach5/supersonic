@@ -148,7 +148,6 @@ public class AlbumDao extends AbstractDao {
      * @return The most recently starred albums for this user.
      */
     public List<Album> getStarredAlbums(int offset, int count, String username) {
-        // TODO: check performance
         return query("select " + prefix(COLUMNS, "album") + " from album, starred_album where album.id = starred_album.album_id and " +
                 "album.present and starred_album.username=? order by starred_album.created desc limit ? offset ?",
                 rowMapper, username, count, offset);

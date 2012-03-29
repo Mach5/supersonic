@@ -230,12 +230,13 @@ public class RESTController extends MultiActionController {
     public void getArtists(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
+        String username = securityService.getCurrentUsername(request);
 
         builder.add("artists", false);
 
         List<Artist> artists = artistDao.getAlphabetialArtists(0, Integer.MAX_VALUE);
         for (Artist artist : artists) {
-            AttributeSet attributes = createAttributesForArtist(artist);
+            AttributeSet attributes = createAttributesForArtist(artist, username);
             builder.add("artist", attributes, true);
         }
 
@@ -243,7 +244,7 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
 
-    private AttributeSet createAttributesForArtist(Artist artist) {
+    private AttributeSet createAttributesForArtist(Artist artist, String username) {
         AttributeSet attributes = new AttributeSet();
         attributes.add("id", artist.getId());
         attributes.add("name", artist.getName());
@@ -251,6 +252,7 @@ public class RESTController extends MultiActionController {
             attributes.add("coverArt", CoverArtController.ARTIST_COVERART_PREFIX + artist.getId());
         }
         attributes.add("albumCount", artist.getAlbumCount());
+        attributes.add("starred", StringUtil.toISO8601(artistDao.getArtistStarredDate(artist.getId(), username)));
         return attributes;
     }
 
@@ -272,7 +274,7 @@ public class RESTController extends MultiActionController {
             return;
         }
 
-        builder.add("artist", createAttributesForArtist(artist), false);
+        builder.add("artist", createAttributesForArtist(artist, username), false);
         for (Album album : albumDao.getAlbumsForArtist(artist.getName())) {
             builder.add("album", createAttributesForAlbum(album, username), true);
         }
@@ -483,7 +485,7 @@ public class RESTController extends MultiActionController {
         criteria.setOffset(ServletRequestUtils.getIntParameter(request, "artistOffset", 0));
         SearchResult searchResult = searchService.search(criteria, SearchService.IndexType.ARTIST_ID3);
         for (Artist artist : searchResult.getArtists()) {
-            builder.add("artist", createAttributesForArtist(artist), true);
+            builder.add("artist", createAttributesForArtist(artist, username), true);
         }
 
         criteria.setCount(ServletRequestUtils.getIntParameter(request, "albumCount", 20));
@@ -1064,7 +1066,7 @@ public class RESTController extends MultiActionController {
         request = wrapRequest(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
-        // TODO: Support artist and media_file.
+        // TODO: Support media_file.
         try {
             String username = securityService.getCurrentUser(request).getUsername();
             for (int albumId : ServletRequestUtils.getIntParameters(request, "albumId")) {
@@ -1077,6 +1079,18 @@ public class RESTController extends MultiActionController {
                     albumDao.starAlbum(albumId, username);
                 } else {
                     albumDao.unstarAlbum(albumId, username);
+                }
+            }
+            for (int artistId : ServletRequestUtils.getIntParameters(request, "artistId")) {
+                Artist artist = artistDao.getArtist(artistId);
+                if (artist == null) {
+                    error(request, response, ErrorCode.NOT_FOUND, "Artist not found: " + artistId);
+                    return;
+                }
+                if (star) {
+                    artistDao.starArtist(artistId, username);
+                } else {
+                    artistDao.unstarArtist(artistId, username);
                 }
             }
         } catch (Exception x) {
