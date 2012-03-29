@@ -81,7 +81,14 @@
 </c:if>
 
 <h1>
-    <img src="<spring:theme code="nowPlayingImage"/>" alt="">
+    <c:choose>
+        <c:when test="${model.starred}">
+            <img src="<spring:theme code="starOnImage"/>" alt="">
+        </c:when>
+        <c:otherwise>
+            <img src="<spring:theme code="starOffImage"/>" alt="">
+        </c:otherwise>
+    </c:choose>
 
     <c:forEach items="${model.ancestors}" var="ancestor">
         <sub:url value="main.view" var="ancestorUrl">

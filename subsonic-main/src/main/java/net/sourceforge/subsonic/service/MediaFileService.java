@@ -294,6 +294,10 @@ public class MediaFileService {
         return mediaFileDao.getAlphabetialAlbums(offset, count);
     }
 
+    public Date getMediaFileStarredDate(int id, String username) {
+        return mediaFileDao.getMediaFileStarredDate(id, username);
+    }
+
     private void updateChildren(MediaFile parent) {
 
         // Check timestamps.

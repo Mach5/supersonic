@@ -117,6 +117,7 @@ public class MainController extends ParameterizableViewController {
 
         map.put("userRating", 10 * userRating);
         map.put("averageRating", Math.round(10.0D * averageRating));
+        map.put("starred", mediaFileService.getMediaFileStarredDate(dir.getId(), username) != null);
 
         CoverArtScheme scheme = player.getCoverArtScheme();
         if (scheme != CoverArtScheme.OFF) {
@@ -127,7 +128,6 @@ public class MainController extends ParameterizableViewController {
             if (coverArts.isEmpty() && dir.isAlbum()) {
                 map.put("showGenericCoverArt", true);
             }
-
         }
 
         setPreviousAndNextAlbums(dir, map);

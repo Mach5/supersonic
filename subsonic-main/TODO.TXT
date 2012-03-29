@@ -26,14 +26,12 @@ Create MediaType music, audiobook and podcast.
 
 TODO IN 4.7
 -----------------
-Add type to getAlbumList and getAlbumList2.
 Add getStarred() (songCount, songOffset, albumCount, ....)
 Add getStarred2()
-Add star(songId, albumId, artistId) and unstar(..)
-Add starred attribute to MediaFile.
 StarService
-Web support.
+Web support.  In first version, just show star.
 Add "Starred" to album list in home.jsp
+Find nicer icons.
 
 Update subsonic-tools.
 Test upgrade 4.6->4.7
