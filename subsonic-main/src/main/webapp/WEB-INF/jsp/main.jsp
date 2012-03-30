@@ -75,8 +75,17 @@
         if ($(imageId).src.indexOf("<spring:theme code="starOnImage"/>") != -1) {
             $(imageId).src = "<spring:theme code="starOffImage"/>";
             starService.unstar(mediaFileId);
-        } else {
+        }
+        else if ($(imageId).src.indexOf("<spring:theme code="starOnSmallImage"/>") != -1) {
+            $(imageId).src = "<spring:theme code="starOffSmallImage"/>";
+            starService.unstar(mediaFileId);
+        }
+        else if ($(imageId).src.indexOf("<spring:theme code="starOffImage"/>") != -1) {
             $(imageId).src = "<spring:theme code="starOnImage"/>";
+            starService.star(mediaFileId);
+        }
+        else if ($(imageId).src.indexOf("<spring:theme code="starOffSmallImage"/>") != -1) {
+            $(imageId).src = "<spring:theme code="starOnSmallImage"/>";
             starService.star(mediaFileId);
         }
     }

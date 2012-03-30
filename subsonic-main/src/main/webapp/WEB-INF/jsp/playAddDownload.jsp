@@ -25,10 +25,10 @@ PARAMETERS
     <a href="#" onclick="toggleStar(${param.id}, 'starImage${param.id}'); return false;">
         <c:choose>
             <c:when test="${param.starred}">
-                <img id="starImage${param.id}" src="<spring:theme code="starOnImage"/>" alt="">
+                <img id="starImage${param.id}" src="<spring:theme code="starOnSmallImage"/>" alt="">
             </c:when>
             <c:otherwise>
-                <img id="starImage${param.id}" src="<spring:theme code="starOffImage"/>" alt="">
+                <img id="starImage${param.id}" src="<spring:theme code="starOffSmallImage"/>" alt="">
             </c:otherwise>
         </c:choose>
     </a>
