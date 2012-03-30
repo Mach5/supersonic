@@ -77,7 +77,11 @@ public class MainController extends ParameterizableViewController {
         }
 
         List<MediaFile> children = mediaFiles.size() == 1 ? mediaFileService.getChildrenOf(dir, true, true, true) : getMultiFolderChildren(mediaFiles);
-        UserSettings userSettings = settingsService.getUserSettings(securityService.getCurrentUsername(request));
+        String username = securityService.getCurrentUsername(request);
+        UserSettings userSettings = settingsService.getUserSettings(username);
+
+        mediaFileService.populateStarredDate(dir, username);
+        mediaFileService.populateStarredDate(children, username);
 
         map.put("dir", dir);
         map.put("ancestors", getAncestors(dir));
@@ -103,7 +107,6 @@ public class MainController extends ParameterizableViewController {
             // Happens if Podcast directory is outside music folder.
         }
 
-        String username = securityService.getCurrentUsername(request);
         Integer userRating = ratingService.getRatingForUser(username, dir);
         Double averageRating = ratingService.getAverageRating(dir);
 

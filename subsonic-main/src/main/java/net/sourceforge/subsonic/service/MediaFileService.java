@@ -298,6 +298,17 @@ public class MediaFileService {
         return mediaFileDao.getMediaFileStarredDate(id, username);
     }
 
+    public void populateStarredDate(List<MediaFile> mediaFiles, String username) {
+        for (MediaFile mediaFile : mediaFiles) {
+            populateStarredDate(mediaFile, username);
+        }
+    }
+
+    public void populateStarredDate(MediaFile mediaFile, String username) {
+        Date starredDate = mediaFileDao.getMediaFileStarredDate(mediaFile.getId(), username);
+        mediaFile.setStarredDate(starredDate);
+    }
+
     private void updateChildren(MediaFile parent) {
 
         // Check timestamps.

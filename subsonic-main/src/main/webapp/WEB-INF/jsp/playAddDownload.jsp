@@ -20,7 +20,6 @@ PARAMETERS
 <c:set var="path">
     <sub:escapeJavaScript string="${param.path}"/>
 </c:set>
-
 <c:if test="${param.starEnabled}">
     <c:if test="${param.asTable}"><td></c:if>
     <a href="#" onclick="toggleStar(${param.id}, 'starImage${param.id}'); return false;">

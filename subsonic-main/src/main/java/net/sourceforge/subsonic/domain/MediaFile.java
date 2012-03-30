@@ -58,6 +58,7 @@ public class MediaFile {
     private Date created;
     private Date lastModified;
     private Date lastScanned;
+    private Date starredDate;
     private Date childrenLastUpdated;
     private boolean present;
 
@@ -383,6 +384,14 @@ public class MediaFile {
 
     public void setLastScanned(Date lastScanned) {
         this.lastScanned = lastScanned;
+    }
+
+    public Date getStarredDate() {
+        return starredDate;
+    }
+
+    public void setStarredDate(Date starredDate) {
+        this.starredDate = starredDate;
     }
 
     /**

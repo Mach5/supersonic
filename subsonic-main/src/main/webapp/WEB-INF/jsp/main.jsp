@@ -94,7 +94,7 @@
 <h1>
     <a href="#" onclick="toggleStar(${model.dir.id}, 'starImage'); return false;">
         <c:choose>
-            <c:when test="${model.starred}">
+            <c:when test="${not empty model.dir.starredDate}">
                 <img id="starImage" src="<spring:theme code="starOnImage"/>" alt="">
             </c:when>
             <c:otherwise>
@@ -267,6 +267,7 @@
                         <c:param name="addEnabled" value="${model.user.streamRole and (not model.partyMode or not child.directory)}"/>
                         <c:param name="downloadEnabled" value="${model.user.downloadRole and not model.partyMode}"/>
                         <c:param name="starEnabled" value="true"/>
+                        <c:param name="starred" value="${not empty child.starredDate}"/>
                         <c:param name="asTable" value="true"/>
                     </c:import>
 
