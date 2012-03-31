@@ -19,6 +19,10 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.AlbumDao;
+import net.sourceforge.subsonic.dao.ArtistDao;
+import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.domain.Artist;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.SecurityService;
@@ -28,7 +32,6 @@ import net.sourceforge.subsonic.util.FileUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
@@ -54,28 +57,39 @@ import java.io.OutputStream;
  */
 public class CoverArtController implements Controller, LastModified {
 
+    public static final String ALBUM_COVERART_PREFIX = "al-";
+    public static final String ARTIST_COVERART_PREFIX = "ar-";
+
     private static final Logger LOG = Logger.getLogger(CoverArtController.class);
 
     private SecurityService securityService;
     private MediaFileService mediaFileService;
+    private ArtistDao artistDao;
+    private AlbumDao albumDao;
 
     public long getLastModified(HttpServletRequest request) {
-        String path = request.getParameter("path");
-        if (StringUtils.trimToNull(path) == null) {
-            return 0;
-        }
+        try {
+            File file = getImageFile(request);
+            if (file == null) {
+                return 0;  // Request for the default image.
+            }
+            if (!FileUtil.exists(file)) {
+                return -1;
+            }
 
-        File file = new File(path);
-        if (!FileUtil.exists(file)) {
-            return -1;
+            return FileUtil.lastModified(file);
+        } catch (Exception e) {
+            return  -1;
         }
-
-        return FileUtil.lastModified(file);
     }
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         File file = getImageFile(request);
-        Integer size = ServletRequestUtils.getIntParameter(request, "size");
+
+        if (file != null && !FileUtil.exists(file)) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return null;
+        }
 
         // Check access.
         if (file != null && !securityService.isReadAllowed(file)) {
@@ -84,6 +98,7 @@ public class CoverArtController implements Controller, LastModified {
         }
 
         // Optimize if no scaling is required.
+        Integer size = ServletRequestUtils.getIntParameter(request, "size");
         if (size == null) {
             sendUnscaled(file, response);
             return null;
@@ -106,17 +121,35 @@ public class CoverArtController implements Controller, LastModified {
         return null;
     }
 
-    private File getImageFile(HttpServletRequest request) throws ServletRequestBindingException {
-        Integer id = ServletRequestUtils.getIntParameter(request, "id");
+    private File getImageFile(HttpServletRequest request) {
+        String id = request.getParameter("id");
         if (id != null) {
-            MediaFile mediaFile = mediaFileService.getMediaFile(id);
-            if (mediaFile != null) {
-                return mediaFileService.getCoverArt(mediaFile);
+            if (id.startsWith(ALBUM_COVERART_PREFIX)) {
+                return getAlbumImage(Integer.valueOf(id.replace(ALBUM_COVERART_PREFIX, "")));
             }
+            if (id.startsWith(ARTIST_COVERART_PREFIX)) {
+                return getArtistImage(Integer.valueOf(id.replace(ARTIST_COVERART_PREFIX, "")));
+            }
+            return getMediaFileImage(Integer.valueOf(id));
         }
 
         String path = StringUtils.trimToNull(request.getParameter("path"));
         return path != null ? new File(path) : null;
+    }
+
+    private File getArtistImage(int id) {
+        Artist artist = artistDao.getArtist(id);
+        return artist == null ? null : new File(artist.getCoverArtPath());
+    }
+
+    private File getAlbumImage(int id) {
+        Album album = albumDao.getAlbum(id);
+        return album == null ? null : new File(album.getCoverArtPath());
+    }
+
+    private File getMediaFileImage(int id) {
+        MediaFile mediaFile = mediaFileService.getMediaFile(id);
+        return mediaFile == null ? null : mediaFileService.getCoverArt(mediaFile);
     }
 
     private void sendImage(File file, HttpServletResponse response) throws IOException {
@@ -247,5 +280,13 @@ public class CoverArtController implements Controller, LastModified {
 
     public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
+    }
+
+    public void setArtistDao(ArtistDao artistDao) {
+        this.artistDao = artistDao;
+    }
+
+    public void setAlbumDao(AlbumDao albumDao) {
+        this.albumDao = albumDao;
     }
 }

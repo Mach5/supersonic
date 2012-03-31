@@ -272,6 +272,18 @@ public class MediaFileService {
     }
 
     /**
+     * Returns the most recently starred albums.
+     *
+     * @param offset   Number of albums to skip.
+     * @param count    Maximum number of albums to return.
+     * @param username Returns albums starred by this user.
+     * @return The most recently starred albums for this user.
+     */
+    public List<MediaFile> getStarredAlbums(int offset, int count, String username) {
+        return mediaFileDao.getStarredAlbums(offset, count, username);
+    }
+
+    /**
      * Returns albums in alphabetial order.
      *
      * @param offset Number of albums to skip.
@@ -280,6 +292,21 @@ public class MediaFileService {
      */
     public List<MediaFile> getAlphabetialAlbums(int offset, int count) {
         return mediaFileDao.getAlphabetialAlbums(offset, count);
+    }
+
+    public Date getMediaFileStarredDate(int id, String username) {
+        return mediaFileDao.getMediaFileStarredDate(id, username);
+    }
+
+    public void populateStarredDate(List<MediaFile> mediaFiles, String username) {
+        for (MediaFile mediaFile : mediaFiles) {
+            populateStarredDate(mediaFile, username);
+        }
+    }
+
+    public void populateStarredDate(MediaFile mediaFile, String username) {
+        Date starredDate = mediaFileDao.getMediaFileStarredDate(mediaFile.getId(), username);
+        mediaFile.setStarredDate(starredDate);
     }
 
     private void updateChildren(MediaFile parent) {
@@ -446,7 +473,7 @@ public class MediaFileService {
             return PODCAST;
         }
         if (path.contains("audiobook") || genre.contains("audiobook") || path.contains("audio book") || genre.contains("audio book")) {
-            return AUDIO_BOOK;
+            return AUDIOBOOK;
         }
         return MUSIC;
     }

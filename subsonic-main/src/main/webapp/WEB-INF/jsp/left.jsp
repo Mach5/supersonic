@@ -107,6 +107,7 @@
     <p class="dense" style="padding-left:0.5em">
         <span title="${song.title}">
             <c:import url="playAddDownload.jsp">
+                <c:param name="id" value="${song.id}"/>
                 <c:param name="path" value="${song.path}"/>
                 <c:param name="playEnabled" value="${model.user.streamRole and not model.partyMode}"/>
                 <c:param name="addEnabled" value="${model.user.streamRole}"/>

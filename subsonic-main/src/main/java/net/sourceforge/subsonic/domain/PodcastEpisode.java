@@ -31,6 +31,7 @@ import net.sourceforge.subsonic.util.StringUtil;
 public class PodcastEpisode {
 
     private Integer id;
+    private Integer mediaFileId;
     private Integer channelId;
     private String url;
     private String path;
@@ -159,5 +160,13 @@ public class PodcastEpisode {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public Integer getMediaFileId() {
+        return mediaFileId;
+    }
+
+    public void setMediaFileId(Integer mediaFileId) {
+        this.mediaFileId = mediaFileId;
     }
 }

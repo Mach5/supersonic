@@ -55,6 +55,7 @@
 
             <tr class="artistRow" ${loopStatus.count > 5 ? "style='display:none'" : ""}>
                 <c:import url="playAddDownload.jsp">
+                    <c:param name="id" value="${match.id}"/>
                     <c:param name="path" value="${match.path}"/>
                     <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>
                     <c:param name="addEnabled" value="${command.user.streamRole and (not command.partyModeEnabled or not match.directory)}"/>
@@ -84,6 +85,7 @@
 
             <tr class="albumRow" ${loopStatus.count > 5 ? "style='display:none'" : ""}>
                 <c:import url="playAddDownload.jsp">
+                    <c:param name="id" value="${match.id}"/>
                     <c:param name="path" value="${match.path}"/>
                     <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>
                     <c:param name="addEnabled" value="${command.user.streamRole and (not command.partyModeEnabled or not match.directory)}"/>
@@ -119,6 +121,7 @@
 
             <tr class="songRow" ${loopStatus.count > 15 ? "style='display:none'" : ""}>
                 <c:import url="playAddDownload.jsp">
+                    <c:param name="id" value="${match.id}"/>
                     <c:param name="path" value="${match.path}"/>
                     <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>
                     <c:param name="addEnabled" value="${command.user.streamRole and (not command.partyModeEnabled or not match.directory)}"/>
