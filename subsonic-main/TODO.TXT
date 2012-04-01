@@ -34,6 +34,8 @@ Find nicer icons.
 
 Eliminate HomeController.Album.
 Use id in web interface.
+Remove "path" from playAddDownload.jsp
+Remove usage of "pathUtf8Hex" in code.
 
 Update subsonic-tools.
 Test upgrade 4.6->4.7

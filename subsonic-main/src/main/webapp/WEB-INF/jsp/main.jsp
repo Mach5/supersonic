@@ -140,15 +140,11 @@
         <c:set var="needSep" value="true"/>
     </c:if>
 
-    <c:set var="path">
-        <sub:escapeJavaScript string="${model.dir.path}"/>
-    </c:set>
-
     <c:if test="${model.user.streamRole}">
         <c:if test="${needSep}">|</c:if>
-        <a href="javascript:noop()" onclick="top.playlist.onPlay('${path}');"><fmt:message key="main.playall"/></a> |
-        <a href="javascript:noop()" onclick="top.playlist.onPlayRandom('${path}', 10);"><fmt:message key="main.playrandom"/></a> |
-        <a href="javascript:noop()" onclick="top.playlist.onAdd('${path}');"><fmt:message key="main.addall"/></a>
+        <a href="javascript:noop()" onclick="top.playlist.onPlay(${model.dir.id});"><fmt:message key="main.playall"/></a> |
+        <a href="javascript:noop()" onclick="top.playlist.onPlayRandom(${model.dir.id}, 10);"><fmt:message key="main.playrandom"/></a> |
+        <a href="javascript:noop()" onclick="top.playlist.onAdd(${model.dir.id});"><fmt:message key="main.addall"/></a>
         <c:set var="needSep" value="true"/>
     </c:if>
 
@@ -156,7 +152,7 @@
 
         <c:if test="${model.user.downloadRole}">
             <sub:url value="download.view" var="downloadUrl">
-                <sub:param name="path" value="${model.dir.path}"/>
+                <sub:param name="id" value="${model.dir.id}"/>
             </sub:url>
             <c:if test="${needSep}">|</c:if>
             <a href="${downloadUrl}"><fmt:message key="common.download"/></a>

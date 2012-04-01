@@ -105,12 +105,12 @@ public class PlaylistService {
         return convert(request, player, serverSidePlaylist, offset);
     }
 
-    public PlaylistInfo play(String path) throws Exception {
+    public PlaylistInfo play(int id) throws Exception {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
 
         Player player = getCurrentPlayer(request, response);
-        MediaFile file = mediaFileService.getMediaFile(path);
+        MediaFile file = mediaFileService.getMediaFile(id);
         List<MediaFile> files = mediaFileService.getDescendantsOf(file, true);
         if (player.isWeb()) {
             removeVideoFiles(files);
@@ -120,11 +120,11 @@ public class PlaylistService {
         return convert(request, player, true);
     }
 
-    public PlaylistInfo playRandom(String path, int count) throws Exception {
+    public PlaylistInfo playRandom(int id, int count) throws Exception {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
 
-        MediaFile file = mediaFileService.getMediaFile(path);
+        MediaFile file = mediaFileService.getMediaFile(id);
         List<MediaFile> randomFiles = getRandomChildren(file, count);
         Player player = getCurrentPlayer(request, response);
         player.getPlaylist().addFiles(false, randomFiles);
@@ -132,17 +132,17 @@ public class PlaylistService {
         return convert(request, player, true);
     }
 
-    public PlaylistInfo add(String path) throws Exception {
+    public PlaylistInfo add(int id) throws Exception {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
-        return doAdd(request, response, Arrays.asList(path));
+        return doAdd(request, response, new int[]{id});
     }
 
-    public PlaylistInfo doAdd(HttpServletRequest request, HttpServletResponse response, List<String> paths) throws Exception {
+    public PlaylistInfo doAdd(HttpServletRequest request, HttpServletResponse response, int[] ids) throws Exception {
         Player player = getCurrentPlayer(request, response);
-        List<MediaFile> files = new ArrayList<MediaFile>(paths.size());
-        for (String path : paths) {
-            MediaFile ancestor = mediaFileService.getMediaFile(path);
+        List<MediaFile> files = new ArrayList<MediaFile>(ids.length);
+        for (int id : ids) {
+            MediaFile ancestor = mediaFileService.getMediaFile(id);
             files.addAll(mediaFileService.getDescendantsOf(ancestor, true));
         }
         if (player.isWeb()) {
@@ -153,14 +153,14 @@ public class PlaylistService {
         return convert(request, player, false);
     }
     
-    public PlaylistInfo doSet(HttpServletRequest request, HttpServletResponse response, List<String> paths) throws Exception {
+    public PlaylistInfo doSet(HttpServletRequest request, HttpServletResponse response, int[] ids) throws Exception {
         Player player = getCurrentPlayer(request, response);
         Playlist playlist = player.getPlaylist();
         MediaFile currentFile = playlist.getCurrentFile();
         Playlist.Status status = playlist.getStatus();
 
         playlist.clear();
-        PlaylistInfo result = doAdd(request, response, paths);
+        PlaylistInfo result = doAdd(request, response, ids);
 
         int index = currentFile == null ? -1 : playlist.getFiles().indexOf(currentFile);
         playlist.setIndex(index);

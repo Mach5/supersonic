@@ -17,9 +17,6 @@ PARAMETERS
 <sub:url value="/download.view" var="downloadUrl">
     <sub:param name="id" value="${param.id}"/>
 </sub:url>
-<c:set var="path">
-    <sub:escapeJavaScript string="${param.path}"/>
-</c:set>
 <c:if test="${param.starEnabled}">
     <c:if test="${param.asTable}"><td></c:if>
     <a href="#" onclick="toggleStar(${param.id}, 'starImage${param.id}'); return false;">
@@ -46,7 +43,7 @@ PARAMETERS
                 <img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a>
         </c:when>
         <c:otherwise>
-            <a href="javascript:noop()" onclick="top.playlist.onPlay('${path}');">
+            <a href="javascript:noop()" onclick="top.playlist.onPlay(${param.id});">
                 <img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a>
         </c:otherwise>
     </c:choose>
@@ -55,7 +52,7 @@ PARAMETERS
 
 <c:if test="${param.asTable}"><td></c:if>
 <c:if test="${(empty param.addEnabled or param.addEnabled) and not param.video}">
-    <a href="javascript:noop()" onclick="top.playlist.onAdd('${path}');">
+    <a href="javascript:noop()" onclick="top.playlist.onAdd(${param.id});">
         <img src="<spring:theme code="addImage"/>" alt="<fmt:message key="common.add"/>" title="<fmt:message key="common.add"/>"></a>
 </c:if>
 <c:if test="${param.asTable}"></td></c:if>

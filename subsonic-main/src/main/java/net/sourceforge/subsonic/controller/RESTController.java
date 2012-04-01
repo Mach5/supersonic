@@ -586,18 +586,10 @@ public class RESTController extends MultiActionController {
                 playlistControlService.doSkip(request, response, index, offset);
             } else if ("add".equals(action)) {
                 int[] ids = ServletRequestUtils.getIntParameters(request, "id");
-                List<String> paths = new ArrayList<String>(ids.length);
-                for (int id : ids) {
-                    paths.add(mediaFileService.getMediaFile(id).getPath());
-                }
-                playlistControlService.doAdd(request, response, paths);
+                playlistControlService.doAdd(request, response, ids);
             } else if ("set".equals(action)) {
                 int[] ids = ServletRequestUtils.getIntParameters(request, "id");
-                List<String> paths = new ArrayList<String>(ids.length);
-                for (int id : ids) {
-                    paths.add(mediaFileService.getMediaFile(id).getPath());
-                }
-                playlistControlService.doSet(request, response, paths);
+                playlistControlService.doSet(request, response, ids);
             } else if ("clear".equals(action)) {
                 playlistControlService.doClear(request, response);
             } else if ("remove".equals(action)) {

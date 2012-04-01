@@ -132,17 +132,17 @@
     function onPrevious() {
         skip(parseInt(getCurrentSongIndex()) - 1);
     }
-    function onPlay(path) {
+    function onPlay(id) {
         startPlayer = true;
-        playlistService.play(path, playlistCallback);
+        playlistService.play(id, playlistCallback);
     }
-    function onPlayRandom(path, count) {
+    function onPlayRandom(id, count) {
         startPlayer = true;
-        playlistService.playRandom(path, count, playlistCallback);
+        playlistService.playRandom(id, count, playlistCallback);
     }
-    function onAdd(path) {
+    function onAdd(id) {
         startPlayer = false;
-        playlistService.add(path, playlistCallback);
+        playlistService.add(id, playlistCallback);
     }
     function onShuffle() {
         playlistService.shuffle(playlistCallback);
