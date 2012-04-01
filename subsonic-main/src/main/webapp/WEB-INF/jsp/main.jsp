@@ -370,13 +370,12 @@
         <c:forEach items="${model.coverArts}" var="coverArt" varStatus="loopStatus">
             <div style="float:left; padding:5px">
                 <c:import url="coverArt.jsp">
-                    <c:param name="albumPath" value="${coverArt.parentFile.path}"/>
-                    <c:param name="albumName" value="${coverArt.parentFile.name}"/>
+                    <c:param name="albumId" value="${coverArt.id}"/>
+                    <c:param name="albumName" value="${coverArt.name}"/>
                     <c:param name="coverArtSize" value="${model.coverArtSize}"/>
-                    <c:param name="coverArtPath" value="${coverArt.path}"/>
-                    <c:param name="showLink" value="${coverArt.parentFile.path ne model.dir.path}"/>
-                    <c:param name="showZoom" value="${coverArt.parentFile.path eq model.dir.path}"/>
-                    <c:param name="showChange" value="${(coverArt.parentFile.path eq model.dir.path) and model.user.coverArtRole}"/>
+                    <c:param name="showLink" value="${coverArt ne model.dir}"/>
+                    <c:param name="showZoom" value="${coverArt eq model.dir}"/>
+                    <c:param name="showChange" value="${(coverArt eq model.dir) and model.user.coverArtRole}"/>
                     <c:param name="showCaption" value="true"/>
                     <c:param name="appearAfter" value="${loopStatus.count * 30}"/>
                 </c:import>
@@ -386,7 +385,7 @@
         <c:if test="${model.showGenericCoverArt}">
             <div style="float:left; padding:5px">
                 <c:import url="coverArt.jsp">
-                    <c:param name="albumPath" value="${model.dir.path}"/>
+                    <c:param name="albumId" value="${model.dir.id}"/>
                     <c:param name="coverArtSize" value="${model.coverArtSize}"/>
                     <c:param name="showLink" value="false"/>
                     <c:param name="showZoom" value="false"/>

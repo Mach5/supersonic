@@ -21,8 +21,8 @@
             $("error").hide();
             $("errorDetails").hide();
             $("noImagesFound").hide();
-            var path = dwr.util.getValue("path");
-            coverArtService.setCoverArtImage(path, imageUrl, setImageComplete);
+            var id = dwr.util.getValue("id");
+            coverArtService.setCoverArtImage(id, imageUrl, setImageComplete);
         }
 
         function setImageComplete(errorDetails) {
@@ -157,13 +157,13 @@
 
 <form action="javascript:setImage(dwr.util.getValue('url'))">
     <table><tr>
-        <input id="path" type="hidden" name="path" value="${model.path}"/>
+        <input id="id" type="hidden" name="id" value="${model.id}"/>
         <td><label for="url"><fmt:message key="changecoverart.address"/></label></td>
         <td style="padding-left:0.5em"><input type="text" name="url" size="50" id="url" value="http://" onclick="select()"/></td>
         <td style="padding-left:0.5em"><input type="submit" value="<fmt:message key="common.ok"/>"></td>
     </tr></table>
 </form>
-<sub:url value="main.view" var="backUrl"><sub:param name="path" value="${model.path}"/></sub:url>
+<sub:url value="main.view" var="backUrl"><sub:param name="id" value="${model.id}"/></sub:url>
 <div style="padding-top:0.5em;padding-bottom:0.5em">
     <div class="back"><a href="${backUrl}"><fmt:message key="common.back"/></a></div>
 </div>

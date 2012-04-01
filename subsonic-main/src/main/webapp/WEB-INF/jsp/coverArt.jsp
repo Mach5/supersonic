@@ -4,8 +4,7 @@
 <%--
 PARAMETERS
   coverArtSize: Height and width of cover art.
-  coverArtPath: Path to cover art, or nil if generic cover art image should be displayed.
-  albumPath: Path to album.
+  albumId: ID of album.
   albumName: Album name to display as caption and img alt.
   showLink: Whether to make the cover art image link to the album page.
   showZoom: Whether to display a link for zooming the cover art.
@@ -26,21 +25,17 @@ PARAMETERS
 
 <div style="width:${size}; max-width:${size}; height:${size}; max-height:${size}" title="${param.albumName}">
     <sub:url value="main.view" var="mainUrl">
-        <sub:param name="path" value="${param.albumPath}"/>
+        <sub:param name="id" value="${param.albumId}"/>
     </sub:url>
 
     <sub:url value="/coverArt.view" var="coverArtUrl">
         <c:if test="${not empty param.coverArtSize}">
             <sub:param name="size" value="${param.coverArtSize}"/>
         </c:if>
-        <c:if test="${not empty param.coverArtPath}">
-            <sub:param name="path" value="${param.coverArtPath}"/>
-        </c:if>
+        <sub:param name="id" value="${param.albumId}"/>
     </sub:url>
     <sub:url value="/coverArt.view" var="zoomCoverArtUrl">
-        <c:if test="${not empty param.coverArtPath}">
-            <sub:param name="path" value="${param.coverArtPath}"/>
-        </c:if>
+        <sub:param name="id" value="${param.albumId}"/>
     </sub:url>
 
     <str:randomString count="5" type="alphabet" var="divId"/>
@@ -72,7 +67,7 @@ PARAMETERS
 <div style="text-align:right; padding-right: 8px;">
     <c:if test="${param.showChange}">
         <sub:url value="/changeCoverArt.view" var="changeCoverArtUrl">
-            <sub:param name="path" value="${param.albumPath}"/>
+            <sub:param name="id" value="${param.albumId}"/>
         </sub:url>
         <a class="detail" href="${changeCoverArtUrl}"><fmt:message key="coverart.change"/></a>
     </c:if>

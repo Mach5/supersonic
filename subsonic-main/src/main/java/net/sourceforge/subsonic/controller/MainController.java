@@ -124,7 +124,7 @@ public class MainController extends ParameterizableViewController {
 
         CoverArtScheme scheme = player.getCoverArtScheme();
         if (scheme != CoverArtScheme.OFF) {
-            List<File> coverArts = getCoverArts(dir, children);
+            List<MediaFile> coverArts = getCoverArts(dir, children);
             int size = coverArts.size() > 1 ? scheme.getSize() : scheme.getSize() * 2;
             map.put("coverArts", coverArts);
             map.put("coverArtSize", size);
@@ -175,27 +175,23 @@ public class MainController extends ParameterizableViewController {
         return null;
     }
 
-    private List<File> getCoverArts(MediaFile dir, List<MediaFile> children) throws IOException {
+    private List<MediaFile> getCoverArts(MediaFile dir, List<MediaFile> children) throws IOException {
         int limit = settingsService.getCoverArtLimit();
         if (limit == 0) {
             limit = Integer.MAX_VALUE;
         }
 
-        List<File> coverArts = new ArrayList<File>();
-        if (dir.isAlbum()) {
-            File coverArt = mediaFileService.getCoverArt(dir);
-            if (coverArt != null) {
-                coverArts.add(coverArt);
-            }
+        List<MediaFile> coverArts = new ArrayList<MediaFile>();
+        if (dir.isAlbum() && dir.getCoverArtPath() != null) {
+            coverArts.add(dir);
         } else {
             for (MediaFile child : children) {
-                if (child.isDirectory()) {
-                    File coverArt = mediaFileService.getCoverArt(child);
-                    if (coverArt != null) {
-                        coverArts.add(coverArt);
-                        if (coverArts.size() > limit) {
-                            break;
-                        }
+                if (child.isAlbum()) {
+                    if (child.getCoverArtPath() != null) {
+                        coverArts.add(child);
+                    }
+                    if (coverArts.size() > limit) {
+                        break;
                     }
                 }
             }
