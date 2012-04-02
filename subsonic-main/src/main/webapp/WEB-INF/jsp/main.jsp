@@ -9,6 +9,7 @@
         <meta http-equiv="refresh" content="180;URL=nowPlaying.view?">
     </c:if>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/starService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/scriptaculous.js?load=effects"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
@@ -70,6 +71,25 @@
         }
     }
 
+    function toggleStar(mediaFileId, imageId) {
+        if ($(imageId).src.indexOf("<spring:theme code="starOnImage"/>") != -1) {
+            $(imageId).src = "<spring:theme code="starOffImage"/>";
+            starService.unstar(mediaFileId);
+        }
+        else if ($(imageId).src.indexOf("<spring:theme code="starOnSmallImage"/>") != -1) {
+            $(imageId).src = "<spring:theme code="starOffSmallImage"/>";
+            starService.unstar(mediaFileId);
+        }
+        else if ($(imageId).src.indexOf("<spring:theme code="starOffImage"/>") != -1) {
+            $(imageId).src = "<spring:theme code="starOnImage"/>";
+            starService.star(mediaFileId);
+        }
+        else if ($(imageId).src.indexOf("<spring:theme code="starOffSmallImage"/>") != -1) {
+            $(imageId).src = "<spring:theme code="starOnSmallImage"/>";
+            starService.star(mediaFileId);
+        }
+    }
+
 </script>
 
 <c:if test="${model.updateNowPlaying}">
@@ -81,7 +101,16 @@
 </c:if>
 
 <h1>
-    <img src="<spring:theme code="nowPlayingImage"/>" alt="">
+    <a href="#" onclick="toggleStar(${model.dir.id}, 'starImage'); return false;">
+        <c:choose>
+            <c:when test="${not empty model.dir.starredDate}">
+                <img id="starImage" src="<spring:theme code="starOnImage"/>" alt="">
+            </c:when>
+            <c:otherwise>
+                <img id="starImage" src="<spring:theme code="starOffImage"/>" alt="">
+            </c:otherwise>
+        </c:choose>
+    </a>
 
     <c:forEach items="${model.ancestors}" var="ancestor">
         <sub:url value="main.view" var="ancestorUrl">
@@ -240,11 +269,14 @@
 
                 <tr style="margin:0;padding:0;border:0">
                     <c:import url="playAddDownload.jsp">
+                        <c:param name="id" value="${child.id}"/>
                         <c:param name="path" value="${child.path}"/>
                         <c:param name="video" value="${child.video and model.player.web}"/>
                         <c:param name="playEnabled" value="${model.user.streamRole and not model.partyMode}"/>
                         <c:param name="addEnabled" value="${model.user.streamRole and (not model.partyMode or not child.directory)}"/>
                         <c:param name="downloadEnabled" value="${model.user.downloadRole and not model.partyMode}"/>
+                        <c:param name="starEnabled" value="true"/>
+                        <c:param name="starred" value="${not empty child.starredDate}"/>
                         <c:param name="asTable" value="true"/>
                     </c:import>
 

@@ -15,10 +15,10 @@ Never remove rows from media_file, set present=false instead.
 Support old-style IDs in REST API.
 Always use fast access mode in LeftController.
   Refactor accessMode in MediaFileService.
-Create new album list type: alphabetic.
+Create new album list type: alphabetic, starred
 Top Rated is broken.
 MetaDataParer.guessArtist etc: Don't return empty strings.
-Added "created" to Child in REST xsd
+Added "created" and "discNumber" to Child in REST xsd
 Update playCount, lastPlayed in Album table.
 Remove MediaFileService.getFirstChild.
 Create MediaType music, audiobook and podcast.
@@ -26,8 +26,17 @@ Create MediaType music, audiobook and podcast.
 
 TODO IN 4.7
 -----------------
+Add getStarred() (songCount, songOffset, albumCount, ....)
+Add getStarred2()
+Web support for starring individual songs in playlist.
+Web support for showing starred stuff.
+Find nicer icons.
+
+Update subsonic-tools.
+Test upgrade 4.6->4.7
 Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
+
 New playlist implementation.
   - Create database schema
   - Cascading delete when user is deleted.
@@ -42,18 +51,16 @@ New playlist implementation.
   - REST support
 
 REST
-  - wrong songcount for album (should not include subdirs)
-  - add mediaType, albumId, artistId. Deprecate isVideo, isDir.
-  - add artist name/id to album?
-  - add getSong method
-  - Support prefixed cover art ID.
   - Document in api.jsp
   - Add example links to demo server.
-  - Analyze existing REST methods, e.g., getAlbumList, search
-  - Add coverart to existing getIndexes method?
+  - Create example for videos.
+  - Test video streaming to Android.
 
+Shortcuts display ID3 names
+
+Encourage users to save email addresses, also for admin.  Explain why.
 Handle albums without artist. Don't create them?
-Bug: Playlist frame > Combo box > Selected songs > * are broken.
+Bug: Playlist frame > Combo box > Selected songs > Add to playlist is broken.
 test that getRandomSongs doesn't return audiobooks and podcast.
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
 Support comment and ratings for Album table.
@@ -70,15 +77,11 @@ Include minisub
 Fix broken REST scrobbling, as reported by Ben.
 Don't throw NPE if requesting non-existent ID in REST.
 Optionally, create "Clean database" setting
-Test: Install 4.6, then upgrade and check that music_file_info is preserved.
-Save statistics in file. Update only when scanning?
 Never use fast access mode in podcast folder.
-Using CPU when idling, but only if low on memory?
-Improve document of REST "download" method.
-Automatically start scanning if media folders change.
+Improve documentation of REST "download" method.
 Use media file IDs in web interface etc.
 Make it work with 64-bit Java 7.  Problem with exe4j?
-Better error message if media file not found.
+Better error message if media file not found, in main.jsp
 Document MediaFileService.
 Check file I/O.
 Optimize MediaFile getters.
@@ -803,6 +806,10 @@ Upgrade Subsonic backend: CHANGE DATE BELOW
   scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/ROOT.war
   scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/demo.war
   rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/pages
+
+
+  Blacklist abusers of my email.
+
 
   Checkpoint database (db.view)
   ssh root@subsonic.org

@@ -94,6 +94,8 @@
     <bean id="searchService" class="net.sourceforge.subsonic.service.SearchService">
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="settingsService" ref="settingsService"/>
+        <property name="artistDao" ref="artistDao"/>
+        <property name="albumDao" ref="albumDao"/>
     </bean>
 
     <bean id="networkService" class="net.sourceforge.subsonic.service.NetworkService" init-method="init">
@@ -201,6 +203,11 @@
     <bean id="ajaxCoverArtService" class="net.sourceforge.subsonic.ajax.CoverArtService">
         <property name="securityService" ref="securityService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
+    </bean>
+
+    <bean id="ajaxStarService" class="net.sourceforge.subsonic.ajax.StarService">
+        <property name="securityService" ref="securityService"/>
+        <property name="mediaFileDao" ref="mediaFileDao"/>
     </bean>
 
     <bean id="ajaxTagService" class="net.sourceforge.subsonic.ajax.TagService">

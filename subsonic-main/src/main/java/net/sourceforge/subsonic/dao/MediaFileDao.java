@@ -80,7 +80,13 @@ public class MediaFileDao extends AbstractDao {
     }
 
     public List<MediaFile> getSongsForAlbum(String artist, String album) {
-        return query("select " + COLUMNS + " from media_file where artist=? and album=? and present order by track_number", rowMapper, artist, album);
+        return query("select " + COLUMNS + " from media_file where artist=? and album=? and present and type in (?,?,?) order by track_number", rowMapper,
+                artist, album, MUSIC.name(), AUDIOBOOK.name(), PODCAST.name());
+    }
+
+    public List<MediaFile> getVideos(int size, int offset) {
+        return query("select " + COLUMNS + " from media_file where type=? and present order by title limit ? offset ?", rowMapper,
+                VIDEO.name(), size, offset);
     }
 
     /**
@@ -214,6 +220,34 @@ public class MediaFileDao extends AbstractDao {
     }
 
     /**
+     * Returns the most recently starred albums.
+     *
+     * @param offset   Number of albums to skip.
+     * @param count    Maximum number of albums to return.
+     * @param username Returns albums starred by this user.
+     * @return The most recently starred albums for this user.
+     */
+    public List<MediaFile> getStarredAlbums(int offset, int count, String username) {
+        // TODO: Check performance.
+        return query("select " + prefix(COLUMNS, "media_file") + " from media_file, starred_media_file where media_file.id = starred_media_file.media_file_id and " +
+                "media_file.present and media_file.type=? and starred_media_file.username=? order by starred_media_file.created desc limit ? offset ?",
+                rowMapper, ALBUM.name(), username, count, offset);
+    }
+
+    public void starMediaFile(int id, String username) {
+        unstarMediaFile(id, username);
+        update("insert into starred_media_file(media_file_id, username, created) values (?,?,?)", id, username, new Date());
+    }
+
+    public void unstarMediaFile(int id, String username) {
+        update("delete from starred_media_file where media_file_id=? and username=?", id, username);
+    }
+
+    public Date getMediaFileStarredDate(int id, String username) {
+        return queryForDate("select created from starred_media_file where media_file_id=? and username=?", null, id, username);
+    }
+
+    /**
      * Returns media library statistics, including the number of artists, albums and songs.
      *
      * @return Media library statistics.
@@ -221,7 +255,7 @@ public class MediaFileDao extends AbstractDao {
     public MediaLibraryStatistics getStatistics() {
         int artistCount = queryForInt("select count(1) from artist where present", 0);
         int albumCount = queryForInt("select count(1) from album where present", 0);
-        int songCount = queryForInt("select count(1) from media_file where type in (?, ?, ?, ?) and present", 0, VIDEO.name(), MUSIC.name(), AUDIO_BOOK.name(), PODCAST.name());
+        int songCount = queryForInt("select count(1) from media_file where type in (?, ?, ?, ?) and present", 0, VIDEO.name(), MUSIC.name(), AUDIOBOOK.name(), PODCAST.name());
         long totalLengthInBytes = queryForLong("select sum(file_size) from media_file where present", 0L);
         long totalDurationInSeconds = queryForLong("select sum(duration_seconds) from media_file where present", 0L);
 
@@ -238,7 +272,7 @@ public class MediaFileDao extends AbstractDao {
 
         final int batchSize = 1000;
         for (int id = minId; id <= maxId; id += batchSize) {
-            update("update media_file set present=false where last_scanned != ?", lastScanned);
+            update("update media_file set present=false where id between ? and ? and last_scanned != ? and present", id, id + batchSize, lastScanned);
         }
     }
 

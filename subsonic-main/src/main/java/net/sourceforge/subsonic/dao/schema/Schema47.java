@@ -128,5 +128,56 @@ public class Schema47 extends Schema {
 
             LOG.info("Database table 'album' was created successfully.");
         }
+
+        if (!tableExists(template, "starred_media_file")) {
+            LOG.info("Database table 'starred_media_file' not found.  Creating it.");
+            template.execute("create table starred_media_file (" +
+                    "id identity," +
+                    "media_file_id int not null," +
+                    "username varchar not null," +
+                    "created datetime not null," +
+                    "foreign key (media_file_id) references media_file(id) on delete cascade,"+
+                    "foreign key (username) references user(username) on delete cascade," +
+                    "unique (media_file_id, username))");
+
+            template.execute("create index idx_starred_media_file_media_file_id on starred_media_file(media_file_id)");
+            template.execute("create index idx_starred_media_file_username on starred_media_file(username)");
+
+            LOG.info("Database table 'starred_media_file' was created successfully.");
+        }
+
+        if (!tableExists(template, "starred_album")) {
+            LOG.info("Database table 'starred_album' not found.  Creating it.");
+            template.execute("create table starred_album (" +
+                    "id identity," +
+                    "album_id int not null," +
+                    "username varchar not null," +
+                    "created datetime not null," +
+                    "foreign key (album_id) references album(id) on delete cascade," +
+                    "foreign key (username) references user(username) on delete cascade," +
+                    "unique (album_id, username))");
+
+            template.execute("create index idx_starred_album_album_id on starred_album(album_id)");
+            template.execute("create index idx_starred_album_username on starred_album(username)");
+
+            LOG.info("Database table 'starred_album' was created successfully.");
+        }
+
+        if (!tableExists(template, "starred_artist")) {
+            LOG.info("Database table 'starred_artist' not found.  Creating it.");
+            template.execute("create table starred_artist (" +
+                    "id identity," +
+                    "artist_id int not null," +
+                    "username varchar not null," +
+                    "created datetime not null," +
+                    "foreign key (artist_id) references artist(id) on delete cascade,"+
+                    "foreign key (username) references user(username) on delete cascade," +
+                    "unique (artist_id, username))");
+
+            template.execute("create index idx_starred_artist_artist_id on starred_artist(artist_id)");
+            template.execute("create index idx_starred_artist_username on starred_artist(username)");
+
+            LOG.info("Database table 'starred_artist' was created successfully.");
+        }
     }
 }
