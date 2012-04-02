@@ -225,9 +225,9 @@
                 dwr.util.setValue("trackNumber" + id, song.trackNumber);
             }
             if (song.starred) {
-                $("starSong" + id).src = "<spring:theme code='starOnSmallImage'/>";
+                $("starSong" + id).src = "<spring:theme code='ratingOnImage'/>";
             } else {
-                $("starSong" + id).src = "<spring:theme code='starOffSmallImage'/>";
+                $("starSong" + id).src = "<spring:theme code='ratingOffImage'/>";
             } 
             if ($("currentImage" + id) && song.streamUrl == currentStreamUrl) {
                 $("currentImage" + id).show();
@@ -514,7 +514,7 @@
     <tbody id="playlistBody">
         <tr id="pattern" style="display:none;margin:0;padding:0;border:0">
             <td class="bgcolor2"><a href="javascript:noop()">
-                <img id="starSong" onclick="onStar(this.id.substring(8) - 1)" src="<spring:theme code="starOffSmallImage"/>"
+                <img id="starSong" onclick="onStar(this.id.substring(8) - 1)" src="<spring:theme code="ratingOffImage"/>"
                      alt="" title=""></a></td>
             <td class="bgcolor2"><a href="javascript:noop()">
                 <img id="removeSong" onclick="onRemove(this.id.substring(10) - 1)" src="<spring:theme code="removeImage"/>"

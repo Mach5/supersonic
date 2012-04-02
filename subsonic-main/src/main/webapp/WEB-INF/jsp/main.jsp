@@ -72,20 +72,12 @@
     }
 
     function toggleStar(mediaFileId, imageId) {
-        if ($(imageId).src.indexOf("<spring:theme code="starOnImage"/>") != -1) {
-            $(imageId).src = "<spring:theme code="starOffImage"/>";
+        if ($(imageId).src.indexOf("<spring:theme code="ratingOnImage"/>") != -1) {
+            $(imageId).src = "<spring:theme code="ratingOffImage"/>";
             starService.unstar(mediaFileId);
         }
-        else if ($(imageId).src.indexOf("<spring:theme code="starOnSmallImage"/>") != -1) {
-            $(imageId).src = "<spring:theme code="starOffSmallImage"/>";
-            starService.unstar(mediaFileId);
-        }
-        else if ($(imageId).src.indexOf("<spring:theme code="starOffImage"/>") != -1) {
-            $(imageId).src = "<spring:theme code="starOnImage"/>";
-            starService.star(mediaFileId);
-        }
-        else if ($(imageId).src.indexOf("<spring:theme code="starOffSmallImage"/>") != -1) {
-            $(imageId).src = "<spring:theme code="starOnSmallImage"/>";
+        else if ($(imageId).src.indexOf("<spring:theme code="ratingOffImage"/>") != -1) {
+            $(imageId).src = "<spring:theme code="ratingOnImage"/>";
             starService.star(mediaFileId);
         }
     }
@@ -104,10 +96,10 @@
     <a href="#" onclick="toggleStar(${model.dir.id}, 'starImage'); return false;">
         <c:choose>
             <c:when test="${not empty model.dir.starredDate}">
-                <img id="starImage" src="<spring:theme code="starOnImage"/>" alt="">
+                <img id="starImage" src="<spring:theme code="ratingOnImage"/>" alt="">
             </c:when>
             <c:otherwise>
-                <img id="starImage" src="<spring:theme code="starOffImage"/>" alt="">
+                <img id="starImage" src="<spring:theme code="ratingOffImage"/>" alt="">
             </c:otherwise>
         </c:choose>
     </a>
