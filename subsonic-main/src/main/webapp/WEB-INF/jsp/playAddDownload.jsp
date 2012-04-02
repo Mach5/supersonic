@@ -37,7 +37,7 @@ PARAMETERS
     <c:choose>
         <c:when test="${param.video}">
             <sub:url value="/videoPlayer.view" var="videoUrl">
-                <sub:param name="path" value="${param.path}"/>
+                <sub:param name="id" value="${param.id}"/>
             </sub:url>
             <a href="${videoUrl}" target="main">
                 <img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a>

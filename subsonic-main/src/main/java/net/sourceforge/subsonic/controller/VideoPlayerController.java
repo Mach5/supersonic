@@ -53,8 +53,8 @@ public class VideoPlayerController extends ParameterizableViewController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         Map<String, Object> map = new HashMap<String, Object>();
-        String path = request.getParameter("path");
-        MediaFile file = mediaFileService.getMediaFile(path);
+        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+        MediaFile file = mediaFileService.getMediaFile(id);
 
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
         timeOffset = Math.max(0, timeOffset);

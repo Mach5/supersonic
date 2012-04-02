@@ -1,3 +1,5 @@
+
+
 DONE IN 4.7
 -----------------
 Improvements to lyrics search, courtesy of Juan Carlos Díaz.
@@ -31,6 +33,7 @@ Add getStarred2()
 Web support for starring individual songs in playlist.
 Web support for showing starred stuff.
 Find nicer icons.
+Video player broken.
 
 Eliminate HomeController.Album.
 Use id in web interface.

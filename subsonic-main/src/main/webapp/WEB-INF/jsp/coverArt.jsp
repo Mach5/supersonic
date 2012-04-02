@@ -3,8 +3,8 @@
 
 <%--
 PARAMETERS
-  coverArtSize: Height and width of cover art.
   albumId: ID of album.
+  coverArtSize: Height and width of cover art.
   albumName: Album name to display as caption and img alt.
   showLink: Whether to make the cover art image link to the album page.
   showZoom: Whether to display a link for zooming the cover art.
