@@ -90,7 +90,7 @@ public class M3UController implements Controller {
                 duration = -1;
             }
             out.println("#EXTINF:" + duration + "," + mediaFile.getArtist() + " - " + mediaFile.getTitle());
-            out.println(url + "player=" + player.getId() + "&pathUtf8Hex=" + StringUtil.utf8HexEncode(mediaFile.getPath()) + "&suffix=." + transcodingService.getSuffix(player, mediaFile, null));
+            out.println(url + "player=" + player.getId() + "&id=" +mediaFile.getId() + "&suffix=." + transcodingService.getSuffix(player, mediaFile, null));
         }
     }
 

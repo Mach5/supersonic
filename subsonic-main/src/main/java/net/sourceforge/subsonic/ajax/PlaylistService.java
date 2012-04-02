@@ -316,10 +316,8 @@ public class PlaylistService {
         List<PlaylistInfo.Entry> entries = new ArrayList<PlaylistInfo.Entry>();
         Playlist playlist = player.getPlaylist();
         for (MediaFile file : playlist.getFiles()) {
-            String albumUrl = url.replaceFirst("/dwr/.*", "/main.view?pathUtf8Hex=" +
-                    StringUtil.utf8HexEncode(file.getParentPath()));
-            String streamUrl = url.replaceFirst("/dwr/.*", "/stream?player=" + player.getId() + "&pathUtf8Hex=" +
-                                                           StringUtil.utf8HexEncode(file.getPath()));
+            String albumUrl = url.replaceFirst("/dwr/.*", "/main.view?id=" + file.getId());
+            String streamUrl = url.replaceFirst("/dwr/.*", "/stream?player=" + player.getId() + "&id=" + file.getId());
 
             // Rewrite URLs in case we're behind a proxy.
             if (settingsService.isRewriteUrlEnabled()) {
