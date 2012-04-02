@@ -147,6 +147,9 @@
     function onShuffle() {
         playlistService.shuffle(playlistCallback);
     }
+    function onStar(index) {
+        playlistService.toggleStar(index, playlistCallback);
+    }
     function onRemove(index) {
         playlistService.remove(index, playlistCallback);
     }
@@ -221,7 +224,11 @@
             if ($("trackNumber" + id)) {
                 dwr.util.setValue("trackNumber" + id, song.trackNumber);
             }
-
+            if (song.starred) {
+                $("starSong" + id).src = "<spring:theme code='starOnSmallImage'/>";
+            } else {
+                $("starSong" + id).src = "<spring:theme code='starOffSmallImage'/>";
+            } 
             if ($("currentImage" + id) && song.streamUrl == currentStreamUrl) {
                 $("currentImage" + id).show();
             }
@@ -506,6 +513,9 @@
 <table style="border-collapse:collapse;white-space:nowrap;">
     <tbody id="playlistBody">
         <tr id="pattern" style="display:none;margin:0;padding:0;border:0">
+            <td class="bgcolor2"><a href="javascript:noop()">
+                <img id="starSong" onclick="onStar(this.id.substring(8) - 1)" src="<spring:theme code="starOffSmallImage"/>"
+                     alt="" title=""></a></td>
             <td class="bgcolor2"><a href="javascript:noop()">
                 <img id="removeSong" onclick="onRemove(this.id.substring(10) - 1)" src="<spring:theme code="removeImage"/>"
                      alt="<fmt:message key="playlist.remove"/>" title="<fmt:message key="playlist.remove"/>"></a></td>

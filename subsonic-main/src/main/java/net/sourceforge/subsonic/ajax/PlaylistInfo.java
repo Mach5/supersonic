@@ -80,12 +80,13 @@ public class PlaylistInfo {
         private final String format;
         private final String contentType;
         private final String fileSize;
+        private final boolean starred;
         private final String albumUrl;
         private final String streamUrl;
 
         public Entry(Integer trackNumber, String title, String artist, String album, String genre, Integer year,
                      String bitRate, Integer duration, String durationAsString, String format, String contentType, String fileSize,
-                     String albumUrl, String streamUrl) {
+                     boolean starred, String albumUrl, String streamUrl) {
             this.trackNumber = trackNumber;
             this.title = title;
             this.artist = artist;
@@ -98,6 +99,7 @@ public class PlaylistInfo {
             this.format = format;
             this.contentType = contentType;
             this.fileSize = fileSize;
+            this.starred = starred;
             this.albumUrl = albumUrl;
             this.streamUrl = streamUrl;
         }
@@ -148,6 +150,10 @@ public class PlaylistInfo {
 
         public String getFileSize() {
             return fileSize;
+        }
+
+        public boolean isStarred() {
+            return starred;
         }
 
         public String getAlbumUrl() {

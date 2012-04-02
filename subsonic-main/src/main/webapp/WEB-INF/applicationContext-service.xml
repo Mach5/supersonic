@@ -197,9 +197,11 @@
     <bean id="ajaxPlaylistService" class="net.sourceforge.subsonic.ajax.PlaylistService">
         <property name="playerService" ref="playerService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="mediaFileDao" ref="mediaFileDao"/>
         <property name="jukeboxService" ref="jukeboxService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="settingsService" ref="settingsService"/>
+        <property name="securityService" ref="securityService"/>
     </bean>
 
     <bean id="ajaxLyricsService" class="net.sourceforge.subsonic.ajax.LyricsService"/>

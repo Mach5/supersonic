@@ -24,12 +24,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.SecurityService;
 import org.directwebremoting.WebContextFactory;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -55,6 +56,8 @@ public class PlaylistService {
     private TranscodingService transcodingService;
     private SettingsService settingsService;
     private MediaFileService mediaFileService;
+    private SecurityService securityService;
+    private MediaFileDao mediaFileDao;
 
     /**
      * Returns the playlist for the player of the current user.
@@ -199,6 +202,22 @@ public class PlaylistService {
         return doRemove(request, response, index);
     }
 
+    public PlaylistInfo toggleStar(int index) throws Exception {
+        HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
+        HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
+        Player player = getCurrentPlayer(request, response);
+
+        MediaFile file = player.getPlaylist().getFile(index);
+        String username = securityService.getCurrentUsername(request);
+        boolean starred = mediaFileDao.getMediaFileStarredDate(file.getId(), username) != null;
+        if (starred) {
+            mediaFileDao.unstarMediaFile(file.getId(), username);
+        } else {
+            mediaFileDao.starMediaFile(file.getId(), username);
+        }
+        return convert(request, player, false);
+    }
+
     public PlaylistInfo doRemove(HttpServletRequest request, HttpServletResponse response, int index) throws Exception {
         Player player = getCurrentPlayer(request, response);
         player.getPlaylist().removeFileAt(index);
@@ -327,10 +346,12 @@ public class PlaylistService {
             }
 
             String format = formatFormat(player, file);
+            String username = securityService.getCurrentUsername(request);
+            boolean starred = mediaFileService.getMediaFileStarredDate(file.getId(), username) != null;
             entries.add(new PlaylistInfo.Entry(file.getTrackNumber(), file.getTitle(), file.getArtist(),
                     file.getAlbumName(), file.getGenre(), file.getYear(), formatBitRate(file),
                     file.getDurationSeconds(), file.getDurationString(), format, formatContentType(format),
-                    formatFileSize(file.getFileSize(), locale), albumUrl, streamUrl));
+                    formatFileSize(file.getFileSize(), locale), starred, albumUrl, streamUrl));
         }
         boolean isStopEnabled = playlist.getStatus() == Playlist.Status.PLAYING && !player.isExternalWithPlaylist();
         float gain = jukeboxService.getGain();
@@ -384,5 +405,13 @@ public class PlaylistService {
 
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
+    }
+
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
+    }
+
+    public void setMediaFileDao(MediaFileDao mediaFileDao) {
+        this.mediaFileDao = mediaFileDao;
     }
 }
