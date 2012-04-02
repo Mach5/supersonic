@@ -169,7 +169,6 @@
                     <c:otherwise>
                         <c:import url="playAddDownload.jsp">
                             <c:param name="id" value="${episode.mediaFileId}"/>
-                            <c:param name="path" value="${episode.path}"/>
                             <c:param name="playEnabled" value="${model.user.streamRole and not model.partyMode}"/>
                             <c:param name="addEnabled" value="${model.user.streamRole and not model.partyMode}"/>
                             <c:param name="downloadEnabled" value="false"/>

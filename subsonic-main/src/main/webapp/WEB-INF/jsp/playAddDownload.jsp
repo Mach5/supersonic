@@ -4,7 +4,6 @@
 <%--
 PARAMETERS
   id: ID of file.
-  path: Path to file (deprecated).
   video: Whether the file is a video (default false).
   playEnabled: Whether the current user is allowed to play songs (default true).
   addEnabled: Whether the current user is allowed to add songs to the playlist (default true).

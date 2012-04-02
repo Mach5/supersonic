@@ -34,10 +34,10 @@ Web support for starring individual songs in playlist.
 Web support for showing starred stuff.
 Find nicer icons.
 Video player broken.
+Test REST video
 
 Eliminate HomeController.Album.
 Use id in web interface.
-Remove "path" from playAddDownload.jsp
 Remove usage of "pathUtf8Hex" in code.
 
 Update subsonic-tools.
