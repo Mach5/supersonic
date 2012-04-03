@@ -21,7 +21,10 @@ package net.sourceforge.subsonic.service;
 import junit.framework.TestCase;
 import net.sourceforge.subsonic.domain.MusicIndex;
 
+import java.util.Arrays;
 import java.util.List;
+
+import org.powermock.reflect.Whitebox;
 
 /**
  * Unit test of {@link MusicIndex}.
@@ -72,5 +75,15 @@ public class MusicIndexServiceTestCase extends TestCase {
         assertEquals("X", indexes.get(3).getPrefixes().get(0));
         assertEquals("Y", indexes.get(3).getPrefixes().get(1));
         assertEquals("Z", indexes.get(3).getPrefixes().get(2));
+    }
+
+    public void testIgnoreNonAlphanumericWhenSorting() throws Exception {
+    	MusicIndexService musicIndexService = new MusicIndexService();
+    	List<String> artistNames = Arrays.asList("artist", "_artist", " artist", "_art_ist_");
+    	for (String artistName : artistNames) {
+    		String sortedArtistName = Whitebox.<String> invokeMethod(musicIndexService, "createSortableName", artistName, new String[] {});
+    		String expectedArtistName = (artistName.equals("_art_ist_")) ? "art ist" : "artist";
+    		assertEquals("artist Name \"" + artistName + "\" became \"" + sortedArtistName + "\"", expectedArtistName, sortedArtistName);
+    	}
     }
 }
