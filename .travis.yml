@@ -8,3 +8,4 @@ notifications:
 branches:
   except:
     - upstream
+
