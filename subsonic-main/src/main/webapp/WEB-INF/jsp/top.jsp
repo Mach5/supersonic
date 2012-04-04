@@ -9,6 +9,7 @@
 
 <fmt:message key="top.home" var="home"/>
 <fmt:message key="top.now_playing" var="nowPlaying"/>
+<fmt:message key="top.starred" var="starred"/>
 <fmt:message key="top.settings" var="settings"/>
 <fmt:message key="top.status" var="status"/>
 <fmt:message key="top.podcast" var="podcast"/>
@@ -34,6 +35,10 @@
             <td style="min-width:4em;padding-right:1.5em">
                 <a href="nowPlaying.view?" target="main"><img src="<spring:theme code="nowPlayingImage"/>" title="${nowPlaying}" alt="${nowPlaying}"></a><br>
                 <a href="nowPlaying.view?" target="main">${nowPlaying}</a>
+            </td>
+            <td style="min-width:4em;padding-right:1.5em">
+                <a href="starred.view?" target="main"><img src="<spring:theme code="ratingOffImage"/>" title="${starred}" alt="${starred}"></a><br>
+                <a href="starred.view?" target="main">${starred}</a>
             </td>
             <td style="min-width:4em;padding-right:1.5em">
                 <a href="podcastReceiver.view?" target="main"><img src="<spring:theme code="podcastLargeImage"/>" title="${podcast}" alt="${podcast}"></a><br>

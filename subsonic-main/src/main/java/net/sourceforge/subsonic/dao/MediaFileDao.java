@@ -228,10 +228,37 @@ public class MediaFileDao extends AbstractDao {
      * @return The most recently starred albums for this user.
      */
     public List<MediaFile> getStarredAlbums(int offset, int count, String username) {
-        // TODO: Check performance.
         return query("select " + prefix(COLUMNS, "media_file") + " from media_file, starred_media_file where media_file.id = starred_media_file.media_file_id and " +
                 "media_file.present and media_file.type=? and starred_media_file.username=? order by starred_media_file.created desc limit ? offset ?",
                 rowMapper, ALBUM.name(), username, count, offset);
+    }
+
+    /**
+     * Returns the most recently starred directories.
+     *
+     * @param offset   Number of directories to skip.
+     * @param count    Maximum number of directories to return.
+     * @param username Returns directories starred by this user.
+     * @return The most recently starred directories for this user.
+     */
+    public List<MediaFile> getStarredDirectories(int offset, int count, String username) {
+        return query("select " + prefix(COLUMNS, "media_file") + " from media_file, starred_media_file where media_file.id = starred_media_file.media_file_id and " +
+                "media_file.present and media_file.type=? and starred_media_file.username=? order by starred_media_file.created desc limit ? offset ?",
+                rowMapper, DIRECTORY.name(), username, count, offset);
+    }
+
+    /**
+     * Returns the most recently starred files.
+     *
+     * @param offset   Number of files to skip.
+     * @param count    Maximum number of files to return.
+     * @param username Returns files starred by this user.
+     * @return The most recently starred files for this user.
+     */
+    public List<MediaFile> getStarredFiles(int offset, int count, String username) {
+        return query("select " + prefix(COLUMNS, "media_file") + " from media_file, starred_media_file where media_file.id = starred_media_file.media_file_id and " +
+                "media_file.present and media_file.type in (?,?,?,?) and starred_media_file.username=? order by starred_media_file.created desc limit ? offset ?",
+                rowMapper, MUSIC.name(), PODCAST.name(), AUDIOBOOK.name(), VIDEO.name(), username, count, offset);
     }
 
     public void starMediaFile(int id, String username) {

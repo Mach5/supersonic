@@ -1,5 +1,4 @@
 
-
 DONE IN 4.7
 -----------------
 Improvements to lyrics search, courtesy of Juan Carlos Díaz.
