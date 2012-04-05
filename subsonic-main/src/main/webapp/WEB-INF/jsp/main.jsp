@@ -153,7 +153,7 @@
 
         <c:if test="${model.user.coverArtRole}">
             <sub:url value="editTags.view" var="editTagsUrl">
-                <sub:param name="path" value="${model.dir.path}"/>
+                <sub:param name="id" value="${model.dir.id}"/>
             </sub:url>
             <c:if test="${needSep}">|</c:if>
             <a href="${editTagsUrl}"><fmt:message key="main.tags"/></a>

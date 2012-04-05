@@ -69,7 +69,7 @@
         updateNextTag();
     }
     function updateNextTag() {
-        var path = dwr.util.getValue("path" + index);
+        var id = dwr.util.getValue("id" + index);
         var artist = dwr.util.getValue("artist" + index);
         var track = dwr.util.getValue("track" + index);
         var album = dwr.util.getValue("album" + index);
@@ -77,7 +77,7 @@
         var year = dwr.util.getValue("year" + index);
         var genre = dwr.util.getValue("genre" + index);
         dwr.util.setValue("status" + index, "<fmt:message key="edittags.working"/>");
-        tagService.setTags(path, track, artist, album, title, year, genre, setTagsCallback);
+        tagService.setTags(id, track, artist, album, title, year, genre, setTagsCallback);
     }
     function setTagsCallback(result) {
         var message;
@@ -102,7 +102,7 @@
 </script>
 
 <h1><fmt:message key="edittags.title"/></h1>
-<sub:url value="main.view" var="backUrl"><sub:param name="path" value="${model.path}"/></sub:url>
+<sub:url value="main.view" var="backUrl"><sub:param name="id" value="${model.id}"/></sub:url>
 <div class="back"><a href="${backUrl}"><fmt:message key="common.back"/></a></div>
 
 <table class="ruleTable indent">
@@ -141,7 +141,7 @@
     <c:forEach items="${model.songs}" var="song" varStatus="loopStatus">
         <tr>
             <str:truncateNicely lower="25" upper="25" var="fileName">${song.fileName}</str:truncateNicely>
-            <input type="hidden" name="path${loopStatus.count - 1}" value="${song.path}"/>
+            <input type="hidden" name="id${loopStatus.count - 1}" value="${song.id}"/>
             <input type="hidden" name="suggestedTitle${loopStatus.count - 1}" value="${song.suggestedTitle}"/>
             <input type="hidden" name="originalTitle${loopStatus.count - 1}" value="${song.title}"/>
             <input type="hidden" name="suggestedTrack${loopStatus.count - 1}" value="${song.suggestedTrack}"/>

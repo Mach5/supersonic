@@ -25,6 +25,7 @@ import net.sourceforge.subsonic.service.metadata.MetaDataParser;
 import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.*;
 import org.springframework.web.servlet.mvc.*;
 
@@ -43,8 +44,8 @@ public class EditTagsController extends ParameterizableViewController {
 
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        String path = request.getParameter("path");
-        MediaFile dir = mediaFileService.getMediaFile(path);
+        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+        MediaFile dir = mediaFileService.getMediaFile(id);
         List<MediaFile> files = mediaFileService.getChildrenOf(dir, true, false, true);
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -60,7 +61,7 @@ public class EditTagsController extends ParameterizableViewController {
         for (int i = 0; i < files.size(); i++) {
             songs.add(createSong(files.get(i), i));
         }
-        map.put("path", path);
+        map.put("id", id);
         map.put("songs", songs);
 
         ModelAndView result = super.handleRequestInternal(request, response);
@@ -73,7 +74,7 @@ public class EditTagsController extends ParameterizableViewController {
         MetaData metaData = parser.getRawMetaData(file.getFile());
 
         Song song = new Song();
-        song.setPath(file.getPath());
+        song.setId(file.getId());
         song.setFileName(file.getName());
         song.setTrack(metaData.getTrackNumber());
         song.setSuggestedTrack(index + 1);
@@ -98,7 +99,7 @@ public class EditTagsController extends ParameterizableViewController {
      * Contains information about a single song.
      */
     public static class Song {
-        private String path;
+        private int id;
         private String fileName;
         private Integer suggestedTrack;
         private Integer track;
@@ -109,12 +110,12 @@ public class EditTagsController extends ParameterizableViewController {
         private Integer year;
         private String genre;
 
-        public String getPath() {
-            return path;
+        public int getId() {
+            return id;
         }
 
-        public void setPath(String path) {
-            this.path = path;
+        public void setId(int id) {
+            this.id = id;
         }
 
         public String getFileName() {

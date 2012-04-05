@@ -44,7 +44,7 @@ public class TagService {
     /**
      * Updated tags for a given music file.
      *
-     * @param path   The path of the music file.
+     * @param id     The ID of the music file.
      * @param track  The track number.
      * @param artist The artist name.
      * @param album  The album name.
@@ -54,7 +54,7 @@ public class TagService {
      * @return "UPDATED" if the new tags were updated, "SKIPPED" if no update was necessary.
      *         Otherwise the error message is returned.
      */
-    public String setTags(String path, String track, String artist, String album, String title, String year, String genre) {
+    public String setTags(int id, String track, String artist, String album, String title, String year, String genre) {
 
         track = StringUtils.trimToNull(track);
         artist = StringUtils.trimToNull(artist);
@@ -83,7 +83,7 @@ public class TagService {
 
         try {
 
-            MediaFile file = mediaFileService.getMediaFile(path);
+            MediaFile file = mediaFileService.getMediaFile(id);
             MetaDataParser parser = metaDataParserFactory.getParser(file.getFile());
 
             if (!parser.isEditingSupported()) {
@@ -113,7 +113,7 @@ public class TagService {
             return "UPDATED";
 
         } catch (Exception x) {
-            LOG.warn("Failed to update tags for " + path, x);
+            LOG.warn("Failed to update tags for " + id, x);
             return x.getMessage();
         }
     }

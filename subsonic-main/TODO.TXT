@@ -68,8 +68,6 @@ How to uniquely identify an album? Disregard artists, use all artists, or use on
 Support comment and ratings for Album table.
 JSON exception with ampersand.
 minisub doesn't play.
-wget "http://localhost:8080/rest/getMusicDirectory.view?u=admin&p=admin&v=1.6&c=android&id=2f55736572732f73696e6472652f4d757369632f4c756e67732043442031000000" -O -
-wget "http://localhost:8080/rest/getArtists.view?u=admin&p=admin&v=1.6&c=android" -O -
 Test getPlaylist vs old-style IDs.
 Test that Fast access mode works.
 Move statistcs to About page?
@@ -81,7 +79,6 @@ Don't throw NPE if requesting non-existent ID in REST.
 Optionally, create "Clean database" setting
 Never use fast access mode in podcast folder.
 Improve documentation of REST "download" method.
-Use media file IDs in web interface etc.
 Make it work with 64-bit Java 7.  Problem with exe4j?
 Better error message if media file not found, in main.jsp
 Document MediaFileService.
