@@ -884,72 +884,78 @@
         <td>The password of the new user, either in clear text of hex-encoded (see above).</td>
     </tr>
     <tr class="table-altrow">
+        <td><code>email</code></td>
+        <td>Yes</td>
+        <td></td>
+        <td>The email address of the new user.</td>
+    </tr>
+    <tr>
         <td><code>ldapAuthenticated</code></td>
         <td>No</td>
         <td>false</td>
         <td>Whether the user is authenicated in LDAP.</td>
     </tr>
-    <tr>
+    <tr class="table-altrow">
         <td><code>adminRole</code></td>
         <td>No</td>
         <td>false</td>
         <td>Whether the user is administrator.</td>
     </tr>
-    <tr class="table-altrow">
+    <tr>
         <td><code>settingsRole</code></td>
         <td>No</td>
         <td>true</td>
         <td>Whether the user is allowed to change settings and password.</td>
     </tr>
-    <tr>
+    <tr class="table-altrow">
         <td><code>streamRole</code></td>
         <td>No</td>
         <td>true</td>
         <td>Whether the user is allowed to play files.</td>
     </tr>
-    <tr class="table-altrow">
+    <tr>
         <td><code>jukeboxRole</code></td>
         <td>No</td>
         <td>false</td>
         <td>Whether the user is allowed to play files in jukebox mode.</td>
     </tr>
-    <tr>
+    <tr class="table-altrow">
         <td><code>downloadRole</code></td>
         <td>No</td>
         <td>false</td>
         <td>Whether the user is allowed to download files.</td>
     </tr>
-    <tr class="table-altrow">
+    <tr>
         <td><code>uploadRole</code></td>
         <td>No</td>
         <td>false</td>
         <td>Whether the user is allowed to upload files.</td>
     </tr>
-    <tr>
+    <tr class="table-altrow">
         <td><code>playlistRole</code></td>
         <td>No</td>
         <td>false</td>
         <td>Whether the user is allowed to create and delete playlists.</td>
     </tr>
-    <tr class="table-altrow">
+    <tr>
         <td><code>coverArtRole</code></td>
         <td>No</td>
         <td>false</td>
         <td>Whether the user is allowed to change cover art and tags.</td>
     </tr>
-    <tr>
+    <tr class="table-altrow">
         <td><code>commentRole</code></td>
         <td>No</td>
         <td>false</td>
         <td>Whether the user is allowed to create and edit comments and ratings.</td>
     </tr>
-    <tr class="table-altrow">
+    <tr>
         <td><code>podcastRole</code></td>
         <td>No</td>
         <td>false</td>
         <td>Whether the user is allowed to administrate Podcasts.</td>
     </tr>
-    <tr>
+    <tr class="table-altrow">
         <td><code>shareRole</code></td>
         <td>No</td>
         <td>false</td>

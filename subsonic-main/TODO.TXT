@@ -24,7 +24,6 @@ Update playCount, lastPlayed in Album table.
 Remove MediaFileService.getFirstChild.
 Create MediaType music, audiobook and podcast.
 
-
 TODO IN 4.7
 -----------------
 Add getStarred() (songCount, songOffset, albumCount, ....)
