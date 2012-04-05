@@ -26,9 +26,6 @@ Create MediaType music, audiobook and podcast.
 
 TODO IN 4.7
 -----------------
-Add getStarred() (songCount, songOffset, albumCount, ....)
-Add getStarred2()
-Web support for showing starred stuff.
 Find nicer icons.
 Video player broken.
 Test REST video

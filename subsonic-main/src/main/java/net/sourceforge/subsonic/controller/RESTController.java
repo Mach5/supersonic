@@ -1116,6 +1116,48 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
 
+    public void getStarred(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
+
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+        builder.add("starred", false);
+        for (MediaFile artist : mediaFileDao.getStarredDirectories(0, Integer.MAX_VALUE, username)) {
+            builder.add("artist", true,
+                    new Attribute("name", artist.getName()),
+                    new Attribute("id", artist.getId()));
+        }
+        for (MediaFile album : mediaFileDao.getStarredAlbums(0, Integer.MAX_VALUE, username)) {
+            builder.add("album", createAttributesForMediaFile(player, album, username), true);
+        }
+        for (MediaFile song : mediaFileDao.getStarredFiles(0, Integer.MAX_VALUE, username)) {
+            builder.add("song", createAttributesForMediaFile(player, song, username), true);
+        }
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+
+    public void getStarred2(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        Player player = playerService.getPlayer(request, response);
+        String username = securityService.getCurrentUsername(request);
+
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+        builder.add("starred2", false);
+        for (Artist artist : artistDao.getStarredArtists(0, Integer.MAX_VALUE, username)) {
+            builder.add("artist", createAttributesForArtist(artist, username), true);
+        }
+        for (Album album : albumDao.getStarredAlbums(0, Integer.MAX_VALUE, username)) {
+            builder.add("album", createAttributesForAlbum(album, username), true);
+        }
+        for (MediaFile song : mediaFileDao.getStarredFiles(0, Integer.MAX_VALUE, username)) {
+            builder.add("song", createAttributesForMediaFile(player, song, username), true);
+        }
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+
     public void getPodcasts(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);

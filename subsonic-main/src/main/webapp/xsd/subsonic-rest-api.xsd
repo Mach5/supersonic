@@ -35,6 +35,8 @@
             <xs:element name="lyrics" type="sub:Lyrics" minOccurs="1" maxOccurs="1"/>
             <xs:element name="podcasts" type="sub:Podcasts" minOccurs="1" maxOccurs="1"/>
             <xs:element name="shares" type="sub:Shares" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="starred" type="sub:Starred" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="starred2" type="sub:Starred2" minOccurs="1" maxOccurs="1"/>
             <xs:element name="error" type="sub:Error" minOccurs="1" maxOccurs="1"/>
         </xs:choice>
         <xs:attribute name="status" type="sub:ResponseStatus" use="required"/>
@@ -373,6 +375,22 @@
         <xs:attribute name="expires" type="xs:dateTime" use="optional"/>
         <xs:attribute name="lastVisited" type="xs:dateTime" use="optional"/>
         <xs:attribute name="visitCount" type="xs:int" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="Starred">
+        <xs:sequence>
+            <xs:element name="artist" type="sub:Artist" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="album" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Starred2">
+        <xs:sequence>
+            <xs:element name="artist" type="sub:ArtistID3" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="album" type="sub:AlbumID3" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="song" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="License">
