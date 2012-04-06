@@ -26,9 +26,12 @@ Create MediaType music, audiobook and podcast.
 
 TODO IN 4.7
 -----------------
+Add path to album table. Use to determine if songs belong to the same album.
+Review how to look up album for a song.
 Find nicer icons.
 Video player broken.
 Test REST video
+REST: Consider changing method names and type to *Id3.
 
 Eliminate HomeController.Album.
 Use id in web interface.
@@ -40,17 +43,18 @@ Blacklist abusers of my email.
 Update apps to include PlayBook version.
 
 New playlist implementation.
+  - Rename to "play queue" and "playlist"
   - Create database schema
   - Cascading delete when user is deleted.
   - Update "present" when scanning media library?
   - Initally import existing playlists if table is empty.
   - Change appendPlaylist and loadPlaylist page, show meta data (owner, public/private, #songs, duration, created date, comment).
   - Create new Playlists button in top frame.
-  - managePlaylist -> Play, Download, Export (m3u), Delete, Private/Shared, Change owner
+  - managePlaylist -> Play, Download, Export (m3u), Delete, Private/Shared
   - Shared/private
-  - Admin can change owner.
   - Keep existing playlist role, but make it enabled by default.
-  - REST support
+  - REST support, add/removePlaylistUser.
+  - Remove settings for playlist folder.
 
 REST
   - Document in api.jsp
@@ -64,7 +68,7 @@ Encourage users to save email addresses, also for admin.  Explain why.
 Handle albums without artist. Don't create them?
 Bug: Playlist frame > Combo box > Selected songs > Add to playlist is broken.
 test that getRandomSongs doesn't return audiobooks and podcast.
-How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
+How to uniquely identify an album? Disregard artists, use all artists, or use one artist, or use Various Artists.
 Support comment and ratings for Album table.
 JSON exception with ampersand.
 minisub doesn't play.
@@ -942,9 +946,9 @@ Ogmunds vei 11
 0488 Oslo
 Norway
 
-Account number: 97223688407
 IBAN number: NO7297223688407
 SWIFT/BIC code: DNBANOKK
+Account number: 97223688407
 
 Bank address:
 DnB NOR

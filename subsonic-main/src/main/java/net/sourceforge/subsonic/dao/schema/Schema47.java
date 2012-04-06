@@ -179,5 +179,46 @@ public class Schema47 extends Schema {
 
             LOG.info("Database table 'starred_artist' was created successfully.");
         }
+
+        if (!tableExists(template, "playlist")) {
+            LOG.info("Database table 'playlist' not found.  Creating it.");
+            template.execute("create table playlist (" +
+                    "id identity," +
+                    "username varchar not null," +
+                    "public boolean not null," +
+                    "name varchar not null," +
+                    "comment varchar," +
+                    "song_count int default 0 not null," +
+                    "duration_seconds int default 0 not null," +
+                    "created datetime not null," +
+                    "foreign key (username) references user(username) on delete cascade," +
+                    "unique (name))");
+
+            LOG.info("Database table 'playlist' was created successfully.");
+        }
+
+        if (!tableExists(template, "playlist_song")) {
+            LOG.info("Database table 'playlist_song' not found.  Creating it.");
+            template.execute("create cached table playlist_song (" +
+                    "id identity," +
+                    "playlist_id int not null," +
+                    "song_id int not null," +
+                    "foreign key (playlist_id) references playlist(id) on delete cascade)," +
+                    "foreign key (song_id) references media_file(id) on delete cascade)");
+
+            LOG.info("Database table 'playlist_song' was created successfully.");
+        }
+
+        if (!tableExists(template, "playlist_user")) {
+            LOG.info("Database table 'playlist_user' not found.  Creating it.");
+            template.execute("create table playlist_user (" +
+                    "id identity," +
+                    "playlist_id int not null," +
+                    "username varchar not null," +
+                    "foreign key (playlist_id) references playlist(id) on delete cascade," +
+                    "foreign key (username) references user(username) on delete cascade)");
+
+            LOG.info("Database table 'playlist_user' was created successfully.");
+        }
     }
 }
