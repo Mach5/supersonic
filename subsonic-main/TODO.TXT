@@ -42,29 +42,6 @@ Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
 Update apps to include PlayBook version.
 
-New playlist implementation.
-
-Create a new data model for playlists. A playlist should have the following meta-data:
-
-- Owner
-- Name
-- Comment
-- Song count
-- Total duration
-- Creation date
-
-The owner of a playlist can grant read-only access to one or more users. This feature will (for now at least) only be available
-through the REST API.
-
-New REST methods:
-- addPlaylistUser: Takes playlist ID and username as parameters.
-- removePlaylistUser: Takes playlist ID and username as parameters.
-
-Modified REST methods:
-- getPlaylists: Shall return the new playlist attributes mentioned earlier. Shall only return playlists the user is authorized to see.
-Shall take a new optional username parameter; if the authenticated user has admin privileges, the method returns playlists visible to that user.
-- getPlaylist: Shall return the new playlist attributes mentioned earlier.
-
   - Rename to "play queue" and "playlist"
   - Rename RandomPlaylistController, playlist.jsp, PlaylistService.
   - Create database schema
@@ -75,7 +52,7 @@ Shall take a new optional username parameter; if the authenticated user has admi
   - Create new Playlists button in top frame.
   - managePlaylist -> Play, Download, Export (m3u), Delete, Private/Shared
   - Shared/private
-  - Keep existing playlist role, but make it enabled by default.
+  - Keep existing playlist role, but make it enabled by default.  Or remove it?
   - REST support, add/removePlaylistUser.
   - Remove settings for playlist folder.
 
@@ -195,6 +172,8 @@ Improve caching of artist list.
 TODO IN ANDROID 3.4
 --------------------
 Support Bluetooth play/pause buttons in ICS.
+Problem if underscore/dash in server name.
+  https://mail.google.com/mail/?shva=1#inbox/1365ef6ddc03e31a
 Music controls in notification.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/136242ab25baddad
 Holo theme

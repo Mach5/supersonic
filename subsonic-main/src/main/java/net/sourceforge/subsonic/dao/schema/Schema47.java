@@ -185,7 +185,7 @@ public class Schema47 extends Schema {
             template.execute("create table playlist (" +
                     "id identity," +
                     "username varchar not null," +
-                    "public boolean not null," +
+                    "is_public boolean not null," +
                     "name varchar not null," +
                     "comment varchar," +
                     "song_count int default 0 not null," +
@@ -203,7 +203,7 @@ public class Schema47 extends Schema {
                     "id identity," +
                     "playlist_id int not null," +
                     "song_id int not null," +
-                    "foreign key (playlist_id) references playlist(id) on delete cascade)," +
+                    "foreign key (playlist_id) references playlist(id) on delete cascade," +
                     "foreign key (song_id) references media_file(id) on delete cascade)");
 
             LOG.info("Database table 'playlist_song' was created successfully.");
@@ -215,6 +215,7 @@ public class Schema47 extends Schema {
                     "id identity," +
                     "playlist_id int not null," +
                     "username varchar not null," +
+                    "unique(playlist_id, username)," +
                     "foreign key (playlist_id) references playlist(id) on delete cascade," +
                     "foreign key (username) references user(username) on delete cascade)");
 
