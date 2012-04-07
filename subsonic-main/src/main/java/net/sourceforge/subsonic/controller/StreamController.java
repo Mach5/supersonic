@@ -40,7 +40,7 @@ import org.springframework.web.servlet.mvc.Controller;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
@@ -58,7 +58,7 @@ import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.Util;
 
 /**
- * A controller which streams the content of a {@link Playlist} to a remote
+ * A controller which streams the content of a {@link net.sourceforge.subsonic.domain.PlayQueue} to a remote
  * {@link Player}.
  *
  * @author Sindre Mehus
@@ -96,10 +96,10 @@ public class StreamController implements Controller {
             String playlistName = request.getParameter("playlist");
             boolean isPodcast = playlistName != null;
             if (isPodcast) {
-                Playlist playlist = new Playlist();
-                playlistService.loadPlaylist(playlist, playlistName);
-                player.setPlaylist(playlist);
-                Util.setContentLength(response, playlist.length());
+                PlayQueue playQueue = new PlayQueue();
+                playlistService.loadPlaylist(playQueue, playlistName);
+                player.setPlayQueue(playQueue);
+                Util.setContentLength(response, playQueue.length());
                 LOG.info("Incoming Podcast request for playlist " + playlistName);
             }
 
@@ -122,9 +122,9 @@ public class StreamController implements Controller {
             LongRange range = null;
 
             if (isSingleFile) {
-                Playlist playlist = new Playlist();
-                playlist.addFiles(true, file);
-                player.setPlaylist(playlist);
+                PlayQueue playQueue = new PlayQueue();
+                playQueue.addFiles(true, file);
+                player.setPlayQueue(playQueue);
 
                 if (!file.isVideo()) {
                     response.setIntHeader("ETag", file.getId());
@@ -184,7 +184,7 @@ public class StreamController implements Controller {
                 response.setHeader("icy-name", "Subsonic");
                 response.setHeader("icy-genre", "Mixed");
                 response.setHeader("icy-url", "http://subsonic.org/");
-                out = new ShoutCastOutputStream(out, player.getPlaylist(), settingsService);
+                out = new ShoutCastOutputStream(out, player.getPlayQueue(), settingsService);
             }
 
             final int BUFFER_SIZE = 2048;
@@ -197,7 +197,7 @@ public class StreamController implements Controller {
                     return null;
                 }
 
-                if (player.getPlaylist().getStatus() == Playlist.Status.STOPPED) {
+                if (player.getPlayQueue().getStatus() == PlayQueue.Status.STOPPED) {
                     if (isPodcast || isSingleFile) {
                         break;
                     } else {

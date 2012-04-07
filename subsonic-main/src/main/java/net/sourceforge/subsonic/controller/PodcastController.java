@@ -18,7 +18,7 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.service.PlaylistService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.StringUtil;
@@ -62,12 +62,12 @@ public class PodcastController extends ParameterizableViewController {
             String publishDate = RSS_DATE_FORMAT.format(new Date(playlists[i].lastModified()));
 
             // Resolve content type.
-            Playlist playlist = new Playlist();
-            playlistService.loadPlaylist(playlist, playlists[i].getName());
-            String suffix = getSuffix(playlist);
+            PlayQueue playQueue = new PlayQueue();
+            playlistService.loadPlaylist(playQueue, playlists[i].getName());
+            String suffix = getSuffix(playQueue);
             String type = StringUtil.getMimeType(suffix);
 
-            long length = playlist.length();
+            long length = playQueue.length();
             String enclosureUrl = url.replaceFirst("/podcast.*", "/stream?playlist=" + encodedName + "&amp;suffix=." + suffix);
 
             // Rewrite URLs in case we're behind a proxy.
@@ -95,11 +95,11 @@ public class PodcastController extends ParameterizableViewController {
         return result;
     }
 
-    private String getSuffix(Playlist playlist) {
-        if (playlist.isEmpty()) {
+    private String getSuffix(PlayQueue playQueue) {
+        if (playQueue.isEmpty()) {
             return null;
         }
-        return playlist.getFile(0).getFormat();
+        return playQueue.getFile(0).getFormat();
     }
 
     public void setPlaylistService(PlaylistService playlistService) {

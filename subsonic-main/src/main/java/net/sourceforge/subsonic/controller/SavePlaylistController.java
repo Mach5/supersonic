@@ -39,16 +39,16 @@ public class SavePlaylistController extends SimpleFormController {
 
     public ModelAndView onSubmit(Object comm) throws Exception {
         SavePlaylistCommand command = (SavePlaylistCommand) comm;
-        Playlist playlist = command.getPlaylist();
-        playlist.setName(command.getName() + '.' + command.getSuffix());
-        playlistService.savePlaylist(playlist);
+        PlayQueue playQueue = command.getPlayQueue();
+        playQueue.setName(command.getName() + '.' + command.getSuffix());
+        playlistService.savePlaylist(playQueue);
 
         return new ModelAndView(new RedirectView(getSuccessView()));
     }
 
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         Player player = playerService.getPlayer(request, null);
-        return new SavePlaylistCommand(player.getPlaylist());
+        return new SavePlaylistCommand(player.getPlayQueue());
     }
 
     public void setPlaylistService(PlaylistService playlistService) {

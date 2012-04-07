@@ -42,7 +42,7 @@ public class Player {
     private Date lastSeen;
     private CoverArtScheme coverArtScheme = CoverArtScheme.MEDIUM;
     private TranscodeScheme transcodeScheme = TranscodeScheme.OFF;
-    private Playlist playlist;
+    private PlayQueue playQueue;
 
     /**
      * Returns the player ID.
@@ -283,17 +283,17 @@ public class Player {
      *
      * @return The player's playlist
      */
-    public Playlist getPlaylist() {
-        return playlist;
+    public PlayQueue getPlayQueue() {
+        return playQueue;
     }
 
     /**
      * Sets the player's playlist.
      *
-     * @param playlist The player's playlist.
+     * @param playQueue The player's playlist.
      */
-    public void setPlaylist(Playlist playlist) {
-        this.playlist = playlist;
+    public void setPlayQueue(PlayQueue playQueue) {
+        this.playQueue = playQueue;
     }
 
     /**

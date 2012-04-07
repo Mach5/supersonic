@@ -76,10 +76,10 @@ public class LoadPlaylistController extends MultiActionController {
 
     public ModelAndView loadPlaylistConfirm(HttpServletRequest request, HttpServletResponse response) throws IOException {
         Player player = playerService.getPlayer(request, response);
-        Playlist playlist = player.getPlaylist();
+        PlayQueue playQueue = player.getPlayQueue();
 
         String name = request.getParameter("name");
-        playlistService.loadPlaylist(playlist, name);
+        playlistService.loadPlaylist(playQueue, name);
 
         return reload(null);
     }
@@ -87,16 +87,16 @@ public class LoadPlaylistController extends MultiActionController {
     public ModelAndView appendPlaylistConfirm(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         // Load the existing playlist.
-        Playlist savedPlaylist = new Playlist();
+        PlayQueue savedPlayQueue = new PlayQueue();
         String name = request.getParameter("name");
-        playlistService.loadPlaylist(savedPlaylist, name);
+        playlistService.loadPlaylist(savedPlayQueue, name);
 
         // Update the existing playlist with new entries.
         List<MediaFile> files = getFilesToAppend(request, response);
-        savedPlaylist.addFiles(true, files);
+        savedPlayQueue.addFiles(true, files);
 
         // Save the playlist again.
-        playlistService.savePlaylist(savedPlaylist);
+        playlistService.savePlaylist(savedPlayQueue);
 
         String dir = StringUtils.trimToNull(request.getParameter("dir"));
         return reload(dir);
@@ -111,9 +111,9 @@ public class LoadPlaylistController extends MultiActionController {
 
         if (playerId != null) {
             Player player = playerService.getPlayerById(playerId);
-            Playlist playlist = player.getPlaylist();
+            PlayQueue playQueue = player.getPlayQueue();
             for (int index : indexes) {
-                MediaFile file = playlist.getFile(index);
+                MediaFile file = playQueue.getFile(index);
                 files.add(file);
             }
         } else if (dir != null) {

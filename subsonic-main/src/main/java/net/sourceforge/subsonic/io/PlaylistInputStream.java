@@ -25,7 +25,7 @@ import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.SearchService;
 import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
 import net.sourceforge.subsonic.service.TranscodingService;
@@ -35,7 +35,7 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * Implementation of {@link InputStream} which reads from a {@link Playlist}.
+ * Implementation of {@link InputStream} which reads from a {@link net.sourceforge.subsonic.domain.PlayQueue}.
  *
  * @author Sindre Mehus
  */
@@ -84,7 +84,7 @@ public class PlaylistInputStream extends InputStream {
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
         prepare();
-        if (currentInputStream == null || player.getPlaylist().getStatus() == Playlist.Status.STOPPED) {
+        if (currentInputStream == null || player.getPlayQueue().getStatus() == PlayQueue.Status.STOPPED) {
             return -1;
         }
 
@@ -92,7 +92,7 @@ public class PlaylistInputStream extends InputStream {
 
         // If end of song reached, skip to next song and call read() again.
         if (n == -1) {
-            player.getPlaylist().next();
+            player.getPlayQueue().next();
             close();
             return read(b, off, len);
         } else {
@@ -102,16 +102,16 @@ public class PlaylistInputStream extends InputStream {
     }
 
     private void prepare() throws IOException {
-        Playlist playlist = player.getPlaylist();
+        PlayQueue playQueue = player.getPlayQueue();
 
         // If playlist is in auto-random mode, populate it with new random songs.
-        if (playlist.getIndex() == -1 && playlist.getRandomSearchCriteria() != null) {
-            populateRandomPlaylist(playlist);
+        if (playQueue.getIndex() == -1 && playQueue.getRandomSearchCriteria() != null) {
+            populateRandomPlaylist(playQueue);
         }
 
         MediaFile result;
-        synchronized (playlist) {
-            result = playlist.getCurrentFile();
+        synchronized (playQueue) {
+            result = playQueue.getCurrentFile();
         }
         MediaFile file = result;
         if (file == null) {
@@ -131,10 +131,10 @@ public class PlaylistInputStream extends InputStream {
         }
     }
 
-    private void populateRandomPlaylist(Playlist playlist) throws IOException {
-        List<MediaFile> files = searchService.getRandomSongs(playlist.getRandomSearchCriteria());
-        playlist.addFiles(false, files);
-        LOG.info("Recreated random playlist with " + playlist.size() + " songs.");
+    private void populateRandomPlaylist(PlayQueue playQueue) throws IOException {
+        List<MediaFile> files = searchService.getRandomSongs(playQueue.getRandomSearchCriteria());
+        playQueue.addFiles(false, files);
+        LOG.info("Recreated random playlist with " + playQueue.size() + " songs.");
     }
 
     @Override

@@ -21,7 +21,7 @@ package net.sourceforge.subsonic.service;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.Transcoding;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
@@ -70,11 +70,11 @@ public class JukeboxService implements AudioPlayer.Listener {
             return;
         }
 
-        if (player.getPlaylist().getStatus() == Playlist.Status.PLAYING) {
+        if (player.getPlayQueue().getStatus() == PlayQueue.Status.PLAYING) {
             this.player = player;
             MediaFile result;
-            synchronized (player.getPlaylist()) {
-                result = player.getPlaylist().getCurrentFile();
+            synchronized (player.getPlayQueue()) {
+                result = player.getPlayQueue().getCurrentFile();
             }
             play(result, offset);
         } else {
@@ -124,10 +124,10 @@ public class JukeboxService implements AudioPlayer.Listener {
 
     public synchronized void stateChanged(AudioPlayer audioPlayer, AudioPlayer.State state) {
         if (state == EOM) {
-            player.getPlaylist().next();
+            player.getPlayQueue().next();
             MediaFile result;
-            synchronized (player.getPlaylist()) {
-                result = player.getPlaylist().getCurrentFile();
+            synchronized (player.getPlayQueue()) {
+                result = player.getPlayQueue().getCurrentFile();
             }
             play(result, 0);
         }

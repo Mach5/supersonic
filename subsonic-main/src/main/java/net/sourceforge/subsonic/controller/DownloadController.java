@@ -21,7 +21,7 @@ package net.sourceforge.subsonic.controller;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.io.RangeOutputStream;
@@ -132,15 +132,15 @@ public class DownloadController implements Controller, LastModified {
                 downloadFiles(response, status, file, indexes);
 
             } else if (playlistName != null) {
-                Playlist playlist = new Playlist();
-                playlistService.loadPlaylist(playlist, playlistName);
-                downloadPlaylist(response, status, playlist, null, range);
+                PlayQueue playQueue = new PlayQueue();
+                playlistService.loadPlaylist(playQueue, playlistName);
+                downloadPlaylist(response, status, playQueue, null, range);
 
             } else if (playerId != null) {
                 Player player = playerService.getPlayerById(playerId);
-                Playlist playlist = player.getPlaylist();
-                playlist.setName("Playlist");
-                downloadPlaylist(response, status, playlist, indexes.length == 0 ? null : indexes, range);
+                PlayQueue playQueue = player.getPlayQueue();
+                playQueue.setName("Playlist");
+                downloadPlaylist(response, status, playQueue, indexes.length == 0 ? null : indexes, range);
             }
 
 
@@ -254,18 +254,18 @@ public class DownloadController implements Controller, LastModified {
      *
      * @param response The HTTP response.
      * @param status   The download status.
-     * @param playlist The playlist to download.
+     * @param playQueue The playlist to download.
      * @param indexes  Only download songs at these playlist indexes. May be <code>null</code>.
      * @param range    The byte range, may be <code>null</code>.
      * @throws IOException If an I/O error occurs.
      */
-    private void downloadPlaylist(HttpServletResponse response, TransferStatus status, Playlist playlist, int[] indexes, LongRange range) throws IOException {
+    private void downloadPlaylist(HttpServletResponse response, TransferStatus status, PlayQueue playQueue, int[] indexes, LongRange range) throws IOException {
         if (indexes != null && indexes.length == 1) {
-            downloadFile(response, status, playlist.getFile(indexes[0]).getFile(), range);
+            downloadFile(response, status, playQueue.getFile(indexes[0]).getFile(), range);
             return;
         }
 
-        String zipFileName = playlist.getName().replaceAll("(\\.m3u)|(\\.pls)", "") + ".zip";
+        String zipFileName = playQueue.getName().replaceAll("(\\.m3u)|(\\.pls)", "") + ".zip";
         LOG.info("Starting to download '" + zipFileName + "' to " + status.getPlayer());
         response.setContentType("application/x-download");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + zipFileName + '"');
@@ -276,16 +276,16 @@ public class DownloadController implements Controller, LastModified {
         List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
         if (indexes == null) {
             List<MediaFile> result;
-            synchronized (playlist) {
-                result = playlist.getFiles();
+            synchronized (playQueue) {
+                result = playQueue.getFiles();
             }
             mediaFiles.addAll(result);
         } else {
             for (int index : indexes) {
                 try {
                     MediaFile result;
-                    synchronized (playlist) {
-                        result = playlist.getFile(index);
+                    synchronized (playQueue) {
+                        result = playQueue.getFile(index);
                     }
                     mediaFiles.add(result);
                 } catch (IndexOutOfBoundsException x) { /* Ignored */}

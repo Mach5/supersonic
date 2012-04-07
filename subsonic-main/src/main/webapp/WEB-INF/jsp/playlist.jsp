@@ -3,7 +3,7 @@
 <html><head>
     <%@ include file="head.jsp" %>
     <script type="text/javascript" src="<c:url value="/dwr/interface/nowPlayingService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/interface/playlistService.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/playQueueService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
@@ -90,7 +90,7 @@
     }
 
     function getPlaylist() {
-        playlistService.getPlaylist(playlistCallback);
+        playQueueService.getPlaylist(playlistCallback);
     }
 
     function onClear() {
@@ -99,17 +99,17 @@
         ok = confirm("<fmt:message key="playlist.confirmclear"/>");
     </c:if>
         if (ok) {
-            playlistService.clear(playlistCallback);
+            playQueueService.clear(playlistCallback);
         }
     }
     function onStart() {
-        playlistService.start(playlistCallback);
+        playQueueService.start(playlistCallback);
     }
     function onStop() {
-        playlistService.stop(playlistCallback);
+        playQueueService.stop(playlistCallback);
     }
     function onGain(gain) {
-        playlistService.setGain(gain);
+        playQueueService.setGain(gain);
     }
     function onSkip(index) {
     <c:choose>
@@ -118,7 +118,7 @@
     </c:when>
     <c:otherwise>
         currentStreamUrl = songs[index].streamUrl;
-        playlistService.skip(index, playlistCallback);
+        playQueueService.skip(index, playlistCallback);
     </c:otherwise>
     </c:choose>
     }
@@ -134,24 +134,24 @@
     }
     function onPlay(id) {
         startPlayer = true;
-        playlistService.play(id, playlistCallback);
+        playQueueService.play(id, playlistCallback);
     }
     function onPlayRandom(id, count) {
         startPlayer = true;
-        playlistService.playRandom(id, count, playlistCallback);
+        playQueueService.playRandom(id, count, playlistCallback);
     }
     function onAdd(id) {
         startPlayer = false;
-        playlistService.add(id, playlistCallback);
+        playQueueService.add(id, playlistCallback);
     }
     function onShuffle() {
-        playlistService.shuffle(playlistCallback);
+        playQueueService.shuffle(playlistCallback);
     }
     function onStar(index) {
-        playlistService.toggleStar(index, playlistCallback);
+        playQueueService.toggleStar(index, playlistCallback);
     }
     function onRemove(index) {
-        playlistService.remove(index, playlistCallback);
+        playQueueService.remove(index, playlistCallback);
     }
     function onRemoveSelected() {
         var indexes = new Array();
@@ -162,29 +162,29 @@
                 indexes[counter++] = i;
             }
         }
-        playlistService.removeMany(indexes, playlistCallback);
+        playQueueService.removeMany(indexes, playlistCallback);
     }
 
     function onUp(index) {
-        playlistService.up(index, playlistCallback);
+        playQueueService.up(index, playlistCallback);
     }
     function onDown(index) {
-        playlistService.down(index, playlistCallback);
+        playQueueService.down(index, playlistCallback);
     }
     function onToggleRepeat() {
-        playlistService.toggleRepeat(playlistCallback);
+        playQueueService.toggleRepeat(playlistCallback);
     }
     function onUndo() {
-        playlistService.undo(playlistCallback);
+        playQueueService.undo(playlistCallback);
     }
     function onSortByTrack() {
-        playlistService.sortByTrack(playlistCallback);
+        playQueueService.sortByTrack(playlistCallback);
     }
     function onSortByArtist() {
-        playlistService.sortByArtist(playlistCallback);
+        playQueueService.sortByArtist(playlistCallback);
     }
     function onSortByAlbum() {
-        playlistService.sortByAlbum(playlistCallback);
+        playQueueService.sortByAlbum(playlistCallback);
     }
 
     function playlistCallback(playlist) {

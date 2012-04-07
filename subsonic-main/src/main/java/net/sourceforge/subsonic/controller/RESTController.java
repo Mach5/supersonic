@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.ajax.PlayQueueService;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -55,7 +56,7 @@ import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.PlayerTechnology;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.PodcastChannel;
 import net.sourceforge.subsonic.domain.PodcastEpisode;
 import net.sourceforge.subsonic.domain.RandomSearchCriteria;
@@ -114,7 +115,7 @@ public class RESTController extends MultiActionController {
     private PlaylistService playlistService;
     private ChatService chatService;
     private LyricsService lyricsService;
-    private net.sourceforge.subsonic.ajax.PlaylistService playlistControlService;
+    private PlayQueueService playQueueService;
     private JukeboxService jukeboxService;
     private AudioScrobblerService audioScrobblerService;
     private PodcastService podcastService;
@@ -541,14 +542,14 @@ public class RESTController extends MultiActionController {
                 error(request, response, ErrorCode.NOT_FOUND, "Playlist not found: " + id);
                 return;
             }
-            Playlist playlist = new Playlist();
-            playlistService.loadPlaylist(playlist, id);
+            PlayQueue playQueue = new PlayQueue();
+            playlistService.loadPlaylist(playQueue, id);
 
-            builder.add("playlist", false, new Attribute("id", StringUtil.utf8HexEncode(playlist.getName())),
-                    new Attribute("name", FilenameUtils.getBaseName(playlist.getName())));
+            builder.add("playlist", false, new Attribute("id", StringUtil.utf8HexEncode(playQueue.getName())),
+                    new Attribute("name", FilenameUtils.getBaseName(playQueue.getName())));
             List<MediaFile> result;
-            synchronized (playlist) {
-                result = playlist.getFiles();
+            synchronized (playQueue) {
+                result = playQueue.getFiles();
             }
             for (MediaFile mediaFile : result) {
                 AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
@@ -577,26 +578,26 @@ public class RESTController extends MultiActionController {
             boolean returnPlaylist = false;
             String action = ServletRequestUtils.getRequiredStringParameter(request, "action");
             if ("start".equals(action)) {
-                playlistControlService.doStart(request, response);
+                playQueueService.doStart(request, response);
             } else if ("stop".equals(action)) {
-                playlistControlService.doStop(request, response);
+                playQueueService.doStop(request, response);
             } else if ("skip".equals(action)) {
                 int index = ServletRequestUtils.getRequiredIntParameter(request, "index");
                 int offset = ServletRequestUtils.getIntParameter(request, "offset", 0);
-                playlistControlService.doSkip(request, response, index, offset);
+                playQueueService.doSkip(request, response, index, offset);
             } else if ("add".equals(action)) {
                 int[] ids = ServletRequestUtils.getIntParameters(request, "id");
-                playlistControlService.doAdd(request, response, ids);
+                playQueueService.doAdd(request, response, ids);
             } else if ("set".equals(action)) {
                 int[] ids = ServletRequestUtils.getIntParameters(request, "id");
-                playlistControlService.doSet(request, response, ids);
+                playQueueService.doSet(request, response, ids);
             } else if ("clear".equals(action)) {
-                playlistControlService.doClear(request, response);
+                playQueueService.doClear(request, response);
             } else if ("remove".equals(action)) {
                 int index = ServletRequestUtils.getRequiredIntParameter(request, "index");
-                playlistControlService.doRemove(request, response, index);
+                playQueueService.doRemove(request, response, index);
             } else if ("shuffle".equals(action)) {
-                playlistControlService.doShuffle(request, response);
+                playQueueService.doShuffle(request, response);
             } else if ("setGain".equals(action)) {
                 float gain = ServletRequestUtils.getRequiredFloatParameter(request, "gain");
                 jukeboxService.setGain(gain);
@@ -614,19 +615,19 @@ public class RESTController extends MultiActionController {
             String username = securityService.getCurrentUsername(request);
             Player jukeboxPlayer = jukeboxService.getPlayer();
             boolean controlsJukebox = jukeboxPlayer != null && jukeboxPlayer.getId().equals(player.getId());
-            Playlist playlist = player.getPlaylist();
+            PlayQueue playQueue = player.getPlayQueue();
 
             List<Attribute> attrs = new ArrayList<Attribute>(Arrays.asList(
-                    new Attribute("currentIndex", controlsJukebox && !playlist.isEmpty() ? playlist.getIndex() : -1),
-                    new Attribute("playing", controlsJukebox && !playlist.isEmpty() && playlist.getStatus() == Playlist.Status.PLAYING),
+                    new Attribute("currentIndex", controlsJukebox && !playQueue.isEmpty() ? playQueue.getIndex() : -1),
+                    new Attribute("playing", controlsJukebox && !playQueue.isEmpty() && playQueue.getStatus() == PlayQueue.Status.PLAYING),
                     new Attribute("gain", jukeboxService.getGain()),
-                    new Attribute("position", controlsJukebox && !playlist.isEmpty() ? jukeboxService.getPosition() : 0)));
+                    new Attribute("position", controlsJukebox && !playQueue.isEmpty() ? jukeboxService.getPosition() : 0)));
 
             if (returnPlaylist) {
                 builder.add("jukeboxPlaylist", attrs, false);
                 List<MediaFile> result;
-                synchronized (playlist) {
-                    result = playlist.getFiles();
+                synchronized (playQueue) {
+                    result = playQueue.getFiles();
                 }
                 for (MediaFile mediaFile : result) {
                     AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
@@ -665,14 +666,14 @@ public class RESTController extends MultiActionController {
                 return;
             }
 
-            Playlist playlist = new Playlist();
-            playlist.setName(playlistId != null ? StringUtil.utf8HexDecode(playlistId) : name);
+            PlayQueue playQueue = new PlayQueue();
+            playQueue.setName(playlistId != null ? StringUtil.utf8HexDecode(playlistId) : name);
 
             int[] ids = ServletRequestUtils.getIntParameters(request, "songId");
             for (int id : ids) {
-                playlist.addFiles(true, mediaFileService.getMediaFile(id));
+                playQueue.addFiles(true, mediaFileService.getMediaFile(id));
             }
-            playlistService.savePlaylist(playlist);
+            playlistService.savePlaylist(playQueue);
 
             XMLBuilder builder = createXMLBuilder(request, response, true);
             builder.endAll();
@@ -1770,8 +1771,8 @@ public class RESTController extends MultiActionController {
         this.lyricsService = lyricsService;
     }
 
-    public void setPlaylistControlService(net.sourceforge.subsonic.ajax.PlaylistService playlistControlService) {
-        this.playlistControlService = playlistControlService;
+    public void setPlayQueueService(PlayQueueService playQueueService) {
+        this.playQueueService = playQueueService;
     }
 
     public void setJukeboxService(JukeboxService jukeboxService) {

@@ -33,7 +33,7 @@ import java.util.List;
  *
  * @author Sindre Mehus
  */
-public class Playlist {
+public class PlayQueue {
 
     private List<MediaFile> files = new ArrayList<MediaFile>();
     private boolean repeatEnabled;

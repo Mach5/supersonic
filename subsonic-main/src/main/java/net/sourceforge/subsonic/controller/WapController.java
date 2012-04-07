@@ -37,7 +37,7 @@ import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
@@ -136,24 +136,24 @@ public class WapController extends MultiActionController {
         Map<String, Object> map = new HashMap<String, Object>();
 
         for (Player player : players) {
-            Playlist playlist = player.getPlaylist();
-            map.put("playlist", playlist);
+            PlayQueue playQueue = player.getPlayQueue();
+            map.put("playlist", playQueue);
 
             if (request.getParameter("play") != null) {
                 MediaFile file = mediaFileService.getMediaFile(request.getParameter("play"));
-                playlist.addFiles(false, file);
+                playQueue.addFiles(false, file);
             } else if (request.getParameter("add") != null) {
                 MediaFile file = mediaFileService.getMediaFile(request.getParameter("add"));
-                playlist.addFiles(true, file);
+                playQueue.addFiles(true, file);
             } else if (request.getParameter("skip") != null) {
-                playlist.setIndex(Integer.parseInt(request.getParameter("skip")));
+                playQueue.setIndex(Integer.parseInt(request.getParameter("skip")));
             } else if (request.getParameter("clear") != null) {
-                playlist.clear();
+                playQueue.clear();
             } else if (request.getParameter("load") != null) {
-                playlistService.loadPlaylist(playlist, request.getParameter("load"));
+                playlistService.loadPlaylist(playQueue, request.getParameter("load"));
             } else if (request.getParameter("random") != null) {
                 List<MediaFile> randomFiles = searchService.getRandomSongs(new RandomSearchCriteria(20, null, null, null, null));
-                playlist.addFiles(false, randomFiles);
+                playQueue.addFiles(false, randomFiles);
             }
         }
 

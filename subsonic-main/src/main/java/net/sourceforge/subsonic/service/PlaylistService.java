@@ -20,7 +20,7 @@ package net.sourceforge.subsonic.service;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.util.StringUtil;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
  * Provides services for loading and saving playlists to and from persistent storage.
  *
  * @author Sindre Mehus
- * @see Playlist
+ * @see net.sourceforge.subsonic.domain.PlayQueue
  */
 public class PlaylistService {
 
@@ -57,16 +57,16 @@ public class PlaylistService {
     /**
      * Saves the given playlist to persistent storage.
      *
-     * @param playlist The playlist to save.
+     * @param playQueue The playlist to save.
      * @throws IOException If an I/O error occurs.
      */
-    public void savePlaylist(Playlist playlist) throws IOException {
-        String name = playlist.getName();
+    public void savePlaylist(PlayQueue playQueue) throws IOException {
+        String name = playQueue.getName();
 
         // Add m3u suffix if no other suitable suffix is given.
         if (!new PlaylistFilenameFilter().accept(getPlaylistDirectory(), name)) {
             name += ".m3u";
-            playlist.setName(name);
+            playQueue.setName(name);
         }
 
         File playlistFile = new File(getPlaylistDirectory(), name);
@@ -76,7 +76,7 @@ public class PlaylistService {
 
         try {
             PlaylistFormat format = PlaylistFormat.getPlaylistFormat(playlistFile);
-            format.savePlaylist(playlist, writer);
+            format.savePlaylist(playQueue, writer);
         } finally {
             writer.close();
         }
@@ -85,21 +85,21 @@ public class PlaylistService {
     /**
      * Loads a named playlist from persistent storage and into the provided playlist instance.
      *
-     * @param playlist The playlist to populate. Any existing entries in the playlist will
+     * @param playQueue The playlist to populate. Any existing entries in the playlist will
      *                 be removed.
      * @param name     The name of a previously persisted playlist.
      * @throws IOException If an I/O error occurs.
      */
-    public void loadPlaylist(Playlist playlist, String name) throws IOException {
+    public void loadPlaylist(PlayQueue playQueue, String name) throws IOException {
         File playlistFile = new File(getPlaylistDirectory(), name);
         checkAccess(playlistFile);
 
-        playlist.setName(name);
+        playQueue.setName(name);
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(playlistFile), StringUtil.ENCODING_UTF8));
         try {
             PlaylistFormat format = PlaylistFormat.getPlaylistFormat(playlistFile);
-            format.loadPlaylist(playlist, reader, mediaFileService);
+            format.loadPlaylist(playQueue, reader, mediaFileService);
         } finally {
             reader.close();
         }
@@ -179,9 +179,9 @@ public class PlaylistService {
      * Abstract superclass for playlist formats.
      */
     private abstract static class PlaylistFormat {
-        public abstract void loadPlaylist(Playlist playlist, BufferedReader reader, MediaFileService mediaFileService) throws IOException;
+        public abstract void loadPlaylist(PlayQueue playQueue, BufferedReader reader, MediaFileService mediaFileService) throws IOException;
 
-        public abstract void savePlaylist(Playlist playlist, PrintWriter writer) throws IOException;
+        public abstract void savePlaylist(PlayQueue playQueue, PrintWriter writer) throws IOException;
 
         public static PlaylistFormat getPlaylistFormat(File file) {
             String name = file.getName().toLowerCase();
@@ -202,15 +202,15 @@ public class PlaylistService {
      * Implementation of M3U playlist format.
      */
     private static class M3UFormat extends PlaylistFormat {
-        public void loadPlaylist(Playlist playlist, BufferedReader reader, MediaFileService mediaFileService) throws IOException {
-            playlist.clear();
+        public void loadPlaylist(PlayQueue playQueue, BufferedReader reader, MediaFileService mediaFileService) throws IOException {
+            playQueue.clear();
             String line = reader.readLine();
             while (line != null) {
                 if (!line.startsWith("#")) {
                     try {
                         MediaFile file = mediaFileService.getMediaFile(line);
                         if (file.getFile().exists()) {
-                            playlist.addFiles(true, file);
+                            playQueue.addFiles(true, file);
                         }
                     } catch (SecurityException x) {
                         LOG.warn(x.getMessage(), x);
@@ -220,13 +220,13 @@ public class PlaylistService {
             }
         }
 
-        public void savePlaylist(Playlist playlist, PrintWriter writer) throws IOException {
+        public void savePlaylist(PlayQueue playQueue, PrintWriter writer) throws IOException {
             writer.println("#EXTM3U");
-            for (MediaFile file : playlist.getFiles()) {
+            for (MediaFile file : playQueue.getFiles()) {
                 writer.println(file.getPath());
             }
             if (writer.checkError()) {
-                throw new IOException("Error when writing playlist " + playlist.getName());
+                throw new IOException("Error when writing playlist " + playQueue.getName());
             }
         }
     }
@@ -235,8 +235,8 @@ public class PlaylistService {
      * Implementation of PLS playlist format.
      */
     private static class PLSFormat extends PlaylistFormat {
-        public void loadPlaylist(Playlist playlist, BufferedReader reader, MediaFileService mediaFileService) throws IOException {
-            playlist.clear();
+        public void loadPlaylist(PlayQueue playQueue, BufferedReader reader, MediaFileService mediaFileService) throws IOException {
+            playQueue.clear();
 
             Pattern pattern = Pattern.compile("^File\\d+=(.*)$");
             String line = reader.readLine();
@@ -247,7 +247,7 @@ public class PlaylistService {
                     try {
                         MediaFile file = mediaFileService.getMediaFile(matcher.group(1));
                         if (file.getFile().exists()) {
-                            playlist.addFiles(true, file);
+                            playQueue.addFiles(true, file);
                         }
                     } catch (SecurityException x) {
                         LOG.warn(x.getMessage(), x);
@@ -257,11 +257,11 @@ public class PlaylistService {
             }
         }
 
-        public void savePlaylist(Playlist playlist, PrintWriter writer) throws IOException {
+        public void savePlaylist(PlayQueue playQueue, PrintWriter writer) throws IOException {
             writer.println("[playlist]");
             int counter = 0;
 
-            for (MediaFile file : playlist.getFiles()) {
+            for (MediaFile file : playQueue.getFiles()) {
                 counter++;
                 writer.println("File" + counter + '=' + file.getPath());
             }
@@ -269,7 +269,7 @@ public class PlaylistService {
             writer.println("Version=2");
 
             if (writer.checkError()) {
-                throw new IOException("Error when writing playlist " + playlist.getName());
+                throw new IOException("Error when writing playlist " + playQueue.getName());
             }
         }
     }
@@ -278,8 +278,8 @@ public class PlaylistService {
      * Implementation of XSPF (http://www.xspf.org/) playlist format.
      */
     private static class XSPFFormat extends PlaylistFormat {
-        public void loadPlaylist(Playlist playlist, BufferedReader reader, MediaFileService mediaFileService) throws IOException {
-            playlist.clear();
+        public void loadPlaylist(PlayQueue playQueue, BufferedReader reader, MediaFileService mediaFileService) throws IOException {
+            playQueue.clear();
 
             SAXBuilder builder = new SAXBuilder();
             Document document;
@@ -287,7 +287,7 @@ public class PlaylistService {
                 document = builder.build(reader);
             } catch (JDOMException x) {
                 LOG.warn("Failed to parse XSPF playlist.", x);
-                throw new IOException("Failed to parse XSPF playlist " + playlist.getName());
+                throw new IOException("Failed to parse XSPF playlist " + playQueue.getName());
             }
 
             Element root = document.getRootElement();
@@ -303,7 +303,7 @@ public class PlaylistService {
                     try {
                         MediaFile file = mediaFileService.getMediaFile(location);
                         if (file.getFile().exists()) {
-                            playlist.addFiles(true, file);
+                            playQueue.addFiles(true, file);
                         }
                     } catch (SecurityException x) {
                         LOG.warn(x.getMessage(), x);
@@ -312,19 +312,19 @@ public class PlaylistService {
             }
         }
 
-        public void savePlaylist(Playlist playlist, PrintWriter writer) throws IOException {
+        public void savePlaylist(PlayQueue playQueue, PrintWriter writer) throws IOException {
             writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             writer.println("<playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">");
             writer.println("    <trackList>");
 
-            for (MediaFile file : playlist.getFiles()) {
+            for (MediaFile file : playQueue.getFiles()) {
                 writer.println("        <track><location>file://" + StringEscapeUtils.escapeXml(file.getPath()) + "</location></track>");
             }
             writer.println("    </trackList>");
             writer.println("</playlist>");
 
             if (writer.checkError()) {
-                throw new IOException("Error when writing playlist " + playlist.getName());
+                throw new IOException("Error when writing playlist " + playQueue.getName());
             }
         }
     }

@@ -20,7 +20,7 @@ package net.sourceforge.subsonic.io;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.service.SettingsService;
 import org.apache.commons.lang.StringUtils;
 
@@ -53,7 +53,7 @@ public class ShoutCastOutputStream extends OutputStream {
     /**
      * What to write in the SHOUTcast metadata is fetched from the playlist.
      */
-    private Playlist playlist;
+    private PlayQueue playQueue;
 
     /**
      * Keeps track of the number of bytes written (excluding meta-data).  Between 0 and {@link #META_DATA_INTERVAL}.
@@ -71,11 +71,11 @@ public class ShoutCastOutputStream extends OutputStream {
      * Creates a new SHOUTcast-decorated stream for the given output stream.
      *
      * @param out      The output stream to decorate.
-     * @param playlist Meta-data is fetched from this playlist.
+     * @param playQueue Meta-data is fetched from this playlist.
      */
-    public ShoutCastOutputStream(OutputStream out, Playlist playlist, SettingsService settingsService) {
+    public ShoutCastOutputStream(OutputStream out, PlayQueue playQueue, SettingsService settingsService) {
         this.out = out;
-        this.playlist = playlist;
+        this.playQueue = playQueue;
         this.settingsService = settingsService;
     }
 
@@ -135,8 +135,8 @@ public class ShoutCastOutputStream extends OutputStream {
         String streamTitle = StringUtils.trimToEmpty(settingsService.getWelcomeTitle());
 
         MediaFile result;
-        synchronized (playlist) {
-            result = playlist.getCurrentFile();
+        synchronized (playQueue) {
+            result = playQueue.getCurrentFile();
         }
         MediaFile mediaFile = result;
         if (mediaFile != null) {

@@ -194,7 +194,7 @@
         <property name="mediaScannerService" ref="mediaScannerService"/>
     </bean>
 
-    <bean id="ajaxPlaylistService" class="net.sourceforge.subsonic.ajax.PlaylistService">
+    <bean id="ajaxPlayQueueService" class="net.sourceforge.subsonic.ajax.PlayQueueService">
         <property name="playerService" ref="playerService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>

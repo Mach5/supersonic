@@ -29,24 +29,24 @@ import org.springframework.util.*;
  */
 public class SavePlaylistCommand {
 
-    private Playlist playlist;
+    private PlayQueue playQueue;
     private String name;
     private String suffix;
     private String[] formats;
 
-    public SavePlaylistCommand(Playlist playlist) {
-        this.playlist = playlist;
-        name = StringUtils.stripFilenameExtension(playlist.getName());
-        suffix = StringUtils.getFilenameExtension(playlist.getName());
+    public SavePlaylistCommand(PlayQueue playQueue) {
+        this.playQueue = playQueue;
+        name = StringUtils.stripFilenameExtension(playQueue.getName());
+        suffix = StringUtils.getFilenameExtension(playQueue.getName());
         formats = new String[]{"m3u", "pls", "xspf"};
     }
 
-    public Playlist getPlaylist() {
-        return playlist;
+    public PlayQueue getPlayQueue() {
+        return playQueue;
     }
 
-    public void setPlaylist(Playlist playlist) {
-        this.playlist = playlist;
+    public void setPlayQueue(PlayQueue playQueue) {
+        this.playQueue = playQueue;
     }
 
     public String getName() {

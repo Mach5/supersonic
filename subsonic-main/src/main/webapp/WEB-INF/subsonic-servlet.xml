@@ -346,7 +346,7 @@
         <property name="jukeboxService" ref="jukeboxService"/>
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
         <property name="playlistService" ref="playlistService"/>
-        <property name="playlistControlService" ref="ajaxPlaylistService"/>
+        <property name="playQueueService" ref="ajaxPlayQueueService"/>
         <property name="ratingService" ref="musicInfoService"/>
         <property name="chatService" ref="ajaxChatService"/>
         <property name="lyricsService" ref="ajaxLyricsService"/>

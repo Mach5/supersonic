@@ -6,7 +6,7 @@ import java.util.List;
 import net.sourceforge.subsonic.domain.CoverArtScheme;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.PlayerTechnology;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.TranscodeScheme;
 
 /**
@@ -81,12 +81,12 @@ public class PlayerDaoTestCase extends DaoTestCaseBase {
     public void testPlaylist() {
         Player player = new Player();
         playerDao.createPlayer(player);
-        Playlist playlist = player.getPlaylist();
-        assertNotNull("Missing playlist.", playlist);
+        PlayQueue playQueue = player.getPlayQueue();
+        assertNotNull("Missing playlist.", playQueue);
 
         playerDao.deletePlayer(player.getId());
         playerDao.createPlayer(player);
-        assertNotSame("Wrong playlist.", playlist, player.getPlaylist());
+        assertNotSame("Wrong playlist.", playQueue, player.getPlayQueue());
     }
 
     public void testGetPlayersForUserAndClientId() {
