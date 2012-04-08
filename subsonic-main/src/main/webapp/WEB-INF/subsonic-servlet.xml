@@ -66,6 +66,7 @@
         <property name="viewName" value="podcast"/>
         <property name="playlistService" ref="playlistService"/>
         <property name="settingsService" ref="settingsService"/>
+        <property name="securityService" ref="securityService"/>
     </bean>
     <bean id="podcastReceiverController" class="net.sourceforge.subsonic.controller.PodcastReceiverController">
         <property name="viewName" value="podcastReceiver"/>

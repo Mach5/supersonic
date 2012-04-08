@@ -18,8 +18,10 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.domain.PlayQueue;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.PlaylistService;
+import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.StringUtil;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,12 +29,9 @@ import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -48,27 +47,32 @@ public class PodcastController extends ParameterizableViewController {
     private static final DateFormat RSS_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss Z", Locale.US);
     private PlaylistService playlistService;
     private SettingsService settingsService;
+    private SecurityService securityService;
 
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         String url = request.getRequestURL().toString();
-        File[] playlists = playlistService.getSavedPlaylists();
+        String username = securityService.getCurrentUsername(request);
+        List<Playlist> playlists = playlistService.getPlaylistsForUser(username);
         List<Podcast> podcasts = new ArrayList<Podcast>();
 
-        for (int i = 0; i < playlists.length; i++) {
+        for (Playlist playlist : playlists) {
 
-            String name = StringUtil.removeSuffix(playlists[i].getName());
-            String encodedName = URLEncoder.encode(playlists[i].getName(), StringUtil.ENCODING_LATIN);
-            String publishDate = RSS_DATE_FORMAT.format(new Date(playlists[i].lastModified()));
+            List<MediaFile> songs = playlistService.getSongsInPlaylist(playlist.getId());
+            if (songs.isEmpty()) {
+                continue;
+            }
+            long length = 0L;
+            for (MediaFile song : songs) {
+                length += song.getFileSize();
+            }
+            String publishDate = RSS_DATE_FORMAT.format(playlist.getCreated());
 
             // Resolve content type.
-            PlayQueue playQueue = new PlayQueue();
-            playlistService.loadPlaylist(playQueue, playlists[i].getName());
-            String suffix = getSuffix(playQueue);
+            String suffix = songs.get(0).getFormat();
             String type = StringUtil.getMimeType(suffix);
 
-            long length = playQueue.length();
-            String enclosureUrl = url.replaceFirst("/podcast.*", "/stream?playlist=" + encodedName + "&amp;suffix=." + suffix);
+            String enclosureUrl = url.replaceFirst("/podcast.*", "/stream?playlist=" + playlist.getId() + "&amp;suffix=." + suffix);
 
             // Rewrite URLs in case we're behind a proxy.
             if (settingsService.isRewriteUrlEnabled()) {
@@ -82,7 +86,7 @@ public class PodcastController extends ParameterizableViewController {
                 enclosureUrl = StringUtil.toHttpUrl(enclosureUrl, streamPort);
             }
 
-            podcasts.add(new Podcast(name, publishDate, enclosureUrl, length, type));
+            podcasts.add(new Podcast(playlist.getName(), publishDate, enclosureUrl, length, type));
         }
 
         Map<String, Object> map = new HashMap<String, Object>();
@@ -95,19 +99,16 @@ public class PodcastController extends ParameterizableViewController {
         return result;
     }
 
-    private String getSuffix(PlayQueue playQueue) {
-        if (playQueue.isEmpty()) {
-            return null;
-        }
-        return playQueue.getFile(0).getFormat();
-    }
-
     public void setPlaylistService(PlaylistService playlistService) {
         this.playlistService = playlistService;
     }
 
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
+    }
+
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
     }
 
     /**
