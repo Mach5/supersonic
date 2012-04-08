@@ -23,7 +23,7 @@
             <xs:element name="searchResult2" type="sub:SearchResult2" minOccurs="1" maxOccurs="1"/>
             <xs:element name="searchResult3" type="sub:SearchResult3" minOccurs="1" maxOccurs="1"/>
             <xs:element name="playlists" type="sub:Playlists" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="playlist" type="sub:Playlist" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="playlist" type="sub:PlaylistWithSongs" minOccurs="1" maxOccurs="1"/>
             <xs:element name="jukeboxStatus" type="sub:JukeboxStatus" minOccurs="1" maxOccurs="1"/>
             <xs:element name="jukeboxPlaylist" type="sub:JukeboxPlaylist" minOccurs="1" maxOccurs="1"/>
             <xs:element name="license" type="sub:License" minOccurs="1" maxOccurs="1"/>
@@ -246,18 +246,24 @@
 
     <xs:complexType name="Playlists">
         <xs:sequence>
-            <xs:element name="playlist" type="sub:PlaylistIdAndName" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="playlist" type="sub:Playlist" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="PlaylistIdAndName">
+    <xs:complexType name="Playlist">
         <xs:attribute name="id" type="xs:string" use="required"/>
         <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="comment" type="xs:string" use="optional"/>   <!--Added in 1.8.0-->
+        <xs:attribute name="owner" type="xs:boolean" use="optional"/>    <!--Added in 1.8.0-->
+        <xs:attribute name="public" type="xs:boolean" use="optional"/>   <!--Added in 1.8.0-->
+        <xs:attribute name="songCount" type="xs:int" use="required"/>    <!--Added in 1.8.0-->
+        <xs:attribute name="duration" type="xs:int" use="required"/>     <!--Added in 1.8.0-->
+        <xs:attribute name="created" type="xs:dateTime" use="required"/> <!--Added in 1.8.0-->
     </xs:complexType>
 
-    <xs:complexType name="Playlist">
+    <xs:complexType name="PlaylistWithSongs">
         <xs:complexContent>
-            <xs:extension base="sub:PlaylistIdAndName">
+            <xs:extension base="sub:Playlist">
                 <xs:sequence>
                     <xs:element name="entry" type="sub:Child" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>

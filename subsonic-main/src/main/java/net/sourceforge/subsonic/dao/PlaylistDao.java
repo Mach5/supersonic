@@ -18,14 +18,20 @@
  */
 package net.sourceforge.subsonic.dao;
 
+import jsx3.gui.matrix.Column;
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Playlist;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /**
  * Provides database services for playlists.
@@ -35,17 +41,55 @@ import java.util.List;
 public class PlaylistDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(PlaylistDao.class);
-    private static final String COLUMNS = "id, username, is_public, name, comment, song_count, duration_seconds, created, last_scanned, present";
+    private static final String COLUMNS = "id, username, is_public, name, comment, song_count, duration_seconds, created";
     private final RowMapper rowMapper = new PlaylistMapper();
 
     public List<Playlist> getPlaylistsForUser(String username) {
-        List<Playlist> result1 = query("select " + COLUMNS + " from playlist where username=? order by name", rowMapper, username);
-        List<Playlist> result2 = query("select " + prefix(COLUMNS, "playlist") + " from playlist, playlist_user where " +
+
+        List<Playlist> result1 = query("select " + COLUMNS + " from playlist where username=?", rowMapper, username);
+        List<Playlist> result2 = query("select " + COLUMNS + " from playlist where is_public", rowMapper, username);
+        List<Playlist> result3 = query("select " + prefix(COLUMNS, "playlist") + " from playlist, playlist_user where " +
                 "playlist.id = playlist_user.playlist_id and " +
                 "playlist.username != ? and " +
-                "playlist_user.username = ? order by playlist.name", rowMapper, username, username);
-        result1.addAll(result2);
-        return result1;
+                "playlist_user.username = ?", rowMapper, username, username);
+
+        // Put in sorted map to avoid duplicates.
+        SortedMap<Integer, Playlist> map = new TreeMap<Integer, Playlist>();
+        for (Playlist playlist : result1) {
+            map.put(playlist.getId(), playlist);
+        }
+        for (Playlist playlist : result2) {
+            map.put(playlist.getId(), playlist);
+        }
+        for (Playlist playlist : result3) {
+            map.put(playlist.getId(), playlist);
+        }
+        return new ArrayList<Playlist>(map.values());
+    }
+
+    public Playlist getPlaylist(int id) {
+        return queryOne("select " + COLUMNS + " from playlist where id=?", rowMapper, id);
+    }
+
+    public synchronized void createPlaylist(Playlist playlist) {
+        update("insert into playlist(" + COLUMNS + ") values(" + questionMarks(COLUMNS) + ")",
+                null, playlist.getUsername(), playlist.isPublic(), playlist.getName(), playlist.getComment(),
+                0, 0, playlist.getCreated());
+
+        int id = queryForInt("select max(id) from playlist", 0);
+        playlist.setId(id);
+    }
+
+    public void setSongsInPlaylist(int id, List<MediaFile> songs) {
+        update("delete from playlist_song where playlist_id=?", id);
+        int duration = 0;
+        for (MediaFile song : songs) {
+            update("insert into playlist_song (playlist_id, song_id) values (?, ?)", id, song.getId());
+            if (song.getDurationSeconds() != null) {
+                duration += song.getDurationSeconds();
+            }
+        }
+        update("update playlist set song_count=?, duration=? where playlist_id=?", songs.size(), duration, id);
     }
 
     public List<String> getPlaylistUsers(int playlistId) {
@@ -60,6 +104,10 @@ public class PlaylistDao extends AbstractDao {
 
     public void removePlaylistUser(int playlistId, String username) {
         update("delete from playlist_user where playlist_id=? and username=?", playlistId, username);
+    }
+
+    public synchronized void deletePlaylist(int id) {
+        update("delete from playlist where id=?", id);
     }
 
     private static class PlaylistMapper implements ParameterizedRowMapper<Playlist> {

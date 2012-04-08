@@ -19,8 +19,11 @@
 package net.sourceforge.subsonic.service;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.MediaFileDao;
+import net.sourceforge.subsonic.dao.PlaylistDao;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.PlayQueue;
+import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.util.FileUtil;
 import net.sourceforge.subsonic.util.StringUtil;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -53,6 +56,46 @@ public class PlaylistService {
     private SettingsService settingsService;
     private SecurityService securityService;
     private MediaFileService mediaFileService;
+    private MediaFileDao mediaFileDao;
+    private PlaylistDao playlistDao;
+
+    public List<Playlist> getPlaylistsForUser(String username) {
+        return playlistDao.getPlaylistsForUser(username);
+    }
+
+    public Playlist getPlaylist(int id) {
+        return playlistDao.getPlaylist(id);
+    }
+
+    public List<MediaFile> getSongsInPlaylist(int id) {
+        return mediaFileDao.getSongsInPlaylist(id);
+    }
+
+    public void setSongsInPlaylist(int id, List<MediaFile> songs) {
+        playlistDao.setSongsInPlaylist(id, songs);
+    }
+
+    public void createPlaylist(Playlist playlist) {
+        playlistDao.createPlaylist(playlist);
+    }
+
+    public boolean isReadAllowed(Playlist playlist, String username) {
+        if (username == null) {
+            return false;
+        }
+        if (username.equals(playlist.getUsername()) || playlist.isPublic()) {
+            return true;
+        }
+        return playlistDao.getPlaylistUsers(playlist.getId()).contains(username);
+    }
+
+    public boolean isWriteAllowed(Playlist playlist, String username) {
+        return username != null && username.equals(playlist.getUsername());
+    }
+
+    public void deletePlaylist(int id) {
+        playlistDao.deletePlaylist(id);
+    }
 
     /**
      * Saves the given playlist to persistent storage.
@@ -60,6 +103,7 @@ public class PlaylistService {
      * @param playQueue The playlist to save.
      * @throws IOException If an I/O error occurs.
      */
+    @Deprecated
     public void savePlaylist(PlayQueue playQueue) throws IOException {
         String name = playQueue.getName();
 
@@ -90,6 +134,7 @@ public class PlaylistService {
      * @param name     The name of a previously persisted playlist.
      * @throws IOException If an I/O error occurs.
      */
+    @Deprecated
     public void loadPlaylist(PlayQueue playQueue, String name) throws IOException {
         File playlistFile = new File(getPlaylistDirectory(), name);
         checkAccess(playlistFile);
@@ -110,6 +155,7 @@ public class PlaylistService {
      *
      * @return A list of all previously saved playlists.
      */
+    @Deprecated
     public File[] getSavedPlaylists() {
         return FileUtil.listFiles(getPlaylistDirectory(), new PlaylistFilenameFilter(), true);
     }
@@ -120,6 +166,7 @@ public class PlaylistService {
      * @param name The name of the playlist.
      * @return The playlist, or <code>null</code> if not found.
      */
+    @Deprecated
     public File getSavedPlaylist(String name) {
         for (File file : getSavedPlaylists()) {
             if (name.equals(file.getName())) {
@@ -135,6 +182,7 @@ public class PlaylistService {
      * @param name The name of the playlist to delete.
      * @throws IOException If an I/O error occurs.
      */
+    @Deprecated
     public void deletePlaylist(String name) throws IOException {
         File file = new File(getPlaylistDirectory(), name);
         checkAccess(file);
@@ -146,6 +194,7 @@ public class PlaylistService {
      *
      * @return The directory where playlists are stored.
      */
+    @Deprecated
     public File getPlaylistDirectory() {
         return new File(settingsService.getPlaylistFolder());
     }
@@ -166,6 +215,14 @@ public class PlaylistService {
 
     public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
+    }
+
+    public void setPlaylistDao(PlaylistDao playlistDao) {
+        this.playlistDao = playlistDao;
+    }
+
+    public void setMediaFileDao(MediaFileDao mediaFileDao) {
+        this.mediaFileDao = mediaFileDao;
     }
 
     private static class PlaylistFilenameFilter implements FilenameFilter {

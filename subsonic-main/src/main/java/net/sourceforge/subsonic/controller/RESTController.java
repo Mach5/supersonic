@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.ajax.PlayQueueService;
-import org.apache.commons.io.FilenameUtils;
+import net.sourceforge.subsonic.domain.Playlist;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -124,7 +124,7 @@ public class RESTController extends MultiActionController {
     private MediaFileDao mediaFileDao;
     private ArtistDao artistDao;
     private AlbumDao albumDao;
-            
+
     public void ping(HttpServletRequest request, HttpServletResponse response) throws Exception {
         XMLBuilder builder = createXMLBuilder(request, response, true).endAll();
         response.getWriter().print(builder);
@@ -306,6 +306,20 @@ public class RESTController extends MultiActionController {
         attributes.add("created", StringUtil.toISO8601(album.getCreated()));
         attributes.add("starred", StringUtil.toISO8601(albumDao.getAlbumStarredDate(album.getId(), username)));
 
+        return attributes;
+    }
+
+    private AttributeSet createAttributesForPlaylist(Playlist playlist) {
+        AttributeSet attributes;
+        attributes = new AttributeSet();
+        attributes.add("id", playlist.getId());
+        attributes.add("name", playlist.getName());
+        attributes.add("comment", playlist.getComment());
+        attributes.add("owner", playlist.getUsername());
+        attributes.add("public", playlist.isPublic());
+        attributes.add("songCount", playlist.getSongCount());
+        attributes.add("duration", playlist.getDurationSeconds());
+        attributes.add("created", StringUtil.toISO8601(playlist.getCreated()));
         return attributes;
     }
 
@@ -515,15 +529,15 @@ public class RESTController extends MultiActionController {
 
     public void getPlaylists(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
+        String username = securityService.getCurrentUsername(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
         builder.add("playlists", false);
 
-        for (File playlist : playlistService.getSavedPlaylists()) {
-            String id = StringUtil.utf8HexEncode(playlist.getName());
-            String name = FilenameUtils.getBaseName(playlist.getName());
-            builder.add("playlist", true, new Attribute("id", id), new Attribute("name", name));
+        for (Playlist playlist : playlistService.getPlaylistsForUser(username)) {
+            builder.add("playlist", createAttributesForPlaylist(playlist), true);
         }
+
         builder.endAll();
         response.getWriter().print(builder);
     }
@@ -536,22 +550,19 @@ public class RESTController extends MultiActionController {
         XMLBuilder builder = createXMLBuilder(request, response, true);
 
         try {
-            String id = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
-            File file = playlistService.getSavedPlaylist(id);
-            if (file == null) {
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+
+            Playlist playlist = playlistService.getPlaylist(id);
+            if (playlist == null) {
                 error(request, response, ErrorCode.NOT_FOUND, "Playlist not found: " + id);
                 return;
             }
-            PlayQueue playQueue = new PlayQueue();
-            playlistService.loadPlaylist(playQueue, id);
-
-            builder.add("playlist", false, new Attribute("id", StringUtil.utf8HexEncode(playQueue.getName())),
-                    new Attribute("name", FilenameUtils.getBaseName(playQueue.getName())));
-            List<MediaFile> result;
-            synchronized (playQueue) {
-                result = playQueue.getFiles();
+            if (!playlistService.isReadAllowed(playlist, username)) {
+                error(request, response, ErrorCode.NOT_AUTHORIZED, "Permission denied for playlist " + id);
+                return;
             }
-            for (MediaFile mediaFile : result) {
+            builder.add("playlist", createAttributesForPlaylist(playlist), false);
+            for (MediaFile mediaFile : playlistService.getSongsInPlaylist(id)) {
                 AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
                 builder.add("entry", attributes, true);
             }
@@ -650,30 +661,45 @@ public class RESTController extends MultiActionController {
 
     public void createPlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request, true);
-
-        User user = securityService.getCurrentUser(request);
-        if (!user.isPlaylistRole()) {
-            error(request, response, ErrorCode.NOT_AUTHORIZED, user.getUsername() + " is not authorized to create playlists.");
-            return;
-        }
+        String username = securityService.getCurrentUsername(request);
 
         try {
 
-            String playlistId = request.getParameter("playlistId");
+            Integer playlistId = ServletRequestUtils.getIntParameter(request, "playlistId");
             String name = request.getParameter("name");
             if (playlistId == null && name == null) {
                 error(request, response, ErrorCode.MISSING_PARAMETER, "Playlist ID or name must be specified.");
                 return;
             }
 
-            PlayQueue playQueue = new PlayQueue();
-            playQueue.setName(playlistId != null ? StringUtil.utf8HexDecode(playlistId) : name);
-
-            int[] ids = ServletRequestUtils.getIntParameters(request, "songId");
-            for (int id : ids) {
-                playQueue.addFiles(true, mediaFileService.getMediaFile(id));
+            Playlist playlist;
+            if (playlistId != null) {
+                playlist = playlistService.getPlaylist(playlistId);
+                if (playlist == null) {
+                    error(request, response, ErrorCode.NOT_FOUND, "Playlist not found: " + playlistId);
+                    return;
+                }
+                if (!playlistService.isWriteAllowed(playlist, username)) {
+                    error(request, response, ErrorCode.NOT_AUTHORIZED, "Permission denied for playlist " + playlistId);
+                    return;
+                }
+            } else {
+                playlist = new Playlist();
+                playlist.setName(name);
+                playlist.setCreated(new Date());
+                playlist.setPublic(false);
+                playlist.setUsername(username);
+                playlistService.createPlaylist(playlist);
             }
-            playlistService.savePlaylist(playQueue);
+
+            List<MediaFile> songs = new ArrayList<MediaFile>();
+            for (int id : ServletRequestUtils.getIntParameters(request, "songId")) {
+                MediaFile song = mediaFileService.getMediaFile(id);
+                if (song != null) {
+                    songs.add(song);
+                }
+            }
+            playlistService.setSongsInPlaylist(playlist.getId(), songs);
 
             XMLBuilder builder = createXMLBuilder(request, response, true);
             builder.endAll();
@@ -689,15 +715,19 @@ public class RESTController extends MultiActionController {
 
     public void deletePlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request, true);
-
-        User user = securityService.getCurrentUser(request);
-        if (!user.isPlaylistRole()) {
-            error(request, response, ErrorCode.NOT_AUTHORIZED, user.getUsername() + " is not authorized to delete playlists.");
-            return;
-        }
+        String username = securityService.getCurrentUsername(request);
 
         try {
-            String id = StringUtil.utf8HexDecode(ServletRequestUtils.getRequiredStringParameter(request, "id"));
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            Playlist playlist = playlistService.getPlaylist(id);
+            if (playlist == null) {
+                error(request, response, ErrorCode.NOT_FOUND, "Playlist not found: " + id);
+                return;
+            }
+            if (!playlistService.isWriteAllowed(playlist, username)) {
+                error(request, response, ErrorCode.NOT_AUTHORIZED, "Permission denied for playlist " + id);
+                return;
+            }
             playlistService.deletePlaylist(id);
 
             XMLBuilder builder = createXMLBuilder(request, response, true);

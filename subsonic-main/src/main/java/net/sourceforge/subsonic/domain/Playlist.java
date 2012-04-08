@@ -34,6 +34,9 @@ public class Playlist {
     private int durationSeconds;
     private Date created;
 
+    public Playlist() {
+    }
+
     public Playlist(int id, String username, boolean isPublic, String name, String comment, int songCount,
                     int durationSeconds, Date created) {
         this.id = id;

@@ -42,19 +42,18 @@ Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
 Update apps to include PlayBook version.
 
-  - Rename to "play queue" and "playlist"
   - Rename RandomPlaylistController, playlist.jsp, PlaylistService.
-  - Create database schema
-  - Cascading delete when user is deleted.
   - Update "present" when scanning media library?
   - Initally import existing playlists if table is empty.
   - Change appendPlaylist and loadPlaylist page, show meta data (owner, public/private, #songs, duration, created date, comment).
   - Create new Playlists button in top frame.
   - managePlaylist -> Play, Download, Export (m3u), Delete, Private/Shared
-  - Shared/private
   - Keep existing playlist role, but make it enabled by default.  Or remove it?
   - REST support, add/removePlaylistUser.
+  - REST support, modify playlist metadata.
   - Remove settings for playlist folder.
+  - Import/export feature.
+
 
 REST
   - Document in api.jsp
