@@ -28,7 +28,7 @@ import org.springframework.web.servlet.view.*;
 import javax.servlet.http.*;
 
 /**
- * Controller for saving playlists.
+ * Controller for saving the play queue as a playlist.
  *
  * @author Sindre Mehus
  */
@@ -38,9 +38,10 @@ public class SavePlaylistController extends SimpleFormController {
     private PlayerService playerService;
 
     public ModelAndView onSubmit(Object comm) throws Exception {
+        todo
         SavePlaylistCommand command = (SavePlaylistCommand) comm;
         PlayQueue playQueue = command.getPlayQueue();
-        playQueue.setName(command.getName() + '.' + command.getSuffix());
+        playQueue.setName(command.getName());
         playlistService.savePlaylist(playQueue);
 
         return new ModelAndView(new RedirectView(getSuccessView()));

@@ -31,14 +31,10 @@ public class SavePlaylistCommand {
 
     private PlayQueue playQueue;
     private String name;
-    private String suffix;
-    private String[] formats;
 
     public SavePlaylistCommand(PlayQueue playQueue) {
         this.playQueue = playQueue;
-        name = StringUtils.stripFilenameExtension(playQueue.getName());
-        suffix = StringUtils.getFilenameExtension(playQueue.getName());
-        formats = new String[]{"m3u", "pls", "xspf"};
+        name = playQueue.getName();
     }
 
     public PlayQueue getPlayQueue() {
@@ -55,21 +51,5 @@ public class SavePlaylistCommand {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSuffix() {
-        return suffix;
-    }
-
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
-    }
-
-    public String[] getFormats() {
-        return formats;
-    }
-
-    public void setFormats(String[] formats) {
-        this.formats = formats;
     }
 }

@@ -368,9 +368,7 @@
         <property name="viewName" value="db"/>
         <property name="daoHelper" ref="daoHelper"/>
     </bean>
-    <bean id="savePlaylistValidator" class="net.sourceforge.subsonic.validator.SavePlaylistValidator">
-        <property name="playlistService" ref="playlistService"/>
-    </bean>
+    <bean id="savePlaylistValidator" class="net.sourceforge.subsonic.validator.SavePlaylistValidator"/>
     <bean id="donateValidator" class="net.sourceforge.subsonic.validator.DonateValidator">
         <property name="settingsService" ref="settingsService"/>
     </bean>
