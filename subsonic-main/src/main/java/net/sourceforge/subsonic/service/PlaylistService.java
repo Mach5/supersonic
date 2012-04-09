@@ -161,35 +161,6 @@ public class PlaylistService {
     }
 
     /**
-     * Returns the saved playlist with the given name.
-     *
-     * @param name The name of the playlist.
-     * @return The playlist, or <code>null</code> if not found.
-     */
-    @Deprecated
-    public File getSavedPlaylist(String name) {
-        for (File file : getSavedPlaylists()) {
-            if (name.equals(file.getName())) {
-                return file;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Deletes the named playlist from persistent storage.
-     *
-     * @param name The name of the playlist to delete.
-     * @throws IOException If an I/O error occurs.
-     */
-    @Deprecated
-    public void deletePlaylist(String name) throws IOException {
-        File file = new File(getPlaylistDirectory(), name);
-        checkAccess(file);
-        file.delete();
-    }
-
-    /**
      * Returns the directory where playlists are stored.
      *
      * @return The directory where playlists are stored.

@@ -53,50 +53,40 @@ public class LoadPlaylistController extends MultiActionController {
     }
 
     private ModelAndView loadOrAppendPlaylist(HttpServletRequest request, boolean load) {
+        User user = securityService.getCurrentUser(request);
         Map<String, Object> map = new HashMap<String, Object>();
-        List<String> playlistNames = new ArrayList<String>();
-
-        if (playlistService.getPlaylistDirectory().exists()) {
-            File[] playlists = playlistService.getSavedPlaylists();
-            for (File file : playlists) {
-                playlistNames.add(file.getName());
-            }
-        }
-
         map.put("load", load);
         map.put("player", request.getParameter("player"));
         map.put("dir", request.getParameter("dir"));
         map.put("indexes", ServletRequestUtils.getIntParameters(request, "i"));
-        map.put("playlistDirectory", playlistService.getPlaylistDirectory());
-        map.put("playlistDirectoryExists", playlistService.getPlaylistDirectory().exists());
-        map.put("playlists", playlistNames);
-        map.put("user", securityService.getCurrentUser(request));
+        map.put("playlists", playlistService.getPlaylistsForUser(user.getUsername()));
+        map.put("user", user);
         return new ModelAndView("loadPlaylist", "model", map);
     }
 
-    public ModelAndView loadPlaylistConfirm(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ModelAndView loadPlaylistConfirm(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Player player = playerService.getPlayer(request, response);
         PlayQueue playQueue = player.getPlayQueue();
 
-        String name = request.getParameter("name");
-        playlistService.loadPlaylist(playQueue, name);
+        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+        playQueue.addFiles(false, playlistService.getSongsInPlaylist(id));
 
         return reload(null);
     }
 
-    public ModelAndView appendPlaylistConfirm(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public ModelAndView appendPlaylistConfirm(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         // Load the existing playlist.
-        PlayQueue savedPlayQueue = new PlayQueue();
-        String name = request.getParameter("name");
-        playlistService.loadPlaylist(savedPlayQueue, name);
+        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+        List<MediaFile> songs = playlistService.getSongsInPlaylist(id);
 
         // Update the existing playlist with new entries.
-        List<MediaFile> files = getFilesToAppend(request, response);
-        savedPlayQueue.addFiles(true, files);
+        for (MediaFile song : getFilesToAppend(request, response)) {
+            songs.add(song);
+        }
 
-        // Save the playlist again.
-        playlistService.savePlaylist(savedPlayQueue);
+        // Save it.
+        playlistService.setSongsInPlaylist(id, songs);
 
         String dir = StringUtils.trimToNull(request.getParameter("dir"));
         return reload(dir);
@@ -142,9 +132,9 @@ public class LoadPlaylistController extends MultiActionController {
         return new ModelAndView("reload", "model", map);
     }
 
-    public ModelAndView deletePlaylist(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String name = request.getParameter("name");
-        playlistService.deletePlaylist(name);
+    public ModelAndView deletePlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+        playlistService.deletePlaylist(id);
 
         return new ModelAndView(new RedirectView("loadPlaylist.view?"));
     }

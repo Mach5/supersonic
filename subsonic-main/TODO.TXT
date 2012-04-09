@@ -42,6 +42,7 @@ Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
 Update apps to include PlayBook version.
 
+  - Change "dir" usage in LoadPlaylistController.
   - Remove deprecated methods in PlaylistService.
   - Rename RandomPlaylistController, playlist.jsp, PlaylistService.
   - Update "present" when scanning media library?

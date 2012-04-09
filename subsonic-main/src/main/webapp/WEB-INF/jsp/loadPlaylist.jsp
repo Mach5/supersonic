@@ -25,9 +25,7 @@
     </c:choose>
 </h1>
 <c:choose>
-    <c:when test="${not model.playlistDirectoryExists}">
-        <p class="warning"><fmt:message key="playlist.load.missing_folder"><fmt:param value="${model.playlistDirectory}"/></fmt:message></p>
-    </c:when>
+
     <c:when test="${empty model.playlists}">
         <p class="warning"><fmt:message key="playlist.load.empty"/></p>
     </c:when>

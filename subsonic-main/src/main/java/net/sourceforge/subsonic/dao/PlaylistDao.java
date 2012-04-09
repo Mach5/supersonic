@@ -47,7 +47,7 @@ public class PlaylistDao extends AbstractDao {
     public List<Playlist> getPlaylistsForUser(String username) {
 
         List<Playlist> result1 = query("select " + COLUMNS + " from playlist where username=?", rowMapper, username);
-        List<Playlist> result2 = query("select " + COLUMNS + " from playlist where is_public", rowMapper, username);
+        List<Playlist> result2 = query("select " + COLUMNS + " from playlist where is_public", rowMapper);
         List<Playlist> result3 = query("select " + prefix(COLUMNS, "playlist") + " from playlist, playlist_user where " +
                 "playlist.id = playlist_user.playlist_id and " +
                 "playlist.username != ? and " +
