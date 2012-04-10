@@ -191,6 +191,7 @@ public class Schema47 extends Schema {
                     "song_count int default 0 not null," +
                     "duration_seconds int default 0 not null," +
                     "created datetime not null," +
+                    "last_modified datetime not null," +
                     "foreign key (username) references user(username) on delete cascade)");
 
             LOG.info("Database table 'playlist' was created successfully.");

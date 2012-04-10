@@ -42,13 +42,11 @@ Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
 Update apps to include PlayBook version.
 
-  - 
   - Show playlists in left.jsp?
   - "Play queue -> Save as playlist" should create a new playlist with automatic name (Play Queue 10/4 22:43)
   - "Add to playlist" should show list of existing playlists.
   - "Add to new playlist" should create an automatic name.
   - Improve usability when saving play queue as playlist e.g., if using an existing name.  Use ajax?
-  - Add last_updated to playlist table.
   - Change "dir" usage in LoadPlaylistController.
   - Rename RandomPlaylistController, playlist.jsp, PlaylistService.
   - Update "present" when scanning media library?

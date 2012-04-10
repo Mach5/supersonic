@@ -687,6 +687,7 @@ public class RESTController extends MultiActionController {
                 playlist = new Playlist();
                 playlist.setName(name);
                 playlist.setCreated(new Date());
+                playlist.setLastModified(new Date());
                 playlist.setPublic(false);
                 playlist.setUsername(username);
                 playlistService.createPlaylist(playlist);

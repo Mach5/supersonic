@@ -28,6 +28,7 @@ import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
@@ -41,7 +42,7 @@ import java.util.TreeMap;
 public class PlaylistDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(PlaylistDao.class);
-    private static final String COLUMNS = "id, username, is_public, name, comment, song_count, duration_seconds, created";
+    private static final String COLUMNS = "id, username, is_public, name, comment, song_count, duration_seconds, created, last_modified";
     private final RowMapper rowMapper = new PlaylistMapper();
 
     public List<Playlist> getPlaylistsForUser(String username) {
@@ -74,7 +75,7 @@ public class PlaylistDao extends AbstractDao {
     public synchronized void createPlaylist(Playlist playlist) {
         update("insert into playlist(" + COLUMNS + ") values(" + questionMarks(COLUMNS) + ")",
                 null, playlist.getUsername(), playlist.isPublic(), playlist.getName(), playlist.getComment(),
-                0, 0, playlist.getCreated());
+                0, 0, playlist.getCreated(), playlist.getLastModified());
 
         int id = queryForInt("select max(id) from playlist", 0);
         playlist.setId(id);
@@ -89,7 +90,7 @@ public class PlaylistDao extends AbstractDao {
                 duration += song.getDurationSeconds();
             }
         }
-        update("update playlist set song_count=?, duration_seconds=? where id=?", songs.size(), duration, id);
+        update("update playlist set song_count=?, duration_seconds=?, last_updated=? where id=?", songs.size(), duration, new Date(), id);
     }
 
     public List<String> getPlaylistUsers(int playlistId) {
@@ -120,7 +121,8 @@ public class PlaylistDao extends AbstractDao {
                     rs.getString(5),
                     rs.getInt(6),
                     rs.getInt(7),
-                    rs.getTimestamp(8));
+                    rs.getTimestamp(8),
+                    rs.getTimestamp(9));
         }
     }
 }
