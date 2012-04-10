@@ -98,35 +98,6 @@ public class PlaylistService {
     }
 
     /**
-     * Saves the given playlist to persistent storage.
-     *
-     * @param playQueue The playlist to save.
-     * @throws IOException If an I/O error occurs.
-     */
-    @Deprecated
-    public void savePlaylist(PlayQueue playQueue) throws IOException {
-        String name = playQueue.getName();
-
-        // Add m3u suffix if no other suitable suffix is given.
-        if (!new PlaylistFilenameFilter().accept(getPlaylistDirectory(), name)) {
-            name += ".m3u";
-            playQueue.setName(name);
-        }
-
-        File playlistFile = new File(getPlaylistDirectory(), name);
-        checkAccess(playlistFile);
-
-        PrintWriter writer = new PrintWriter(playlistFile, StringUtil.ENCODING_UTF8);
-
-        try {
-            PlaylistFormat format = PlaylistFormat.getPlaylistFormat(playlistFile);
-            format.savePlaylist(playQueue, writer);
-        } finally {
-            writer.close();
-        }
-    }
-
-    /**
      * Loads a named playlist from persistent storage and into the provided playlist instance.
      *
      * @param playQueue The playlist to populate. Any existing entries in the playlist will
@@ -254,7 +225,7 @@ public class PlaylistService {
                 writer.println(file.getPath());
             }
             if (writer.checkError()) {
-                throw new IOException("Error when writing playlist " + playQueue.getName());
+                throw new IOException("Error when writing playlist");
             }
         }
     }
@@ -297,7 +268,7 @@ public class PlaylistService {
             writer.println("Version=2");
 
             if (writer.checkError()) {
-                throw new IOException("Error when writing playlist " + playQueue.getName());
+                throw new IOException("Error when writing playlist.");
             }
         }
     }
@@ -315,7 +286,7 @@ public class PlaylistService {
                 document = builder.build(reader);
             } catch (JDOMException x) {
                 LOG.warn("Failed to parse XSPF playlist.", x);
-                throw new IOException("Failed to parse XSPF playlist " + playQueue.getName());
+                throw new IOException("Failed to parse XSPF playlist.");
             }
 
             Element root = document.getRootElement();
@@ -352,7 +323,7 @@ public class PlaylistService {
             writer.println("</playlist>");
 
             if (writer.checkError()) {
-                throw new IOException("Error when writing playlist " + playQueue.getName());
+                throw new IOException("Error when writing playlist.");
             }
         }
     }

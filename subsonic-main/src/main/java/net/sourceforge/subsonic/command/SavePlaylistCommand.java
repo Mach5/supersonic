@@ -36,7 +36,6 @@ public class SavePlaylistCommand {
     public SavePlaylistCommand(PlayQueue playQueue, String username) {
         this.playQueue = playQueue;
         this.username = username;
-        name = playQueue.getName();
     }
 
     public PlayQueue getPlayQueue() {

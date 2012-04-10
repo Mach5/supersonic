@@ -32,19 +32,19 @@
     <c:otherwise>
         <table class="ruleTable indent">
             <c:forEach items="${model.playlists}" var="playlist">
-                <sub:url value="loadPlaylistConfirm.view" var="loadUrl"><sub:param name="name" value="${playlist}"/></sub:url>
+                <sub:url value="loadPlaylistConfirm.view" var="loadUrl"><sub:param name="id" value="${playlist.id}"/></sub:url>
                 <sub:url value="appendPlaylistConfirm.view" var="appendUrl">
-                    <sub:param name="name" value="${playlist}"/>
+                    <sub:param name="id" value="${playlist.id}"/>
                     <sub:param name="player" value="${model.player}"/>
                     <sub:param name="dir" value="${model.dir}"/>
                     <c:forEach items="${model.indexes}" var="index">
                         <sub:param name="i" value="${index}"/>
                     </c:forEach>
                 </sub:url>
-                <sub:url value="deletePlaylist.view" var="deleteUrl"><sub:param name="name" value="${playlist}"/></sub:url>
-                <sub:url value="download.view" var="downloadUrl"><sub:param name="playlist" value="${playlist}"/></sub:url>
+                <sub:url value="deletePlaylist.view" var="deleteUrl"><sub:param name="id" value="${playlist.id}"/></sub:url>
+                <sub:url value="download.view" var="downloadUrl"><sub:param name="playlist" value="${playlist.id}"/></sub:url>
                 <tr>
-                    <td class="ruleTableHeader">${playlist}</td>
+                    <td class="ruleTableHeader">${playlist.name}</td>
                     <td class="ruleTableCell">
                         <c:choose>
                             <c:when test="${model.load}">
