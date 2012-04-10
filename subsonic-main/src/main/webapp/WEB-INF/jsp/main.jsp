@@ -134,9 +134,9 @@
 
     <c:if test="${model.user.streamRole}">
         <c:if test="${needSep}">|</c:if>
-        <a href="javascript:noop()" onclick="top.playlist.onPlay(${model.dir.id});"><fmt:message key="main.playall"/></a> |
-        <a href="javascript:noop()" onclick="top.playlist.onPlayRandom(${model.dir.id}, 10);"><fmt:message key="main.playrandom"/></a> |
-        <a href="javascript:noop()" onclick="top.playlist.onAdd(${model.dir.id});"><fmt:message key="main.addall"/></a>
+        <a href="javascript:noop()" onclick="top.playQueue.onPlay(${model.dir.id});"><fmt:message key="main.playall"/></a> |
+        <a href="javascript:noop()" onclick="top.playQueue.onPlayRandom(${model.dir.id}, 10);"><fmt:message key="main.playrandom"/></a> |
+        <a href="javascript:noop()" onclick="top.playQueue.onAdd(${model.dir.id});"><fmt:message key="main.addall"/></a>
         <c:set var="needSep" value="true"/>
     </c:if>
 

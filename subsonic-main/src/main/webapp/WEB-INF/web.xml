@@ -166,7 +166,7 @@
     </filter-mapping>
     <filter-mapping>
         <filter-name>NoCacheFilter</filter-name>
-        <url-pattern>/playlist.view</url-pattern>
+        <url-pattern>/playQueue.view</url-pattern>
     </filter-mapping>
     <filter-mapping>
         <filter-name>NoCacheFilter</filter-name>

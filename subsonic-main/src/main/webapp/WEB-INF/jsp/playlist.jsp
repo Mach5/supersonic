@@ -414,7 +414,7 @@
     <table style="white-space:nowrap;">
         <tr style="white-space:nowrap;">
             <c:if test="${model.user.settingsRole}">
-                <td><select name="player" onchange="location='playlist.view?player=' + options[selectedIndex].value;">
+                <td><select name="player" onchange="location='playQueue.view?player=' + options[selectedIndex].value;">
                     <c:forEach items="${model.players}" var="player">
                         <option ${player.id eq model.player.id ? "selected" : ""} value="${player.id}">${player.shortDescription}</option>
                     </c:forEach>

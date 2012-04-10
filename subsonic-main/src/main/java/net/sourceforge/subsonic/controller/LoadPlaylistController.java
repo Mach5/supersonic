@@ -118,7 +118,7 @@ public class LoadPlaylistController extends MultiActionController {
 
     private ModelAndView reload(String dir) {
         List<ReloadFrame> reloadFrames = new ArrayList<ReloadFrame>();
-        reloadFrames.add(new ReloadFrame("playlist", "playlist.view?"));
+        reloadFrames.add(new ReloadFrame("playQueue", "playQueue.view?"));
 
         if (dir == null) {
             reloadFrames.add(new ReloadFrame("main", "nowPlaying.view?"));

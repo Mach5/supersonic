@@ -171,7 +171,7 @@
 </c:choose>
 
 <c:if test="${command.reloadNeeded}">
-    <script language="javascript" type="text/javascript">parent.frames.playlist.location.href="playlist.view?"</script>
+    <script language="javascript" type="text/javascript">parent.frames.playQueue.location.href="playQueue.view?"</script>
 </c:if>
 
 </body></html>

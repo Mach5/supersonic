@@ -101,8 +101,8 @@
         <property name="reloadFrames">
             <list>
                 <bean class="net.sourceforge.subsonic.controller.ReloadFrame">
-                    <property name="frame" value="playlist"/>
-                    <property name="view" value="playlist.view?"/>
+                    <property name="frame" value="playQueue"/>
+                    <property name="view" value="playQueue.view?"/>
                 </bean>
                 <bean class="net.sourceforge.subsonic.controller.ReloadFrame">
                     <property name="frame" value="main"/>
@@ -429,7 +429,7 @@
                 <prop key="/allmusic.view">allmusicController</prop>
                 <prop key="/home.view">homeController</prop>
                 <prop key="/editTags.view">editTagsController</prop>
-                <prop key="/playlist.view">playlistController</prop>
+                <prop key="/playQueue.view">playlistController</prop>
                 <prop key="/coverArt.view">coverArtController</prop>
                 <prop key="/avatar.view">avatarController</prop>
                 <prop key="/proxy.view">proxyController</prop>

@@ -42,7 +42,7 @@ PARAMETERS
                 <img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a>
         </c:when>
         <c:otherwise>
-            <a href="javascript:noop()" onclick="top.playlist.onPlay(${param.id});">
+            <a href="javascript:noop()" onclick="top.playQueue.onPlay(${param.id});">
                 <img src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"></a>
         </c:otherwise>
     </c:choose>
@@ -51,7 +51,7 @@ PARAMETERS
 
 <c:if test="${param.asTable}"><td></c:if>
 <c:if test="${(empty param.addEnabled or param.addEnabled) and not param.video}">
-    <a href="javascript:noop()" onclick="top.playlist.onAdd(${param.id});">
+    <a href="javascript:noop()" onclick="top.playQueue.onAdd(${param.id});">
         <img src="<spring:theme code="addImage"/>" alt="<fmt:message key="common.add"/>" title="<fmt:message key="common.add"/>"></a>
 </c:if>
 <c:if test="${param.asTable}"></td></c:if>
