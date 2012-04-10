@@ -18,18 +18,6 @@
                 <form:input path="name" size="30"/>
             </td>
 
-            <td style="padding-left:1em">
-                <fmt:message key="playlist.save.format"/>
-            </td>
-
-            <td>
-                <form:select path="suffix">
-                    <c:forEach items="${command.formats}" var="format" varStatus="loopStatus">
-                        <form:option value="${format}" label="${format}"/>
-                    </c:forEach>
-                </form:select>
-            </td>
-
         </tr>
         <tr>
             <td>

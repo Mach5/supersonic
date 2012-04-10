@@ -42,7 +42,7 @@ Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
 Update apps to include PlayBook version.
 
-  - Improve usability when saving play queue as playlist.
+  - Improve usability when saving play queue as playlist e.g., if using an existing name.  Use ajax?
   - Change "dir" usage in LoadPlaylistController.
   - Remove deprecated methods in PlaylistService.
   - Rename RandomPlaylistController, playlist.jsp, PlaylistService.

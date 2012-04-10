@@ -123,6 +123,7 @@
         <property name="validator" ref="savePlaylistValidator"/>
         <property name="formView" value="savePlaylist"/>
         <property name="successView" value="nowPlaying.view"/>
+        <property name="securityService" ref="securityService"/>
         <property name="playlistService" ref="playlistService"/>
         <property name="playerService" ref="playerService"/>
     </bean>

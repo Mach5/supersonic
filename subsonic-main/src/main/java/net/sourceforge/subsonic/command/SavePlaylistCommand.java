@@ -31,9 +31,11 @@ public class SavePlaylistCommand {
 
     private PlayQueue playQueue;
     private String name;
+    private final String username;
 
-    public SavePlaylistCommand(PlayQueue playQueue) {
+    public SavePlaylistCommand(PlayQueue playQueue, String username) {
         this.playQueue = playQueue;
+        this.username = username;
         name = playQueue.getName();
     }
 
@@ -51,5 +53,9 @@ public class SavePlaylistCommand {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }
