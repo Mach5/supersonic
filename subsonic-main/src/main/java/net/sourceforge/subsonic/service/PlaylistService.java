@@ -53,9 +53,6 @@ import java.util.regex.Pattern;
 public class PlaylistService {
 
     private static final Logger LOG = Logger.getLogger(PlaylistService.class);
-    private SettingsService settingsService;
-    private SecurityService securityService;
-    private MediaFileService mediaFileService;
     private MediaFileDao mediaFileDao;
     private PlaylistDao playlistDao;
 
@@ -95,68 +92,6 @@ public class PlaylistService {
 
     public void deletePlaylist(int id) {
         playlistDao.deletePlaylist(id);
-    }
-
-    /**
-     * Loads a named playlist from persistent storage and into the provided playlist instance.
-     *
-     * @param playQueue The playlist to populate. Any existing entries in the playlist will
-     *                 be removed.
-     * @param name     The name of a previously persisted playlist.
-     * @throws IOException If an I/O error occurs.
-     */
-    @Deprecated
-    public void loadPlaylist(PlayQueue playQueue, String name) throws IOException {
-        File playlistFile = new File(getPlaylistDirectory(), name);
-        checkAccess(playlistFile);
-
-        playQueue.setName(name);
-
-        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(playlistFile), StringUtil.ENCODING_UTF8));
-        try {
-            PlaylistFormat format = PlaylistFormat.getPlaylistFormat(playlistFile);
-            format.loadPlaylist(playQueue, reader, mediaFileService);
-        } finally {
-            reader.close();
-        }
-    }
-
-    /**
-     * Returns a list of all previously saved playlists.
-     *
-     * @return A list of all previously saved playlists.
-     */
-    @Deprecated
-    public File[] getSavedPlaylists() {
-        return FileUtil.listFiles(getPlaylistDirectory(), new PlaylistFilenameFilter(), true);
-    }
-
-    /**
-     * Returns the directory where playlists are stored.
-     *
-     * @return The directory where playlists are stored.
-     */
-    @Deprecated
-    public File getPlaylistDirectory() {
-        return new File(settingsService.getPlaylistFolder());
-    }
-
-    private void checkAccess(File file) {
-        if (!securityService.isWriteAllowed(file)) {
-            throw new SecurityException("Access denied to file " + file);
-        }
-    }
-
-    public void setSettingsService(SettingsService settingsService) {
-        this.settingsService = settingsService;
-    }
-
-    public void setSecurityService(SecurityService securityService) {
-        this.securityService = securityService;
-    }
-
-    public void setMediaFileService(MediaFileService mediaFileService) {
-        this.mediaFileService = mediaFileService;
     }
 
     public void setPlaylistDao(PlaylistDao playlistDao) {

@@ -92,15 +92,15 @@ public class StreamController implements Controller {
             }
 
             // If "playlist" request parameter is set, this is a Podcast request. In that case, create a separate
-            // playlist (in order to support multiple parallel Podcast streams).
-            String playlistName = request.getParameter("playlist");
-            boolean isPodcast = playlistName != null;
+            // play queue (in order to support multiple parallel Podcast streams).
+            Integer playlistId = ServletRequestUtils.getIntParameter(request, "playlist");
+            boolean isPodcast = playlistId != null;
             if (isPodcast) {
                 PlayQueue playQueue = new PlayQueue();
-                playlistService.loadPlaylist(playQueue, playlistName);
+                playQueue.addFiles(false, playlistService.getSongsInPlaylist(playlistId));
                 player.setPlayQueue(playQueue);
                 Util.setContentLength(response, playQueue.length());
-                LOG.info("Incoming Podcast request for playlist " + playlistName);
+                LOG.info("Incoming Podcast request for playlist " + playlistId);
             }
 
             String contentType = StringUtil.getMimeType(request.getParameter("suffix"));

@@ -30,6 +30,7 @@ import java.util.SortedSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
@@ -150,7 +151,8 @@ public class WapController extends MultiActionController {
             } else if (request.getParameter("clear") != null) {
                 playQueue.clear();
             } else if (request.getParameter("load") != null) {
-                playlistService.loadPlaylist(playQueue, request.getParameter("load"));
+                List<MediaFile> songs = playlistService.getSongsInPlaylist(ServletRequestUtils.getIntParameter(request, "id"));
+                playQueue.addFiles(false, songs);
             } else if (request.getParameter("random") != null) {
                 List<MediaFile> randomFiles = searchService.getRandomSongs(new RandomSearchCriteria(20, null, null, null, null));
                 playQueue.addFiles(false, randomFiles);
@@ -163,7 +165,7 @@ public class WapController extends MultiActionController {
 
     public ModelAndView loadPlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("playlists", playlistService.getSavedPlaylists());
+        map.put("playlists", playlistService.getPlaylistsForUser(securityService.getCurrentUsername(request)));
         return new ModelAndView("wap/loadPlaylist", "model", map);
     }
 

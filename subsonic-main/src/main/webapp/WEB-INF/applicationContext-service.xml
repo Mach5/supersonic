@@ -114,9 +114,6 @@
     </bean>
 
     <bean id="playlistService" class="net.sourceforge.subsonic.service.PlaylistService">
-        <property name="settingsService" ref="settingsService"/>
-        <property name="securityService" ref="securityService"/>
-        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
         <property name="playlistDao" ref="playlistDao"/>
     </bean>
