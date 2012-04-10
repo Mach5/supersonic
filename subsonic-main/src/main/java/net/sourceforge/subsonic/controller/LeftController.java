@@ -33,6 +33,8 @@ import java.util.SortedSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.service.PlaylistService;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.LastModified;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -76,7 +78,7 @@ public class LeftController extends ParameterizableViewController implements Las
     private MediaFileService mediaFileService;
     private MusicIndexService musicIndexService;
     private PlayerService playerService;
-
+    private PlaylistService playlistService;
 
     public long getLastModified(HttpServletRequest request) {
         saveSelectedMusicFolder(request);
@@ -86,6 +88,7 @@ public class LeftController extends ParameterizableViewController implements Las
         }
 
         long lastModified = LAST_COMPATIBILITY_TIME.getTimeInMillis();
+        String username = securityService.getCurrentUsername(request);
 
         // When was settings last changed?
         lastModified = Math.max(lastModified, settingsService.getSettingsChanged());
@@ -113,8 +116,13 @@ public class LeftController extends ParameterizableViewController implements Las
             lastModified = Math.max(lastModified, internetRadio.getChanged().getTime());
         }
 
+        // When was playlist table last changed?
+        for (Playlist playlist : playlistService.getPlaylistsForUser(username)) {
+            lastModified = Math.max(lastModified, playlist.getLastModified().getTime());
+        }
+
         // When was user settings last changed?
-        UserSettings userSettings = settingsService.getUserSettings(securityService.getCurrentUsername(request));
+        UserSettings userSettings = settingsService.getUserSettings(username);
         lastModified = Math.max(lastModified, userSettings.getChanged().getTime());
 
         return lastModified;
@@ -128,11 +136,12 @@ public class LeftController extends ParameterizableViewController implements Las
         MediaLibraryStatistics statistics = mediaScannerService.getStatistics();
         Locale locale = RequestContextUtils.getLocale(request);
 
+        String username = securityService.getCurrentUsername(request);
         List<MusicFolder> allMusicFolders = settingsService.getAllMusicFolders();
         MusicFolder selectedMusicFolder = getSelectedMusicFolder(request);
         List<MusicFolder> musicFoldersToUse = selectedMusicFolder == null ? allMusicFolders : Arrays.asList(selectedMusicFolder);
         String[] shortcuts = settingsService.getShortcutsAsArray();
-        UserSettings userSettings = settingsService.getUserSettings(securityService.getCurrentUsername(request));
+        UserSettings userSettings = settingsService.getUserSettings(username);
 
         MusicFolderContent musicFolderContent = getMusicFolderContent(musicFoldersToUse);
 
@@ -142,6 +151,7 @@ public class LeftController extends ParameterizableViewController implements Las
         map.put("selectedMusicFolder", selectedMusicFolder);
         map.put("radios", settingsService.getAllInternetRadios());
         map.put("shortcuts", getShortcuts(musicFoldersToUse, shortcuts));
+        map.put("playlists", playlistService.getPlaylistsForUser(username));
         map.put("captionCutoff", userSettings.getMainVisibility().getCaptionCutoff());
         map.put("partyMode", userSettings.isPartyModeEnabled());
         map.put("organizeByFolderStructure", settingsService.isOrganizeByFolderStructure());
@@ -239,6 +249,10 @@ public class LeftController extends ParameterizableViewController implements Las
 
     public void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
+    }
+
+    public void setPlaylistService(PlaylistService playlistService) {
+        this.playlistService = playlistService;
     }
 
     public static class MusicFolderContent {

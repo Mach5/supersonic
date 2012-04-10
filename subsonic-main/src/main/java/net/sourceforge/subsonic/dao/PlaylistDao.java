@@ -90,7 +90,7 @@ public class PlaylistDao extends AbstractDao {
                 duration += song.getDurationSeconds();
             }
         }
-        update("update playlist set song_count=?, duration_seconds=?, last_updated=? where id=?", songs.size(), duration, new Date(), id);
+        update("update playlist set song_count=?, duration_seconds=?, last_modified=? where id=?", songs.size(), duration, new Date(), id);
     }
 
     public List<String> getPlaylistUsers(int playlistId) {

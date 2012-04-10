@@ -12,6 +12,7 @@
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="musicIndexService" ref="musicIndexService"/>
         <property name="playerService" ref="playerService"/>
+        <property name="playlistService" ref="playlistService"/>
     </bean>
     <bean id="rightController" class="net.sourceforge.subsonic.controller.RightController">
         <property name="viewName" value="right"/>
