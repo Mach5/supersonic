@@ -39,7 +39,7 @@ import net.sourceforge.subsonic.service.SettingsService;
  *
  * @author Sindre Mehus
  */
-public class PlaylistController extends ParameterizableViewController {
+public class PlayQueueController extends ParameterizableViewController {
 
     private PlayerService playerService;
     private SecurityService securityService;
