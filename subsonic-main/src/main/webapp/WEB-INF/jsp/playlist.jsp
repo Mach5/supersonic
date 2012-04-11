@@ -4,7 +4,6 @@
     <%@ include file="head.jsp" %>
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/swfobject.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/range.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/timer.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/slider.js"/>"></script>
@@ -61,26 +60,9 @@
     }
 
     function createPlayer() {
-        var flashvars = {
-            backcolor:"<spring:theme code="backgroundColor"/>",
-            frontcolor:"<spring:theme code="textColor"/>",
-            id:"player1"
-        };
-        var params = {
-            allowfullscreen:"true",
-            allowscriptaccess:"always"
-        };
-        var attributes = {
-            id:"player1",
-            name:"player1"
-        };
-        swfobject.embedSWF("<c:url value="/flash/jw-player-5.6.swf"/>", "placeholder", "340", "24", "9.0.0", false, flashvars, params, attributes);
     }
 
     function playerReady(thePlayer) {
-        player = $("player1");
-        player.addModelListener("STATE", "stateListener");
-        getPlaylist();
     }
 
     function stateListener(obj) { // IDLE, BUFFERING, PLAYING, PAUSED, COMPLETED
@@ -288,8 +270,8 @@
         }
         updateCurrentImage();
         if (songs.length == 0) {
-            player.sendEvent("LOAD", new Array());
-            player.sendEvent("STOP");
+            player1.pause();
+            player1.src = "";
         }
     }
 
@@ -315,8 +297,8 @@
             list[0].provider = "video";
         }
 
-        player.sendEvent("LOAD", list);
-        player.sendEvent("PLAY");
+        player1.src = song.streamUrl;
+        player1.play();
     }
 
     function updateCurrentImage() {
@@ -415,7 +397,16 @@
             </c:if>
             <c:if test="${model.player.web}">
                 <td style="width:340px; height:24px;padding-left:10px;padding-right:10px"><div id="placeholder">
+
+                    <audio controls="controls" id="player1" width=340 height=24>
                     <a href="http://www.adobe.com/go/getflashplayer" target="_blank"><fmt:message key="playlist.getflash"/></a>
+                    </audio>
+                    <script type="text/javascript">
+                        var player1=document.getElementById("player1");
+
+                        player1.addEventListener("ended", function () { onNext(repeatEnabled); });
+                        getPlaylist();
+                    </script>
                 </div></td>
             </c:if>
 
