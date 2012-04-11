@@ -19,6 +19,7 @@
 package net.sourceforge.subsonic.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,9 +29,14 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
 import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
 
 /**
  * Controller for the main page.
@@ -42,17 +48,24 @@ public class PlaylistController extends ParameterizableViewController {
     private SecurityService securityService;
     private PlayerService playerService;
     private PlaylistService playlistService;
+    private SettingsService settingsService;
+    private MediaFileService mediaFileService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
 
         int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+        User user = securityService.getCurrentUser(request);
+        UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
+        List<MediaFile> files = playlistService.getFilesInPlaylist(id);
+        mediaFileService.populateStarredDate(files, user.getUsername());
 
         map.put("playlist", playlistService.getPlaylist(id));
+        map.put("files", files);
         map.put("player", playerService.getPlayer(request, response));
-        map.put("user", securityService.getCurrentUser(request));
-//        map.put("partyMode", userSettings.isPartyModeEnabled());
+        map.put("user", user);
+        map.put("partyMode", userSettings.isPartyModeEnabled());
 
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
@@ -69,5 +82,13 @@ public class PlaylistController extends ParameterizableViewController {
 
     public void setPlaylistService(PlaylistService playlistService) {
         this.playlistService = playlistService;
+    }
+
+    public void setSettingsService(SettingsService settingsService) {
+        this.settingsService = settingsService;
+    }
+
+    public void setMediaFileService(MediaFileService mediaFileService) {
+        this.mediaFileService = mediaFileService;
     }
 }
