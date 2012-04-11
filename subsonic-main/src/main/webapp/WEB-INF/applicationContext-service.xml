@@ -211,6 +211,7 @@
         <property name="playlistService" ref="playlistService"/>
         <property name="securityService" ref="securityService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="mediaFileDao" ref="mediaFileDao"/>
     </bean>
 
     <bean id="ajaxLyricsService" class="net.sourceforge.subsonic.ajax.LyricsService"/>

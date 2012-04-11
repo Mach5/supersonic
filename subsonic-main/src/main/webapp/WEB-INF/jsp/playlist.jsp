@@ -13,18 +13,8 @@
         function init() {
 //            TODO
 //            dwr.engine.setErrorHandler(null);
+            $("empty").hide();
             getPlaylist();
-        }
-
-        function toggleStar(mediaFileId, imageId) {
-            if ($(imageId).src.indexOf("<spring:theme code="ratingOnImage"/>") != -1) {
-                $(imageId).src = "<spring:theme code="ratingOffImage"/>";
-                starService.unstar(mediaFileId);
-            }
-            else if ($(imageId).src.indexOf("<spring:theme code="ratingOffImage"/>") != -1) {
-                $(imageId).src = "<spring:theme code="ratingOnImage"/>";
-                starService.star(mediaFileId);
-            }
         }
 
         function getPlaylist() {
@@ -50,7 +40,7 @@
                 var song  = songs[i];
                 var id = i + 1;
                 dwr.util.cloneNode("pattern", { idSuffix:id });
-                if (song.starredDate != null) {
+                if (song.starred) {
                     $("starSong" + id).src = "<spring:theme code='ratingOnImage'/>";
                 } else {
                     $("starSong" + id).src = "<spring:theme code='ratingOffImage'/>";
@@ -87,6 +77,19 @@
             return s;
         }
 
+        function onStar(index) {
+            playlistService.toggleStar(${model.playlist.id}, index, playlistCallback);
+        }
+        function onRemove(index) {
+            playlistService.remove(${model.playlist.id}, index, playlistCallback);
+        }
+        function onUp(index) {
+            playlistService.up(${model.playlist.id}, index, playlistCallback);
+        }
+        function onDown(index) {
+            playlistService.down(${model.playlist.id}, index, playlistCallback);
+        }
+
     </script>
 </head>
 <body class="mainframe bgcolor1" onload="init()">
@@ -99,27 +102,25 @@
     <h2>${model.playlist.comment}</h2>
 </c:if>
 
-<p id="empty" style="visibility: hidden;"><em><fmt:message key="playlist.empty"/></em></p>
+<p id="empty"><em><fmt:message key="playlist.empty"/></em></p>
 
 <table style="border-collapse:collapse;white-space:nowrap;">
     <tbody id="playlistBody">
     <tr id="pattern" style="display:none;margin:0;padding:0;border:0">
-        <td><a href="javascript:noop()">
+        <td class="bgcolor1"><a href="#">
             <img id="starSong" onclick="onStar(this.id.substring(8) - 1)" src="<spring:theme code="ratingOffImage"/>"
                  alt="" title=""></a></td>
-        <td><a href="javascript:noop()">
+        <td class="bgcolor1"><a href="#">
             <img id="removeSong" onclick="onRemove(this.id.substring(10) - 1)" src="<spring:theme code="removeImage"/>"
                  alt="<fmt:message key="playlist.remove"/>" title="<fmt:message key="playlist.remove"/>"></a></td>
-        <td><a href="javascript:noop()">
+        <td class="bgcolor1"><a href="#">
             <img id="up" onclick="onUp(this.id.substring(2) - 1)" src="<spring:theme code="upImage"/>"
                  alt="<fmt:message key="playlist.up"/>" title="<fmt:message key="playlist.up"/>"></a></td>
-        <td><a href="javascript:noop()">
+        <td class="bgcolor1"><a href="#">
             <img id="down" onclick="onDown(this.id.substring(4) - 1)" src="<spring:theme code="downImage"/>"
                  alt="<fmt:message key="playlist.down"/>" title="<fmt:message key="playlist.down"/>"></a></td>
 
-        <td style="padding-left: 0.1em"><input type="checkbox" class="checkbox" id="songIndex"></td>
         <td style="padding-right:0.25em"></td>
-
 
         <td style="padding-right:1.25em"><span id="title">Title</span></td>
         <td style="padding-right:1.25em"><a id="albumUrl" target="main"><span id="album" class="detail">Album</span></a></td>

@@ -22,7 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.dao.MediaFileDao;
+import net.sourceforge.subsonic.domain.Player;
 import org.directwebremoting.WebContextFactory;
 
 import net.sourceforge.subsonic.domain.MediaFile;
@@ -41,6 +44,7 @@ public class PlaylistService {
     private MediaFileService mediaFileService;
     private SecurityService securityService;
     private net.sourceforge.subsonic.service.PlaylistService playlistService;
+    private MediaFileDao mediaFileDao;
 
     /**
      * Returns the playlist with the given ID.
@@ -66,6 +70,48 @@ public class PlaylistService {
         return result;
     }
 
+    public PlaylistInfo toggleStar(int id, int index) throws Exception {
+        HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
+        String username = securityService.getCurrentUsername(request);
+        List<MediaFile> files = playlistService.getFilesInPlaylist(id);
+        MediaFile file = files.get(index);
+
+        boolean starred = mediaFileDao.getMediaFileStarredDate(file.getId(), username) != null;
+        if (starred) {
+            mediaFileDao.unstarMediaFile(file.getId(), username);
+        } else {
+            mediaFileDao.starMediaFile(file.getId(), username);
+        }
+        return getPlaylist(id);
+    }
+
+    public PlaylistInfo remove(int id, int index) throws Exception {
+        List<MediaFile> files = playlistService.getFilesInPlaylist(id);
+        files.remove(index);
+        playlistService.setFilesInPlaylist(id, files);
+        return getPlaylist(id);
+    }
+
+    public PlaylistInfo up(int id, int index) throws Exception {
+        List<MediaFile> files = playlistService.getFilesInPlaylist(id);
+        if (index > 0) {
+            MediaFile file = files.remove(index);
+            files.add(index - 1, file);
+            playlistService.setFilesInPlaylist(id, files);
+        }
+        return getPlaylist(id);
+    }
+
+    public PlaylistInfo down(int id, int index) throws Exception {
+        List<MediaFile> files = playlistService.getFilesInPlaylist(id);
+        if (index < files.size() - 1) {
+            MediaFile file = files.remove(index);
+            files.add(index + 1, file);
+            playlistService.setFilesInPlaylist(id, files);
+        }
+        return getPlaylist(id);
+    }
+
     public void setPlaylistService(net.sourceforge.subsonic.service.PlaylistService playlistService) {
         this.playlistService = playlistService;
     }
@@ -76,5 +122,9 @@ public class PlaylistService {
 
     public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
+    }
+
+    public void setMediaFileDao(MediaFileDao mediaFileDao) {
+        this.mediaFileDao = mediaFileDao;
     }
 }
