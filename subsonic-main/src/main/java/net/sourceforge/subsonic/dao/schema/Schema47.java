@@ -66,7 +66,7 @@ public class Schema47 extends Schema {
                     "last_played datetime," +
                     "comment varchar," +
                     "created datetime not null," +
-                    "last_modified datetime not null," +
+                    "changed datetime not null," +
                     "last_scanned datetime not null," +
                     "children_last_updated datetime not null," +
                     "present boolean not null," +

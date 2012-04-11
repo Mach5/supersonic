@@ -77,10 +77,10 @@ public class DownloadController implements Controller, LastModified {
     public long getLastModified(HttpServletRequest request) {
         try {
             MediaFile mediaFile = getSingleFile(request);
-            if (mediaFile == null || mediaFile.isDirectory() || mediaFile.getLastModified() == null) {
+            if (mediaFile == null || mediaFile.isDirectory() || mediaFile.getChanged() == null) {
                 return -1;
             }
-            return mediaFile.getLastModified().getTime();
+            return mediaFile.getChanged().getTime();
         } catch (ServletRequestBindingException e) {
             return -1;
         }

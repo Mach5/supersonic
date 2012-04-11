@@ -118,7 +118,7 @@ public class MediaFileService {
     }
 
     private MediaFile checkLastModified(MediaFile mediaFile, boolean useFastCache) {
-        if (useFastCache || mediaFile.getLastModified().getTime() >= FileUtil.lastModified(mediaFile.getFile())) {
+        if (useFastCache || mediaFile.getChanged().getTime() >= FileUtil.lastModified(mediaFile.getFile())) {
             return mediaFile;
         }
         mediaFile = createMediaFile(mediaFile.getFile());
@@ -312,7 +312,7 @@ public class MediaFileService {
     private void updateChildren(MediaFile parent) {
 
         // Check timestamps.
-        if (parent.getChildrenLastUpdated().getTime() >= parent.getLastModified().getTime()) {
+        if (parent.getChildrenLastUpdated().getTime() >= parent.getChanged().getTime()) {
             return;
         }
 
@@ -336,7 +336,7 @@ public class MediaFileService {
         }
 
         // Update timestamp in parent.
-        parent.setChildrenLastUpdated(parent.getLastModified());
+        parent.setChildrenLastUpdated(parent.getChanged());
         parent.setPresent(true);
         mediaFileDao.createOrUpdateMediaFile(parent);
     }
@@ -389,7 +389,7 @@ public class MediaFileService {
         mediaFile.setPath(file.getPath());
         mediaFile.setFolder(securityService.getRootFolderForFile(file));
         mediaFile.setParentPath(file.getParent());
-        mediaFile.setLastModified(lastModified);
+        mediaFile.setChanged(lastModified);
         mediaFile.setLastScanned(new Date());
         mediaFile.setPlayCount(0);
         mediaFile.setChildrenLastUpdated(new Date(0));

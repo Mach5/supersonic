@@ -42,7 +42,6 @@ Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
 Update apps to include PlayBook version.
 
-  - Rename last_modified to changed.
   - Make playlist.jsp
   - "Play queue -> Save as playlist" should create a new playlist with automatic name (Play Queue 10/4 22:43)
   - "Add to playlist" should show list of existing playlists.

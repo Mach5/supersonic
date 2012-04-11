@@ -56,7 +56,7 @@ public class MediaFile {
     private Date lastPlayed;
     private String comment;
     private Date created;
-    private Date lastModified;
+    private Date changed;
     private Date lastScanned;
     private Date starredDate;
     private Date childrenLastUpdated;
@@ -65,7 +65,7 @@ public class MediaFile {
     public MediaFile(int id, String path, String folder, MediaType mediaType, String format, String title,
                      String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
                      boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
-                     String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date lastModified, Date lastScanned,
+                     String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date changed, Date lastScanned,
                      Date childrenLastUpdated, boolean present) {
         this.id = id;
         this.path = path;
@@ -91,7 +91,7 @@ public class MediaFile {
         this.lastPlayed = lastPlayed;
         this.comment = comment;
         this.created = created;
-        this.lastModified = lastModified;
+        this.changed = changed;
         this.lastScanned = lastScanned;
         this.childrenLastUpdated = childrenLastUpdated;
         this.present = present;
@@ -370,12 +370,12 @@ public class MediaFile {
         this.created = created;
     }
 
-    public Date getLastModified() {
-        return lastModified;
+    public Date getChanged() {
+        return changed;
     }
 
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
+    public void setChanged(Date changed) {
+        this.changed = changed;
     }
 
     public Date getLastScanned() {

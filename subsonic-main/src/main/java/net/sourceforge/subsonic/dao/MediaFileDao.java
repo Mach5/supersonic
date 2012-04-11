@@ -42,7 +42,7 @@ public class MediaFileDao extends AbstractDao {
     private static final Logger LOG = Logger.getLogger(MediaFileDao.class);
     private static final String COLUMNS = "id, path, folder, type, format, title, album, artist, disc_number, " +
             "track_number, year, genre, bit_rate, variable_bit_rate, duration_seconds, file_size, width, height, cover_art_path, " +
-            "parent_path, play_count, last_played, comment, created, last_modified, last_scanned, children_last_updated, present, version";
+            "parent_path, play_count, last_played, comment, created, changed, last_scanned, children_last_updated, present, version";
 
     private static final int VERSION = 1;
 
@@ -124,7 +124,7 @@ public class MediaFileDao extends AbstractDao {
                 "play_count=?," +
                 "last_played=?," +
                 "comment=?," +
-                "last_modified=?," +
+                "changed=?," +
                 "last_scanned=?," +
                 "children_last_updated=?," +
                 "present=?, " +
@@ -136,7 +136,7 @@ public class MediaFileDao extends AbstractDao {
                 file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
                 file.isVariableBitRate(), file.getDurationSeconds(), file.getFileSize(), file.getWidth(), file.getHeight(),
                 file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
-                file.getLastModified(), file.getLastScanned(), file.getChildrenLastUpdated(), file.isPresent(), VERSION, file.getPath());
+                file.getChanged(), file.getLastScanned(), file.getChildrenLastUpdated(), file.isPresent(), VERSION, file.getPath());
 
         if (n == 0) {
 
@@ -153,7 +153,7 @@ public class MediaFileDao extends AbstractDao {
                     file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
                     file.isVariableBitRate(), file.getDurationSeconds(), file.getFileSize(), file.getWidth(), file.getHeight(),
                     file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
-                    file.getCreated(), file.getLastModified(), file.getLastScanned(),
+                    file.getCreated(), file.getChanged(), file.getLastScanned(),
                     file.getChildrenLastUpdated(), file.isPresent(), VERSION);
         }
 

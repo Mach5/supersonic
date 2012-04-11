@@ -222,7 +222,7 @@ public class MediaScannerService {
             album = new Album();
             album.setName(file.getAlbumName());
             album.setArtist(file.getArtist());
-            album.setCreated(file.getLastModified());
+            album.setCreated(file.getChanged());
         }
         if (album.getCoverArtPath() == null) {
             MediaFile parent = mediaFileService.getMediaFile(file.getParentPath());

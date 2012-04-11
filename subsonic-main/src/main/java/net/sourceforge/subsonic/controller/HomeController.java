@@ -33,7 +33,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -161,7 +161,7 @@ public class HomeController extends ParameterizableViewController {
             if (album != null) {
                 Date created = file.getCreated();
                 if (created == null) {
-                    created = file.getLastModified();
+                    created = file.getChanged();
                 }
                 album.setCreated(created);
                 result.add(album);
