@@ -64,7 +64,7 @@
             <sub:url value="playlist.view" var="playlistUrl">
                 <sub:param name="id" value="${playlist.id}"/>
             </sub:url>
-            <a target="main" href="${playlistUrl}">${playlist.name}&nbsp;(${playlist.songCount})</a>
+            <a target="main" href="${playlistUrl}">${playlist.name}&nbsp;(${playlist.fileCount})</a>
         </p>
     </c:forEach>
 </c:if>

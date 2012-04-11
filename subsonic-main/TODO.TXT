@@ -61,7 +61,7 @@ Update apps to include PlayBook version.
   - Import/export feature.
   - Retest wap and podcast playlist stuff.
   - Playlist support in StreamController.
-
+  - Show message if nothing is starred.
 
 REST
   - Document in api.jsp
