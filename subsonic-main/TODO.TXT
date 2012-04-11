@@ -44,10 +44,9 @@ Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
 Update apps to include PlayBook version.
 
+  - Add confirmation dialog before deleting playlist.
   - Display meta data.
   - Option to change name, comment, public.
-  - Hide edit buttons if not authorized.
-  - Buttons to play/add/download whole playlist.
   - Update playlist list in left.jsp
 
   - Increase line height in playlist.jsp

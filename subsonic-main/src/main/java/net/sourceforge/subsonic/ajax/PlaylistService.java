@@ -46,9 +46,12 @@ public class PlaylistService {
     private net.sourceforge.subsonic.service.PlaylistService playlistService;
     private MediaFileDao mediaFileDao;
 
-    /**
-     * Returns the playlist with the given ID.
-     */
+    public List<Playlist> getPlaylists() throws Exception {
+        HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
+        String username = securityService.getCurrentUsername(request);
+        return playlistService.getPlaylistsForUser(username);
+    }
+
     public PlaylistInfo getPlaylist(int id) throws Exception {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
 

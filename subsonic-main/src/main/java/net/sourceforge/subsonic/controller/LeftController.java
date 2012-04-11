@@ -33,7 +33,6 @@ import java.util.SortedSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.service.PlaylistService;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.LastModified;
@@ -116,11 +115,6 @@ public class LeftController extends ParameterizableViewController implements Las
             lastModified = Math.max(lastModified, internetRadio.getChanged().getTime());
         }
 
-        // When was playlist table last changed?
-        for (Playlist playlist : playlistService.getPlaylistsForUser(username)) {
-            lastModified = Math.max(lastModified, playlist.getChanged().getTime());
-        }
-
         // When was user settings last changed?
         UserSettings userSettings = settingsService.getUserSettings(username);
         lastModified = Math.max(lastModified, userSettings.getChanged().getTime());
@@ -151,7 +145,6 @@ public class LeftController extends ParameterizableViewController implements Las
         map.put("selectedMusicFolder", selectedMusicFolder);
         map.put("radios", settingsService.getAllInternetRadios());
         map.put("shortcuts", getShortcuts(musicFoldersToUse, shortcuts));
-        map.put("playlists", playlistService.getPlaylistsForUser(username));
         map.put("captionCutoff", userSettings.getMainVisibility().getCaptionCutoff());
         map.put("partyMode", userSettings.isPartyModeEnabled());
         map.put("organizeByFolderStructure", settingsService.isOrganizeByFolderStructure());
