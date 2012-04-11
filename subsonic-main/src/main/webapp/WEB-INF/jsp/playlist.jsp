@@ -99,6 +99,10 @@
         function onDown(index) {
             playlistService.down(${model.playlist.id}, index, playlistCallback);
         }
+        function onDeletePlaylist() {
+            playlistService.deletePlaylist(${model.playlist.id});
+            location = "home.view";
+        }
 
 
     </script>
@@ -113,6 +117,9 @@
     <c:if test="${model.user.downloadRole}">
         <c:url value="download.view" var="downloadUrl"><c:param name="playlist" value="${model.playlist.id}"/></c:url>
         | <a href="${downloadUrl}"><fmt:message key="common.download"/></a>
+    </c:if>
+    <c:if test="${model.editAllowed}">
+        | <a href="#" onclick="onDeletePlaylist();"><fmt:message key="common.delete"/></a>
     </c:if>
 
 </h2>
@@ -144,15 +151,17 @@
         <td style="padding-right:1.25em"><span id="artist" class="detail">Artist</span></td>
         <td style="padding-right:1.25em;text-align:right;"><span id="duration" class="detail">Duration</span></td>
 
-        <td class="bgcolor1"><a href="#">
-            <img id="removeSong" onclick="onRemove(this.id.substring(10) - 1)" src="<spring:theme code="removeImage"/>"
-                 alt="<fmt:message key="playlist.remove"/>" title="<fmt:message key="playlist.remove"/>"></a></td>
-        <td class="bgcolor1"><a href="#">
-            <img id="up" onclick="onUp(this.id.substring(2) - 1)" src="<spring:theme code="upImage"/>"
-                 alt="<fmt:message key="playlist.up"/>" title="<fmt:message key="playlist.up"/>"></a></td>
-        <td class="bgcolor1"><a href="#">
-            <img id="down" onclick="onDown(this.id.substring(4) - 1)" src="<spring:theme code="downImage"/>"
-                 alt="<fmt:message key="playlist.down"/>" title="<fmt:message key="playlist.down"/>"></a></td>
+        <c:if test="${model.editAllowed}">
+            <td class="bgcolor1"><a href="#">
+                <img id="removeSong" onclick="onRemove(this.id.substring(10) - 1)" src="<spring:theme code="removeImage"/>"
+                     alt="<fmt:message key="playlist.remove"/>" title="<fmt:message key="playlist.remove"/>"></a></td>
+            <td class="bgcolor1"><a href="#">
+                <img id="up" onclick="onUp(this.id.substring(2) - 1)" src="<spring:theme code="upImage"/>"
+                     alt="<fmt:message key="playlist.up"/>" title="<fmt:message key="playlist.up"/>"></a></td>
+            <td class="bgcolor1"><a href="#">
+                <img id="down" onclick="onDown(this.id.substring(4) - 1)" src="<spring:theme code="downImage"/>"
+                     alt="<fmt:message key="playlist.down"/>" title="<fmt:message key="playlist.down"/>"></a></td>
+        </c:if>
 
     </tr>
     </tbody>

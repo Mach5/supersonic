@@ -48,6 +48,7 @@ Update apps to include PlayBook version.
   - Option to change name, comment, public.
   - Hide edit buttons if not authorized.
   - Buttons to play/add/download whole playlist.
+  - Update playlist list in left.jsp
 
   - Increase line height in playlist.jsp
   - Rename to play queue in Settings > Player.

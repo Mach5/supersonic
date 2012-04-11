@@ -112,6 +112,10 @@ public class PlaylistService {
         return getPlaylist(id);
     }
 
+    public void deletePlaylist(int id) throws Exception {
+        playlistService.deletePlaylist(id);
+    }
+
     public void setPlaylistService(net.sourceforge.subsonic.service.PlaylistService playlistService) {
         this.playlistService = playlistService;
     }

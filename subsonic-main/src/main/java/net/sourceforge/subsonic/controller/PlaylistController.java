@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sourceforge.subsonic.domain.Playlist;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -58,13 +59,11 @@ public class PlaylistController extends ParameterizableViewController {
         int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
-//        List<MediaFile> files = playlistService.getFilesInPlaylist(id);
-//        mediaFileService.populateStarredDate(files, user.getUsername());
+        Playlist playlist = playlistService.getPlaylist(id);
 
-        map.put("playlist", playlistService.getPlaylist(id));
-//        map.put("files", files);
-        map.put("player", playerService.getPlayer(request, response));
+        map.put("playlist", playlist);
         map.put("user", user);
+        map.put("editAllowed", user.getUsername().equals(playlist.getUsername()));
         map.put("partyMode", userSettings.isPartyModeEnabled());
 
         ModelAndView result = super.handleRequestInternal(request, response);
