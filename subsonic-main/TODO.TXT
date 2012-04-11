@@ -32,6 +32,8 @@ Find nicer icons.
 Video player broken.
 Test REST video
 REST: Consider changing method names and type to *Id3.
+Escape some chars in podcast
+  http://forum.subsonic.org/forum/viewtopic.php?f=2&t=5717&p=21988&hilit=podcast#p21988
 
 Eliminate HomeController.Album.
 Use id in web interface.

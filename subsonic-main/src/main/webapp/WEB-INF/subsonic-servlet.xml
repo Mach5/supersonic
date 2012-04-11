@@ -32,6 +32,12 @@
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="adService" ref="adService"/>
     </bean>
+    <bean id="playlistController" class="net.sourceforge.subsonic.controller.PlaylistController">
+        <property name="viewName" value="playlist"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="playerService" ref="playerService"/>
+        <property name="playlistService" ref="playlistService"/>
+    </bean>
     <bean id="topController" class="net.sourceforge.subsonic.controller.TopController">
         <property name="viewName" value="top"/>
         <property name="settingsService" ref="settingsService"/>
@@ -259,7 +265,7 @@
         <property name="metaDataParserFactory" ref="metaDataParserFactory"/>
     </bean>
     <bean id="playQueueController" class="net.sourceforge.subsonic.controller.PlayQueueController">
-        <property name="viewName" value="playlist"/>
+        <property name="viewName" value="playQueue"/>
         <property name="playerService" ref="playerService"/>
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
@@ -385,6 +391,7 @@
         <property name="mappings">
             <props>
                 <prop key="/main.view">mainController</prop>
+                <prop key="/playlist.view">playlistController</prop>
                 <prop key="/help.view">helpController</prop>
                 <prop key="/lyrics.view">lyricsController</prop>
                 <prop key="/left.view">leftController</prop>
