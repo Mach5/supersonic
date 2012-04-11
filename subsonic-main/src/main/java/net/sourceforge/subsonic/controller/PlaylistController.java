@@ -58,11 +58,11 @@ public class PlaylistController extends ParameterizableViewController {
         int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
-        List<MediaFile> files = playlistService.getFilesInPlaylist(id);
-        mediaFileService.populateStarredDate(files, user.getUsername());
+//        List<MediaFile> files = playlistService.getFilesInPlaylist(id);
+//        mediaFileService.populateStarredDate(files, user.getUsername());
 
         map.put("playlist", playlistService.getPlaylist(id));
-        map.put("files", files);
+//        map.put("files", files);
         map.put("player", playerService.getPlayer(request, response));
         map.put("user", user);
         map.put("partyMode", userSettings.isPartyModeEnabled());
