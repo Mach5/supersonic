@@ -136,6 +136,10 @@
         startPlayer = true;
         playQueueService.play(id, playQueueCallback);
     }
+    function onPlayPlaylist(id) {
+        startPlayer = true;
+        playQueueService.playPlaylist(id, playQueueCallback);
+    }
     function onPlayRandom(id, count) {
         startPlayer = true;
         playQueueService.playRandom(id, count, playQueueCallback);

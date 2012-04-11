@@ -54,8 +54,7 @@
                 if ($("album" + id)) {
                     dwr.util.setValue("album" + id, truncate(song.album));
                     $("album" + id).title = song.album;
-//TODO
-//                    $("albumUrl" + id).href = song.albumUrl;
+                    $("albumUrl" + id).href = "main.view?id=" + song.id;
                 }
                 if ($("artist" + id)) {
                     dwr.util.setValue("artist" + id, truncate(song.artist));
@@ -82,6 +81,9 @@
         function onPlay(index) {
             top.playQueue.onPlay(songs[index].id);
         }
+        function onPlayAll() {
+            top.playQueue.onPlayPlaylist(${model.playlist.id});
+        }
         function onAdd(index) {
             top.playQueue.onAdd(songs[index].id);
         }
@@ -98,17 +100,28 @@
             playlistService.down(${model.playlist.id}, index, playlistCallback);
         }
 
+
     </script>
 </head>
 <body class="mainframe bgcolor1" onload="init()">
 
-<h1>
-    ${model.playlist.name}
-</h1>
+<h1>${model.playlist.name}</h1>
+
+<h2>
+    <a href="#" onclick="onPlayAll();"><fmt:message key="common.play"/></a>
+
+    <c:if test="${model.user.downloadRole}">
+        <c:url value="download.view" var="downloadUrl"><c:param name="playlist" value="${model.playlist.id}"/></c:url>
+        | <a href="${downloadUrl}"><fmt:message key="common.download"/></a>
+    </c:if>
+
+</h2>
 
 <c:if test="${not empty model.playlist.comment}">
-    <h2>${model.playlist.comment}</h2>
+    <div class="detail" style="padding-top:0.2em">${model.playlist.comment}</div>
 </c:if>
+
+<div style="height:0.7em"></div>
 
 <p id="empty"><em><fmt:message key="playlist.empty"/></em></p>
 

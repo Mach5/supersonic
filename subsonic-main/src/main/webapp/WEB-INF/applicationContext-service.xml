@@ -199,6 +199,7 @@
 
     <bean id="ajaxPlayQueueService" class="net.sourceforge.subsonic.ajax.PlayQueueService">
         <property name="playerService" ref="playerService"/>
+        <property name="playlistService" ref="playlistService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
         <property name="jukeboxService" ref="jukeboxService"/>

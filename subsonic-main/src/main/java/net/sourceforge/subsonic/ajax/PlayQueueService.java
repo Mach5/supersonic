@@ -29,18 +29,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.dao.MediaFileDao;
-import net.sourceforge.subsonic.service.MediaFileService;
-import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.*;
+import net.sourceforge.subsonic.service.PlaylistService;
 import org.directwebremoting.WebContextFactory;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.PlayQueue;
-import net.sourceforge.subsonic.service.JukeboxService;
-import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.TranscodingService;
-import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.StringUtil;
 
 /**
@@ -58,6 +54,7 @@ public class PlayQueueService {
     private MediaFileService mediaFileService;
     private SecurityService securityService;
     private MediaFileDao mediaFileDao;
+    private net.sourceforge.subsonic.service.PlaylistService playlistService;
 
     /**
      * Returns the play queue for the player of the current user.
@@ -115,6 +112,19 @@ public class PlayQueueService {
         Player player = getCurrentPlayer(request, response);
         MediaFile file = mediaFileService.getMediaFile(id);
         List<MediaFile> files = mediaFileService.getDescendantsOf(file, true);
+        return doPlay(request, player, files);
+    }
+
+    public PlayQueueInfo playPlaylist(int id) throws Exception {
+        HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
+        HttpServletResponse response = WebContextFactory.get().getHttpServletResponse();
+
+        List<MediaFile> files = playlistService.getFilesInPlaylist(id);
+        Player player = getCurrentPlayer(request, response);
+        return doPlay(request, player, files);
+    }
+
+    private PlayQueueInfo doPlay(HttpServletRequest request, Player player, List<MediaFile> files) throws Exception {
         if (player.isWeb()) {
             removeVideoFiles(files);
         }
@@ -413,5 +423,9 @@ public class PlayQueueService {
 
     public void setMediaFileDao(MediaFileDao mediaFileDao) {
         this.mediaFileDao = mediaFileDao;
+    }
+
+    public void setPlaylistService(PlaylistService playlistService) {
+        this.playlistService = playlistService;
     }
 }
