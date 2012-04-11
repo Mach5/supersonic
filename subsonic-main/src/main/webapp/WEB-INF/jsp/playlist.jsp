@@ -10,6 +10,8 @@
     <script type="text/javascript" src="<c:url value="/dwr/interface/starService.js"/>"></script>
     <script type="text/javascript" language="javascript">
 
+        var songs;
+
         function init() {
 //            TODO
 //            dwr.engine.setErrorHandler(null);
@@ -77,6 +79,12 @@
             return s;
         }
 
+        function onPlay(index) {
+            top.playQueue.onPlay(songs[index].id);
+        }
+        function onAdd(index) {
+            top.playQueue.onAdd(songs[index].id);
+        }
         function onStar(index) {
             playlistService.toggleStar(${model.playlist.id}, index, playlistCallback);
         }
@@ -108,8 +116,21 @@
     <tbody id="playlistBody">
     <tr id="pattern" style="display:none;margin:0;padding:0;border:0">
         <td class="bgcolor1"><a href="#">
-            <img id="starSong" onclick="onStar(this.id.substring(8) - 1)" src="<spring:theme code="ratingOffImage"/>"
-                 alt="" title=""></a></td>
+            <img id="starSong" onclick="onStar(this.id.substring(8) - 1)" src="<spring:theme code="ratingOffImage"/>" alt="" title=""></a></td>
+        <td class="bgcolor1"><a href="#">
+            <img id="play" src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"
+                 onclick="onPlay(this.id.substring(4) - 1)"></a></td>
+        <td class="bgcolor1"><a href="#">
+            <img id="add" src="<spring:theme code="addImage"/>" alt="<fmt:message key="common.add"/>" title="<fmt:message key="common.add"/>"
+                 onclick="onAdd(this.id.substring(3) - 1)"></a></td>
+
+        <td style="padding-right:0.25em"></td>
+
+        <td style="padding-right:1.25em"><span id="title">Title</span></td>
+        <td style="padding-right:1.25em"><a id="albumUrl" target="main"><span id="album" class="detail">Album</span></a></td>
+        <td style="padding-right:1.25em"><span id="artist" class="detail">Artist</span></td>
+        <td style="padding-right:1.25em;text-align:right;"><span id="duration" class="detail">Duration</span></td>
+
         <td class="bgcolor1"><a href="#">
             <img id="removeSong" onclick="onRemove(this.id.substring(10) - 1)" src="<spring:theme code="removeImage"/>"
                  alt="<fmt:message key="playlist.remove"/>" title="<fmt:message key="playlist.remove"/>"></a></td>
@@ -120,12 +141,6 @@
             <img id="down" onclick="onDown(this.id.substring(4) - 1)" src="<spring:theme code="downImage"/>"
                  alt="<fmt:message key="playlist.down"/>" title="<fmt:message key="playlist.down"/>"></a></td>
 
-        <td style="padding-right:0.25em"></td>
-
-        <td style="padding-right:1.25em"><span id="title">Title</span></td>
-        <td style="padding-right:1.25em"><a id="albumUrl" target="main"><span id="album" class="detail">Album</span></a></td>
-        <td style="padding-right:1.25em"><span id="artist" class="detail">Artist</span></td>
-        <td style="padding-right:1.25em;text-align:right;"><span id="duration" class="detail">Duration</span></td>
     </tr>
     </tbody>
 </table>
