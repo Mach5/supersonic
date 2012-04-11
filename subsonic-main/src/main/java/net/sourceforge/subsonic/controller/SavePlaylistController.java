@@ -46,7 +46,7 @@ public class SavePlaylistController extends SimpleFormController {
         Playlist playlist = new Playlist();
         playlist.setName(command.getName());
         playlist.setCreated(new Date());
-        playlist.setLastModified(new Date());
+        playlist.setChanged(new Date());
         playlist.setPublic(false);
         playlist.setUsername(command.getUsername());
 

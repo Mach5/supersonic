@@ -33,13 +33,13 @@ public class Playlist {
     private int fileCount;
     private int durationSeconds;
     private Date created;
-    private Date lastModified;
+    private Date changed;
 
     public Playlist() {
     }
 
     public Playlist(int id, String username, boolean isPublic, String name, String comment, int fileCount,
-                    int durationSeconds, Date created, Date lastModified) {
+                    int durationSeconds, Date created, Date changed) {
         this.id = id;
         this.username = username;
         this.isPublic = isPublic;
@@ -48,7 +48,7 @@ public class Playlist {
         this.fileCount = fileCount;
         this.durationSeconds = durationSeconds;
         this.created = created;
-        this.lastModified = lastModified;
+        this.changed = changed;
     }
 
     public int getId() {
@@ -115,11 +115,11 @@ public class Playlist {
         this.created = created;
     }
 
-    public Date getLastModified() {
-        return lastModified;
+    public Date getChanged() {
+        return changed;
     }
 
-    public void setLastModified(Date lastModified) {
-        this.lastModified = lastModified;
+    public void setChanged(Date changed) {
+        this.changed = changed;
     }
 }

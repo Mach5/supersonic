@@ -118,7 +118,7 @@ public class LeftController extends ParameterizableViewController implements Las
 
         // When was playlist table last changed?
         for (Playlist playlist : playlistService.getPlaylistsForUser(username)) {
-            lastModified = Math.max(lastModified, playlist.getLastModified().getTime());
+            lastModified = Math.max(lastModified, playlist.getChanged().getTime());
         }
 
         // When was user settings last changed?

@@ -40,7 +40,7 @@ import java.util.TreeMap;
 public class PlaylistDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(PlaylistDao.class);
-    private static final String COLUMNS = "id, username, is_public, name, comment, file_count, duration_seconds, created, last_modified";
+    private static final String COLUMNS = "id, username, is_public, name, comment, file_count, duration_seconds, created, changed";
     private final RowMapper rowMapper = new PlaylistMapper();
 
     public List<Playlist> getPlaylistsForUser(String username) {
@@ -73,7 +73,7 @@ public class PlaylistDao extends AbstractDao {
     public synchronized void createPlaylist(Playlist playlist) {
         update("insert into playlist(" + COLUMNS + ") values(" + questionMarks(COLUMNS) + ")",
                 null, playlist.getUsername(), playlist.isPublic(), playlist.getName(), playlist.getComment(),
-                0, 0, playlist.getCreated(), playlist.getLastModified());
+                0, 0, playlist.getCreated(), playlist.getChanged());
 
         int id = queryForInt("select max(id) from playlist", 0);
         playlist.setId(id);
@@ -88,7 +88,7 @@ public class PlaylistDao extends AbstractDao {
                 duration += file.getDurationSeconds();
             }
         }
-        update("update playlist set file_count=?, duration_seconds=?, last_modified=? where id=?", files.size(), duration, new Date(), id);
+        update("update playlist set file_count=?, duration_seconds=?, changed=? where id=?", files.size(), duration, new Date(), id);
     }
 
     public List<String> getPlaylistUsers(int playlistId) {
