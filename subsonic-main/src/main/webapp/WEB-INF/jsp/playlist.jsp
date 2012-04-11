@@ -28,13 +28,10 @@
         }
 
         function getPlaylist() {
-            alert("getPlaylist");
             playlistService.getPlaylist(${model.playlist.id}, playlistCallback);
         }
 
         function playlistCallback(playlist) {
-            alert(playlist);
-
             songs = playlist.entries;
 
             if (songs.length == 0) {
@@ -77,8 +74,17 @@
                 }
 
                 $("pattern" + id).show();
-                $("pattern" + id).className = (i % 2 == 0) ? "bgcolor1" : "bgcolor2";
+                $("pattern" + id).className = (i % 2 == 0) ? "bgcolor2" : "bgcolor1";
             }
+        }
+
+        function truncate(s) {
+            var cutoff = 30;
+
+            if (s.length > cutoff) {
+                return s.substring(0, cutoff) + "...";
+            }
+            return s;
         }
 
     </script>
@@ -93,25 +99,25 @@
     <h2>${model.playlist.comment}</h2>
 </c:if>
 
-<p id="empty"><em><fmt:message key="playlist.empty"/></em></p>
+<p id="empty" style="visibility: hidden;"><em><fmt:message key="playlist.empty"/></em></p>
 
 <table style="border-collapse:collapse;white-space:nowrap;">
     <tbody id="playlistBody">
     <tr id="pattern" style="display:none;margin:0;padding:0;border:0">
-        <td class="bgcolor2"><a href="javascript:noop()">
+        <td><a href="javascript:noop()">
             <img id="starSong" onclick="onStar(this.id.substring(8) - 1)" src="<spring:theme code="ratingOffImage"/>"
                  alt="" title=""></a></td>
-        <td class="bgcolor2"><a href="javascript:noop()">
+        <td><a href="javascript:noop()">
             <img id="removeSong" onclick="onRemove(this.id.substring(10) - 1)" src="<spring:theme code="removeImage"/>"
                  alt="<fmt:message key="playlist.remove"/>" title="<fmt:message key="playlist.remove"/>"></a></td>
-        <td class="bgcolor2"><a href="javascript:noop()">
+        <td><a href="javascript:noop()">
             <img id="up" onclick="onUp(this.id.substring(2) - 1)" src="<spring:theme code="upImage"/>"
                  alt="<fmt:message key="playlist.up"/>" title="<fmt:message key="playlist.up"/>"></a></td>
-        <td class="bgcolor2"><a href="javascript:noop()">
+        <td><a href="javascript:noop()">
             <img id="down" onclick="onDown(this.id.substring(4) - 1)" src="<spring:theme code="downImage"/>"
                  alt="<fmt:message key="playlist.down"/>" title="<fmt:message key="playlist.down"/>"></a></td>
 
-        <td class="bgcolor2" style="padding-left: 0.1em"><input type="checkbox" class="checkbox" id="songIndex"></td>
+        <td style="padding-left: 0.1em"><input type="checkbox" class="checkbox" id="songIndex"></td>
         <td style="padding-right:0.25em"></td>
 
 
@@ -122,39 +128,5 @@
     </tr>
     </tbody>
 </table>
-<%--<table style="border-collapse:collapse">--%>
-    <%--<c:forEach items="${model.files}" var="song" varStatus="loopStatus">--%>
-
-        <%--<sub:url value="/main.view" var="mainUrl">--%>
-            <%--<sub:param name="path" value="${song.parentPath}"/>--%>
-        <%--</sub:url>--%>
-
-        <%--<tr>--%>
-            <%--<c:import url="playAddDownload.jsp">--%>
-                <%--<c:param name="id" value="${song.id}"/>--%>
-                <%--<c:param name="playEnabled" value="${model.user.streamRole and not model.partyModeEnabled}"/>--%>
-                <%--<c:param name="addEnabled" value="${model.user.streamRole and (not model.partyModeEnabled or not song.directory)}"/>--%>
-                <%--<c:param name="downloadEnabled" value="${model.user.downloadRole and not model.partyModeEnabled}"/>--%>
-                <%--<c:param name="starEnabled" value="true"/>--%>
-                <%--<c:param name="starred" value="${not empty song.starredDate}"/>--%>
-                <%--<c:param name="video" value="${song.video and model.player.web}"/>--%>
-                <%--<c:param name="asTable" value="true"/>--%>
-            <%--</c:import>--%>
-
-            <%--<td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-left:0.25em;padding-right:1.25em">--%>
-                    <%--${song.title}--%>
-            <%--</td>--%>
-
-            <%--<td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-right:1.25em">--%>
-                <%--<a href="${mainUrl}"><span class="detail">${song.albumName}</span></a>--%>
-            <%--</td>--%>
-
-            <%--<td ${loopStatus.count % 2 == 1 ? "class='bgcolor2'" : ""} style="padding-right:0.25em">--%>
-                <%--<span class="detail">${song.artist}</span>--%>
-            <%--</td>--%>
-            <%--</tr>--%>
-
-        <%--</c:forEach>--%>
-    <%--</table>--%>
 
 </body></html>
