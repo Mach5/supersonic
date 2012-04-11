@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import java.lang.Math;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -128,7 +129,6 @@ public class StreamController implements Controller {
 
                 if (!file.isVideo()) {
                     response.setIntHeader("ETag", file.getId());
-                    response.setHeader("Accept-Ranges", "bytes");
                 }
 
                 TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
@@ -140,9 +140,11 @@ public class StreamController implements Controller {
                 if (range != null) {
                     LOG.info("Got range: " + range);
                     response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
-                    Util.setContentLength(response, fileLength - range.getMinimumLong());
+                    long maxLength = fileLength;
+                    if (maxLength>range.getMaximumLong()) maxLength=range.getMaximumLong()+1; 
+                    Util.setContentLength(response, Math.max(maxLength - range.getMinimumLong(),0));
                     long firstBytePos = range.getMinimumLong();
-                    long lastBytePos = fileLength - 1;
+                    long lastBytePos = maxLength - 1;
                     response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
                 } else if (!isConversion || estimateContentLength) {
                     Util.setContentLength(response, fileLength);
