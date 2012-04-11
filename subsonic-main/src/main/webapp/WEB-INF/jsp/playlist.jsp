@@ -11,7 +11,8 @@
     <script type="text/javascript" language="javascript">
 
         function init() {
-            dwr.engine.setErrorHandler(null);
+//            TODO
+//            dwr.engine.setErrorHandler(null);
             getPlaylist();
         }
 
@@ -27,10 +28,13 @@
         }
 
         function getPlaylist() {
+            alert("getPlaylist");
             playlistService.getPlaylist(${model.playlist.id}, playlistCallback);
         }
 
         function playlistCallback(playlist) {
+            alert(playlist);
+
             songs = playlist.entries;
 
             if (songs.length == 0) {
@@ -59,7 +63,7 @@
                     $("title" + id).title = song.title;
                 }
                 if ($("album" + id)) {
-                    dwr.util.setValue("album" + id, truncate(song.albumName));
+                    dwr.util.setValue("album" + id, truncate(song.album));
                     $("album" + id).title = song.album;
 //TODO
 //                    $("albumUrl" + id).href = song.albumUrl;
@@ -69,7 +73,7 @@
                     $("artist" + id).title = song.artist;
                 }
                 if ($("duration" + id)) {
-                    dwr.util.setValue("duration" + id, song.durationString);
+                    dwr.util.setValue("duration" + id, song.durationAsString);
                 }
 
                 $("pattern" + id).show();

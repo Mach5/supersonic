@@ -207,6 +207,12 @@
         <property name="securityService" ref="securityService"/>
     </bean>
 
+    <bean id="ajaxPlaylistService" class="net.sourceforge.subsonic.ajax.PlaylistService">
+        <property name="playlistService" ref="playlistService"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
+    </bean>
+
     <bean id="ajaxLyricsService" class="net.sourceforge.subsonic.ajax.LyricsService"/>
 
     <bean id="ajaxCoverArtService" class="net.sourceforge.subsonic.ajax.CoverArtService">
