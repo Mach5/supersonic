@@ -317,7 +317,7 @@ public class RESTController extends MultiActionController {
         attributes.add("comment", playlist.getComment());
         attributes.add("owner", playlist.getUsername());
         attributes.add("public", playlist.isPublic());
-        attributes.add("songCount", playlist.getSongCount());
+        attributes.add("songCount", playlist.getFileCount());
         attributes.add("duration", playlist.getDurationSeconds());
         attributes.add("created", StringUtil.toISO8601(playlist.getCreated()));
         return attributes;
@@ -562,7 +562,7 @@ public class RESTController extends MultiActionController {
                 return;
             }
             builder.add("playlist", createAttributesForPlaylist(playlist), false);
-            for (MediaFile mediaFile : playlistService.getSongsInPlaylist(id)) {
+            for (MediaFile mediaFile : playlistService.getFilesInPlaylist(id)) {
                 AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
                 builder.add("entry", attributes, true);
             }
@@ -700,7 +700,7 @@ public class RESTController extends MultiActionController {
                     songs.add(song);
                 }
             }
-            playlistService.setSongsInPlaylist(playlist.getId(), songs);
+            playlistService.setFilesInPlaylist(playlist.getId(), songs);
 
             XMLBuilder builder = createXMLBuilder(request, response, true);
             builder.endAll();

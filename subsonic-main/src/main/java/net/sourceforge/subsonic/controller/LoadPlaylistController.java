@@ -69,7 +69,7 @@ public class LoadPlaylistController extends MultiActionController {
         PlayQueue playQueue = player.getPlayQueue();
 
         int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
-        playQueue.addFiles(false, playlistService.getSongsInPlaylist(id));
+        playQueue.addFiles(false, playlistService.getFilesInPlaylist(id));
 
         return reload(null);
     }
@@ -78,7 +78,7 @@ public class LoadPlaylistController extends MultiActionController {
 
         // Load the existing playlist.
         int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
-        List<MediaFile> songs = playlistService.getSongsInPlaylist(id);
+        List<MediaFile> songs = playlistService.getFilesInPlaylist(id);
 
         // Update the existing playlist with new entries.
         for (MediaFile song : getFilesToAppend(request, response)) {
@@ -86,7 +86,7 @@ public class LoadPlaylistController extends MultiActionController {
         }
 
         // Save it.
-        playlistService.setSongsInPlaylist(id, songs);
+        playlistService.setFilesInPlaylist(id, songs);
 
         String dir = StringUtils.trimToNull(request.getParameter("dir"));
         return reload(dir);

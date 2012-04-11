@@ -30,7 +30,7 @@ public class Playlist {
     private boolean isPublic;
     private String name;
     private String comment;
-    private int songCount;
+    private int fileCount;
     private int durationSeconds;
     private Date created;
     private Date lastModified;
@@ -38,14 +38,14 @@ public class Playlist {
     public Playlist() {
     }
 
-    public Playlist(int id, String username, boolean isPublic, String name, String comment, int songCount,
+    public Playlist(int id, String username, boolean isPublic, String name, String comment, int fileCount,
                     int durationSeconds, Date created, Date lastModified) {
         this.id = id;
         this.username = username;
         this.isPublic = isPublic;
         this.name = name;
         this.comment = comment;
-        this.songCount = songCount;
+        this.fileCount = fileCount;
         this.durationSeconds = durationSeconds;
         this.created = created;
         this.lastModified = lastModified;
@@ -91,12 +91,12 @@ public class Playlist {
         this.comment = comment;
     }
 
-    public int getSongCount() {
-        return songCount;
+    public int getFileCount() {
+        return fileCount;
     }
 
-    public void setSongCount(int songCount) {
-        this.songCount = songCount;
+    public void setFileCount(int fileCount) {
+        this.fileCount = fileCount;
     }
 
     public int getDurationSeconds() {

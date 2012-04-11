@@ -51,7 +51,7 @@ public class SavePlaylistController extends SimpleFormController {
         playlist.setUsername(command.getUsername());
 
         playlistService.createPlaylist(playlist);
-        playlistService.setSongsInPlaylist(playlist.getId(), playQueue.getFiles());
+        playlistService.setFilesInPlaylist(playlist.getId(), playQueue.getFiles());
 
         playQueue.setName(command.getName());
         return new ModelAndView(new RedirectView(getSuccessView()));

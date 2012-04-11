@@ -188,7 +188,7 @@ public class Schema47 extends Schema {
                     "is_public boolean not null," +
                     "name varchar not null," +
                     "comment varchar," +
-                    "song_count int default 0 not null," +
+                    "file_count int default 0 not null," +
                     "duration_seconds int default 0 not null," +
                     "created datetime not null," +
                     "last_modified datetime not null," +
@@ -197,16 +197,16 @@ public class Schema47 extends Schema {
             LOG.info("Database table 'playlist' was created successfully.");
         }
 
-        if (!tableExists(template, "playlist_song")) {
-            LOG.info("Database table 'playlist_song' not found.  Creating it.");
-            template.execute("create cached table playlist_song (" +
+        if (!tableExists(template, "playlist_file")) {
+            LOG.info("Database table 'playlist_file' not found.  Creating it.");
+            template.execute("create cached table playlist_file (" +
                     "id identity," +
                     "playlist_id int not null," +
-                    "song_id int not null," +
+                    "media_file_id int not null," +
                     "foreign key (playlist_id) references playlist(id) on delete cascade," +
-                    "foreign key (song_id) references media_file(id) on delete cascade)");
+                    "foreign key (media_file_id) references media_file(id) on delete cascade)");
 
-            LOG.info("Database table 'playlist_song' was created successfully.");
+            LOG.info("Database table 'playlist_file' was created successfully.");
         }
 
         if (!tableExists(template, "playlist_user")) {

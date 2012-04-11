@@ -97,7 +97,7 @@ public class StreamController implements Controller {
             boolean isPodcast = playlistId != null;
             if (isPodcast) {
                 PlayQueue playQueue = new PlayQueue();
-                playQueue.addFiles(false, playlistService.getSongsInPlaylist(playlistId));
+                playQueue.addFiles(false, playlistService.getFilesInPlaylist(playlistId));
                 player.setPlayQueue(playQueue);
                 Util.setContentLength(response, playQueue.length());
                 LOG.info("Incoming Podcast request for playlist " + playlistId);

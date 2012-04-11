@@ -18,7 +18,6 @@
  */
 package net.sourceforge.subsonic.dao;
 
-import jsx3.gui.matrix.Column;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Playlist;
@@ -30,7 +29,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -42,7 +40,7 @@ import java.util.TreeMap;
 public class PlaylistDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(PlaylistDao.class);
-    private static final String COLUMNS = "id, username, is_public, name, comment, song_count, duration_seconds, created, last_modified";
+    private static final String COLUMNS = "id, username, is_public, name, comment, file_count, duration_seconds, created, last_modified";
     private final RowMapper rowMapper = new PlaylistMapper();
 
     public List<Playlist> getPlaylistsForUser(String username) {
@@ -81,16 +79,16 @@ public class PlaylistDao extends AbstractDao {
         playlist.setId(id);
     }
 
-    public void setSongsInPlaylist(int id, List<MediaFile> songs) {
-        update("delete from playlist_song where playlist_id=?", id);
+    public void setFilesInPlaylist(int id, List<MediaFile> files) {
+        update("delete from playlist_file where playlist_id=?", id);
         int duration = 0;
-        for (MediaFile song : songs) {
-            update("insert into playlist_song (playlist_id, song_id) values (?, ?)", id, song.getId());
-            if (song.getDurationSeconds() != null) {
-                duration += song.getDurationSeconds();
+        for (MediaFile file : files) {
+            update("insert into playlist_file (playlist_id, media_file_id) values (?, ?)", id, file.getId());
+            if (file.getDurationSeconds() != null) {
+                duration += file.getDurationSeconds();
             }
         }
-        update("update playlist set song_count=?, duration_seconds=?, last_modified=? where id=?", songs.size(), duration, new Date(), id);
+        update("update playlist set file_count=?, duration_seconds=?, last_modified=? where id=?", files.size(), duration, new Date(), id);
     }
 
     public List<String> getPlaylistUsers(int playlistId) {

@@ -24,8 +24,7 @@ import net.sourceforge.subsonic.dao.PlaylistDao;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.Playlist;
-import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.util.StringUtil;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -35,10 +34,8 @@ import org.jdom.input.SAXBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -64,12 +61,12 @@ public class PlaylistService {
         return playlistDao.getPlaylist(id);
     }
 
-    public List<MediaFile> getSongsInPlaylist(int id) {
-        return mediaFileDao.getSongsInPlaylist(id);
+    public List<MediaFile> getFilesInPlaylist(int id) {
+        return mediaFileDao.getFilesInPlaylist(id);
     }
 
-    public void setSongsInPlaylist(int id, List<MediaFile> songs) {
-        playlistDao.setSongsInPlaylist(id, songs);
+    public void setFilesInPlaylist(int id, List<MediaFile> files) {
+        playlistDao.setFilesInPlaylist(id, files);
     }
 
     public void createPlaylist(Playlist playlist) {

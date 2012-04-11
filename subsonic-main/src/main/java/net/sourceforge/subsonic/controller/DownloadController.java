@@ -131,7 +131,7 @@ public class DownloadController implements Controller, LastModified {
                 downloadFiles(response, status, file, indexes);
 
             } else if (playlistId != null) {
-                List<MediaFile> songs = playlistService.getSongsInPlaylist(playlistId);
+                List<MediaFile> songs = playlistService.getFilesInPlaylist(playlistId);
                 downloadFiles(response, status, songs, null, range);
 
             } else if (playerId != null) {

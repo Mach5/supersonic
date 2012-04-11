@@ -58,7 +58,7 @@ public class PodcastController extends ParameterizableViewController {
 
         for (Playlist playlist : playlists) {
 
-            List<MediaFile> songs = playlistService.getSongsInPlaylist(playlist.getId());
+            List<MediaFile> songs = playlistService.getFilesInPlaylist(playlist.getId());
             if (songs.isEmpty()) {
                 continue;
             }
