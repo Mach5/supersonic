@@ -116,6 +116,18 @@ public class PlaylistService {
         playlistService.deletePlaylist(id);
     }
 
+    public void setPlaylistName(int id, String name) throws Exception {
+        Playlist playlist = playlistService.getPlaylist(id);
+        playlist.setName(name);
+        playlistService.updatePlaylist(playlist);
+    }
+
+    public void setPlaylistComment(int id, String comment) throws Exception {
+        Playlist playlist = playlistService.getPlaylist(id);
+        playlist.setComment(comment);
+        playlistService.updatePlaylist(playlist);
+    }
+
     public void setPlaylistService(net.sourceforge.subsonic.service.PlaylistService playlistService) {
         this.playlistService = playlistService;
     }

@@ -10,11 +10,11 @@
     <script type="text/javascript" src="<c:url value="/dwr/interface/starService.js"/>"></script>
     <script type="text/javascript" language="javascript">
 
+        var playlist;
         var songs;
 
         function init() {
-//            TODO
-//            dwr.engine.setErrorHandler(null);
+            dwr.engine.setErrorHandler(null);
             $("empty").hide();
             getPlaylist();
         }
@@ -23,8 +23,9 @@
             playlistService.getPlaylist(${model.playlist.id}, playlistCallback);
         }
 
-        function playlistCallback(playlist) {
-            songs = playlist.entries;
+        function playlistCallback(playlistInfo) {
+            this.playlist = playlistInfo.playlist;
+            this.songs = playlistInfo.entries;
 
             if (songs.length == 0) {
                 $("empty").show();
@@ -82,34 +83,47 @@
             top.playQueue.onPlay(songs[index].id);
         }
         function onPlayAll() {
-            top.playQueue.onPlayPlaylist(${model.playlist.id});
+            top.playQueue.onPlayPlaylist(playlist.id);
         }
         function onAdd(index) {
             top.playQueue.onAdd(songs[index].id);
         }
         function onStar(index) {
-            playlistService.toggleStar(${model.playlist.id}, index, playlistCallback);
+            playlistService.toggleStar(playlist.id, index, playlistCallback);
         }
         function onRemove(index) {
-            playlistService.remove(${model.playlist.id}, index, playlistCallback);
+            playlistService.remove(playlist.id, index, playlistCallback);
         }
         function onUp(index) {
-            playlistService.up(${model.playlist.id}, index, playlistCallback);
+            playlistService.up(playlist.id, index, playlistCallback);
         }
         function onDown(index) {
-            playlistService.down(${model.playlist.id}, index, playlistCallback);
+            playlistService.down(playlist.id, index, playlistCallback);
         }
         function onDeletePlaylist() {
-            playlistService.deletePlaylist(${model.playlist.id});
+            playlistService.deletePlaylist(playlist.id);
             location = "home.view";
         }
-
+        function onChangeName() {
+            var name = prompt("<fmt:message key="playlist2.name"/>", playlist.name);
+            if (name != null) {
+                playlistService.setPlaylistName(playlist.id, name);
+                dwr.util.setValue("name", name);
+            }
+        }
+        function onChangeComment() {
+            var comment = prompt("<fmt:message key="playlist2.comment"/>", playlist.comment);
+            if (comment != null) {
+                playlistService.setPlaylistComment(playlist.id, comment);
+                dwr.util.setValue("comment", comment);
+            }
+        }
 
     </script>
 </head>
 <body class="mainframe bgcolor1" onload="init()">
 
-<h1>${model.playlist.name}</h1>
+<h1 id="name">${model.playlist.name}</h1>
 
 <h2>
     <a href="#" onclick="onPlayAll();"><fmt:message key="common.play"/></a>
@@ -124,9 +138,14 @@
 
 </h2>
 
-<c:if test="${not empty model.playlist.comment}">
-    <div class="detail" style="padding-top:0.2em">${model.playlist.comment}</div>
-</c:if>
+<div id="comment" class="detail" style="padding-top:0.2em">${model.playlist.comment}</div>
+
+<div class="detail" style="padding-top:0.2em">
+    <fmt:message key="playlist2.created">
+        <fmt:param>${model.playlist.username}</fmt:param>
+        <fmt:param><fmt:formatDate type="date" dateStyle="long" value="${model.playlist.created}"/></fmt:param>
+    </fmt:message>
+</div>
 
 <div style="height:0.7em"></div>
 
@@ -166,5 +185,10 @@
     </tr>
     </tbody>
 </table>
+
+<c:if test="${model.editAllowed}">
+        <div class="forward" style="float:left;padding-right:1.5em"><a href="#" onclick="onChangeName();"><fmt:message key="playlist2.changename"/></a></div>
+        <div class="forward" style="float:left;padding-right:1.5em"><a href="#" onclick="onChangeComment();"><fmt:message key="playlist2.changecomment"/></a></div>
+</c:if>
 
 </body></html>

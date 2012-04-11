@@ -109,6 +109,12 @@ public class PlaylistDao extends AbstractDao {
         update("delete from playlist where id=?", id);
     }
 
+    public void updatePlaylist(Playlist playlist) {
+        update("update playlist set username=?, is_public=?, name=?, comment=?, changed=? where id=?",
+                playlist.getUsername(), playlist.isPublic(), playlist.getName(), playlist.getComment(),
+                new Date(), playlist.getId());
+    }
+
     private static class PlaylistMapper implements ParameterizedRowMapper<Playlist> {
         public Playlist mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new Playlist(

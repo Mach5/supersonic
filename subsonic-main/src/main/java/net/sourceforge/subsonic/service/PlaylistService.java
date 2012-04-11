@@ -91,6 +91,10 @@ public class PlaylistService {
         playlistDao.deletePlaylist(id);
     }
 
+    public void updatePlaylist(Playlist playlist) {
+        playlistDao.updatePlaylist(playlist);
+    }
+
     public void setPlaylistDao(PlaylistDao playlistDao) {
         this.playlistDao = playlistDao;
     }
