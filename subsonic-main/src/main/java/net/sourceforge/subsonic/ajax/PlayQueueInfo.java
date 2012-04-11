@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author Sindre Mehus
  */
-public class PlaylistInfo {
+public class PlayQueueInfo {
 
     private final List<Entry> entries;
     private final int index;
@@ -34,7 +34,7 @@ public class PlaylistInfo {
     private final boolean sendM3U;
     private final float gain;
 
-    public PlaylistInfo(List<Entry> entries, int index, boolean stopEnabled, boolean repeatEnabled, boolean sendM3U, float gain) {
+    public PlayQueueInfo(List<Entry> entries, int index, boolean stopEnabled, boolean repeatEnabled, boolean sendM3U, float gain) {
         this.entries = entries;
         this.index = index;
         this.stopEnabled = stopEnabled;

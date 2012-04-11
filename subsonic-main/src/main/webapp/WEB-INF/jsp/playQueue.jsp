@@ -35,7 +35,7 @@
         createPlayer();
     </c:when>
     <c:otherwise>
-        getPlaylist();
+        getPlayQueue();
     </c:otherwise>
     </c:choose>
     }
@@ -48,7 +48,7 @@
 
     function nowPlayingCallback(nowPlayingInfo) {
         if (nowPlayingInfo != null && nowPlayingInfo.streamUrl != currentStreamUrl) {
-            getPlaylist();
+            getPlayQueue();
             if (currentAlbumUrl != nowPlayingInfo.albumUrl && top.main.updateNowPlaying) {
                 top.main.location.replace("nowPlaying.view?");
                 currentAlbumUrl = nowPlayingInfo.albumUrl;
@@ -80,7 +80,7 @@
     function playerReady(thePlayer) {
         player = $("player1");
         player.addModelListener("STATE", "stateListener");
-        getPlaylist();
+        getPlayQueue();
     }
 
     function stateListener(obj) { // IDLE, BUFFERING, PLAYING, PAUSED, COMPLETED
@@ -89,8 +89,8 @@
         }
     }
 
-    function getPlaylist() {
-        playQueueService.getPlaylist(playlistCallback);
+    function getPlayQueue() {
+        playQueueService.getPlayQueue(playQueueCallback);
     }
 
     function onClear() {
@@ -99,14 +99,14 @@
         ok = confirm("<fmt:message key="playlist.confirmclear"/>");
     </c:if>
         if (ok) {
-            playQueueService.clear(playlistCallback);
+            playQueueService.clear(playQueueCallback);
         }
     }
     function onStart() {
-        playQueueService.start(playlistCallback);
+        playQueueService.start(playQueueCallback);
     }
     function onStop() {
-        playQueueService.stop(playlistCallback);
+        playQueueService.stop(playQueueCallback);
     }
     function onGain(gain) {
         playQueueService.setGain(gain);
@@ -118,7 +118,7 @@
     </c:when>
     <c:otherwise>
         currentStreamUrl = songs[index].streamUrl;
-        playQueueService.skip(index, playlistCallback);
+        playQueueService.skip(index, playQueueCallback);
     </c:otherwise>
     </c:choose>
     }
@@ -134,24 +134,24 @@
     }
     function onPlay(id) {
         startPlayer = true;
-        playQueueService.play(id, playlistCallback);
+        playQueueService.play(id, playQueueCallback);
     }
     function onPlayRandom(id, count) {
         startPlayer = true;
-        playQueueService.playRandom(id, count, playlistCallback);
+        playQueueService.playRandom(id, count, playQueueCallback);
     }
     function onAdd(id) {
         startPlayer = false;
-        playQueueService.add(id, playlistCallback);
+        playQueueService.add(id, playQueueCallback);
     }
     function onShuffle() {
-        playQueueService.shuffle(playlistCallback);
+        playQueueService.shuffle(playQueueCallback);
     }
     function onStar(index) {
-        playQueueService.toggleStar(index, playlistCallback);
+        playQueueService.toggleStar(index, playQueueCallback);
     }
     function onRemove(index) {
-        playQueueService.remove(index, playlistCallback);
+        playQueueService.remove(index, playQueueCallback);
     }
     function onRemoveSelected() {
         var indexes = new Array();
@@ -162,36 +162,36 @@
                 indexes[counter++] = i;
             }
         }
-        playQueueService.removeMany(indexes, playlistCallback);
+        playQueueService.removeMany(indexes, playQueueCallback);
     }
 
     function onUp(index) {
-        playQueueService.up(index, playlistCallback);
+        playQueueService.up(index, playQueueCallback);
     }
     function onDown(index) {
-        playQueueService.down(index, playlistCallback);
+        playQueueService.down(index, playQueueCallback);
     }
     function onToggleRepeat() {
-        playQueueService.toggleRepeat(playlistCallback);
+        playQueueService.toggleRepeat(playQueueCallback);
     }
     function onUndo() {
-        playQueueService.undo(playlistCallback);
+        playQueueService.undo(playQueueCallback);
     }
     function onSortByTrack() {
-        playQueueService.sortByTrack(playlistCallback);
+        playQueueService.sortByTrack(playQueueCallback);
     }
     function onSortByArtist() {
-        playQueueService.sortByArtist(playlistCallback);
+        playQueueService.sortByArtist(playQueueCallback);
     }
     function onSortByAlbum() {
-        playQueueService.sortByAlbum(playlistCallback);
+        playQueueService.sortByAlbum(playQueueCallback);
     }
 
-    function playlistCallback(playlist) {
-        songs = playlist.entries;
-        repeatEnabled = playlist.repeatEnabled;
+    function playQueueCallback(playQueue) {
+        songs = playQueue.entries;
+        repeatEnabled = playQueue.repeatEnabled;
         if ($("start")) {
-            if (playlist.stopEnabled) {
+            if (playQueue.stopEnabled) {
                 $("start").hide();
                 $("stop").show();
             } else {
@@ -273,12 +273,12 @@
             $("pattern" + id).className = (i % 2 == 0) ? "bgcolor1" : "bgcolor2";
         }
 
-        if (playlist.sendM3U) {
+        if (playQueue.sendM3U) {
             parent.frames.main.location.href="play.m3u?";
         }
 
         if (slider) {
-            slider.setValue(playlist.gain * 100);
+            slider.setValue(playQueue.gain * 100);
         }
 
     <c:if test="${model.player.web}">
