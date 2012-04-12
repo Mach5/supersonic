@@ -4,7 +4,6 @@
     <%@ include file="head.jsp" %>
     <link rel="stylesheet" href="<c:url value="/style/smoothness/jquery-ui-1.8.18.custom.css"/>" type="text/css">
     <script type="text/javascript" src="<c:url value='/script/scripts.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/script/prototype.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/script/jquery-1.7.1.min.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/script/jquery-ui-1.8.18.custom.min.js'/>"></script>
     <script type="text/javascript" src="<c:url value='/dwr/util.js'/>"></script>
@@ -18,7 +17,7 @@
 
         function init() {
             dwr.engine.setErrorHandler(null);
-            $("empty").hide();
+            $("#empty").hide();
             getPlaylist();
         }
 
@@ -31,9 +30,9 @@
             this.songs = playlistInfo.entries;
 
             if (songs.length == 0) {
-                $("empty").show();
+                $("#empty").show();
             } else {
-                $("empty").hide();
+                $("#empty").hide();
             }
 
             // Delete all the rows except for the "pattern" row
@@ -47,29 +46,29 @@
                 var id = i + 1;
                 dwr.util.cloneNode("pattern", { idSuffix:id });
                 if (song.starred) {
-                    $("starSong" + id).src = "<spring:theme code='ratingOnImage'/>";
+                    $("#starSong" + id).attr("src", "<spring:theme code='ratingOnImage'/>");
                 } else {
-                    $("starSong" + id).src = "<spring:theme code='ratingOffImage'/>";
+                    $("#starSong" + id).attr("src", "<spring:theme code='ratingOffImage'/>");
                 }
-                if ($("title" + id)) {
-                    dwr.util.setValue("title" + id, truncate(song.title));
-                    $("title" + id).title = song.title;
+                if ($("#title" + id)) {
+                    $("#title" + id).html(truncate(song.title));
+                    $("#title" + id).attr("title", song.title);
                 }
-                if ($("album" + id)) {
-                    dwr.util.setValue("album" + id, truncate(song.album));
-                    $("album" + id).title = song.album;
-                    $("albumUrl" + id).href = "main.view?id=" + song.id;
+                if ($("#album" + id)) {
+                    $("#album" + id).html(truncate(song.album));
+                    $("#album" + id).attr("title", song.album);
+                    $("#albumUrl" + id).attr("href", "main.view?id=" + song.id);
                 }
-                if ($("artist" + id)) {
-                    dwr.util.setValue("artist" + id, truncate(song.artist));
-                    $("artist" + id).title = song.artist;
+                if ($("#artist" + id)) {
+                    $("#artist" + id).html(truncate(song.artist));
+                    $("#artist" + id).attr("title", song.artist);
                 }
-                if ($("duration" + id)) {
-                    dwr.util.setValue("duration" + id, song.durationAsString);
+                if ($("#duration" + id)) {
+                    $("#duration" + id).html(song.durationAsString);
                 }
 
-                $("pattern" + id).show();
-                $("pattern" + id).className = (i % 2 == 0) ? "bgcolor2" : "bgcolor1";
+                $("#pattern" + id).addClass((i % 2 == 0) ? "bgcolor2" : "bgcolor1");
+                $("#pattern" + id).show();
             }
         }
 
@@ -104,12 +103,13 @@
             playlistService.down(playlist.id, index, playlistCallback);
         }
         function onDeletePlaylist() {
+//            $("#dialog-confirm").dialog();
             playlistService.deletePlaylist(playlist.id, function (){top.left.updatePlaylists(); location = "home.view";});
         }
         function onChangeName() {
             var name = prompt("<fmt:message key="playlist2.name"/>", playlist.name);
             if (name != null) {
-                dwr.util.setValue("name", name);
+                $("#name").html(name);
                 playlistService.setPlaylistName(playlist.id, name, function (){top.left.updatePlaylists()});
             }
         }
@@ -117,7 +117,7 @@
             var comment = prompt("<fmt:message key="playlist2.comment"/>", playlist.comment);
             if (comment != null) {
                 playlistService.setPlaylistComment(playlist.id, comment);
-                dwr.util.setValue("comment", comment);
+                $("#comment").html(comment);
             }
         }
 
@@ -192,5 +192,10 @@
         <div class="forward" style="float:left;padding-right:1.5em"><a href="#" onclick="onChangeName();"><fmt:message key="playlist2.changename"/></a></div>
         <div class="forward" style="float:left;padding-right:1.5em"><a href="#" onclick="onChangeComment();"><fmt:message key="playlist2.changecomment"/></a></div>
 </c:if>
+
+<%--<div id="dialog-confirm" title="Empty the recycle bin?">--%>
+    <%--<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>These items will be permanently deleted and cannot be recovered. Are you sure?</p>--%>
+<%--</div>--%>
+
 
 </body></html>
