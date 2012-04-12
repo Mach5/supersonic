@@ -2,11 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
     <script type="text/javascript" src="<c:url value="/dwr/interface/nowPlayingService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/interface/playQueueService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/swfobject.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/range.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/timer.js"/>"></script>
@@ -77,7 +77,7 @@
     }
 
     function playerReady(thePlayer) {
-        player = $("player1");
+        player = document.getElementById("player1");
         player.addModelListener("STATE", "stateListener");
         getPlayQueue();
     }
@@ -161,7 +161,7 @@
         var counter = 0;
         for (var i = 0; i < songs.length; i++) {
             var index = i + 1;
-            if ($("songIndex" + index).checked) {
+            if ($("#songIndex" + index).is(":checked")) {
                 indexes[counter++] = i;
             }
         }
@@ -196,25 +196,25 @@
     function playQueueCallback(playQueue) {
         songs = playQueue.entries;
         repeatEnabled = playQueue.repeatEnabled;
-        if ($("start")) {
+        if ($("#start")) {
             if (playQueue.stopEnabled) {
-                $("start").hide();
-                $("stop").show();
+                $("#start").hide();
+                $("#stop").show();
             } else {
-                $("start").show();
-                $("stop").hide();
+                $("#start").show();
+                $("#stop").hide();
             }
         }
 
-        if ($("toggleRepeat")) {
+        if ($("#toggleRepeat")) {
             var text = repeatEnabled ? "<fmt:message key="playlist.repeat_on"/>" : "<fmt:message key="playlist.repeat_off"/>";
-            dwr.util.setValue("toggleRepeat", text);
+            $("#toggleRepeat").html(text);
         }
 
         if (songs.length == 0) {
-            $("empty").show();
+            $("#empty").show();
         } else {
-            $("empty").hide();
+            $("#empty").hide();
         }
 
         // Delete all the rows except for the "pattern" row
@@ -227,56 +227,56 @@
             var song  = songs[i];
             var id = i + 1;
             dwr.util.cloneNode("pattern", { idSuffix:id });
-            if ($("trackNumber" + id)) {
-                dwr.util.setValue("trackNumber" + id, song.trackNumber);
+            if ($("#trackNumber" + id)) {
+                $("#trackNumber" + id).html(song.trackNumber);
             }
             if (song.starred) {
-                $("starSong" + id).src = "<spring:theme code='ratingOnImage'/>";
+                $("#starSong" + id).attr("src", "<spring:theme code='ratingOnImage'/>");
             } else {
-                $("starSong" + id).src = "<spring:theme code='ratingOffImage'/>";
+                $("#starSong" + id).attr("src", "<spring:theme code='ratingOffImage'/>");
             } 
-            if ($("currentImage" + id) && song.streamUrl == currentStreamUrl) {
-                $("currentImage" + id).show();
+            if ($("#currentImage" + id) && song.streamUrl == currentStreamUrl) {
+                $("#currentImage" + id).show();
             }
-            if ($("title" + id)) {
-                dwr.util.setValue("title" + id, truncate(song.title));
-                $("title" + id).title = song.title;
+            if ($("#title" + id)) {
+                $("#title" + id).html(truncate(song.title));
+                $("#title" + id).attr("title", song.title);
             }
-            if ($("titleUrl" + id)) {
-                dwr.util.setValue("titleUrl" + id, truncate(song.title));
-                $("titleUrl" + id).title = song.title;
-                $("titleUrl" + id).onclick = function () {onSkip(this.id.substring(8) - 1)};
+            if ($("#titleUrl" + id)) {
+                $("#titleUrl" + id).html(truncate(song.title));
+                $("#titleUrl" + id).attr("title", song.title);
+                $("#titleUrl" + id).click(function () {onSkip(this.id.substring(8) - 1)});
             }
-            if ($("album" + id)) {
-                dwr.util.setValue("album" + id, truncate(song.album));
-                $("album" + id).title = song.album;
-                $("albumUrl" + id).href = song.albumUrl;
+            if ($("#album" + id)) {
+                $("#album" + id).html(truncate(song.album));
+                $("#album" + id).attr("title", song.album);
+                $("#albumUrl" + id).attr("href", song.albumUrl);
             }
-            if ($("artist" + id)) {
-                dwr.util.setValue("artist" + id, truncate(song.artist));
-                $("artist" + id).title = song.artist;
+            if ($("#artist" + id)) {
+                $("#artist" + id).html(truncate(song.artist));
+                $("#artist" + id).attr("title", song.artist);
             }
-            if ($("genre" + id)) {
-                dwr.util.setValue("genre" + id, song.genre);
+            if ($("#genre" + id)) {
+                $("#genre" + id).html(song.genre);
             }
-            if ($("year" + id)) {
-                dwr.util.setValue("year" + id, song.year);
+            if ($("#year" + id)) {
+                $("#year" + id).html(song.year);
             }
-            if ($("bitRate" + id)) {
-                dwr.util.setValue("bitRate" + id, song.bitRate);
+            if ($("#bitRate" + id)) {
+                $("#bitRate" + id).html(song.bitRate);
             }
-            if ($("duration" + id)) {
-                dwr.util.setValue("duration" + id, song.durationAsString);
+            if ($("#duration" + id)) {
+                $("#duration" + id).html(song.durationAsString);
             }
-            if ($("format" + id)) {
-                dwr.util.setValue("format" + id, song.format);
+            if ($("#format" + id)) {
+                $("#format" + id).html(song.format);
             }
-            if ($("fileSize" + id)) {
-                dwr.util.setValue("fileSize" + id, song.fileSize);
+            if ($("#fileSize" + id)) {
+                $("#fileSize" + id).html(song.fileSize);
             }
 
-            $("pattern" + id).show();
-            $("pattern" + id).className = (i % 2 == 0) ? "bgcolor1" : "bgcolor2";
+            $("#pattern" + id).show();
+            $("#pattern" + id).addClass((i % 2 == 0) ? "bgcolor1" : "bgcolor2");
         }
 
         if (playQueue.sendM3U) {
@@ -336,7 +336,7 @@
         for (var i = 0; i < songs.length; i++) {
             var song  = songs[i];
             var id = i + 1;
-            var image = $("currentImage" + id);
+            var image = $("#currentImage" + id);
 
             if (image) {
                 if (song.streamUrl == currentStreamUrl) {
@@ -395,13 +395,13 @@
         } else if (id == "appendPlaylist") {
             parent.frames.main.location.href = "appendPlaylist.view?player=${model.player.id}&" + getSelectedIndexes();
         }
-        $("moreActions").selectedIndex = 0;
+        $("#moreActions").prop("selectedIndex", 0);
     }
 
     function getSelectedIndexes() {
         var result = "";
         for (var i = 0; i < songs.length; i++) {
-            if ($("songIndex" + (i + 1)).checked) {
+            if ($("#songIndex" + (i + 1)).is(":checked")) {
                 result += "i=" + i + "&";
             }
         }
@@ -410,7 +410,11 @@
 
     function selectAll(b) {
         for (var i = 0; i < songs.length; i++) {
-            $("songIndex" + (i + 1)).checked = b;
+            if (b) {
+                $("#songIndex" + (i + 1)).attr("checked", "checked");
+            } else {
+                $("#songIndex" + (i + 1)).removeAttr("checked");
+            }
         }
     }
 
