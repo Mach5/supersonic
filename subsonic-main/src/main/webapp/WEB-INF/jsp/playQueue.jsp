@@ -190,6 +190,9 @@
     function onSortByAlbum() {
         playQueueService.sortByAlbum(playQueueCallback);
     }
+    function onSavePlaylist() {
+        playQueueService.savePlaylist(function () {top.left.updatePlaylists();});
+    }
 
     function playQueueCallback(playQueue) {
         songs = playQueue.entries;
@@ -371,7 +374,7 @@
         } else if (id == "loadPlaylist") {
             parent.frames.main.location.href = "loadPlaylist.view?";
         } else if (id == "savePlaylist") {
-            parent.frames.main.location.href = "savePlaylist.view?";
+            onSavePlaylist();
         } else if (id == "downloadPlaylist") {
             location.href = "download.view?player=${model.player.id}";
         } else if (id == "sharePlaylist") {

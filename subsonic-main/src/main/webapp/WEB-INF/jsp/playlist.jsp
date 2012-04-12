@@ -68,7 +68,6 @@
                 $("pattern" + id).show();
                 $("pattern" + id).className = (i % 2 == 0) ? "bgcolor2" : "bgcolor1";
             }
-            top.left.updatePlaylists();
         }
 
         function truncate(s) {
@@ -93,7 +92,7 @@
             playlistService.toggleStar(playlist.id, index, playlistCallback);
         }
         function onRemove(index) {
-            playlistService.remove(playlist.id, index, playlistCallback);
+            playlistService.remove(playlist.id, index, function (playlistInfo){playlistCallback(playlistInfo); top.left.updatePlaylists()});
         }
         function onUp(index) {
             playlistService.up(playlist.id, index, playlistCallback);
@@ -102,15 +101,13 @@
             playlistService.down(playlist.id, index, playlistCallback);
         }
         function onDeletePlaylist() {
-            playlistService.deletePlaylist(playlist.id);
-            location = "home.view";
+            playlistService.deletePlaylist(playlist.id, function (){top.left.updatePlaylists(); location = "home.view";});
         }
         function onChangeName() {
             var name = prompt("<fmt:message key="playlist2.name"/>", playlist.name);
             if (name != null) {
-                playlistService.setPlaylistName(playlist.id, name);
                 dwr.util.setValue("name", name);
-                top.left.updatePlaylists();
+                playlistService.setPlaylistName(playlist.id, name, function (){top.left.updatePlaylists()});
             }
         }
         function onChangeComment() {
