@@ -44,6 +44,7 @@ Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
 Update apps to include PlayBook version.
 
+  - Rewrite playQueue.jsp to use jquery.
   - Show toast when saving queue as playlist (and when saving settings)
   - Nicer dialogs for changing name/comment.  Combine dialog. Also include public checkbox.  Use "Edit" link.
   - Display meta data.
