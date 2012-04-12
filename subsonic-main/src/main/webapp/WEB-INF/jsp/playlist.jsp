@@ -17,7 +17,16 @@
 
         function init() {
             dwr.engine.setErrorHandler(null);
-            $("#empty").hide();
+            $("#dialog-confirm").dialog({resizable: false, height: 170, position: 'top', modal: true, autoOpen: false,
+                buttons: {
+                    "<fmt:message key="common.delete"/>": function() {
+                        $(this).dialog("close");
+                        playlistService.deletePlaylist(playlist.id, function (){top.left.updatePlaylists(); location = "home.view";});
+                    },
+                    "<fmt:message key="common.cancel"/>": function() {
+                        $(this).dialog("close");
+                    }
+                }});
             getPlaylist();
         }
 
@@ -103,8 +112,7 @@
             playlistService.down(playlist.id, index, playlistCallback);
         }
         function onDeletePlaylist() {
-//            $("#dialog-confirm").dialog();
-            playlistService.deletePlaylist(playlist.id, function (){top.left.updatePlaylists(); location = "home.view";});
+            $("#dialog-confirm").dialog("open");
         }
         function onChangeName() {
             var name = prompt("<fmt:message key="playlist2.name"/>", playlist.name);
@@ -151,9 +159,9 @@
 
 <div style="height:0.7em"></div>
 
-<p id="empty"><em><fmt:message key="playlist.empty"/></em></p>
+<p id="empty" style="display: none;"><em><fmt:message key="playlist.empty"/></em></p>
 
-<table style="border-collapse:collapse;white-space:nowrap;">
+<table style="border-collapse:collapse;white-space:nowrap">
     <tbody id="playlistBody">
     <tr id="pattern" style="display:none;margin:0;padding:0;border:0">
         <td class="bgcolor1"><a href="#">
@@ -166,7 +174,6 @@
                  onclick="onAdd(this.id.substring(3) - 1)"></a></td>
 
         <td style="padding-right:0.25em"></td>
-
         <td style="padding-right:1.25em"><span id="title">Title</span></td>
         <td style="padding-right:1.25em"><a id="albumUrl" target="main"><span id="album" class="detail">Album</span></a></td>
         <td style="padding-right:1.25em"><span id="artist" class="detail">Artist</span></td>
@@ -193,9 +200,10 @@
         <div class="forward" style="float:left;padding-right:1.5em"><a href="#" onclick="onChangeComment();"><fmt:message key="playlist2.changecomment"/></a></div>
 </c:if>
 
-<%--<div id="dialog-confirm" title="Empty the recycle bin?">--%>
-    <%--<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>These items will be permanently deleted and cannot be recovered. Are you sure?</p>--%>
-<%--</div>--%>
+<div id="dialog-confirm" title="<fmt:message key="common.confirm"/>" style="display: none;">
+    <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+        <fmt:message key="playlist2.confirmdelete"/></p>
+</div>
 
 
 </body></html>
