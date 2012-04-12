@@ -119,15 +119,11 @@ public class PlaylistService {
         playlistService.deletePlaylist(id);
     }
 
-    public void setPlaylistName(int id, String name) throws Exception {
+    public void updatePlaylist(int id, String name, String comment, boolean isPublic) throws Exception {
         Playlist playlist = playlistService.getPlaylist(id);
         playlist.setName(name);
-        playlistService.updatePlaylist(playlist);
-    }
-
-    public void setPlaylistComment(int id, String comment) throws Exception {
-        Playlist playlist = playlistService.getPlaylist(id);
         playlist.setComment(comment);
+        playlist.setPublic(isPublic);
         playlistService.updatePlaylist(playlist);
     }
 

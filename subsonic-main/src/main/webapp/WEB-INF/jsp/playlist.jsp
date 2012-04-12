@@ -17,7 +17,23 @@
 
         function init() {
             dwr.engine.setErrorHandler(null);
-            $("#dialog-confirm").dialog({resizable: false, height: 170, position: 'top', modal: true, autoOpen: false,
+            $("#dialog-edit").dialog({resizable: true, width:400, position: 'top', modal: true, autoOpen: false,
+                buttons: {
+                    "<fmt:message key="common.save"/>": function() {
+                        $(this).dialog("close");
+                        var name = $("#newName").val();
+                        var comment = $("#newComment").val();
+                        var isPublic = $("#newPublic").is(":checked");
+                        $("#name").html(name);
+                        $("#comment").html(comment);
+                        playlistService.updatePlaylist(playlist.id, name, comment, isPublic, function (){top.left.updatePlaylists()});
+                    },
+                    "<fmt:message key="common.cancel"/>": function() {
+                        $(this).dialog("close");
+                    }
+                }});
+
+            $("#dialog-delete").dialog({resizable: false, height: 170, position: 'top', modal: true, autoOpen: false,
                 buttons: {
                     "<fmt:message key="common.delete"/>": function() {
                         $(this).dialog("close");
@@ -111,22 +127,11 @@
         function onDown(index) {
             playlistService.down(playlist.id, index, playlistCallback);
         }
+        function onEditPlaylist() {
+            $("#dialog-edit").dialog("open");
+        }
         function onDeletePlaylist() {
-            $("#dialog-confirm").dialog("open");
-        }
-        function onChangeName() {
-            var name = prompt("<fmt:message key="playlist2.name"/>", playlist.name);
-            if (name != null) {
-                $("#name").html(name);
-                playlistService.setPlaylistName(playlist.id, name, function (){top.left.updatePlaylists()});
-            }
-        }
-        function onChangeComment() {
-            var comment = prompt("<fmt:message key="playlist2.comment"/>", playlist.comment);
-            if (comment != null) {
-                playlistService.setPlaylistComment(playlist.id, comment);
-                $("#comment").html(comment);
-            }
+            $("#dialog-delete").dialog("open");
         }
 
     </script>
@@ -143,6 +148,7 @@
         | <a href="${downloadUrl}"><fmt:message key="common.download"/></a>
     </c:if>
     <c:if test="${model.editAllowed}">
+        | <a href="#" onclick="onEditPlaylist();"><fmt:message key="common.edit"/></a>
         | <a href="#" onclick="onDeletePlaylist();"><fmt:message key="common.delete"/></a>
     </c:if>
 
@@ -195,15 +201,22 @@
     </tbody>
 </table>
 
-<c:if test="${model.editAllowed}">
-        <div class="forward" style="float:left;padding-right:1.5em"><a href="#" onclick="onChangeName();"><fmt:message key="playlist2.changename"/></a></div>
-        <div class="forward" style="float:left;padding-right:1.5em"><a href="#" onclick="onChangeComment();"><fmt:message key="playlist2.changecomment"/></a></div>
-</c:if>
-
-<div id="dialog-confirm" title="<fmt:message key="common.confirm"/>" style="display: none;">
+<div id="dialog-delete" title="<fmt:message key="common.confirm"/>" style="display: none;">
     <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
         <fmt:message key="playlist2.confirmdelete"/></p>
 </div>
 
+<div id="dialog-edit" title="<fmt:message key="common.edit"/>" style="display: none;">
+    <form>
+        <label for="newName" style="display:block;"><fmt:message key="playlist2.name"/></label>
+        <input type="text" name="newName" id="newName" value="${model.playlist.name}" class="ui-widget-content"
+               style="display:block;width:95%;"/>
+        <label for="newComment" style="display:block;margin-top:1em"><fmt:message key="playlist2.comment"/></label>
+        <input type="text" name="newComment" id="newComment" value="${model.playlist.comment}" class="ui-widget-content"
+               style="display:block;width:95%;"/>
+        <input type="checkbox" name="newPublic" id="newPublic" ${model.playlist.public ? "checked='checked'" : ""} style="margin-top:1.5em" class="ui-widget-content"/>
+        <label for="newPublic"><fmt:message key="playlist2.public"/></label>
+    </form>
+</div>
 
 </body></html>
