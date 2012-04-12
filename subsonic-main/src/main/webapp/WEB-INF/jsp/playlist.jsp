@@ -68,6 +68,7 @@
                 $("pattern" + id).show();
                 $("pattern" + id).className = (i % 2 == 0) ? "bgcolor2" : "bgcolor1";
             }
+            top.left.updatePlaylists();
         }
 
         function truncate(s) {
@@ -109,6 +110,7 @@
             if (name != null) {
                 playlistService.setPlaylistName(playlist.id, name);
                 dwr.util.setValue("name", name);
+                top.left.updatePlaylists();
             }
         }
         function onChangeComment() {

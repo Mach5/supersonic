@@ -13,10 +13,10 @@
 
             function init() {
                 dwr.engine.setErrorHandler(null);
-                getPlaylists();
+                updatePlaylists();
             }
 
-            function getPlaylists() {
+            function updatePlaylists() {
                 playlistService.getPlaylists(playlistCallback);
             }
 
