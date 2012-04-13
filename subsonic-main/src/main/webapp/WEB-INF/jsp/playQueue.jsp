@@ -5,6 +5,7 @@
     <%@ include file="jquery.jsp" %>
     <script type="text/javascript" src="<c:url value="/dwr/interface/nowPlayingService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/interface/playQueueService.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/playlistService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/swfobject.js"/>"></script>
@@ -28,6 +29,13 @@
     function init() {
         dwr.engine.setErrorHandler(null);
         startTimer();
+
+        $("#dialog-select-playlist").dialog({resizable: true, height: 220, position: 'top', modal: true, autoOpen: false,
+            buttons: {
+                "<fmt:message key="common.cancel"/>": function() {
+                    $(this).dialog("close");
+                }
+            }});
 
     <c:choose>
     <c:when test="${model.player.web}">
@@ -191,6 +199,21 @@
     }
     function onSavePlaylist() {
         playQueueService.savePlaylist(function () {top.left.updatePlaylists();});
+    }
+    function onAppendPlaylist() {
+        playlistService.getPlaylists(playlistCallback);
+    }
+    function playlistCallback(playlists) {
+        $("#dialog-select-playlist-list").empty();
+        for (var i = 0; i < playlists.length; i++) {
+            var playlist = playlists[i];
+            $("<p class='dense'><b><a href='#' onclick='appendPlaylist(" + playlist.id + ")'>" + playlist.name + "</a></b></p>").appendTo("#dialog-select-playlist-list");
+        }
+        $("#dialog-select-playlist").dialog("open");
+    }
+    function appendPlaylist(playlistId) {
+        $("#dialog-select-playlist").dialog("close");
+        alert(playlistId);
     }
 
     function playQueueCallback(playQueue) {
@@ -393,7 +416,7 @@
         } else if (id == "download") {
             location.href = "download.view?player=${model.player.id}&" + getSelectedIndexes();
         } else if (id == "appendPlaylist") {
-            parent.frames.main.location.href = "appendPlaylist.view?player=${model.player.id}&" + getSelectedIndexes();
+            onAppendPlaylist();
         }
         $("#moreActions").prop("selectedIndex", 0);
     }
@@ -582,5 +605,12 @@
         </tr>
     </tbody>
 </table>
+
+<div id="dialog-select-playlist" title="<fmt:message key="common.confirm"/>" style="display: none;">
+    <p>
+        Add selected songs to this playlist:
+    </p>
+    <div id="dialog-select-playlist-list"></div>
+</div>
 
 </body></html>
