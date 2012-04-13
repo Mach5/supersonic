@@ -2,35 +2,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/smooth-scroll.js"/>"></script>
-    <script type="text/javascript" src="<c:url value='/dwr/util.js'/>"></script>
-        <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/dwr/interface/playlistService.js"/>"></script>
-        <script type="text/javascript" language="javascript">
+    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/playlistService.js"/>"></script>
+    <script type="text/javascript" language="javascript">
 
-            var playlists;
+        var playlists;
 
-            function init() {
-                dwr.engine.setErrorHandler(null);
-                updatePlaylists();
+        function init() {
+            dwr.engine.setErrorHandler(null);
+            updatePlaylists();
+        }
+
+        function updatePlaylists() {
+            playlistService.getPlaylists(playlistCallback);
+        }
+
+        function createEmptyPlaylist() {
+            playlistService.createEmptyPlaylist(playlistCallback);
+        }
+
+        function playlistCallback(playlists) {
+            this.playlists = playlists;
+
+            $("#playlists").empty();
+            for (var i = 0; i < playlists.length; i++) {
+                var playlist = playlists[i];
+                $("<p class='dense'><a target='main' href='playlist.view?id=" +
+                        playlist.id + "'>" + playlist.name + "&nbsp;(" + playlist.fileCount + ")</a></p>").appendTo("#playlists");
             }
-
-            function updatePlaylists() {
-                playlistService.getPlaylists(playlistCallback);
-            }
-
-            function playlistCallback(playlists) {
-                this.playlists = playlists;
-                var buf = "";
-                for (var i = 0; i < playlists.length; i++) {
-                    var playlist = playlists[i];
-                    buf += "<p class='dense' style='padding-left:0.5em'><a target='main' href='playlist.view?id=" +
-                            playlist.id + "'>" + playlist.name + "&nbsp;(" + playlist.fileCount + ")</a></p>";
-                }
-                dwr.util.setValue("playlists", buf, { escapeHtml:false });
-            }
-        </script>
+        }
+    </script>
 </head>
 
 <body class="bgcolor2 leftframe" onload="init()">
@@ -85,16 +89,10 @@
 </c:if>
 
 <h2 class="bgcolor1"><fmt:message key="left.playlists"/></h2>
-<div id="playlists"></div>
-<%--todo--%>
-<%--<c:forEach items="${model.playlists}" var="playlist">--%>
-    <%--<p class="dense" style="padding-left:0.5em">--%>
-        <%--<sub:url value="playlist.view" var="playlistUrl">--%>
-            <%--<sub:param name="id" value="${playlist.id}"/>--%>
-        <%--</sub:url>--%>
-        <%--<a target="main" href="${playlistUrl}">${playlist.name}&nbsp;(${playlist.fileCount})</a>--%>
-    <%--</p>--%>
-<%--</c:forEach>--%>
+<div style='padding-left:0.5em'>
+    <div id="playlists"></div>
+    <div><a href="javascript:noop()" onclick="createEmptyPlaylist()"><fmt:message key="left.createplaylist"/></a></div>
+</div>
 
 <c:if test="${not empty model.radios}">
     <h2 class="bgcolor1"><fmt:message key="left.radio"/></h2>
@@ -165,6 +163,5 @@
         <a href="#${index.index}">${index.index}</a>
     </c:forEach>
 </div>
-
 
 </body></html>

@@ -18,14 +18,18 @@
  */
 package net.sourceforge.subsonic.ajax;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.service.SettingsService;
 import org.directwebremoting.WebContextFactory;
 
 import net.sourceforge.subsonic.domain.MediaFile;
@@ -45,14 +49,15 @@ public class PlaylistService {
     private SecurityService securityService;
     private net.sourceforge.subsonic.service.PlaylistService playlistService;
     private MediaFileDao mediaFileDao;
+    private SettingsService settingsService;
 
-    public List<Playlist> getPlaylists() throws Exception {
+    public List<Playlist> getPlaylists() {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         String username = securityService.getCurrentUsername(request);
         return playlistService.getPlaylistsForUser(username);
     }
 
-    public PlaylistInfo getPlaylist(int id) throws Exception {
+    public PlaylistInfo getPlaylist(int id) {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
 
         Playlist playlist = playlistService.getPlaylist(id);
@@ -61,6 +66,23 @@ public class PlaylistService {
         String username = securityService.getCurrentUsername(request);
         mediaFileService.populateStarredDate(files, username);
         return new PlaylistInfo(playlist, createEntries(files));
+    }
+
+    public List<Playlist> createEmptyPlaylist() {
+        HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
+        Locale locale = settingsService.getLocale();
+        DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, locale);
+
+        Date now = new Date();
+        Playlist playlist = new Playlist();
+        playlist.setUsername(securityService.getCurrentUsername(request));
+        playlist.setCreated(now);
+        playlist.setChanged(now);
+        playlist.setPublic(false);
+        playlist.setName(dateFormat.format(now));
+
+        playlistService.createPlaylist(playlist);
+        return getPlaylists();
     }
 
     public void appendToPlaylist(int playlistId, List<Integer> mediaFileIds) {
@@ -84,7 +106,7 @@ public class PlaylistService {
         return result;
     }
 
-    public PlaylistInfo toggleStar(int id, int index) throws Exception {
+    public PlaylistInfo toggleStar(int id, int index) {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         String username = securityService.getCurrentUsername(request);
         List<MediaFile> files = playlistService.getFilesInPlaylist(id);
@@ -99,14 +121,14 @@ public class PlaylistService {
         return getPlaylist(id);
     }
 
-    public PlaylistInfo remove(int id, int index) throws Exception {
+    public PlaylistInfo remove(int id, int index) {
         List<MediaFile> files = playlistService.getFilesInPlaylist(id);
         files.remove(index);
         playlistService.setFilesInPlaylist(id, files);
         return getPlaylist(id);
     }
 
-    public PlaylistInfo up(int id, int index) throws Exception {
+    public PlaylistInfo up(int id, int index) {
         List<MediaFile> files = playlistService.getFilesInPlaylist(id);
         if (index > 0) {
             MediaFile file = files.remove(index);
@@ -116,7 +138,7 @@ public class PlaylistService {
         return getPlaylist(id);
     }
 
-    public PlaylistInfo down(int id, int index) throws Exception {
+    public PlaylistInfo down(int id, int index) {
         List<MediaFile> files = playlistService.getFilesInPlaylist(id);
         if (index < files.size() - 1) {
             MediaFile file = files.remove(index);
@@ -126,11 +148,11 @@ public class PlaylistService {
         return getPlaylist(id);
     }
 
-    public void deletePlaylist(int id) throws Exception {
+    public void deletePlaylist(int id) {
         playlistService.deletePlaylist(id);
     }
 
-    public void updatePlaylist(int id, String name, String comment, boolean isPublic) throws Exception {
+    public void updatePlaylist(int id, String name, String comment, boolean isPublic) {
         Playlist playlist = playlistService.getPlaylist(id);
         playlist.setName(name);
         playlist.setComment(comment);
@@ -152,5 +174,9 @@ public class PlaylistService {
 
     public void setMediaFileDao(MediaFileDao mediaFileDao) {
         this.mediaFileDao = mediaFileDao;
+    }
+
+    public void setSettingsService(SettingsService settingsService) {
+        this.settingsService = settingsService;
     }
 }
