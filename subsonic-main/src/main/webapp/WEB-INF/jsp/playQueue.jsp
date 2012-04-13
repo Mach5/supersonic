@@ -215,7 +215,6 @@
         $("#dialog-select-playlist").dialog("close");
 
         var mediaFileIds = new Array();
-        var j = 0;
         for (var i = 0; i < songs.length; i++) {
             if ($("#songIndex" + (i + 1)).is(":checked")) {
                 mediaFileIds.push(songs[i].id);

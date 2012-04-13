@@ -11,6 +11,7 @@
     </c:if>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/interface/starService.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/playlistService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/fancyzoom/FancyZoom.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/fancyzoom/FancyZoomHTML.js"/>"></script>
 </head><body class="mainframe bgcolor1" onload="init();">
@@ -28,6 +29,13 @@
 <script type="text/javascript" language="javascript">
     function init() {
         setupZoom('<c:url value="/"/>');
+
+        $("#dialog-select-playlist").dialog({resizable: true, height: 220, position: 'top', modal: true, autoOpen: false,
+            buttons: {
+                "<fmt:message key="common.cancel"/>": function() {
+                    $(this).dialog("close");
+                }
+            }});
     }
 
     <!-- actionSelected() is invoked when the users selects from the "More actions..." combo box. -->
@@ -44,7 +52,7 @@
         } else if (id == "download") {
             location.href = "${downloadUrl}&" + getSelectedIndexes();
         } else if (id == "appendPlaylist") {
-            parent.frames.main.location.href = "${appendPlaylistUrl}&" + getSelectedIndexes();
+            onAppendPlaylist();
         }
         $("#moreActions").prop("selectedIndex", 0);
     }
@@ -82,6 +90,30 @@
             $(imageId).attr("src", "<spring:theme code="ratingOnImage"/>");
             starService.star(mediaFileId);
         }
+    }
+
+    function onAppendPlaylist() {
+        playlistService.getPlaylists(playlistCallback);
+    }
+    function playlistCallback(playlists) {
+        $("#dialog-select-playlist-list").empty();
+        for (var i = 0; i < playlists.length; i++) {
+            var playlist = playlists[i];
+            $("<p class='dense'><b><a href='#' onclick='appendPlaylist(" + playlist.id + ")'>" + playlist.name + "</a></b></p>").appendTo("#dialog-select-playlist-list");
+        }
+        $("#dialog-select-playlist").dialog("open");
+    }
+    function appendPlaylist(playlistId) {
+        $("#dialog-select-playlist").dialog("close");
+
+        var mediaFileIds = new Array();
+        for (var i = 0; i < ${fn:length(model.children)}; i++) {
+            var checkbox = $("#songIndex" + i);
+            if (checkbox && checkbox.is(":checked")) {
+                mediaFileIds.push($("#songId" + i).html());
+            }
+        }
+        playlistService.appendToPlaylist(playlistId, mediaFileIds, function (){top.left.updatePlaylists();});
     }
 
 </script>
@@ -280,7 +312,8 @@
                         </c:when>
 
                         <c:otherwise>
-                            <td ${class} style="padding-left:0.25em"><input type="checkbox" class="checkbox" id="songIndex${loopStatus.count - 1}"></td>
+                            <td ${class} style="padding-left:0.25em"><input type="checkbox" class="checkbox" id="songIndex${loopStatus.count - 1}">
+                                <span id="songId${loopStatus.count - 1}" style="display: none">${child.id}</span></td>
 
                             <c:if test="${model.visibility.trackNumberVisible}">
                                 <td ${class} style="padding-right:0.5em;text-align:right">
@@ -438,6 +471,11 @@
             <str:truncateNicely upper="30">${fn:escapeXml(model.nextAlbum.name)}</str:truncateNicely>
         </a></div>
     </c:if>
+</div>
+
+<div id="dialog-select-playlist" title="<fmt:message key="main.addtoplaylist.title"/>" style="display: none;">
+    <p><fmt:message key="main.addtoplaylist.text"/></p>
+    <div id="dialog-select-playlist-list"></div>
 </div>
 
 </body>

@@ -44,7 +44,6 @@ Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
 Update apps to include PlayBook version.
 
-  - Make append to playlist work in main.jsp
   - Make it easy to create a new empty playlist.
   - Only show editable playlists when appending.
   - Show toast when saving queue as playlist (and when saving settings)
