@@ -4,7 +4,6 @@
 <head>
     <%@ include file="head.jsp" %>
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/scriptaculous.js?load=effects"/>"></script>
 </head>
 <body>
 

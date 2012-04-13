@@ -45,7 +45,6 @@ Blacklist abusers of my email.
 Update apps to include PlayBook version.
 
   - Make append to playlist work in main.jsp
-  - Remove scriptalous
   - Remove loadPlaylist.jsp etc
   - Make it easy to create a new empty playlist.
   - Only show editable playlists when appending.
