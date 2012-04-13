@@ -18,7 +18,7 @@ PARAMETERS
 </sub:url>
 <c:if test="${param.starEnabled}">
     <c:if test="${param.asTable}"><td></c:if>
-    <a href="#" onclick="toggleStar(${param.id}, 'starImage${param.id}'); return false;">
+    <a href="#" onclick="toggleStar(${param.id}, '#starImage${param.id}'); return false;">
         <c:choose>
             <c:when test="${param.starred}">
                 <img id="starImage${param.id}" src="<spring:theme code="ratingOnImage"/>" alt="">

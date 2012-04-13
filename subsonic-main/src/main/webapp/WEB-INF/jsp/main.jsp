@@ -4,15 +4,13 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
     <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
     <c:if test="${not model.updateNowPlaying}">
         <meta http-equiv="refresh" content="180;URL=nowPlaying.view?">
     </c:if>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/interface/starService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/scriptaculous.js?load=effects"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/fancyzoom/FancyZoom.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/fancyzoom/FancyZoomHTML.js"/>"></script>
 </head><body class="mainframe bgcolor1" onload="init();">
@@ -48,14 +46,14 @@
         } else if (id == "appendPlaylist") {
             parent.frames.main.location.href = "${appendPlaylistUrl}&" + getSelectedIndexes();
         }
-        $("moreActions").selectedIndex = 0;
+        $("#moreActions").prop("selectedIndex", 0);
     }
 
     function getSelectedIndexes() {
         var result = "";
         for (var i = 0; i < ${fn:length(model.children)}; i++) {
-            var checkbox = $("songIndex" + i);
-            if (checkbox != null  && checkbox.checked) {
+            var checkbox = $("#songIndex" + i);
+            if (checkbox != null  && checkbox.is(":checked")) {
                 result += "i=" + i + "&";
             }
         }
@@ -64,20 +62,24 @@
 
     function selectAll(b) {
         for (var i = 0; i < ${fn:length(model.children)}; i++) {
-            var checkbox = $("songIndex" + i);
+            var checkbox = $("#songIndex" + i);
             if (checkbox != null) {
-                checkbox.checked = b;
+                if (b) {
+                    checkbox.attr("checked", "checked");
+                } else {
+                    checkbox.removeAttr("checked");
+                }
             }
         }
     }
 
     function toggleStar(mediaFileId, imageId) {
-        if ($(imageId).src.indexOf("<spring:theme code="ratingOnImage"/>") != -1) {
-            $(imageId).src = "<spring:theme code="ratingOffImage"/>";
+        if ($(imageId).attr("src").indexOf("<spring:theme code="ratingOnImage"/>") != -1) {
+            $(imageId).attr("src", "<spring:theme code="ratingOffImage"/>");
             starService.unstar(mediaFileId);
         }
-        else if ($(imageId).src.indexOf("<spring:theme code="ratingOffImage"/>") != -1) {
-            $(imageId).src = "<spring:theme code="ratingOnImage"/>";
+        else if ($(imageId).attr("src").indexOf("<spring:theme code="ratingOffImage"/>") != -1) {
+            $(imageId).attr("src", "<spring:theme code="ratingOnImage"/>");
             starService.star(mediaFileId);
         }
     }
@@ -93,7 +95,7 @@
 </c:if>
 
 <h1>
-    <a href="#" onclick="toggleStar(${model.dir.id}, 'starImage'); return false;">
+    <a href="#" onclick="toggleStar(${model.dir.id}, '#starImage'); return false;">
         <c:choose>
             <c:when test="${not empty model.dir.starredDate}">
                 <img id="starImage" src="<spring:theme code="ratingOnImage"/>" alt="">
@@ -134,9 +136,9 @@
 
     <c:if test="${model.user.streamRole}">
         <c:if test="${needSep}">|</c:if>
-        <a href="javascript:noop()" onclick="top.playQueue.onPlay(${model.dir.id});"><fmt:message key="main.playall"/></a> |
-        <a href="javascript:noop()" onclick="top.playQueue.onPlayRandom(${model.dir.id}, 10);"><fmt:message key="main.playrandom"/></a> |
-        <a href="javascript:noop()" onclick="top.playQueue.onAdd(${model.dir.id});"><fmt:message key="main.addall"/></a>
+        <a href="#" onclick="top.playQueue.onPlay(${model.dir.id});"><fmt:message key="main.playall"/></a> |
+        <a href="#" onclick="top.playQueue.onPlayRandom(${model.dir.id}, 10);"><fmt:message key="main.playrandom"/></a> |
+        <a href="#" onclick="top.playQueue.onAdd(${model.dir.id});"><fmt:message key="main.addall"/></a>
         <c:set var="needSep" value="true"/>
     </c:if>
 
@@ -233,8 +235,8 @@
 
 <script type='text/javascript'>
     function toggleComment() {
-        $("commentForm").toggle();
-        $("comment").toggle();
+        $("#commentForm").toggle();
+        $("#comment").toggle();
     }
 </script>
 
