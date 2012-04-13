@@ -39,7 +39,7 @@ PARAMETERS
     </sub:url>
 
     <str:randomString count="5" type="alphabet" var="divId"/>
-    <div class="outerpair1" id="${divId}" style="opacity:${opacity}">
+    <div class="outerpair1" id="${divId}" style="display:none">
         <div class="outerpair2">
             <div class="shadowbox">
                 <div class="innerbox">
@@ -57,7 +57,7 @@ PARAMETERS
         <script type="text/javascript">
             if (window.addEventListener) {
                 window.addEventListener('load', function() {
-                    setTimeout("new Effect.Opacity('${divId}', { from: 0.0, to: 1.0, duration: 0.5 })", ${param.appearAfter});
+                    setTimeout("$('#${divId}').fadeIn(500)", ${param.appearAfter});
                 }, false);
             }
         </script>

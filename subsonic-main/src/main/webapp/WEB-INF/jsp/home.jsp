@@ -3,12 +3,11 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
     <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
     <c:if test="${model.listType eq 'random'}">
         <meta http-equiv="refresh" content="20">
     </c:if>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/scriptaculous.js?load=effects"/>"></script>
 </head>
 <body class="mainframe bgcolor1">
 <h1>
