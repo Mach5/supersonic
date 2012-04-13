@@ -2,19 +2,19 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
-    <script type="text/javascript" src="<c:url value='/script/scripts.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/script/prototype.js'/>"></script>
+    <%@ include file="jquery.jsp" %>
     <script type="text/javascript" src="<c:url value='/dwr/util.js'/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/interface/starService.js"/>"></script>
     <script type="text/javascript" language="javascript">
+
         function toggleStar(mediaFileId, imageId) {
-            if ($(imageId).src.indexOf("<spring:theme code="ratingOnImage"/>") != -1) {
-                $(imageId).src = "<spring:theme code="ratingOffImage"/>";
+            if ($(imageId).attr("src").indexOf("<spring:theme code="ratingOnImage"/>") != -1) {
+                $(imageId).attr("src", "<spring:theme code="ratingOffImage"/>");
                 starService.unstar(mediaFileId);
             }
-            else if ($(imageId).src.indexOf("<spring:theme code="ratingOffImage"/>") != -1) {
-                $(imageId).src = "<spring:theme code="ratingOnImage"/>";
+            else if ($(imageId).attr("src").indexOf("<spring:theme code="ratingOffImage"/>") != -1) {
+                $(imageId).attr("src", "<spring:theme code="ratingOnImage"/>");
                 starService.star(mediaFileId);
             }
         }
