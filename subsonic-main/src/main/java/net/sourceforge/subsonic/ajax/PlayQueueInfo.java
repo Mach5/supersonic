@@ -68,6 +68,7 @@ public class PlayQueueInfo {
     }
 
     public static class Entry {
+        private final int id;
         private final Integer trackNumber;
         private final String title;
         private final String artist;
@@ -84,9 +85,10 @@ public class PlayQueueInfo {
         private final String albumUrl;
         private final String streamUrl;
 
-        public Entry(Integer trackNumber, String title, String artist, String album, String genre, Integer year,
+        public Entry(int id, Integer trackNumber, String title, String artist, String album, String genre, Integer year,
                      String bitRate, Integer duration, String durationAsString, String format, String contentType, String fileSize,
                      boolean starred, String albumUrl, String streamUrl) {
+            this.id = id;
             this.trackNumber = trackNumber;
             this.title = title;
             this.artist = artist;
@@ -102,6 +104,10 @@ public class PlayQueueInfo {
             this.starred = starred;
             this.albumUrl = albumUrl;
             this.streamUrl = streamUrl;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public Integer getTrackNumber() {

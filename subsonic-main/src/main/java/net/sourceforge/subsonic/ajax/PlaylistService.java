@@ -63,6 +63,17 @@ public class PlaylistService {
         return new PlaylistInfo(playlist, createEntries(files));
     }
 
+    public void appendToPlaylist(int playlistId, List<Integer> mediaFileIds) {
+        List<MediaFile> files = playlistService.getFilesInPlaylist(playlistId);
+        for (Integer mediaFileId : mediaFileIds) {
+            MediaFile file = mediaFileService.getMediaFile(mediaFileId);
+            if (file != null) {
+                files.add(file);
+            }
+        }
+        playlistService.setFilesInPlaylist(playlistId, files);
+    }
+    
     private List<PlaylistInfo.Entry> createEntries(List<MediaFile> files) {
         List<PlaylistInfo.Entry> result = new ArrayList<PlaylistInfo.Entry>();
         for (MediaFile file : files) {
