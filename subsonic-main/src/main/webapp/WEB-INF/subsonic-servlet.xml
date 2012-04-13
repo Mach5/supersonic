@@ -120,22 +120,6 @@
             </list>
         </property>
     </bean>
-    <bean id="loadPlaylistController" class="net.sourceforge.subsonic.controller.LoadPlaylistController">
-        <property name="securityService" ref="securityService"/>
-        <property name="playlistService" ref="playlistService"/>
-        <property name="playerService" ref="playerService"/>
-        <property name="mediaFileService" ref="mediaFileService"/>
-    </bean>
-    <bean id="savePlaylistController" class="net.sourceforge.subsonic.controller.SavePlaylistController">
-        <property name="commandName" value="command"/>
-        <property name="commandClass" value="net.sourceforge.subsonic.command.SavePlaylistCommand"/>
-        <property name="validator" ref="savePlaylistValidator"/>
-        <property name="formView" value="savePlaylist"/>
-        <property name="successView" value="nowPlaying.view"/>
-        <property name="securityService" ref="securityService"/>
-        <property name="playlistService" ref="playlistService"/>
-        <property name="playerService" ref="playerService"/>
-    </bean>
     <bean id="changeCoverArtController" class="net.sourceforge.subsonic.controller.ChangeCoverArtController">
         <property name="viewName" value="changeCoverArt"/>
         <property name="mediaFileService" ref="mediaFileService"/>
@@ -378,7 +362,6 @@
         <property name="viewName" value="db"/>
         <property name="daoHelper" ref="daoHelper"/>
     </bean>
-    <bean id="savePlaylistValidator" class="net.sourceforge.subsonic.validator.SavePlaylistValidator"/>
     <bean id="donateValidator" class="net.sourceforge.subsonic.validator.DonateValidator">
         <property name="settingsService" ref="settingsService"/>
     </bean>
@@ -406,12 +389,6 @@
                 <prop key="/setRating.view">setRatingController</prop>
                 <prop key="/top.view">topController</prop>
                 <prop key="/randomPlaylist.view">randomPlaylistController</prop>
-                <prop key="/loadPlaylist.view">loadPlaylistController</prop>
-                <prop key="/loadPlaylistConfirm.view">loadPlaylistController</prop>
-                <prop key="/appendPlaylist.view">loadPlaylistController</prop>
-                <prop key="/appendPlaylistConfirm.view">loadPlaylistController</prop>
-                <prop key="/deletePlaylist.view">loadPlaylistController</prop>
-                <prop key="/savePlaylist.view">savePlaylistController</prop>
                 <prop key="/changeCoverArt.view">changeCoverArtController</prop>
                 <prop key="/login.view">multiController</prop>
                 <prop key="/recover.view">multiController</prop>
