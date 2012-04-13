@@ -401,8 +401,6 @@
     function actionSelected(id) {
         if (id == "top") {
             return;
-        } else if (id == "loadPlaylist") {
-            parent.frames.main.location.href = "loadPlaylist.view?";
         } else if (id == "savePlaylist") {
             onSavePlaylist();
         } else if (id == "downloadPlaylist") {
@@ -518,7 +516,6 @@
             <td style="white-space:nowrap;"><select id="moreActions" onchange="actionSelected(this.options[selectedIndex].id)">
                 <option id="top" selected="selected"><fmt:message key="playlist.more"/></option>
                 <option style="color:blue;"><fmt:message key="playlist.more.playlist"/></option>
-                <option id="loadPlaylist">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.load"/></option>
                 <c:if test="${model.user.playlistRole}">
                     <option id="savePlaylist">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.save"/></option>
                 </c:if>
@@ -614,10 +611,8 @@
     </tbody>
 </table>
 
-<div id="dialog-select-playlist" title="<fmt:message key="common.confirm"/>" style="display: none;">
-    <p>
-        Add selected songs to this playlist:
-    </p>
+<div id="dialog-select-playlist" title="<fmt:message key="main.addtoplaylist.title"/>" style="display: none;">
+    <p><fmt:message key="main.addtoplaylist.text"/></p>
     <div id="dialog-select-playlist-list"></div>
 </div>
 
