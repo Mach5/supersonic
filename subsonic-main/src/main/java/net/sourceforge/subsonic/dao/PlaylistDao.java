@@ -105,7 +105,7 @@ public class PlaylistDao extends AbstractDao {
         }
     }
 
-    public void removePlaylistUser(int playlistId, String username) {
+    public void deletePlaylistUser(int playlistId, String username) {
         update("delete from playlist_user where playlist_id=? and username=?", playlistId, username);
     }
 

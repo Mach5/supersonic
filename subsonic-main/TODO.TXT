@@ -57,8 +57,8 @@ REST
 Playlist
   - Initally import existing playlists if table is empty.
   - Remove playlist role.
-  - REST support, add/removePlaylistUser.
   - REST support, modify playlist metadata.
+  - REST: Return shared users for playlist.
   - Remove settings for playlist folder.
   - Playlist support in StreamController.
   - Retest wap and podcast playlist stuff.

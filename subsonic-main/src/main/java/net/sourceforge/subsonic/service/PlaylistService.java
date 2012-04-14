@@ -77,6 +77,14 @@ public class PlaylistService {
         playlistDao.createPlaylist(playlist);
     }
 
+    public void addPlaylistUser(int playlistId, String username) {
+        playlistDao.addPlaylistUser(playlistId, username);
+    }
+
+    public void deletePlaylistUser(int playlistId, String username) {
+        playlistDao.deletePlaylistUser(playlistId, username);
+    }
+
     public boolean isReadAllowed(Playlist playlist, String username) {
         if (username == null) {
             return false;
