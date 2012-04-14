@@ -534,7 +534,7 @@ public class RESTController extends MultiActionController {
 
         builder.add("playlists", false);
 
-        for (Playlist playlist : playlistService.getPlaylistsForUser(username)) {
+        for (Playlist playlist : playlistService.getReadablePlaylistsForUser(username)) {
             builder.add("playlist", createAttributesForPlaylist(playlist), true);
         }
 

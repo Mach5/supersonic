@@ -25,10 +25,8 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.dao.MediaFileDao;
-import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.service.SettingsService;
 import org.directwebremoting.WebContextFactory;
 
@@ -51,10 +49,16 @@ public class PlaylistService {
     private MediaFileDao mediaFileDao;
     private SettingsService settingsService;
 
-    public List<Playlist> getPlaylists() {
+    public List<Playlist> getReadablePlaylists() {
         HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
         String username = securityService.getCurrentUsername(request);
-        return playlistService.getPlaylistsForUser(username);
+        return playlistService.getReadablePlaylistsForUser(username);
+    }
+
+    public List<Playlist> getWritablePlaylists() {
+        HttpServletRequest request = WebContextFactory.get().getHttpServletRequest();
+        String username = securityService.getCurrentUsername(request);
+        return playlistService.getWritablePlaylistsForUser(username);
     }
 
     public PlaylistInfo getPlaylist(int id) {
@@ -82,7 +86,7 @@ public class PlaylistService {
         playlist.setName(dateFormat.format(now));
 
         playlistService.createPlaylist(playlist);
-        return getPlaylists();
+        return getReadablePlaylists();
     }
 
     public void appendToPlaylist(int playlistId, List<Integer> mediaFileIds) {

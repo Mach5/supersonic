@@ -53,7 +53,7 @@ public class PodcastController extends ParameterizableViewController {
 
         String url = request.getRequestURL().toString();
         String username = securityService.getCurrentUsername(request);
-        List<Playlist> playlists = playlistService.getPlaylistsForUser(username);
+        List<Playlist> playlists = playlistService.getReadablePlaylistsForUser(username);
         List<Podcast> podcasts = new ArrayList<Podcast>();
 
         for (Playlist playlist : playlists) {

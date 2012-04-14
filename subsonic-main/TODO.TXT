@@ -1,5 +1,5 @@
 
-DONE IN 4.7
+DONE IN 5.0
 -----------------
 Improvements to lyrics search, courtesy of Juan Carlos Díaz.
 Updated Dutch translation, courtesy of W. van der Heijden.
@@ -23,20 +23,24 @@ Added "created" and "discNumber" to Child in REST xsd
 Update playCount, lastPlayed in Album table.
 Remove MediaFileService.getFirstChild.
 Create MediaType music, audiobook and podcast.
+Starring
+Playlist
+ID3
+Performance
 
-TODO IN 4.7
+
+TODO IN 5.0
 -----------------
+Create complete test plan.
 Add path to album table. Use to determine if songs belong to the same album.
 Review how to look up album for a song.
 Find nicer icons.
 Video player broken.
-Test REST video
 REST: Consider changing method names and type to *Id3.
 Escape some chars in podcast
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=5717&p=21988&hilit=podcast#p21988
 
 Eliminate HomeController.Album.
-Use id in web interface.
 
 Update subsonic-tools.
 Test upgrade 4.6->4.7
@@ -44,41 +48,36 @@ Avoid long db startup. Reduce hsql log size?
 Blacklist abusers of my email.
 Update apps to include PlayBook version.
 
-  - Import/export
-  - Only show editable playlists when appending.
-  - Show toast when saving queue as playlist (and when saving settings)
-  - Increase line height in playlist.jsp
-  - Rename to play queue in Settings > Player.
-  - "Add to playlist" should show list of existing playlists.
-  - "Add to new playlist" should create an automatic name.
-  - Improve usability when saving play queue as playlist e.g., if using an existing name.  Use ajax?
-  - Change "dir" usage in LoadPlaylistController.
-  - Rename RandomPlaylistController, playlist.jsp, PlaylistService.
-  - Update "present" when scanning media library?
-  - Initally import existing playlists if table is empty.
-  - Change appendPlaylist and loadPlaylist page, show meta data (owner, public/private, #songs, duration, created date, comment).
-  - Create new Playlists button in top frame.
-  - managePlaylist -> Play, Download, Export (m3u), Delete, Private/Shared
-  - Keep existing playlist role, but make it enabled by default.  Or remove it?
-  - REST support, add/removePlaylistUser.
-  - REST support, modify playlist metadata.
-  - Remove settings for playlist folder.
-  - Import/export feature.
-  - Retest wap and podcast playlist stuff.
-  - Playlist support in StreamController.
-  - Show message if nothing is starred.
-
 REST
-  - Document in api.jsp
+  - Document new methods in api.jsp
   - Add example links to demo server.
   - Create example for videos.
   - Test video streaming to Android.
 
+Playlist
+  - Initally import existing playlists if table is empty.
+  - Remove playlist role.
+  - REST support, add/removePlaylistUser.
+  - REST support, modify playlist metadata.
+  - Remove settings for playlist folder.
+  - Playlist support in StreamController.
+  - Retest wap and podcast playlist stuff.
+
+Postponed:
+  - Playlist export/import.
+  - Show toast when saving queue as playlist (and when saving settings)
+  - Increase line height in playlist.jsp
+  - Rename RandomPlaylistController.
+  - Rename to play queue in Settings > Player.
+  - Show "isPublic", #songs, duration in playlist.jsp.
+  - Show message if nothing is starred.
+  - Show message if no songs are selected when doing add to playlist.
+  - Encourage users to save email addresses, also for admin.  Explain why.
+  - Better error message if media file not found, in main.jsp
+
 Shortcuts display ID3 names
 
-Encourage users to save email addresses, also for admin.  Explain why.
 Handle albums without artist. Don't create them?
-Bug: Playlist frame > Combo box > Selected songs > Add to playlist is broken.
 test that getRandomSongs doesn't return audiobooks and podcast.
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist, or use Various Artists.
 Support comment and ratings for Album table.
@@ -86,24 +85,14 @@ JSON exception with ampersand.
 minisub doesn't play.
 Test getPlaylist vs old-style IDs.
 Test that Fast access mode works.
-Move statistcs to About page?
 Include minisub
     http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
-
 Fix broken REST scrobbling, as reported by Ben.
-Don't throw NPE if requesting non-existent ID in REST.
 Optionally, create "Clean database" setting
-Never use fast access mode in podcast folder.
 Improve documentation of REST "download" method.
-Make it work with 64-bit Java 7.  Problem with exe4j?
-Better error message if media file not found, in main.jsp
-Document MediaFileService.
-Check file I/O.
-Optimize MediaFile getters.
 -
 Maintain track order for offline files in Android. Prepend track number for sortability?
 REST: Ensure that podcast dir is included.
-Star support
 
 Support ISO files.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668

@@ -165,7 +165,7 @@ public class WapController extends MultiActionController {
 
     public ModelAndView loadPlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("playlists", playlistService.getPlaylistsForUser(securityService.getCurrentUsername(request)));
+        map.put("playlists", playlistService.getReadablePlaylistsForUser(securityService.getCurrentUsername(request)));
         return new ModelAndView("wap/loadPlaylist", "model", map);
     }
 

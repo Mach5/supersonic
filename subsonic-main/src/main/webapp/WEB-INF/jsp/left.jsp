@@ -17,7 +17,7 @@
         }
 
         function updatePlaylists() {
-            playlistService.getPlaylists(playlistCallback);
+            playlistService.getReadablePlaylists(playlistCallback);
         }
 
         function createEmptyPlaylist() {

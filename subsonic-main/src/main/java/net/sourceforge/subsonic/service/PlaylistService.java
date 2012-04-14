@@ -53,8 +53,12 @@ public class PlaylistService {
     private MediaFileDao mediaFileDao;
     private PlaylistDao playlistDao;
 
-    public List<Playlist> getPlaylistsForUser(String username) {
-        return playlistDao.getPlaylistsForUser(username);
+    public List<Playlist> getReadablePlaylistsForUser(String username) {
+        return playlistDao.getReadablePlaylistsForUser(username);
+    }
+
+    public List<Playlist> getWritablePlaylistsForUser(String username) {
+        return playlistDao.getWritablePlaylistsForUser(username);
     }
 
     public Playlist getPlaylist(int id) {

@@ -43,9 +43,9 @@ public class PlaylistDao extends AbstractDao {
     private static final String COLUMNS = "id, username, is_public, name, comment, file_count, duration_seconds, created, changed";
     private final RowMapper rowMapper = new PlaylistMapper();
 
-    public List<Playlist> getPlaylistsForUser(String username) {
+    public List<Playlist> getReadablePlaylistsForUser(String username) {
 
-        List<Playlist> result1 = query("select " + COLUMNS + " from playlist where username=?", rowMapper, username);
+        List<Playlist> result1 = getWritablePlaylistsForUser(username);
         List<Playlist> result2 = query("select " + COLUMNS + " from playlist where is_public", rowMapper);
         List<Playlist> result3 = query("select " + prefix(COLUMNS, "playlist") + " from playlist, playlist_user where " +
                 "playlist.id = playlist_user.playlist_id and " +
@@ -64,6 +64,10 @@ public class PlaylistDao extends AbstractDao {
             map.put(playlist.getId(), playlist);
         }
         return new ArrayList<Playlist>(map.values());
+    }
+
+    public List<Playlist> getWritablePlaylistsForUser(String username) {
+        return query("select " + COLUMNS + " from playlist where username=?", rowMapper, username);
     }
 
     public Playlist getPlaylist(int id) {

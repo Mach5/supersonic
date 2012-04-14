@@ -93,7 +93,7 @@
     }
 
     function onAppendPlaylist() {
-        playlistService.getPlaylists(playlistCallback);
+        playlistService.getWritablePlaylists(playlistCallback);
     }
     function playlistCallback(playlists) {
         $("#dialog-select-playlist-list").empty();
