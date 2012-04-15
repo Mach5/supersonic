@@ -38,8 +38,6 @@ Review how to look up album for a song.
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist, or use Various Artists.
 Add path to album table. Use to determine if songs belong to the same album.
 Find nicer star icon.
-Escape some chars in podcast
-  http://forum.subsonic.org/forum/viewtopic.php?f=2&t=5717&p=21988&hilit=podcast#p21988
 Document new RESTmethods in api.jsp
 REST: Create editPlaylist (for changing metadata, removing/adding songs/users).
 REST: Optional username parameter in getPlaylists method?

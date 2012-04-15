@@ -99,7 +99,7 @@ public final class StringUtil {
             {"bmp", "image/bmp"},
     };
 
-    private static final String[] FILE_SYSTEM_UNSAFE = {"/", "\\", "..", ":", "\"", "?", "*"};
+    private static final String[] FILE_SYSTEM_UNSAFE = {"/", "\\", "..", ":", "\"", "?", "*", "|"};
 
     /**
      * Disallow external instantiation.
