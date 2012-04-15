@@ -30,69 +30,50 @@ Playlist
 ID3
 Performance
 
-
 TODO IN 5.0
 -----------------
 Create complete test plan.
-Add path to album table. Use to determine if songs belong to the same album.
+Test upgrade 4.6->4.7
 Review how to look up album for a song.
-Find nicer icons.
-Video player broken.
-REST: Consider changing method names and type to *Id3.
+How to uniquely identify an album? Disregard artists, use all artists, or use one artist, or use Various Artists.
+Add path to album table. Use to determine if songs belong to the same album.
+Find nicer star icon.
 Escape some chars in podcast
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=5717&p=21988&hilit=podcast#p21988
-
-Eliminate HomeController.Album.
-
-Update subsonic-tools.
-Test upgrade 4.6->4.7
-Avoid long db startup. Reduce hsql log size?
-Blacklist abusers of my email.
-Update apps to include PlayBook version.
-
-REST
-  - Document new methods in api.jsp
-  - Add example links to demo server.
-  - Create example for videos.
-  - Test video streaming to Android.
-
-Playlist
-  - REST: Create editPlaylist (for changing metadata, removing/adding songs/users).
-  - REST: Optional username parameter in getPlaylists method?
-  - Update playlist xml examples.
-  - Playlist support in StreamController.s
-  - Retest wap and podcast playlist stuff.
+Document new RESTmethods in api.jsp
+REST: Create editPlaylist (for changing metadata, removing/adding songs/users).
+REST: Optional username parameter in getPlaylists method?
+Improve documentation of REST "download" method.
+Update playlist xml examples.
+Shortcuts display ID3 names
 
 Postponed:
   - Playlist export/import.
   - Show toast when saving queue as playlist (and when saving settings)
   - Increase line height in playlist.jsp
-  - Rename RandomPlaylistController.
+  - Rename RandomPlaylistController, PlaylistInputStream.
   - Rename to play queue in Settings > Player.
   - Show "isPublic", #songs, duration in playlist.jsp.
   - Show message if nothing is starred.
   - Show message if no songs are selected when doing add to playlist.
   - Encourage users to save email addresses, also for admin.  Explain why.
   - Better error message if media file not found, in main.jsp
-
-Shortcuts display ID3 names
+  - Update apps to include PlayBook version.
+  - REST: Add example links to demo server.
+  - Blacklist abusers of my email.
+  - Update subsonic-tools.
+  - Eliminate HomeController.Album.
 
 Handle albums without artist. Don't create them?
-test that getRandomSongs doesn't return audiobooks and podcast.
-How to uniquely identify an album? Disregard artists, use all artists, or use one artist, or use Various Artists.
 Support comment and ratings for Album table.
 JSON exception with ampersand.
 minisub doesn't play.
 Test getPlaylist vs old-style IDs.
-Test that Fast access mode works.
 Include minisub
     http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
 Fix broken REST scrobbling, as reported by Ben.
 Optionally, create "Clean database" setting
-Improve documentation of REST "download" method.
 -
-Maintain track order for offline files in Android. Prepend track number for sortability?
-REST: Ensure that podcast dir is included.
 
 Support ISO files.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
