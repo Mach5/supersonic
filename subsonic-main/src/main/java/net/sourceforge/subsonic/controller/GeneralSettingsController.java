@@ -43,7 +43,6 @@ public class GeneralSettingsController extends SimpleFormController {
         command.setIndex(settingsService.getIndexString());
         command.setMusicFileTypes(settingsService.getMusicFileTypes());
         command.setVideoFileTypes(settingsService.getVideoFileTypes());
-        command.setPlaylistFolder(settingsService.getPlaylistFolder());
         command.setGettingStartedEnabled(settingsService.isGettingStartedEnabled());
         command.setWelcomeTitle(settingsService.getWelcomeTitle());
         command.setWelcomeSubtitle(settingsService.getWelcomeSubtitle());
@@ -94,7 +93,6 @@ public class GeneralSettingsController extends SimpleFormController {
         settingsService.setIndexString(command.getIndex());
         settingsService.setIgnoredArticles(command.getIgnoredArticles());
         settingsService.setShortcuts(command.getShortcuts());
-        settingsService.setPlaylistFolder(command.getPlaylistFolder());
         settingsService.setMusicFileTypes(command.getMusicFileTypes());
         settingsService.setVideoFileTypes(command.getVideoFileTypes());
         settingsService.setCoverArtFileTypes(command.getCoverArtFileTypes());

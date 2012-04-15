@@ -17,13 +17,6 @@
 <form:form method="post" action="generalSettings.view" commandName="command">
 
     <table style="white-space:nowrap" class="indent">
-        <tr>
-            <td><fmt:message key="generalsettings.playlistfolder"/></td>
-            <td>
-                <form:input path="playlistFolder" size="70"/>
-                <c:import url="helpToolTip.jsp"><c:param name="topic" value="playlistfolder"/></c:import>
-            </td>
-        </tr>
 
         <tr>
             <td><fmt:message key="generalsettings.musicmask"/></td>

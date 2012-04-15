@@ -57,13 +57,11 @@ REST
   - Test video streaming to Android.
 
 Playlist
-  - Initally import existing playlists if table is empty.
   - Remove playlist role.
-  - REST support, modify playlist metadata.
+  - REST: Create editPlaylist (for changing metadata, removing/adding songs/users).
   - REST: Return shared users for playlist.
   - REST: Optional username parameter in getPlaylists method?
   - Update playlist xml examples.
-  - Remove settings for playlist folder.
   - Playlist support in StreamController.
   - Retest wap and podcast playlist stuff.
 

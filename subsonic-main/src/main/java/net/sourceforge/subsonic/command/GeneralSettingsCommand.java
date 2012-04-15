@@ -28,7 +28,6 @@ import net.sourceforge.subsonic.domain.Theme;
  */
 public class GeneralSettingsCommand {
 
-    private String playlistFolder;
     private String musicFileTypes;
     private String videoFileTypes;
     private String coverArtFileTypes;
@@ -45,14 +44,6 @@ public class GeneralSettingsCommand {
     private String themeIndex;
     private Theme[] themes;
     private boolean isReloadNeeded;
-
-    public String getPlaylistFolder() {
-        return playlistFolder;
-    }
-
-    public void setPlaylistFolder(String playlistFolder) {
-        this.playlistFolder = playlistFolder;
-    }
 
     public String getMusicFileTypes() {
         return musicFileTypes;

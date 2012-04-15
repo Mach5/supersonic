@@ -186,8 +186,8 @@ public class SecurityService implements UserDetailsService {
      * @return Whether the given file may be read.
      */
     public boolean isReadAllowed(File file) {
-        // Allowed to read from both music folder, playlist folder and podcast folder.
-        return isInMusicFolder(file) || isInPlaylistFolder(file) || isInPodcastFolder(file);
+        // Allowed to read from both music folder and podcast folder.
+        return isInMusicFolder(file) || isInPodcastFolder(file);
     }
 
     /**
@@ -196,12 +196,11 @@ public class SecurityService implements UserDetailsService {
      * @return Whether the given file may be written, created or deleted.
      */
     public boolean isWriteAllowed(File file) {
-        // Only allowed to write playlists, podcasts or cover art.
-        boolean isPlaylist = isInPlaylistFolder(file);
+        // Only allowed to write podcasts or cover art.
         boolean isPodcast = isInPodcastFolder(file);
         boolean isCoverArt = isInMusicFolder(file) && file.getName().startsWith("cover.");
 
-        return isPlaylist || isPodcast || isCoverArt;
+        return isPodcast || isCoverArt;
     }
 
     /**
@@ -232,17 +231,6 @@ public class SecurityService implements UserDetailsService {
             }
         }
         return null;
-    }
-
-    /**
-     * Returns whether the given file is located in the playlist folder (or any of its sub-folders).
-     *
-     * @param file The file in question.
-     * @return Whether the given file is located in the playlist folder.
-     */
-    private boolean isInPlaylistFolder(File file) {
-        String playlistFolder = settingsService.getPlaylistFolder();
-        return isFileInFolder(file.getPath(), playlistFolder);
     }
 
     /**

@@ -352,10 +352,6 @@ public class SettingsService {
         return properties.getProperty(KEY_PLAYLIST_FOLDER, DEFAULT_PLAYLIST_FOLDER);
     }
 
-    public void setPlaylistFolder(String playlistFolder) {
-        setProperty(KEY_PLAYLIST_FOLDER, playlistFolder);
-    }
-
     public String getMusicFileTypes() {
         return properties.getProperty(KEY_MUSIC_FILE_TYPES, DEFAULT_MUSIC_FILE_TYPES);
     }
