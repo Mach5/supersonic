@@ -2,9 +2,10 @@
 DONE IN 5.0
 -----------------
 Improvements to lyrics search, courtesy of Juan Carlos Díaz.
-Updated Estonian translation, courtesy of Olav Mägi.
+Added Estonian translation, courtesy of Olav Mägi.
 Updated Dutch translation, courtesy of W. van der Heijden.
 Updated Swedish translation, courtesy of Fritte Jensen.
+Updated Catalan translation, courtesy of Josep Santalo.
 Update Lucene index concurrently, not afterwards.
 Fixed missing db table indexes.
 Use Lucene for random song/album search.
