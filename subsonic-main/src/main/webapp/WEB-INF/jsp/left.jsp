@@ -91,7 +91,7 @@
 <h2 class="bgcolor1"><fmt:message key="left.playlists"/></h2>
 <div style='padding-left:0.5em'>
     <div id="playlists"></div>
-    <div><a href="javascript:noop()" onclick="createEmptyPlaylist()"><fmt:message key="left.createplaylist"/></a></div>
+    <div style="margin-top: 0.3em"><a href="javascript:noop()" onclick="createEmptyPlaylist()"><fmt:message key="left.createplaylist"/></a></div>
 </div>
 
 <c:if test="${not empty model.radios}">

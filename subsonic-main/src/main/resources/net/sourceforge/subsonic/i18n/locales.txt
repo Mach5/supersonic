@@ -75,3 +75,6 @@ fi
 
 # Icelandic
 is
+
+# Estonian
+et

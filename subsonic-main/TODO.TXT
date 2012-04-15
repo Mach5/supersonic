@@ -2,6 +2,7 @@
 DONE IN 5.0
 -----------------
 Improvements to lyrics search, courtesy of Juan Carlos Díaz.
+Updated Estonian translation, courtesy of Olav Mägi.
 Updated Dutch translation, courtesy of W. van der Heijden.
 Updated Swedish translation, courtesy of Fritte Jensen.
 Update Lucene index concurrently, not afterwards.
@@ -59,6 +60,8 @@ Playlist
   - Remove playlist role.
   - REST support, modify playlist metadata.
   - REST: Return shared users for playlist.
+  - REST: Optional username parameter in getPlaylists method?
+  - Update playlist xml examples.
   - Remove settings for playlist folder.
   - Playlist support in StreamController.
   - Retest wap and podcast playlist stuff.
