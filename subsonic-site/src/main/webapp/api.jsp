@@ -935,7 +935,7 @@
         <td><code>playlistRole</code></td>
         <td>No</td>
         <td>false</td>
-        <td>Whether the user is allowed to create and delete playlists.</td>
+        <td>Whether the user is allowed to create and delete playlists. Since 1.8.0, changing this role has no effect.</td>
     </tr>
     <tr>
         <td><code>coverArtRole</code></td>

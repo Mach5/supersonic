@@ -33,7 +33,6 @@ public class UserSettingsCommand {
     private boolean isAdminRole;
     private boolean isDownloadRole;
     private boolean isUploadRole;
-    private boolean isPlaylistRole;
     private boolean isCoverArtRole;
     private boolean isCommentRole;
     private boolean isPodcastRole;
@@ -88,14 +87,6 @@ public class UserSettingsCommand {
 
     public void setUploadRole(boolean uploadRole) {
         isUploadRole = uploadRole;
-    }
-
-    public boolean isPlaylistRole() {
-        return isPlaylistRole;
-    }
-
-    public void setPlaylistRole(boolean playlistRole) {
-        isPlaylistRole = playlistRole;
     }
 
     public boolean isCoverArtRole() {
@@ -275,7 +266,6 @@ public class UserSettingsCommand {
         isAdminRole = user != null && user.isAdminRole();
         isDownloadRole = user != null && user.isDownloadRole();
         isUploadRole = user != null && user.isUploadRole();
-        isPlaylistRole = user != null && user.isPlaylistRole();
         isCoverArtRole = user != null && user.isCoverArtRole();
         isCommentRole = user != null && user.isCommentRole();
         isPodcastRole = user != null && user.isPodcastRole();

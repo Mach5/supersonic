@@ -1560,7 +1560,7 @@ public class RESTController extends MultiActionController {
                 new Attribute("settingsRole", requestedUser.isSettingsRole()),
                 new Attribute("downloadRole", requestedUser.isDownloadRole()),
                 new Attribute("uploadRole", requestedUser.isUploadRole()),
-                new Attribute("playlistRole", requestedUser.isPlaylistRole()),
+                new Attribute("playlistRole", true),  // Since 1.8.0
                 new Attribute("coverArtRole", requestedUser.isCoverArtRole()),
                 new Attribute("commentRole", requestedUser.isCommentRole()),
                 new Attribute("podcastRole", requestedUser.isPodcastRole()),
@@ -1595,7 +1595,6 @@ public class RESTController extends MultiActionController {
             command.setStreamRole(ServletRequestUtils.getBooleanParameter(request, "streamRole", true));
             command.setUploadRole(ServletRequestUtils.getBooleanParameter(request, "uploadRole", false));
             command.setJukeboxRole(ServletRequestUtils.getBooleanParameter(request, "jukeboxRole", false));
-            command.setPlaylistRole(ServletRequestUtils.getBooleanParameter(request, "playlistRole", false));
             command.setPodcastRole(ServletRequestUtils.getBooleanParameter(request, "podcastRole", false));
             command.setSettingsRole(ServletRequestUtils.getBooleanParameter(request, "settingsRole", true));
             command.setTranscodeSchemeName(ServletRequestUtils.getStringParameter(request, "transcodeScheme", TranscodeScheme.OFF.name()));

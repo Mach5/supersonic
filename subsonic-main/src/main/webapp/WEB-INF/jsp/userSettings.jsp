@@ -86,10 +86,6 @@
                 <td><label for="share"><fmt:message key="usersettings.share"/></label></td>
             </tr>
             <tr>
-                <td style="padding-top:1em"><form:checkbox path="playlistRole" id="playlist" cssClass="checkbox"/></td>
-                <td style="padding-top:1em"><label for="playlist"><fmt:message key="usersettings.playlist"/></label></td>
-            </tr>
-            <tr>
                 <td><form:checkbox path="coverArtRole" id="coverArt" cssClass="checkbox"/></td>
                 <td><label for="coverArt"><fmt:message key="usersettings.coverart"/></label></td>
             </tr>

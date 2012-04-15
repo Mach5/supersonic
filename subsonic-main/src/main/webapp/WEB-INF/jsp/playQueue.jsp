@@ -515,9 +515,7 @@
             <td style="white-space:nowrap;"><select id="moreActions" onchange="actionSelected(this.options[selectedIndex].id)">
                 <option id="top" selected="selected"><fmt:message key="playlist.more"/></option>
                 <option style="color:blue;"><fmt:message key="playlist.more.playlist"/></option>
-                <c:if test="${model.user.playlistRole}">
-                    <option id="savePlaylist">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.save"/></option>
-                </c:if>
+                <option id="savePlaylist">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.save"/></option>
                 <c:if test="${model.user.downloadRole}">
                     <option id="downloadPlaylist">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="common.download"/></option>
                 </c:if>
@@ -534,9 +532,7 @@
                 <c:if test="${model.user.downloadRole}">
                     <option id="download">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="common.download"/></option>
                 </c:if>
-                <c:if test="${model.user.playlistRole}">
-                    <option id="appendPlaylist">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.append"/></option>
-                </c:if>
+                <option id="appendPlaylist">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.append"/></option>
             </select>
             </td>
 

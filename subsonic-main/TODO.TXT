@@ -57,7 +57,6 @@ REST
   - Test video streaming to Android.
 
 Playlist
-  - Remove playlist role.
   - REST: Create editPlaylist (for changing metadata, removing/adding songs/users).
   - REST: Return shared users for playlist.
   - REST: Optional username parameter in getPlaylists method?
