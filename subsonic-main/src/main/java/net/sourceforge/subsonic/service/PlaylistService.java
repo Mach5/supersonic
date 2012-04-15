@@ -65,6 +65,10 @@ public class PlaylistService {
         return playlistDao.getPlaylist(id);
     }
 
+    public List<String> getPlaylistUsers(int playlistId) {
+        return  playlistDao.getPlaylistUsers(playlistId);
+    }
+
     public List<MediaFile> getFilesInPlaylist(int id) {
         return mediaFileDao.getFilesInPlaylist(id);
     }

@@ -319,7 +319,9 @@ public class RESTController extends MultiActionController {
         attributes.add("public", playlist.isPublic());
         attributes.add("songCount", playlist.getFileCount());
         attributes.add("duration", playlist.getDurationSeconds());
-        attributes.add("created", StringUtil.toISO8601(playlist.getCreated()));
+        for (String username : playlistService.getPlaylistUsers(playlist.getId())) {
+            attributes.add("allowedUser", username);
+        }
         return attributes;
     }
 

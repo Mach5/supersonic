@@ -58,10 +58,9 @@ REST
 
 Playlist
   - REST: Create editPlaylist (for changing metadata, removing/adding songs/users).
-  - REST: Return shared users for playlist.
   - REST: Optional username parameter in getPlaylists method?
   - Update playlist xml examples.
-  - Playlist support in StreamController.
+  - Playlist support in StreamController.s
   - Retest wap and podcast playlist stuff.
 
 Postponed:
