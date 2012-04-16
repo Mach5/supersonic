@@ -623,7 +623,8 @@
 </p>
 
 <p>
-    Downloads a given media file.
+    Downloads a given media file. Similar to <code>stream</code>, but this method returns the original media data
+    without transcoding or downsampling.
 </p>
 <table width="100%" class="bottomspace">
     <tr>
