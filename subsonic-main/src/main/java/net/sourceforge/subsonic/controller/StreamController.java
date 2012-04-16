@@ -139,13 +139,17 @@ public class StreamController implements Controller {
                 range = getRange(request, file);
                 if (range != null) {
                     LOG.info("Got range: " + range);
-                    response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
-                    long maxLength = fileLength;
-                    if (maxLength>range.getMaximumLong()) maxLength=range.getMaximumLong()+1; 
-                    Util.setContentLength(response, Math.max(maxLength - range.getMinimumLong(),0));
-                    long firstBytePos = range.getMinimumLong();
-                    long lastBytePos = maxLength - 1;
-                    response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
+                    if (isConversion) {
+                        response.setHeader("Accept-Ranges", "none");
+                    } else {
+                        response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+                        long maxLength = fileLength;
+                        if (maxLength>range.getMaximumLong()) maxLength=range.getMaximumLong()+1; 
+                        Util.setContentLength(response, Math.max(maxLength - range.getMinimumLong(),0));
+                        long firstBytePos = range.getMinimumLong();
+                        long lastBytePos = maxLength - 1;
+                        response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
+                    }
                 } else if (!isConversion || estimateContentLength) {
                     Util.setContentLength(response, fileLength);
                 }
