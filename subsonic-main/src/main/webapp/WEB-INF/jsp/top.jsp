@@ -37,7 +37,7 @@
                 <a href="nowPlaying.view?" target="main">${nowPlaying}</a>
             </td>
             <td style="min-width:4em;padding-right:1.5em">
-                <a href="starred.view?" target="main"><img src="<spring:theme code="ratingOffImage"/>" title="${starred}" alt="${starred}"></a><br>
+                <a href="starred.view?" target="main"><img src="<spring:theme code="starredImage"/>" title="${starred}" alt="${starred}"></a><br>
                 <a href="starred.view?" target="main">${starred}</a>
             </td>
             <td style="min-width:4em;padding-right:1.5em">
