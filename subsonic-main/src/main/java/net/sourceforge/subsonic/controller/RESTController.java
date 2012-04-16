@@ -533,12 +533,22 @@ public class RESTController extends MultiActionController {
 
     public void getPlaylists(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
-        String username = securityService.getCurrentUsername(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
+
+        User user = securityService.getCurrentUser(request);
+        String authenticatedUsername = user.getUsername();
+        String requestedUsername = request.getParameter("username");
+
+        if (requestedUsername == null) {
+            requestedUsername = authenticatedUsername;
+        } else if (!user.isAdminRole()) {
+            error(request, response, ErrorCode.NOT_AUTHORIZED, authenticatedUsername + " is not authorized to get playlists for " + requestedUsername);
+            return;
+        }
 
         builder.add("playlists", false);
 
-        for (Playlist playlist : playlistService.getReadablePlaylistsForUser(username)) {
+        for (Playlist playlist : playlistService.getReadablePlaylistsForUser(requestedUsername)) {
             builder.add("playlist", createAttributesForPlaylist(playlist), true);
         }
 

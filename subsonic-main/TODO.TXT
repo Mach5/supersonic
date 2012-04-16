@@ -25,6 +25,7 @@ Added "created" and "discNumber" to Child in REST xsd
 Update playCount, lastPlayed in Album table.
 Remove MediaFileService.getFirstChild.
 Create MediaType music, audiobook and podcast.
+REST: Optional username parameter in getPlaylists method
 Starring
 Playlist
 ID3
@@ -39,7 +40,6 @@ How to uniquely identify an album? Disregard artists, use all artists, or use on
 Add path to album table. Use to determine if songs belong to the same album.
 Find nicer star icon.
 Document new RESTmethods in api.jsp
-REST: Optional username parameter in getPlaylists method?
 Test playlist deliverables.
 Improve documentation of REST "download" method.
 Update playlist xml examples.
@@ -61,6 +61,7 @@ Postponed:
   - Blacklist abusers of my email.
   - Update subsonic-tools.
   - Eliminate HomeController.Album.
+  - Clicking play button on a video podcast doesn't work.
 
 Handle albums without artist. Don't create them?
 Support comment and ratings for Album table.
