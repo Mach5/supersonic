@@ -39,8 +39,8 @@ How to uniquely identify an album? Disregard artists, use all artists, or use on
 Add path to album table. Use to determine if songs belong to the same album.
 Find nicer star icon.
 Document new RESTmethods in api.jsp
-REST: Create editPlaylist (for changing metadata, removing/adding songs/users).
 REST: Optional username parameter in getPlaylists method?
+Test playlist deliverables.
 Improve documentation of REST "download" method.
 Update playlist xml examples.
 Shortcuts display ID3 names

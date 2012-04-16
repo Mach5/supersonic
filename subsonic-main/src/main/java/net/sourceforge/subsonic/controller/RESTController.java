@@ -22,12 +22,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
@@ -716,6 +718,82 @@ public class RESTController extends MultiActionController {
         }
     }
 
+    public void updatePlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request, true);
+        String username = securityService.getCurrentUsername(request);
+
+        try {
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            Playlist playlist = playlistService.getPlaylist(id);
+            if (playlist == null) {
+                error(request, response, ErrorCode.NOT_FOUND, "Playlist not found: " + id);
+                return;
+            }
+            if (!playlistService.isWriteAllowed(playlist, username)) {
+                error(request, response, ErrorCode.NOT_AUTHORIZED, "Permission denied for playlist " + id);
+                return;
+            }
+
+            String name = request.getParameter("name");
+            if (name != null) {
+                playlist.setName(name);
+            }
+            String comment = request.getParameter("comment");
+            if (comment != null) {
+                playlist.setComment(comment);
+            }
+            Boolean isPublic = ServletRequestUtils.getBooleanParameter(request, "public");
+            if (isPublic != null) {
+                playlist.setPublic(isPublic);
+            }
+            playlistService.updatePlaylist(playlist);
+
+            for (String usernameToAdd : ServletRequestUtils.getStringParameters(request, "usernameToAdd")) {
+                if (securityService.getUserByName(usernameToAdd) != null) {
+                    playlistService.addPlaylistUser(id, usernameToAdd);
+                }
+            }
+            for (String usernameToRemove : ServletRequestUtils.getStringParameters(request, "usernameToRemove")) {
+                if (securityService.getUserByName(usernameToRemove) != null) {
+                    playlistService.deletePlaylistUser(id, usernameToRemove);
+                }
+            }
+            List<MediaFile> songs = playlistService.getFilesInPlaylist(id);
+            boolean songsChanged = false;
+
+            SortedSet<Integer> tmp = new TreeSet<Integer>();
+            for (int songIndexToRemove : ServletRequestUtils.getIntParameters(request, "songIndexToRemove")) {
+                tmp.add(songIndexToRemove);
+            }
+            List<Integer> songIndexesToRemove = new ArrayList<Integer>(tmp);
+            Collections.reverse(songIndexesToRemove);
+            for (Integer songIndexToRemove : songIndexesToRemove) {
+                songs.remove(songIndexToRemove.intValue());
+                songsChanged = true;
+            }
+            for (int songToAdd : ServletRequestUtils.getIntParameters(request, "songIdToAdd")) {
+                MediaFile song = mediaFileService.getMediaFile(songToAdd);
+                if (song != null) {
+                    songs.add(song);
+                    songsChanged = true;
+                }
+            }
+            if (songsChanged) {
+                playlistService.setFilesInPlaylist(id, songs);
+            }
+
+            XMLBuilder builder = createXMLBuilder(request, response, true);
+            builder.endAll();
+            response.getWriter().print(builder);
+
+        } catch (ServletRequestBindingException x) {
+            error(request, response, ErrorCode.MISSING_PARAMETER, getErrorMessage(x));
+        } catch (Exception x) {
+            LOG.warn("Error in REST API.", x);
+            error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
+        }
+    }
+    
     public void deletePlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request, true);
         String username = securityService.getCurrentUsername(request);
@@ -732,74 +810,6 @@ public class RESTController extends MultiActionController {
                 return;
             }
             playlistService.deletePlaylist(id);
-
-            XMLBuilder builder = createXMLBuilder(request, response, true);
-            builder.endAll();
-            response.getWriter().print(builder);
-
-        } catch (ServletRequestBindingException x) {
-            error(request, response, ErrorCode.MISSING_PARAMETER, getErrorMessage(x));
-        } catch (Exception x) {
-            LOG.warn("Error in REST API.", x);
-            error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
-        }
-    }
-
-    public void addPlaylistUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        request = wrapRequest(request, true);
-        String username = securityService.getCurrentUsername(request);
-
-        try {
-            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
-            Playlist playlist = playlistService.getPlaylist(id);
-            if (playlist == null) {
-                error(request, response, ErrorCode.NOT_FOUND, "Playlist not found: " + id);
-                return;
-            }
-            if (!playlistService.isWriteAllowed(playlist, username)) {
-                error(request, response, ErrorCode.NOT_AUTHORIZED, "Permission denied for playlist " + id);
-                return;
-            }
-            String usernameToAdd = ServletRequestUtils.getRequiredStringParameter(request, "username");
-            if (securityService.getUserByName(usernameToAdd) == null) {
-                error(request, response, ErrorCode.NOT_FOUND, "User not found: " + usernameToAdd);
-                return;
-            }
-            playlistService.addPlaylistUser(id, usernameToAdd);
-
-            XMLBuilder builder = createXMLBuilder(request, response, true);
-            builder.endAll();
-            response.getWriter().print(builder);
-
-        } catch (ServletRequestBindingException x) {
-            error(request, response, ErrorCode.MISSING_PARAMETER, getErrorMessage(x));
-        } catch (Exception x) {
-            LOG.warn("Error in REST API.", x);
-            error(request, response, ErrorCode.GENERIC, getErrorMessage(x));
-        }
-    }
-
-    public void deletePlaylistUser(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        request = wrapRequest(request, true);
-        String username = securityService.getCurrentUsername(request);
-
-        try {
-            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
-            Playlist playlist = playlistService.getPlaylist(id);
-            if (playlist == null) {
-                error(request, response, ErrorCode.NOT_FOUND, "Playlist not found: " + id);
-                return;
-            }
-            if (!playlistService.isWriteAllowed(playlist, username)) {
-                error(request, response, ErrorCode.NOT_AUTHORIZED, "Permission denied for playlist " + id);
-                return;
-            }
-            String usernameToDelete = ServletRequestUtils.getRequiredStringParameter(request, "username");
-            if (securityService.getUserByName(usernameToDelete) == null) {
-                error(request, response, ErrorCode.NOT_FOUND, "User not found: " + usernameToDelete);
-                return;
-            }
-            playlistService.deletePlaylistUser(id, usernameToDelete);
 
             XMLBuilder builder = createXMLBuilder(request, response, true);
             builder.endAll();
