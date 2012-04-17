@@ -321,9 +321,7 @@ public class RESTController extends MultiActionController {
         attributes.add("public", playlist.isPublic());
         attributes.add("songCount", playlist.getFileCount());
         attributes.add("duration", playlist.getDurationSeconds());
-        for (String username : playlistService.getPlaylistUsers(playlist.getId())) {
-            attributes.add("allowedUser", username);
-        }
+        attributes.add("created", StringUtil.toISO8601(playlist.getCreated()));
         return attributes;
     }
 
@@ -549,7 +547,14 @@ public class RESTController extends MultiActionController {
         builder.add("playlists", false);
 
         for (Playlist playlist : playlistService.getReadablePlaylistsForUser(requestedUsername)) {
-            builder.add("playlist", createAttributesForPlaylist(playlist), true);
+            List<String> sharedUsers = playlistService.getPlaylistUsers(playlist.getId());
+            builder.add("playlist", createAttributesForPlaylist(playlist), sharedUsers.isEmpty());
+            if (!sharedUsers.isEmpty()) {
+                for (String username : sharedUsers) {
+                    builder.add("allowedUser", (Iterable<Attribute>) null, username, true);
+                }
+                builder.end();
+            }
         }
 
         builder.endAll();
@@ -576,10 +581,14 @@ public class RESTController extends MultiActionController {
                 return;
             }
             builder.add("playlist", createAttributesForPlaylist(playlist), false);
+            for (String allowedUser : playlistService.getPlaylistUsers(playlist.getId())) {
+                builder.add("allowedUser", (Iterable<Attribute>) null, allowedUser, true);
+            }
             for (MediaFile mediaFile : playlistService.getFilesInPlaylist(id)) {
                 AttributeSet attributes = createAttributesForMediaFile(player, mediaFile, username);
                 builder.add("entry", attributes, true);
             }
+
             builder.endAll();
             response.getWriter().print(builder);
         } catch (ServletRequestBindingException x) {

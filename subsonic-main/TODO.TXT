@@ -39,8 +39,6 @@ Review how to look up album for a song.
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist, or use Various Artists.
 Add path to album table. Use to determine if songs belong to the same album.
 Document new RESTmethods in api.jsp
-Test playlist deliverables.
-Update playlist xml examples.
 Shortcuts display ID3 names
 
 Postponed:
