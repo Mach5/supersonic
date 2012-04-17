@@ -137,22 +137,6 @@ public class StreamController implements Controller {
                 boolean estimateContentLength = ServletRequestUtils.getBooleanParameter(request, "estimateContentLength", false);
 
                 range = getRange(request, file);
-                if (range != null) {
-                    LOG.info("Got range: " + range);
-                    if (isConversion) {
-                        response.setHeader("Accept-Ranges", "none");
-                    } else {
-                        response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
-                        long maxLength = fileLength;
-                        if (maxLength>range.getMaximumLong()) maxLength=range.getMaximumLong()+1; 
-                        Util.setContentLength(response, Math.max(maxLength - range.getMinimumLong(),0));
-                        long firstBytePos = range.getMinimumLong();
-                        long lastBytePos = maxLength - 1;
-                        response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
-                    }
-                } else if (!isConversion || estimateContentLength) {
-                    Util.setContentLength(response, fileLength);
-                }
 
                 String transcodedSuffix = transcodingService.getSuffix(player, file, preferredTargetFormat);
                 response.setContentType(StringUtil.getMimeType(transcodedSuffix));
@@ -191,6 +175,39 @@ public class StreamController implements Controller {
                 response.setHeader("icy-genre", "Mixed");
                 response.setHeader("icy-url", "http://subsonic.org/");
                 out = new ShoutCastOutputStream(out, player.getPlaylist(), settingsService);
+            }
+
+            if (isSingleFile) {
+                if (range != null) {
+                    LOG.info("Got range: " + range);
+                    response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+		    if (isConvserion) {
+		        ByteArrayOutputStream baout = new ByteArrayOutputStream();
+            		final int BUFFER_SIZE = 2048;
+                        byte[] buf = new byte[BUFFER_SIZE];
+			byte[] buf2;
+			int n = 0;
+		        n = in.read(buf);
+			while (n>=0) {
+                            if (status.terminated()) {
+                                return null;
+                            }
+			    baout.write(buf,0,n);
+			    n = in.read(buf);
+			}    
+			buf2 = baout.toByteArray();
+			fileLength = buf2.length;
+			in = new ByteArrayInputStream(buf2);
+		    }
+                    long maxLength = fileLength;
+                    if (maxLength>range.getMaximumLong()) maxLength=range.getMaximumLong()+1; 
+                    Util.setContentLength(response, Math.max(maxLength - range.getMinimumLong(),0));
+                    long firstBytePos = range.getMinimumLong();
+                    long lastBytePos = maxLength - 1;
+                    response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
+                } else if (!isConversion || estimateContentLength) {
+                    Util.setContentLength(response, fileLength);
+                }
             }
 
             final int BUFFER_SIZE = 2048;
