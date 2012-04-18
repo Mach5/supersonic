@@ -114,6 +114,11 @@
     function onPrevious() {
         skip(parseInt(getCurrentSongIndex()) - 1);
     }
+    function onStopWeb() {
+        player1.pause();
+        player1.currentTime=0;
+        playlistService.stop(playlistCallback);	
+    }
     function onPlay(path) {
         startPlayer = true;
         playlistService.play(path, playlistCallback);
@@ -261,13 +266,28 @@
     </c:if>
     }
 
+    function switchSong(player, url, format) {
+	if (player.canPlayType) {
+	    var formats = [format, "mp3", "webm", "aac", "webm", "ogg"];
+	    for (i=0; i<formats.length; i++) { 
+	        if (player.canPlayType(function (format) { switch(format) { case "mp3": return "audio/mpeg"; case "aac": case "m4a": return "audio/mp4"; case "ogg": case "oga": return "audio/ogg"; case "webm": return "audio/webm"; case "wav": return "audio/x-wav"; case "flac": return "audio/flac"; case "wma": return "audio/x-ms-wma"; } }(formats[i]))) {
+		     player.src = url + "&format=" + formats[i];
+		     break;
+                }
+	    }	
+	} else {
+	    player.src = url;
+        }
+    }
     function triggerPlayer() {
         if (startPlayer) {
             startPlayer = false;
             if (songs.length > 0) {
                 skip(0);
             }
-        }
+        } else {
+            switchSong(player1, songs[0].streamUrl, songs[0].format);
+	}
         updateCurrentImage();
         if (songs.length == 0) {
             player1.pause();
@@ -297,8 +317,9 @@
             list[0].provider = "video";
         }
 
-        player1.src = song.streamUrl;
-        player1.play();
+	switchSong(player1, song.streamUrl, song.format);
+	player1.load();
+	player1.play();
     }
 
     function updateCurrentImage() {
@@ -398,14 +419,15 @@
             <c:if test="${model.player.web}">
                 <td style="width:340px; height:24px;padding-left:10px;padding-right:10px"><div id="placeholder">
 
-                    <audio controls="controls" id="player1" width=340 height=24>
-                    <a href="http://www.adobe.com/go/getflashplayer" target="_blank"><fmt:message key="playlist.getflash"/></a>
+                    <audio controls="controls" preload="auto" id="player1" width=340 height=24>
+		        Your browser does not support audio
                     </audio>
                     <script type="text/javascript">
                         var player1=document.getElementById("player1");
 
                         player1.addEventListener("ended", function () { onNext(repeatEnabled); });
                         getPlaylist();
+
                     </script>
                 </div></td>
             </c:if>
@@ -442,6 +464,7 @@
 
             <c:if test="${model.player.web}">
                 <td style="white-space:nowrap;"><a href="javascript:noop()" onclick="onPrevious()"><b>&laquo;</b></a></td>
+                <td style="white-space:nowrap;"><a href="javascript:noop()" onclick="onStopWeb()">Stop</a></td>
                 <td style="white-space:nowrap;"><a href="javascript:noop()" onclick="onNext(false)"><b>&raquo;</b></a> |</td>
             </c:if>
 

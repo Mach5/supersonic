@@ -381,7 +381,7 @@ public class TranscodingService {
 
         List<Transcoding> applicableTranscodings = new LinkedList<Transcoding>();
         String suffix = mediaFile.getFormat();
-        if (suffix.equalsIgnoreCase(preferredTargetFormat)) return null;
+        if (preferredTargetFormat == null || preferredTargetFormat.isEmpty() || suffix.equalsIgnoreCase(preferredTargetFormat) ) return null;
 
         for (Transcoding transcoding : getTranscodingsForPlayer(player)) {
             for (String sourceFormat : transcoding.getSourceFormatsAsArray()) {
