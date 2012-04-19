@@ -1092,8 +1092,8 @@
         <td></td>
         <td>The list type. Must be one of the following: <code>random</code>, <code>newest</code>,
             <code>highest</code>, <code>frequent</code>, <code>recent</code>. Since <a href="#versions">1.8.0</a>
-            you can also use <code>alphabetical</code> to page through all albums sorted alphabetically by artist
-            and album name.</td>
+            you can also use <code>alphabeticalByName</code> or <code>alphabeticalByArtist</code> to page through all albums
+            alphabetically.</td>
     </tr>
     <tr>
         <td><code>size</code></td>

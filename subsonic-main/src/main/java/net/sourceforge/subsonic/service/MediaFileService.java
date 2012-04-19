@@ -286,12 +286,14 @@ public class MediaFileService {
     /**
      * Returns albums in alphabetial order.
      *
+     *
      * @param offset Number of albums to skip.
      * @param count  Maximum number of albums to return.
+     * @param byArtist Whether to sort by artist name
      * @return Albums in alphabetical order.
      */
-    public List<MediaFile> getAlphabetialAlbums(int offset, int count) {
-        return mediaFileDao.getAlphabetialAlbums(offset, count);
+    public List<MediaFile> getAlphabetialAlbums(int offset, int count, boolean byArtist) {
+        return mediaFileDao.getAlphabetialAlbums(offset, count, byArtist);
     }
 
     public Date getMediaFileStarredDate(int id, String username) {

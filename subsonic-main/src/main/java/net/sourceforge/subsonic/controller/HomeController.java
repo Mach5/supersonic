@@ -98,7 +98,7 @@ public class HomeController extends ParameterizableViewController {
         } else if ("random".equals(listType)) {
             albums = getRandom(listSize);
         } else if ("alphabetical".equals(listType)) {
-            albums = getAlphabetical(listOffset, listSize);
+            albums = getAlphabetical(listOffset, listSize, true);
         } else {
             albums = Collections.emptyList();
         }
@@ -192,9 +192,9 @@ public class HomeController extends ParameterizableViewController {
         return result;
     }
 
-    List<Album> getAlphabetical(int offset, int count) throws IOException {
+    List<Album> getAlphabetical(int offset, int count, boolean byArtist) throws IOException {
         List<Album> result = new ArrayList<Album>();
-        for (MediaFile file : mediaFileService.getAlphabetialAlbums(offset, count)) {
+        for (MediaFile file : mediaFileService.getAlphabetialAlbums(offset, count, byArtist)) {
             Album album = createAlbum(file);
             if (album != null) {
                 result.add(album);

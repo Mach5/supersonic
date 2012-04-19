@@ -218,12 +218,14 @@ public class MediaFileDao extends AbstractDao {
     /**
      * Returns albums in alphabetical order.
      *
-     * @param offset Number of albums to skip.
-     * @param count  Maximum number of albums to return.
+     * @param offset   Number of albums to skip.
+     * @param count    Maximum number of albums to return.
+     * @param byArtist Whether to sort by artist name
      * @return Albums in alphabetical order.
      */
-    public List<MediaFile> getAlphabetialAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from media_file where type=? and artist != '' and present order by artist, album limit ? offset ?",
+    public List<MediaFile> getAlphabetialAlbums(int offset, int count, boolean byArtist) {
+        String orderBy = byArtist ? "artist, album" : "album";
+        return query("select " + COLUMNS + " from media_file where type=? and artist != '' and present order by " + orderBy + " limit ? offset ?",
                 rowMapper, ALBUM.name(), count, offset);
     }
 
