@@ -217,7 +217,7 @@ public class MediaScannerService {
             return;
         }
 
-        Album album = albumDao.getAlbum(file.getArtist(), file.getAlbumName());
+        Album album = albumDao.getAlbumForFile(file);
         if (album == null) {
             album = new Album();
             album.setPath(file.getParentPath());

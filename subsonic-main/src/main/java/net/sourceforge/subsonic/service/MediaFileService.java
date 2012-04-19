@@ -587,7 +587,7 @@ public class MediaFileService {
             updateMediaFile(parent);
         }
 
-        Album album = albumDao.getAlbum(file.getArtist(), file.getAlbumName());
+        Album album = albumDao.getAlbumForFile(file);
         if (album != null) {
             album.setLastPlayed(now);
             album.setPlayCount(album.getPlayCount() + 1);

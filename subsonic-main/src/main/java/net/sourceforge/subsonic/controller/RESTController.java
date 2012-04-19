@@ -1056,7 +1056,7 @@ public class RESTController extends MultiActionController {
             attributes.add("path", getRelativePath(mediaFile));
 
             if (mediaFile.getArtist() != null && mediaFile.getAlbumName() != null) {
-                Album album = albumDao.getAlbum(mediaFile.getArtist(), mediaFile.getAlbumName());
+                Album album = albumDao.getAlbumForFile(mediaFile);
                 if (album != null) {
                     attributes.add("albumId", album.getId());
                 }
