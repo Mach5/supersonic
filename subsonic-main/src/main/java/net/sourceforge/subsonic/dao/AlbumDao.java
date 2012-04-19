@@ -29,14 +29,14 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Provides database services for artists.
+ * Provides database services for albums.
  *
  * @author Sindre Mehus
  */
 public class AlbumDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(AlbumDao.class);
-    private static final String COLUMNS = "id, name, artist, song_count, duration_seconds, cover_art_path, " +
+    private static final String COLUMNS = "id, path, name, artist, song_count, duration_seconds, cover_art_path, " +
             "play_count, last_played, comment, created, last_scanned, present";
 
     private final RowMapper rowMapper = new AlbumMapper();
@@ -83,7 +83,7 @@ public class AlbumDao extends AbstractDao {
 
         if (n == 0) {
 
-            update("insert into album (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")", null, album.getName(), album.getArtist(),
+            update("insert into album (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")", null, album.getPath(), album.getName(), album.getArtist(),
                     album.getSongCount(), album.getDurationSeconds(), album.getCoverArtPath(), album.getPlayCount(), album.getLastPlayed(),
                     album.getComment(), album.getCreated(), album.getLastScanned(), album.isPresent());
         }
@@ -182,15 +182,16 @@ public class AlbumDao extends AbstractDao {
                     rs.getInt(1),
                     rs.getString(2),
                     rs.getString(3),
-                    rs.getInt(4),
+                    rs.getString(4),
                     rs.getInt(5),
-                    rs.getString(6),
-                    rs.getInt(7),
-                    rs.getTimestamp(8),
-                    rs.getString(9),
-                    rs.getTimestamp(10),
+                    rs.getInt(6),
+                    rs.getString(7),
+                    rs.getInt(8),
+                    rs.getTimestamp(9),
+                    rs.getString(10),
                     rs.getTimestamp(11),
-                    rs.getBoolean(12));
+                    rs.getTimestamp(12),
+                    rs.getBoolean(13));
         }
     }
 }

@@ -108,6 +108,7 @@ public class Schema47 extends Schema {
             LOG.info("Database table 'album' not found.  Creating it.");
             template.execute("create cached table album (" +
                     "id identity," +
+                    "path varchar not null," +
                     "name varchar not null," +
                     "artist varchar not null," +
                     "song_count int default 0 not null," +

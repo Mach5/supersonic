@@ -27,6 +27,7 @@ import java.util.Date;
 public class Album {
 
     private int id;
+    private String path;
     private String name;
     private String artist;
     private int songCount;
@@ -42,9 +43,10 @@ public class Album {
     public Album() {
     }
 
-    public Album(int id, String name, String artist, int songCount, int durationSeconds, String coverArtPath,
+    public Album(int id, String path, String name, String artist, int songCount, int durationSeconds, String coverArtPath,
             int playCount, Date lastPlayed, String comment, Date created, Date lastScanned, boolean present) {
         this.id = id;
+        this.path = path;
         this.name = name;
         this.artist = artist;
         this.songCount = songCount;
@@ -64,6 +66,14 @@ public class Album {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getName() {
