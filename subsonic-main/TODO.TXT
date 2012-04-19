@@ -33,6 +33,7 @@ Performance
 
 TODO IN 4.7
 -----------------
+Change "Play queue is empty" to "Playlist is empty"
 Create complete test plan.
 Test upgrade 4.6->4.7
 Review how to create and look up album for a song.
@@ -41,11 +42,6 @@ Add path to album table. Use to determine if songs belong to the same album.
 Document new RESTmethods in api.jsp
 Shortcuts display ID3 names
 Create two album list types: alphabeticalByTitle, alphabeticalByArtist
-
-getSongsInAlbum(): Need to add albumId to media_file, or album_artist.
-createAlbum(): If album exists with same name and path, don't create it - even if artist is different.
-getAlbumForMediaFile(): Get all albums with given name. If multiple, select the one with the same path.
-Add MediaFile.albumArtist?
 
 Postponed:
   - Playlist export/import.

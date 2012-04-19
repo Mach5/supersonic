@@ -50,6 +50,7 @@ public class Schema47 extends Schema {
                     "title varchar," +
                     "album varchar," +
                     "artist varchar," +
+                    "album_artist varchar," +
                     "disc_number int," +
                     "track_number int," +
                     "year int," +
@@ -78,6 +79,7 @@ public class Schema47 extends Schema {
             template.execute("create index idx_media_file_type on media_file(type)");
             template.execute("create index idx_media_file_album on media_file(album)");
             template.execute("create index idx_media_file_artist on media_file(artist)");
+            template.execute("create index idx_media_file_album_artist on media_file(album_artist)");
             template.execute("create index idx_media_file_present on media_file(present)");
             template.execute("create index idx_media_file_genre on media_file(genre)");
             template.execute("create index idx_media_file_play_count on media_file(play_count)");

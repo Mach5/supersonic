@@ -40,6 +40,7 @@ public class MediaFile {
     private String title;
     private String albumName;
     private String artist;
+    private String albumArtist;
     private Integer discNumber;
     private Integer trackNumber;
     private Integer year;
@@ -63,7 +64,7 @@ public class MediaFile {
     private boolean present;
 
     public MediaFile(int id, String path, String folder, MediaType mediaType, String format, String title,
-                     String albumName, String artist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
+                     String albumName, String artist, String albumArtist, Integer discNumber, Integer trackNumber, Integer year, String genre, Integer bitRate,
                      boolean variableBitRate, Integer durationSeconds, Long fileSize, Integer width, Integer height, String coverArtPath,
                      String parentPath, int playCount, Date lastPlayed, String comment, Date created, Date changed, Date lastScanned,
                      Date childrenLastUpdated, boolean present) {
@@ -75,6 +76,7 @@ public class MediaFile {
         this.title = title;
         this.albumName = albumName;
         this.artist = artist;
+        this.albumArtist = albumArtist;
         this.discNumber = discNumber;
         this.trackNumber = trackNumber;
         this.year = year;
@@ -191,6 +193,14 @@ public class MediaFile {
 
     public void setArtist(String artist) {
         this.artist = artist;
+    }
+
+    public String getAlbumArtist() {
+        return albumArtist;
+    }
+
+    public void setAlbumArtist(String albumArtist) {
+        this.albumArtist = albumArtist;
     }
 
     public String getName() {

@@ -36,6 +36,7 @@ import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.util.FileUtil;
+import org.apache.commons.lang.ObjectUtils;
 
 /**
  * Provides services for scanning the music library.
@@ -250,6 +251,12 @@ public class MediaScannerService {
         albumDao.createOrUpdateAlbum(album);
         if (firstEncounter) {
             searchService.index(album);
+        }
+
+        // Update the file's album artist, if necessary.
+        if (!ObjectUtils.equals(album.getArtist(), file.getAlbumArtist())) {
+            file.setAlbumArtist(album.getArtist());
+             mediaFileDao.createOrUpdateMediaFile(file);
         }
     }
 

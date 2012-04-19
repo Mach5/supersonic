@@ -50,7 +50,6 @@ public class AlbumDao extends AbstractDao {
      * @param albumName  The album name.
      * @return The album or null.
      */
-    @Deprecated
     public Album getAlbum(String artistName, String albumName) {
         return queryOne("select " + COLUMNS + " from album where artist=? and name=?", rowMapper, artistName, albumName);
     }

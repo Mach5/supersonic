@@ -40,7 +40,7 @@ import static net.sourceforge.subsonic.domain.MediaFile.MediaType.*;
 public class MediaFileDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(MediaFileDao.class);
-    private static final String COLUMNS = "id, path, folder, type, format, title, album, artist, disc_number, " +
+    private static final String COLUMNS = "id, path, folder, type, format, title, album, artist, album_artist, disc_number, " +
             "track_number, year, genre, bit_rate, variable_bit_rate, duration_seconds, file_size, width, height, cover_art_path, " +
             "parent_path, play_count, last_played, comment, created, changed, last_scanned, children_last_updated, present, version";
 
@@ -87,7 +87,7 @@ public class MediaFileDao extends AbstractDao {
     }
 
     public List<MediaFile> getSongsForAlbum(String artist, String album) {
-        return query("select " + COLUMNS + " from media_file where artist=? and album=? and present and type in (?,?,?) order by track_number", rowMapper,
+        return query("select " + COLUMNS + " from media_file where album_artist=? and album=? and present and type in (?,?,?) order by track_number", rowMapper,
                 artist, album, MUSIC.name(), AUDIOBOOK.name(), PODCAST.name());
     }
 
@@ -109,6 +109,7 @@ public class MediaFileDao extends AbstractDao {
                 "title=?," +
                 "album=?," +
                 "artist=?," +
+                "album_artist=?," +
                 "disc_number=?," +
                 "track_number=?," +
                 "year=?," +
@@ -133,7 +134,7 @@ public class MediaFileDao extends AbstractDao {
 
         int n = update(sql,
                 file.getFolder(), file.getMediaType().name(), file.getFormat(), file.getTitle(), file.getAlbumName(), file.getArtist(),
-                file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
+                file.getAlbumArtist(), file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
                 file.isVariableBitRate(), file.getDurationSeconds(), file.getFileSize(), file.getWidth(), file.getHeight(),
                 file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
                 file.getChanged(), file.getLastScanned(), file.getChildrenLastUpdated(), file.isPresent(), VERSION, file.getPath());
@@ -150,7 +151,7 @@ public class MediaFileDao extends AbstractDao {
 
             update("insert into media_file (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")", null,
                     file.getPath(), file.getFolder(), file.getMediaType().name(), file.getFormat(), file.getTitle(), file.getAlbumName(), file.getArtist(),
-                    file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
+                    file.getAlbumArtist(), file.getDiscNumber(), file.getTrackNumber(), file.getYear(), file.getGenre(), file.getBitRate(),
                     file.isVariableBitRate(), file.getDurationSeconds(), file.getFileSize(), file.getWidth(), file.getHeight(),
                     file.getCoverArtPath(), file.getParentPath(), file.getPlayCount(), file.getLastPlayed(), file.getComment(),
                     file.getCreated(), file.getChanged(), file.getLastScanned(),
@@ -321,26 +322,27 @@ public class MediaFileDao extends AbstractDao {
                     rs.getString(6),
                     rs.getString(7),
                     rs.getString(8),
-                    rs.getInt(9) == 0 ? null : rs.getInt(9),
+                    rs.getString(9),
                     rs.getInt(10) == 0 ? null : rs.getInt(10),
                     rs.getInt(11) == 0 ? null : rs.getInt(11),
-                    rs.getString(12),
-                    rs.getInt(13) == 0 ? null : rs.getInt(13),
-                    rs.getBoolean(14),
-                    rs.getInt(15) == 0 ? null : rs.getInt(15),
-                    rs.getLong(16) == 0 ? null : rs.getLong(16),
-                    rs.getInt(17) == 0 ? null : rs.getInt(17),
+                    rs.getInt(12) == 0 ? null : rs.getInt(12),
+                    rs.getString(13),
+                    rs.getInt(14) == 0 ? null : rs.getInt(14),
+                    rs.getBoolean(15),
+                    rs.getInt(16) == 0 ? null : rs.getInt(16),
+                    rs.getLong(17) == 0 ? null : rs.getLong(17),
                     rs.getInt(18) == 0 ? null : rs.getInt(18),
-                    rs.getString(19),
+                    rs.getInt(19) == 0 ? null : rs.getInt(19),
                     rs.getString(20),
-                    rs.getInt(21),
-                    rs.getTimestamp(22),
-                    rs.getString(23),
-                    rs.getTimestamp(24),
+                    rs.getString(21),
+                    rs.getInt(22),
+                    rs.getTimestamp(23),
+                    rs.getString(24),
                     rs.getTimestamp(25),
                     rs.getTimestamp(26),
                     rs.getTimestamp(27),
-                    rs.getBoolean(28));
+                    rs.getTimestamp(28),
+                    rs.getBoolean(29));
         }
     }
 

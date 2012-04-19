@@ -403,6 +403,7 @@ public class MediaFileService {
             if (parser != null) {
                 MetaData metaData = parser.getMetaData(file);
                 mediaFile.setArtist(metaData.getArtist());
+                mediaFile.setAlbumArtist(metaData.getArtist());
                 mediaFile.setAlbumName(metaData.getAlbumName());
                 mediaFile.setTitle(metaData.getTitle());
                 mediaFile.setDiscNumber(metaData.getDiscNumber());
@@ -587,7 +588,7 @@ public class MediaFileService {
             updateMediaFile(parent);
         }
 
-        Album album = albumDao.getAlbumForFile(file);
+        Album album = albumDao.getAlbum(file.getAlbumArtist(), file.getAlbumName());
         if (album != null) {
             album.setLastPlayed(now);
             album.setPlayCount(album.getPlayCount() + 1);
