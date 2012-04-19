@@ -129,12 +129,14 @@ public class AlbumDao extends AbstractDao {
     /**
      * Returns albums in alphabetical order.
      *
-     * @param offset Number of albums to skip.
-     * @param count  Maximum number of albums to return.
+     * @param offset   Number of albums to skip.
+     * @param count    Maximum number of albums to return.
+     * @param byArtist Whether to sort by artist name
      * @return Albums in alphabetical order.
      */
-    public List<Album> getAlphabetialAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from album where present order by artist, name limit ? offset ?", rowMapper, count, offset);
+    public List<Album> getAlphabetialAlbums(int offset, int count, boolean byArtist) {
+        String orderBy = byArtist ? "artist, name" : "name";
+        return query("select " + COLUMNS + " from album where present order by " + orderBy + " limit ? offset ?", rowMapper, count, offset);
     }
 
     /**

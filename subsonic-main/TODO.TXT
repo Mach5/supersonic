@@ -33,7 +33,6 @@ Performance
 
 TODO IN 4.7
 -----------------
-Create two album list types: alphabeticalByTitle, alphabeticalByArtist
 getAlbumList returns both "title" and "album".
 Shortcuts display ID3 names
 Document new RESTmethods in api.jsp

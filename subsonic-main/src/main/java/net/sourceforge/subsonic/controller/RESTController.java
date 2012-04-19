@@ -912,8 +912,10 @@ public class RESTController extends MultiActionController {
                 albums = albumDao.getMostRecentlyPlayedAlbums(offset, size);
             } else if ("newest".equals(type)) {
                 albums = albumDao.getNewestAlbums(offset, size);
-            } else if ("alphabetical".equals(type)) {
-                albums = albumDao.getAlphabetialAlbums(offset, size);
+            } else if ("alphabeticalByArtist".equals(type)) {
+                albums = albumDao.getAlphabetialAlbums(offset, size, true);
+            } else if ("alphabeticalByName".equals(type)) {
+                albums = albumDao.getAlphabetialAlbums(offset, size, false);
             } else if ("starred".equals(type)) {
                 albums = albumDao.getStarredAlbums(offset, size, securityService.getCurrentUser(request).getUsername());
             } else if ("random".equals(type)) {
