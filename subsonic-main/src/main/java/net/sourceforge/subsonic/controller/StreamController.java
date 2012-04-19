@@ -181,27 +181,28 @@ public class StreamController implements Controller {
                 TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
                 long fileLength = getFileLength(parameters);
                 boolean isConversion = parameters.isDownsample() || parameters.isTranscode();
+                if (isConversion) {
+		    ByteArrayOutputStream baout = new ByteArrayOutputStream();
+		    final int BUFFER_SIZE = 2048;
+		    byte[] buf = new byte[BUFFER_SIZE];
+		    byte[] buf2;
+		    int n = 0;
+		    n = in.read(buf);
+		    while (n>=0) {
+		        if (status.terminated()) {
+		            return null;
+		        }
+		        baout.write(buf,0,n);
+		        n = in.read(buf);
+		    }    
+		    buf2 = baout.toByteArray();
+		    fileLength = buf2.length;
+		    in = new ByteArrayInputStream(buf2);
+		    Util.setContentLength(response, fileLength);
+		}
                 if (range != null) {
                     LOG.info("Got range: " + range);
                     response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
-                    if (isConversion) {
-		        ByteArrayOutputStream baout = new ByteArrayOutputStream();
-            		final int BUFFER_SIZE = 2048;
-                        byte[] buf = new byte[BUFFER_SIZE];
-			byte[] buf2;
-			int n = 0;
-		        n = in.read(buf);
-			while (n>=0) {
-                            if (status.terminated()) {
-                                return null;
-                            }
-			    baout.write(buf,0,n);
-			    n = in.read(buf);
-			}    
-			buf2 = baout.toByteArray();
-			fileLength = buf2.length;
-			in = new ByteArrayInputStream(buf2);
-		    }
                     long maxLength = fileLength;
                     if (maxLength>range.getMaximumLong()) maxLength=range.getMaximumLong()+1; 
                     Util.setContentLength(response, Math.max(maxLength - range.getMinimumLong(),0));
