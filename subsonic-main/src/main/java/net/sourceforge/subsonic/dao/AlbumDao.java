@@ -20,6 +20,9 @@ package net.sourceforge.subsonic.dao;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.domain.MediaFile;
+
+import org.apache.commons.lang.ObjectUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
@@ -48,8 +51,27 @@ public class AlbumDao extends AbstractDao {
      * @param albumName  The album name.
      * @return The album or null.
      */
+    @Deprecated
     public Album getAlbum(String artistName, String albumName) {
         return queryOne("select " + COLUMNS + " from album where artist=? and name=?", rowMapper, artistName, albumName);
+    }
+
+    public Album getAlbumForFile(MediaFile file) {
+        // First, get all albums with the correct album name (irrespective of artist).
+        List<Album> candidates = query("select " + COLUMNS + " from album where name=?", rowMapper, file.getAlbumName());
+        if (candidates.isEmpty()) {
+            return null;
+        }
+
+        // Look for album with the correct artist.
+        for (Album candidate : candidates) {
+            if (ObjectUtils.equals(candidate.getArtist(), file.getArtist())) {
+                return candidate;
+            }
+        }
+
+        // Look for album with the same path as the file.
+
     }
 
     public Album getAlbum(int id) {
