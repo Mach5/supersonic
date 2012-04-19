@@ -22,6 +22,9 @@ import java.lang.Math;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,7 +84,7 @@ public class StreamController implements Controller {
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         TransferStatus status = null;
-        PlaylistInputStream in = null;
+        InputStream in = null;
         Player player = playerService.getPlayer(request, response, false, true);
         User user = securityService.getUserByName(player.getUsername());
 
@@ -131,10 +134,6 @@ public class StreamController implements Controller {
                     response.setIntHeader("ETag", file.getId());
                 }
 
-                TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
-                long fileLength = getFileLength(parameters);
-                boolean isConversion = parameters.isDownsample() || parameters.isTranscode();
-                boolean estimateContentLength = ServletRequestUtils.getBooleanParameter(request, "estimateContentLength", false);
 
                 range = getRange(request, file);
 
@@ -178,10 +177,14 @@ public class StreamController implements Controller {
             }
 
             if (isSingleFile) {
+                boolean estimateContentLength = ServletRequestUtils.getBooleanParameter(request, "estimateContentLength", false);
+                TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
+                long fileLength = getFileLength(parameters);
+                boolean isConversion = parameters.isDownsample() || parameters.isTranscode();
                 if (range != null) {
                     LOG.info("Got range: " + range);
                     response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
-		    if (isConvserion) {
+                    if (isConversion) {
 		        ByteArrayOutputStream baout = new ByteArrayOutputStream();
             		final int BUFFER_SIZE = 2048;
                         byte[] buf = new byte[BUFFER_SIZE];
@@ -219,14 +222,14 @@ public class StreamController implements Controller {
                 if (status.terminated()) {
                     return null;
                 }
-
+/*
                 if (player.getPlaylist().getStatus() == Playlist.Status.STOPPED) {
                     if (isPodcast || isSingleFile) {
                         break;
                     } else {
                         sendDummy(buf, out);
                     }
-                } else {
+                } else */ {
 
                     int n = in.read(buf);
                     if (n == -1) {
