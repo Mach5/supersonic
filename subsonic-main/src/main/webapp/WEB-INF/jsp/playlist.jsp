@@ -162,7 +162,7 @@
 
 <div style="height:0.7em"></div>
 
-<p id="empty" style="display: none;"><em><fmt:message key="playlist.empty"/></em></p>
+<p id="empty" style="display: none;"><em><fmt:message key="playlist2.empty"/></em></p>
 
 <table style="border-collapse:collapse;white-space:nowrap">
     <tbody id="playlistBody">

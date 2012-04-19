@@ -33,15 +33,14 @@ Performance
 
 TODO IN 4.7
 -----------------
-Change "Play queue is empty" to "Playlist is empty"
+Create two album list types: alphabeticalByTitle, alphabeticalByArtist
+Shortcuts display ID3 names
+Document new RESTmethods in api.jsp
 Create complete test plan.
 Test upgrade 4.6->4.7
 Review how to create and look up album for a song.
 How to uniquely identify an album? Disregard artists, use all artists, or use one artist, or use Various Artists.
 Add path to album table. Use to determine if songs belong to the same album.
-Document new RESTmethods in api.jsp
-Shortcuts display ID3 names
-Create two album list types: alphabeticalByTitle, alphabeticalByArtist
 
 Postponed:
   - Playlist export/import.
