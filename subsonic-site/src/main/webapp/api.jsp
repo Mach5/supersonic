@@ -228,11 +228,18 @@
 <%@ include file="api-getNowPlaying.jsp" %>
 <%@ include file="api-getIndexes.jsp" %>
 <%@ include file="api-getMusicDirectory.jsp" %>
+<%@ include file="api-getArtists.jsp" %>
+<%@ include file="api-getArtist.jsp" %>
+<%@ include file="api-getAlbum.jsp" %>
+<%@ include file="api-getSong.jsp" %>
+<%@ include file="api-getVideos.jsp" %>
 <%@ include file="api-search.jsp" %>
 <%@ include file="api-search2.jsp" %>
+<%@ include file="api-search3.jsp" %>
 <%@ include file="api-getPlaylists.jsp" %>
 <%@ include file="api-getPlaylist.jsp" %>
 <%@ include file="api-createPlaylist.jsp" %>
+<%@ include file="api-updatePlaylist.jsp" %>
 <%@ include file="api-deletePlaylist.jsp" %>
 <%@ include file="api-download.jsp" %>
 <%@ include file="api-stream.jsp" %>
@@ -246,6 +253,7 @@
 <%@ include file="api-getChatMessages.jsp" %>
 <%@ include file="api-addChatMessage.jsp" %>
 <%@ include file="api-getAlbumList.jsp" %>
+<%@ include file="api-getAlbumList2.jsp" %>
 <%@ include file="api-getRandomSongs.jsp" %>
 <%@ include file="api-getLyrics.jsp" %>
 <%@ include file="api-jukeboxControl.jsp" %>
@@ -254,6 +262,10 @@
 <%@ include file="api-updateShare.jsp" %>
 <%@ include file="api-deleteShare.jsp" %>
 <%@ include file="api-setRating.jsp" %>
+<%@ include file="api-star.jsp" %>
+<%@ include file="api-unstar.jsp" %>
+<%@ include file="api-getStarred.jsp" %>
+<%@ include file="api-getStarred2.jsp" %>
 
 </div>
 

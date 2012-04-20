@@ -1,13 +1,12 @@
-<h2 class="div">getAlbumList</h2>
+<h2 class="div">getAlbumList2</h2>
 
 <p>
-    <code>http://your-server/rest/getAlbumList.view</code>
-    <br>Since <a href="#versions">1.2.0</a>
+    <code>http://your-server/rest/getAlbumList2.view</code>
+    <br>Since <a href="#versions">1.8.0</a>
 </p>
 
 <p>
-    Returns a list of random, newest, highest rated etc. albums. Similar to the album lists
-    on the home page of the Subsonic web interface.
+    Similar to <code>getAlbumList</code> but organizes music according to ID3 tags.
 </p>
 <table width="100%" class="bottomspace">
     <tr>
@@ -21,9 +20,8 @@
         <td>Yes</td>
         <td></td>
         <td>The list type. Must be one of the following: <code>random</code>, <code>newest</code>,
-            <code>highest</code>, <code>frequent</code>, <code>recent</code>. Since <a href="#versions">1.8.0</a>
-            you can also use <code>alphabeticalByName</code> or <code>alphabeticalByArtist</code> to page through all albums
-            alphabetically, and <code>starred</code> to retrieve starred albums.</td>
+            <code>frequent</code>, <code>recent</code>, <code>starred</code>,
+            <code>alphabeticalByName</code> or <code>alphabeticalByArtist</code>.</td>
     </tr>
     <tr>
         <td><code>size</code></td>
@@ -39,6 +37,6 @@
     </tr>
 </table>
 <p>
-    Returns a <code>&lt;subsonic-response&gt;</code> element with a nested <code>&lt;albumList&gt;</code>
-    element on success. <a href="http://subsonic.svn.sourceforge.net/viewvc/subsonic/trunk/subsonic-main/src/main/webapp/xsd/albumList_example_1.xml?view=markup">Example</a>.
+    Returns a <code>&lt;subsonic-response&gt;</code> element with a nested <code>&lt;albumList2&gt;</code>
+    element on success. <a href="http://subsonic.svn.sourceforge.net/viewvc/subsonic/trunk/subsonic-main/src/main/webapp/xsd/albumList2_example_1.xml?view=markup">Example</a>.
 </p>
