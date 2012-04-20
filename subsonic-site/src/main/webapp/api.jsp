@@ -18,7 +18,7 @@
 
 <p>
     The Subsonic API allows anyone to build their own programs using Subsonic as the server, whether they're
-    on the web, the desktop or on mobile devices. As an example, all the Subsonic<a href="apps.jsp">apps</a> are built using the
+    on the web, the desktop or on mobile devices. As an example, all the Subsonic <a href="apps.jsp">apps</a> are built using the
     Subsonic API.
 </p>
 <p>
