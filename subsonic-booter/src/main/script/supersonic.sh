@@ -71,7 +71,7 @@ get_pid() {
 start() {
    get_pid
    if [ -z $PID ]; then
-        if [ $quiet = 0 ]; then
+        if [ $quiet -eq 0 ]; then
            echo -n "Starting Supersonic."
         fi
 
@@ -81,7 +81,7 @@ start() {
         fi
 
         # Restarts must persist argument across calls to start()
-        if [ "$1" == "keepargs" ]; then
+        if [ "$1" = "keepargs" ]; then
             SUPERSONIC_ARGS=`cat ${SUPERSONIC_ARGFILE}`
         else
             SUPERSONIC_ARGS="-Xmx${SUPERSONIC_MAX_MEMORY}m \
@@ -106,7 +106,7 @@ start() {
             echo $! > ${SUPERSONIC_PIDFILE}
         fi
 
-        if [ $quiet = 0 ]; then
+        if [ $quiet -eq 0 ]; then
             echo ".. Done."
             echo "Started Supersonic [PID $!, ${LOG}]"
         fi
@@ -157,7 +157,7 @@ status() {
 
 
 # Maintain legacy functionality when calling script with no command
-if [ "$#" == "0" ]; then
+if [ "$#" = "0" ]; then
   start
 fi
 
