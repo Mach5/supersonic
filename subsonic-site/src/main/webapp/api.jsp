@@ -228,11 +228,11 @@
 <%@ include file="api-getNowPlaying.jsp" %>
 <%@ include file="api-getIndexes.jsp" %>
 <%@ include file="api-getMusicDirectory.jsp" %>
-<%@ include file="api-getArtists.jsp" %>
-<%@ include file="api-getArtist.jsp" %>
-<%@ include file="api-getAlbum.jsp" %>
-<%@ include file="api-getSong.jsp" %>
-<%@ include file="api-getVideos.jsp" %>
+<%--<%@ include file="api-getArtists.jsp" %>--%>
+<%--<%@ include file="api-getArtist.jsp" %>--%>
+<%--<%@ include file="api-getAlbum.jsp" %>--%>
+<%--<%@ include file="api-getSong.jsp" %>--%>
+<%--<%@ include file="api-getVideos.jsp" %>--%>
 <%@ include file="api-search.jsp" %>
 <%@ include file="api-search2.jsp" %>
 <%@ include file="api-search3.jsp" %>
@@ -262,10 +262,10 @@
 <%@ include file="api-updateShare.jsp" %>
 <%@ include file="api-deleteShare.jsp" %>
 <%@ include file="api-setRating.jsp" %>
-<%@ include file="api-star.jsp" %>
-<%@ include file="api-unstar.jsp" %>
-<%@ include file="api-getStarred.jsp" %>
-<%@ include file="api-getStarred2.jsp" %>
+<%--<%@ include file="api-star.jsp" %>--%>
+<%--<%@ include file="api-unstar.jsp" %>--%>
+<%--<%@ include file="api-getStarred.jsp" %>--%>
+<%--<%@ include file="api-getStarred2.jsp" %>--%>
 
 </div>
 

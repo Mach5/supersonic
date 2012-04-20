@@ -6,8 +6,7 @@
 </p>
 
 <p>
-    Creates or updates a saved playlist. Note: The user must be authorized to create playlists (see Settings &gt; Users
-    &gt; User is allowed to create and delete playlists).
+    Creates (or updates) a playlist.
 </p>
 <table width="100%" class="bottomspace">
     <tr>

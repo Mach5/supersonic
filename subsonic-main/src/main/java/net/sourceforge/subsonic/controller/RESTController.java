@@ -748,7 +748,7 @@ public class RESTController extends MultiActionController {
         String username = securityService.getCurrentUsername(request);
 
         try {
-            int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+            int id = ServletRequestUtils.getRequiredIntParameter(request, "playlistId");
             Playlist playlist = playlistService.getPlaylist(id);
             if (playlist == null) {
                 error(request, response, ErrorCode.NOT_FOUND, "Playlist not found: " + id);
