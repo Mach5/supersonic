@@ -6,7 +6,7 @@
 </p>
 
 <p>
-    Similar to <code>getAlbumList</code> but organizes music according to ID3 tags.
+    Similar to <code>getAlbumList</code>, but organizes music according to ID3 tags.
 </p>
 <table width="100%" class="bottomspace">
     <tr>
