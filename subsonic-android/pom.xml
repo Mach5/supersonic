@@ -51,6 +51,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -68,7 +74,7 @@
                         <platform>10</platform>
                     </sdk>
                     <deleteConflictingFiles>true</deleteConflictingFiles>
-                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                    <undeployBeforeDeploy>false</undeployBeforeDeploy>
                 </configuration>
                 <extensions>true</extensions>
             </plugin>

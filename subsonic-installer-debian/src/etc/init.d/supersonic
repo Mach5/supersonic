@@ -65,7 +65,7 @@ do_start()
     [ -e /var/supersonic ] && chown -R $SUBSONIC_USER /var/supersonic
     [ -e /tmp/supersonic ] && chown -R $SUBSONIC_USER /tmp/supersonic
 
-    start-stop-daemon --start -c $SUBSONIC_USER --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_ARGS || return 2
+    start-stop-daemon --start -c $SUBSONIC_USER --pidfile $PIDFILE --exec $DAEMON -- $DAEMON_ARGS start || return 2
 }
 
 #
