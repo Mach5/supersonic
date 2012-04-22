@@ -17,8 +17,8 @@
 <h1>Subsonic API</h1>
 
 <p>
-    The Subsonic API allows anyone to build their own programs using Subsonic as the server, whether they're
-    on the web, the desktop or on mobile devices. As an example, all the Subsonic <a href="apps.jsp">apps</a> are built using the
+    The Subsonic API allows anyone to build their own programs using Subsonic as the media server, whether they're
+    on the web, the desktop or on mobile devices. All the Subsonic <a href="apps.jsp">apps</a> are built using the
     Subsonic API.
 </p>
 <p>
@@ -90,7 +90,7 @@
 </p>
 
 <p>
-    Starting with API version 1.2.0 it is no longer necessary to send the username and password as part of the URL.
+    Starting with API version <a href="#versions">1.2.0</a> it is no longer necessary to send the username and password as part of the URL.
     Instead, HTTP <a href="http://en.wikipedia.org/wiki/Basic_access_authentication">Basic</a> authentication could be
     used.
     (Only <em>preemptive</em> authentication is supported, meaning that the credentials should be supplied by the client
@@ -218,6 +218,22 @@
     and the minor version of the client is less than or equal to the server's. For example, if the server has
     REST API version 2.2, it supports client versions 2.0, 2.1 and 2.2, but not versions 1.x, 2.3+ or 3.x. The third
     part of the version number is not used to determine compatibility.
+</p>
+
+<h2 class="div">File structure vs ID3 tags</h2>
+
+<p>
+    Starting with version <a href="#versions">1.8.0</a>, the API provides methods for accessing the media collection
+    organized according to ID3 tags, rather than file structure.
+</p>
+<p>
+    For instance, browsing through the collection using ID3 tags should use the <code>getArtists</code>, <code>getArtist</code>
+    and <code>getAlbum</code> methods.
+    To browse using file structure you would use <code>getIndexes</code> and <code>getMusicDirectory</code>.
+</p>
+<p>
+    Correspondingly, there are two sets of methods for searching, starring and album lists. Refer to the method
+    documentation for details.
 </p>
 
 <h1>List of API methods</h1>

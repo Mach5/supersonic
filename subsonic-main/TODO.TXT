@@ -33,6 +33,7 @@ Performance
 
 TODO IN 4.7
 -----------------
+Use port 4040 on windows.
 getAlbumList returns both "title" and "album".
 Document new REST methods in api.jsp
   - say something about ID3 vs file structure
@@ -70,6 +71,7 @@ Fix broken REST scrobbling, as reported by Ben.
 Optionally, create "Clean database" setting
 -
 
+Evaluate HTML5.
 Extend demo music, and add video.
 Support ISO files.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
