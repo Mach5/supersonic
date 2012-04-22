@@ -1,4 +1,4 @@
-<h2 class="div">unstar</h2>
+<h2 class="div"><a name="unstar"></a>unstar</h2>
 
 <p>
     <code>http://your-server/rest/unstar.view</code>

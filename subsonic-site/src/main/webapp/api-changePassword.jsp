@@ -1,4 +1,4 @@
-<h2 class="div">changePassword</h2>
+<h2 class="div"><a name="changePassword"></a>changePassword</h2>
 
 <p>
     <code>http://your-server/rest/changePassword.view</code>

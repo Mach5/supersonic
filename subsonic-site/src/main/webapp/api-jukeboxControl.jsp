@@ -1,4 +1,4 @@
-<h2 class="div">jukeboxControl</h2>
+<h2 class="div"><a name="jukeboxControl"></a>jukeboxControl</h2>
 
 <p>
     <code>http://your-server/rest/jukeboxControl.view</code>

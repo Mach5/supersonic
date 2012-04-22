@@ -35,10 +35,7 @@ TODO IN 4.7
 -----------------
 Use port 4040 on windows.
 getAlbumList returns both "title" and "album".
-Document new REST methods in api.jsp
-  - say something about ID3 vs file structure
-  - create index of methods.
-  - create getVideos example.
+REST doc: create getVideos example.
 Create complete test plan.
 Test upgrade 4.6->4.7
 

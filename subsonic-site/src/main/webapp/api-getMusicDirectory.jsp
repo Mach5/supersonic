@@ -1,4 +1,4 @@
-<h2 class="div">getMusicDirectory</h2>
+<h2 class="div"><a name="getMusicDirectory"></a>getMusicDirectory</h2>
 
 <p>
     <code>http://your-server/rest/getMusicDirectory.view</code>

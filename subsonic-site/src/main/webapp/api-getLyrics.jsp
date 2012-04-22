@@ -1,4 +1,4 @@
-<h2 class="div">getLyrics</h2>
+<h2 class="div"><a name="getLyrics"></a>getLyrics</h2>
 
 <p>
     <code>http://your-server/rest/getLyrics.view</code>

@@ -1,4 +1,4 @@
-<h2 class="div">scrobble</h2>
+<h2 class="div"><a name="scrobble"></a>scrobble</h2>
 
 <p>
     <code>http://your-server/rest/scrobble.view</code>

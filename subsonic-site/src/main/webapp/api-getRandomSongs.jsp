@@ -1,4 +1,4 @@
-<h2 class="div">getRandomSongs</h2>
+<h2 class="div"><a name="getRandomSongs"></a>getRandomSongs</h2>
 
 <p>
     <code>http://your-server/rest/getRandomSongs.view</code>

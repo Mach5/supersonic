@@ -1,4 +1,4 @@
-<h2 class="div">getIndexes</h2>
+<h2 class="div"><a name="getIndexes"></a>getIndexes</h2>
 
 <p>
     <code>http://your-server/rest/getIndexes.view</code>

@@ -1,4 +1,4 @@
-<h2 class="div">search</h2>
+<h2 class="div"><a name="search"></a>search</h2>
 
 <p>
     <code>http://your-server/rest/search.view</code>

@@ -1,4 +1,4 @@
-<h2 class="div">getVideos</h2>
+<h2 class="div"><a name="getVideos"></a>getVideos</h2>
 
 <p>
     <code>http://your-server/rest/getVideos.view</code>

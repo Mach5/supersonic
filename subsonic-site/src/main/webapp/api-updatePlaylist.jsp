@@ -1,4 +1,4 @@
-<h2 class="div">updatePlaylist</h2>
+<h2 class="div"><a name="updatePlaylist"></a>updatePlaylist</h2>
 
 <p>
     <code>http://your-server/rest/updatePlaylist.view</code>

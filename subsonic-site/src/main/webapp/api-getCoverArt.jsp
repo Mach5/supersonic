@@ -1,4 +1,4 @@
-<h2 class="div">getCoverArt</h2>
+<h2 class="div"><a name="getCoverArt"></a>getCoverArt</h2>
 
 <p>
     <code>http://your-server/rest/getCoverArt.view</code>

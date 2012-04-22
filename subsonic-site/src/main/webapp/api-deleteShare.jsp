@@ -1,4 +1,4 @@
-<h2 class="div">deleteShare</h2>
+<h2 class="div"><a name="deleteShare"></a>deleteShare</h2>
 <p>
     <code>http://your-server/rest/deleteShare.view</code>
     <br>Since <a href="#versions">1.6.0</a>

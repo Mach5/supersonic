@@ -1,4 +1,4 @@
-<h2 class="div">getAvatar</h2>
+<h2 class="div"><a name="getAvatar"></a>getAvatar</h2>
 
 <p>
     <code>http://your-server/rest/getAvatar.view</code>

@@ -1,4 +1,4 @@
-<h2 class="div">getPodcasts</h2>
+<h2 class="div"><a name="getPodcasts"></a>getPodcasts</h2>
 
 <p>
     <code>http://your-server/rest/getPodcasts.view</code>

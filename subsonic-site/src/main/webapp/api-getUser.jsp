@@ -1,4 +1,4 @@
-<h2 class="div">getUser</h2>
+<h2 class="div"><a name="getUser"></a>getUser</h2>
 
 <p>
     <code>http://your-server/rest/getUser.view</code>

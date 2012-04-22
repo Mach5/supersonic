@@ -1,4 +1,4 @@
-<h2 class="div">ping</h2>
+<h2 class="div"><a name="ping"></a>ping</h2>
 
 <p>
     <code>http://your-server/rest/ping.view</code>

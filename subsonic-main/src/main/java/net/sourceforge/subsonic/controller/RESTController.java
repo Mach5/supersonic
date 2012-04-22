@@ -232,7 +232,6 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
 
-    // TODO: Document
     public void getArtists(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
@@ -262,7 +261,6 @@ public class RESTController extends MultiActionController {
         return attributes;
     }
 
-    // TODO: Document
     public void getArtist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
@@ -327,7 +325,6 @@ public class RESTController extends MultiActionController {
         return attributes;
     }
 
-    // TODO: Document
     public void getAlbum(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
@@ -356,7 +353,6 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
 
-    // TODO: Document
     public void getSong(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
@@ -497,7 +493,6 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
     
-    // TODO: Document
     public void search3(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
@@ -742,7 +737,6 @@ public class RESTController extends MultiActionController {
         }
     }
 
-    // TODO: Document
     public void updatePlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request, true);
         String username = securityService.getCurrentUsername(request);
@@ -898,7 +892,6 @@ public class RESTController extends MultiActionController {
         }
     }
 
-    // TODO: Document
     public void getAlbumList2(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
 
@@ -974,7 +967,6 @@ public class RESTController extends MultiActionController {
         }
     }
     
-    // TODO: Document
     public void getVideos(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
@@ -1199,12 +1191,10 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
 
-    // TODO: Document
     public void star(HttpServletRequest request, HttpServletResponse response) throws Exception {
         starOrUnstar(request, response, true);
     }
 
-    // TODO: Document
     public void unstar(HttpServletRequest request, HttpServletResponse response) throws Exception {
         starOrUnstar(request, response, false);
     }
@@ -1261,7 +1251,6 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
 
-    // TODO: Document
     public void getStarred(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);
@@ -1284,7 +1273,6 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
 
-    // TODO: Document
     public void getStarred2(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         Player player = playerService.getPlayer(request, response);

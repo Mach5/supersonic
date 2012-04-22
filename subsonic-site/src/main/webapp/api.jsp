@@ -236,12 +236,120 @@
     documentation for details.
 </p>
 
-<h1>List of API methods</h1>
+<h1>API method documentation</h1>
+
+<table width="100%" class="bottomspace">
+    <tr class="table-altrow">
+        <td>System</td>
+        <td>
+            <code><a href="#ping">ping</a></code>,
+            <code><a href="#getLicense">getLicense</a></code>
+        </td>
+    </tr>
+    <tr>
+        <td>Browsing</td>
+        <td>
+            <code><a href="#getMusicFolders">getMusicFolders</a></code>,
+            <code><a href="#getIndexes">getIndexes</a></code>,
+            <code><a href="#getMusicDirectory">getMusicDirectory</a></code>,
+            <code><a href="#getArtists">getArtists</a></code>,
+            <code><a href="#getArtist">getArtist</a></code>,
+            <code><a href="#getAlbum">getAlbum</a></code>,
+            <code><a href="#getSong">getSong</a></code>,
+            <code><a href="#getVideos">getVideos</a></code>
+        </td>
+    </tr>
+    <tr class="table-altrow">
+        <td>Album/song lists</td>
+        <td>
+            <code><a href="#getAlbumList">getAlbumList</a></code>,
+            <code><a href="#getAlbumList2">getAlbumList2</a></code>,
+            <code><a href="#getRandomSongs">getRandomSongs</a></code>,
+            <code><a href="#getNowPlaying">getNowPlaying</a></code>,
+            <code><a href="#getStarred">getStarred</a></code>,
+            <code><a href="#getStarred2">getStarred2</a></code>
+        </td>
+    </tr>
+    <tr>
+        <td>Searching</td>
+        <td>
+            <code><a href="#search">search</a></code>,
+            <code><a href="#search2">search2</a></code>,
+            <code><a href="#search3">search3</a></code>
+        </td>
+    </tr>
+    <tr class="table-altrow">
+        <td>Playlists</td>
+        <td>
+            <code><a href="#getPlaylists">getPlaylists</a></code>,
+            <code><a href="#getPlaylist">getPlaylist</a></code>,
+            <code><a href="#createPlaylist">createPlaylist</a></code>,
+            <code><a href="#updatePlaylist">updatePlaylist</a></code>,
+            <code><a href="#deletePlaylist">deletePlaylist</a></code>
+        </td>
+    </tr>
+    <tr>
+        <td>Media retrieval</td>
+        <td>
+            <code><a href="#stream">stream</a></code>,
+            <code><a href="#download">download</a></code>,
+            <code><a href="#getCoverArt">getCoverArt</a></code>,
+            <code><a href="#getLyrics">getLyrics</a></code>,
+            <code><a href="#getAvatar">getAvatar</a></code>
+        </td>
+    </tr>
+    <tr class="table-altrow">
+        <td>Media annotation</td>
+        <td>
+            <code><a href="#star">star</a></code>,
+            <code><a href="#unstar">unstar</a></code>,
+            <code><a href="#setRating">setRating</a></code>,
+            <code><a href="#scrobble">scrobble</a></code>
+        </td>
+    </tr>
+    <tr>
+        <td>Sharing</td>
+        <td>
+            <code><a href="#getShares">getShares</a></code>,
+            <code><a href="#createShare">createShare</a></code>,
+            <code><a href="#updateShare">updateShare</a></code>,
+            <code><a href="#deleteShare">deleteShare</a></code>
+        </td>
+    </tr>
+    <tr class="table-altrow">
+        <td>Podcast</td>
+        <td>
+            <code><a href="#getPodcasts">getPodcasts</a></code>
+        </td>
+    </tr>
+    <tr>
+        <td>Jukebox</td>
+        <td>
+            <code><a href="#jukeboxControl">jukeboxControl</a></code>
+        </td>
+    </tr>
+    <tr class="table-altrow">
+        <td>Chat</td>
+        <td>
+            <code><a href="#getChatMessages">getChatMessages</a></code>,
+            <code><a href="#addChatMessage">addChatMessage</a></code>
+        </td>
+    </tr>
+    <tr>
+        <td style="white-space: nowrap; padding-right: 0.6em">User management</td>
+        <td>
+            <code><a href="#getUser">getUser</a></code>,
+            <code><a href="#createUser">createUser</a></code>,
+            <code><a href="#deleteUser">deleteUser</a></code>,
+            <code><a href="#changePassword">changePassword</a></code>
+        </td>
+    </tr>
+</table>
 
 <%@ include file="api-ping.jsp" %>
 <%@ include file="api-getLicense.jsp" %>
+
 <%@ include file="api-getMusicFolders.jsp" %>
-<%@ include file="api-getNowPlaying.jsp" %>
 <%@ include file="api-getIndexes.jsp" %>
 <%@ include file="api-getMusicDirectory.jsp" %>
 <%@ include file="api-getArtists.jsp" %>
@@ -249,39 +357,51 @@
 <%@ include file="api-getAlbum.jsp" %>
 <%@ include file="api-getSong.jsp" %>
 <%@ include file="api-getVideos.jsp" %>
+
+<%@ include file="api-getAlbumList.jsp" %>
+<%@ include file="api-getAlbumList2.jsp" %>
+<%@ include file="api-getRandomSongs.jsp" %>
+<%@ include file="api-getNowPlaying.jsp" %>
+<%@ include file="api-getStarred.jsp" %>
+<%@ include file="api-getStarred2.jsp" %>
+
 <%@ include file="api-search.jsp" %>
 <%@ include file="api-search2.jsp" %>
 <%@ include file="api-search3.jsp" %>
+
 <%@ include file="api-getPlaylists.jsp" %>
 <%@ include file="api-getPlaylist.jsp" %>
 <%@ include file="api-createPlaylist.jsp" %>
 <%@ include file="api-updatePlaylist.jsp" %>
 <%@ include file="api-deletePlaylist.jsp" %>
-<%@ include file="api-download.jsp" %>
+
 <%@ include file="api-stream.jsp" %>
+<%@ include file="api-download.jsp" %>
 <%@ include file="api-getCoverArt.jsp" %>
-<%@ include file="api-getAvatar.jsp" %>
-<%@ include file="api-scrobble.jsp" %>
-<%@ include file="api-changePassword.jsp" %>
-<%@ include file="api-getUser.jsp" %>
-<%@ include file="api-createUser.jsp" %>
-<%@ include file="api-deleteUser.jsp" %>
-<%@ include file="api-getChatMessages.jsp" %>
-<%@ include file="api-addChatMessage.jsp" %>
-<%@ include file="api-getAlbumList.jsp" %>
-<%@ include file="api-getAlbumList2.jsp" %>
-<%@ include file="api-getRandomSongs.jsp" %>
 <%@ include file="api-getLyrics.jsp" %>
-<%@ include file="api-jukeboxControl.jsp" %>
-<%@ include file="api-getPodcasts.jsp" %>
+<%@ include file="api-getAvatar.jsp" %>
+
+<%@ include file="api-star.jsp" %>
+<%@ include file="api-unstar.jsp" %>
+<%@ include file="api-setRating.jsp" %>
+<%@ include file="api-scrobble.jsp" %>
+
+<%@ include file="api-getShares.jsp" %>
 <%@ include file="api-createShare.jsp" %>
 <%@ include file="api-updateShare.jsp" %>
 <%@ include file="api-deleteShare.jsp" %>
-<%@ include file="api-setRating.jsp" %>
-<%@ include file="api-star.jsp" %>
-<%@ include file="api-unstar.jsp" %>
-<%@ include file="api-getStarred.jsp" %>
-<%@ include file="api-getStarred2.jsp" %>
+
+<%@ include file="api-getPodcasts.jsp" %>
+
+<%@ include file="api-jukeboxControl.jsp" %>
+
+<%@ include file="api-getChatMessages.jsp" %>
+<%@ include file="api-addChatMessage.jsp" %>
+
+<%@ include file="api-getUser.jsp" %>
+<%@ include file="api-createUser.jsp" %>
+<%@ include file="api-deleteUser.jsp" %>
+<%@ include file="api-changePassword.jsp" %>
 
 </div>
 

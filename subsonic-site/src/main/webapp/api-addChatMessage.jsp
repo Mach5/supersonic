@@ -1,4 +1,4 @@
-<h2 class="div">addChatMessage</h2>
+<h2 class="div"><a name="addChatMessage"></a>addChatMessage</h2>
 
 <p>
     <code>http://your-server/rest/addChatMessage.view</code>

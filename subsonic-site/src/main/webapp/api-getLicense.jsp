@@ -1,4 +1,4 @@
-<h2 class="div">getLicense</h2>
+<h2 class="div"><a name="getLicense"></a>getLicense</h2>
 
 <p>
     <code>http://your-server/rest/getLicense.view</code>

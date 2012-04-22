@@ -1,4 +1,4 @@
-<h2 class="div">setRating</h2>
+<h2 class="div"><a name="setRating"></a>setRating</h2>
 
 <p>
     <code>http://your-server/rest/setRating.view</code>

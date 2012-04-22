@@ -1,4 +1,4 @@
-<h2 class="div">deleteUser</h2>
+<h2 class="div"><a name="deleteUser"></a>deleteUser</h2>
 
 <p>
     <code>http://your-server/rest/deleteUser.view</code>

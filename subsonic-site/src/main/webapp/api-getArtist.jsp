@@ -1,4 +1,4 @@
-<h2 class="div">getArtist</h2>
+<h2 class="div"><a name="getArtist"></a>getArtist</h2>
 
 <p>
     <code>http://your-server/rest/getArtist.view</code>

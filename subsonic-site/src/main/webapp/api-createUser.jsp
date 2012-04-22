@@ -1,4 +1,4 @@
-<h2 class="div">createUser</h2>
+<h2 class="div"><a name="createUser"></a>createUser</h2>
 
 <p>
     <code>http://your-server/rest/createUser.view</code>

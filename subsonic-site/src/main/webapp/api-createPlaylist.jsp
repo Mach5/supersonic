@@ -1,4 +1,4 @@
-<h2 class="div">createPlaylist</h2>
+<h2 class="div"><a name="createPlaylist"></a>createPlaylist</h2>
 
 <p>
     <code>http://your-server/rest/createPlaylist.view</code>

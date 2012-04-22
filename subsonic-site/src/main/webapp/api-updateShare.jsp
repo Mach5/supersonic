@@ -1,4 +1,4 @@
-<h2 class="div">updateShare</h2>
+<h2 class="div"><a name="updateShare"></a>updateShare</h2>
 <p>
     <code>http://your-server/rest/updateShare.view</code>
     <br>Since <a href="#versions">1.6.0</a>

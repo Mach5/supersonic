@@ -1,4 +1,4 @@
-<h2 class="div">getNowPlaying</h2>
+<h2 class="div"><a name="getNowPlaying"></a>getNowPlaying</h2>
 
 <p>
     <code>http://your-server/rest/getNowPlaying.view</code>

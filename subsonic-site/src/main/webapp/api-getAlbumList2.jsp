@@ -1,4 +1,4 @@
-<h2 class="div">getAlbumList2</h2>
+<h2 class="div"><a name="getAlbumList2"></a>getAlbumList2</h2>
 
 <p>
     <code>http://your-server/rest/getAlbumList2.view</code>

@@ -1,4 +1,4 @@
-<h2 class="div">getStarred</h2>
+<h2 class="div"><a name="getStarred"></a>getStarred</h2>
 
 <p>
     <code>http://your-server/rest/getStarred.view</code>

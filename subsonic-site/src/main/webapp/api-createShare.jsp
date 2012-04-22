@@ -1,4 +1,4 @@
-<h2 class="div">createShare</h2>
+<h2 class="div"><a name="createShare"></a>createShare</h2>
 <p>
     <code>http://your-server/rest/createShare.view</code>
     <br>Since <a href="#versions">1.6.0</a>

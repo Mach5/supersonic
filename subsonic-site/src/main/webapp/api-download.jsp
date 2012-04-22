@@ -1,4 +1,4 @@
-<h2 class="div">download</h2>
+<h2 class="div"><a name="download"></a>download</h2>
 
 <p>
     <code>http://your-server/rest/download.view</code>

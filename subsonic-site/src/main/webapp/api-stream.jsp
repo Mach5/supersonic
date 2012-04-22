@@ -1,4 +1,4 @@
-<h2 class="div">stream</h2>
+<h2 class="div"><a name="stream"></a>stream</h2>
 
 <p>
     <code>http://your-server/rest/stream.view</code>
