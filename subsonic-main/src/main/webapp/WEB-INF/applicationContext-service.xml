@@ -135,7 +135,7 @@
         <property name="settingsService" ref="settingsService"/>
     </bean>
 
-    <bean id="transcodingService" class="net.sourceforge.subsonic.service.TranscodingService">
+    <bean id="transcodingService" class="de.rjan.subsonic.service.CachedTranscodingService">
         <property name="transcodingDao" ref="transcodingDao"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="playerService" ref="playerService"/>

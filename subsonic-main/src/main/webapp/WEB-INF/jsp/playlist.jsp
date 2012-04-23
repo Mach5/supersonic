@@ -268,7 +268,7 @@
 
     function switchSong(player, url, format) {
 	if (player.canPlayType) {
-	    var formats = [format, "mp3", "webm", "aac", "ogg"];
+	    var formats = [format, "mp3", "ogg", "aac", "webm"];
 	    for (i=0; i<formats.length; i++) { 
 	        if (player.canPlayType(function (format) { switch(format) { case "mp3": return "audio/mpeg"; case "aac": case "m4a": return "audio/mp4"; case "ogg": case "oga": return "audio/ogg"; case "webm": return "audio/webm"; case "wav": return "audio/x-wav"; case "flac": return "audio/flac"; case "wma": return "audio/x-ms-wma"; } }(formats[i]))) {
 		     player.src = url + "&format=" + formats[i];

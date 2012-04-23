@@ -61,6 +61,8 @@ import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.Util;
 
+import de.rjan.subsonic.service.CachedTranscodingService;
+
 /**
  * A controller which streams the content of a {@link Playlist} to a remote
  * {@link Player}.
@@ -76,7 +78,7 @@ public class StreamController implements Controller {
     private PlaylistService playlistService;
     private SecurityService securityService;
     private SettingsService settingsService;
-    private TranscodingService transcodingService;
+    private CachedTranscodingService transcodingService;
     private AudioScrobblerService audioScrobblerService;
     private MediaFileService mediaFileService;
     private SearchService searchService;
@@ -180,26 +182,8 @@ public class StreamController implements Controller {
                 boolean estimateContentLength = ServletRequestUtils.getBooleanParameter(request, "estimateContentLength", false);
                 TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
                 long fileLength = getFileLength(parameters);
+                Util.setContentLength(response, fileLength);
                 boolean isConversion = parameters.isDownsample() || parameters.isTranscode();
-                if (isConversion) {
-		    ByteArrayOutputStream baout = new ByteArrayOutputStream();
-		    final int BUFFER_SIZE = 2048;
-		    byte[] buf = new byte[BUFFER_SIZE];
-		    byte[] buf2;
-		    int n = 0;
-		    n = in.read(buf);
-		    while (n>=0) {
-		        if (status.terminated()) {
-		            return null;
-		        }
-		        baout.write(buf,0,n);
-		        n = in.read(buf);
-		    }    
-		    buf2 = baout.toByteArray();
-		    fileLength = buf2.length;
-		    in = new ByteArrayInputStream(buf2);
-		    Util.setContentLength(response, fileLength);
-		}
                 if (range != null) {
                     LOG.info("Got range: " + range);
                     response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
@@ -209,9 +193,10 @@ public class StreamController implements Controller {
                     long firstBytePos = range.getMinimumLong();
                     long lastBytePos = maxLength - 1;
                     response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
-                } else if (!isConversion || estimateContentLength) {
+                } 
+                /* else if (!isConversion || estimateContentLength) {
                     Util.setContentLength(response, fileLength);
-                }
+                } */
             }
 
             final int BUFFER_SIZE = 2048;
@@ -223,14 +208,13 @@ public class StreamController implements Controller {
                 if (status.terminated()) {
                     return null;
                 }
-/*
                 if (player.getPlaylist().getStatus() == Playlist.Status.STOPPED) {
                     if (isPodcast || isSingleFile) {
                         break;
                     } else {
                         sendDummy(buf, out);
                     }
-                } else */ {
+                } else {
 
                     int n = in.read(buf);
                     if (n == -1) {
@@ -272,7 +256,11 @@ public class StreamController implements Controller {
 
         if (!parameters.isDownsample() && !parameters.isTranscode()) {
             return file.getFileSize();
-        }
+        } else {
+            long length = transcodingService.getTranscodedLength(parameters);
+            if (length > 0) return length;
+        }    
+
         Integer duration = file.getDurationSeconds();
         Integer maxBitRate = parameters.getMaxBitRate();
 
@@ -428,7 +416,7 @@ public class StreamController implements Controller {
         this.settingsService = settingsService;
     }
 
-    public void setTranscodingService(TranscodingService transcodingService) {
+    public void setTranscodingService(CachedTranscodingService transcodingService) {
         this.transcodingService = transcodingService;
     }
 
