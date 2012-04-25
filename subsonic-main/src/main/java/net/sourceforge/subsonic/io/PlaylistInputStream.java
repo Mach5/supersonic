@@ -127,7 +127,7 @@ public class PlaylistInputStream extends InputStream {
             }
 
             TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
-            currentInputStream = transcodingService.getTranscodedInputStream(parameters,status);
+            currentInputStream = transcodingService.getTranscodedInputStream(parameters);
             currentFile = file;
             status.setFile(currentFile.getFile());
         }

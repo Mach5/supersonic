@@ -488,21 +488,28 @@ public class TranscodingService {
         private Transcoding transcoding;
 
         public boolean equals(Object aThat) {
-		if (this == aThat) return true;
-		if (aThat instanceof Parameters) {
-			Parameters that=(Parameters)aThat;
-			return downsample==that.downsample &&
-				((mediaFile == null)? that.mediaFile==null : mediaFile.equals(that.mediaFile) ) &&
-				maxBitRate == that.maxBitRate &&
-				((transcoding == null)? that.transcoding==null : transcoding.equals(that.transcoding));
-
-		}
-		return false;
-	}
+            if (this == aThat) return true;
+            if (aThat instanceof Parameters) {
+                Parameters that=(Parameters)aThat;
+                return downsample==that.downsample &&
+                    ((mediaFile == null)? that.mediaFile==null : mediaFile.equals(that.mediaFile) ) &&
+				    maxBitRate == that.maxBitRate &&
+				    ((transcoding == null)? that.transcoding==null : transcoding.equals(that.transcoding));
+            }
+            return false;
+        }
 
         public Parameters(MediaFile mediaFile, VideoTranscodingSettings videoTranscodingSettings) {
             this.mediaFile = mediaFile;
             this.videoTranscodingSettings = videoTranscodingSettings;
+        }
+
+        public String toString() {
+            return "downsample: "+downsample+
+                " maxBitRate: "+maxBitRate+
+                " mediaFile: "+mediaFile+
+                " transcoding: "+transcoding+
+                " videoTranscSet: "+videoTranscodingSettings;
         }
 
         public void setMaxBitRate(Integer maxBitRate) {

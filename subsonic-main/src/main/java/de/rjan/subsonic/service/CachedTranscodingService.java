@@ -7,51 +7,42 @@ import net.sourceforge.subsonic.Logger;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.util.WeakHashMap;
+
+import org.apache.commons.io.output.ByteArrayOutputStream;
 
 public class CachedTranscodingService extends TranscodingService {
 	private static final Logger LOG = Logger.getLogger(CachedTranscodingService.class);
-	private static final WeakHashMap<Parameters, byte[]> transcodeCache = new WeakHashMap();
+	private static final WeakHashMap<Parameters, GrowingBufferIOStream> transcodeCache = new WeakHashMap();
 
     // since the hash map doesn't really work - keep at least the last file...
-    private Parameters lastParameters;
-    private byte[] lastTranscode;
+    private static Parameters lastParameters = null;
+    private static GrowingBufferIOStream lastTranscode = null;
 
-	public InputStream getTranscodedInputStream(Parameters parameters, TransferStatus status) throws IOException {
+	public InputStream getTranscodedInputStream(Parameters parameters) throws IOException {
         InputStream result;
         if (parameters.isDownsample() || parameters.isTranscode()) {
-            byte[] cachedBuffer = null; // = transcodeCache.get(parameters);
+            GrowingBufferIOStream cachedBuffer = null; // = transcodeCache.get(parameters);
             if (parameters.equals(lastParameters)) {
+                LOG.info("Found parameters " + ((lastTranscode == null)?"but lastTranscode null":"lastTranscode not null"));
                 cachedBuffer = lastTranscode;
             } else {
                 if (lastParameters == null) LOG.info("Last parameters was null");
                 else if (!parameters.getMediaFile().equals(lastParameters.getMediaFile())) LOG.info("Mediafiles different old \"" + lastParameters.getMediaFile().getPath() + "\" new \"" + parameters.getMediaFile().getPath() + "\"");
+                else LOG.info("OldParameters: "+lastParameters+" NewParameters:"+parameters);
             }
             
             if (cachedBuffer == null) {
                 LOG.info("Didnt find parameters for file " + parameters.getMediaFile().getPath());
                 InputStream transcodeStream = super.getTranscodedInputStream(parameters);
-                ByteArrayOutputStream baout = new ByteArrayOutputStream();
-                byte[] buf = new byte[2048];
-                int n = 0;
-                n = transcodeStream.read(buf);
-                while (n>=0) {
-                    if (status.terminated()) {
-                        return null;
-                    }     
-
-                    baout.write(buf,0,n);
-                    n = transcodeStream.read(buf);
-                } 
-                cachedBuffer = baout.toByteArray();
-                lastTranscode = cachedBuffer;
+                cachedBuffer = new GrowingBufferIOStream(transcodeStream);
             } else {
                 LOG.info("Found parameters for file " + parameters.getMediaFile().getPath());
             }
+            lastTranscode = cachedBuffer;
             lastParameters = parameters;
             transcodeCache.put(parameters, cachedBuffer);
-            result = new ByteArrayInputStream(cachedBuffer);
+            result = cachedBuffer.getInputStream();
         } else {
             result=super.getTranscodedInputStream(parameters);
         }
@@ -59,12 +50,44 @@ public class CachedTranscodingService extends TranscodingService {
 	}
 
     public long getTranscodedLength(Parameters parameters) {
-        byte[] cachedBuffer = null; //transcodeCache.get(parameters);
+        GrowingBufferIOStream cachedBuffer = null; //transcodeCache.get(parameters);
         if (parameters.equals(lastParameters)) cachedBuffer=lastTranscode;
-        if (cachedBuffer == null)
+        else LOG.info("getTranscodedLength parameters don't match last:"+lastParameters+" new:"+parameters);
+        if (cachedBuffer == null) {
+            LOG.info("No cached buffer found - "+parameters.getMediaFile());
             return 0;
-        else
-            return cachedBuffer.length;
+        } else
+            return cachedBuffer.getLength();
+    }
+
+    private class GrowingBufferIOStream {
+        private InputStream transcodeStream;
+        private ByteArrayOutputStream baout;
+        private long length;
+
+        public GrowingBufferIOStream(InputStream tcStream) {
+            transcodeStream = tcStream;
+            baout = null;
+            length = 0;
+        }
+
+        private void createByteArray() throws IOException {
+            baout = new ByteArrayOutputStream();
+            length = baout.write(transcodeStream);
+            transcodeStream.close();
+            transcodeStream = null;
+        }
+
+        public synchronized InputStream getInputStream() throws IOException {
+            if (baout == null) {
+                createByteArray();
+            }
+            return new ByteArrayInputStream(baout.toByteArray());
+        }
+
+        public synchronized long getLength() {
+            return length;
+        }
     }
 
 };

@@ -164,6 +164,9 @@ public class StreamController implements Controller {
 
             in = new PlaylistInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, transcodingService,
                     audioScrobblerService, mediaFileService, searchService);
+            final int BUFFER_SIZE = 2048;
+            byte[] buf = new byte[BUFFER_SIZE];
+            in.read(buf,0,0); // read 0 bytes to initialize length
             OutputStream out = RangeOutputStream.wrap(response.getOutputStream(), range);
 
             // Enabled SHOUTcast, if requested.
@@ -198,9 +201,6 @@ public class StreamController implements Controller {
                     Util.setContentLength(response, fileLength);
                 } */
             }
-
-            final int BUFFER_SIZE = 2048;
-            byte[] buf = new byte[BUFFER_SIZE];
 
             while (true) {
 
@@ -258,6 +258,7 @@ public class StreamController implements Controller {
             return file.getFileSize();
         } else {
             long length = transcodingService.getTranscodedLength(parameters);
+            LOG.info("Got length "+length+" from TranscodingService");
             if (length > 0) return length;
         }    
 
