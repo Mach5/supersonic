@@ -7,37 +7,30 @@ import net.sourceforge.subsonic.Logger;
 import java.io.InputStream;
 import java.io.IOException;
 import java.io.ByteArrayInputStream;
-import java.util.WeakHashMap;
+import java.util.Iterator;
+import java.util.Collections;
+import org.apache.commons.collections.map.LRUMap;
+
+import java.util.Map;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 
 public class CachedTranscodingService extends TranscodingService {
 	private static final Logger LOG = Logger.getLogger(CachedTranscodingService.class);
-	private static final WeakHashMap<Parameters, GrowingBufferIOStream> transcodeCache = new WeakHashMap();
+	private static final Map transcodeCache = /* Collections.synchronizedMap( */ new LRUMap(10);
 
     // since the hash map doesn't really work - keep at least the last file...
     private static Parameters lastParameters = null;
     private static GrowingBufferIOStream lastTranscode = null;
-
+   
 	public InputStream getTranscodedInputStream(Parameters parameters) throws IOException {
         InputStream result;
         if (parameters.isDownsample() || parameters.isTranscode()) {
-            GrowingBufferIOStream cachedBuffer = null; // = transcodeCache.get(parameters);
-            if (parameters.equals(lastParameters)) {
-                LOG.info("Found parameters " + ((lastTranscode == null)?"but lastTranscode null":"lastTranscode not null"));
-                cachedBuffer = lastTranscode;
-            } else {
-                if (lastParameters == null) LOG.info("Last parameters was null");
-                else if (!parameters.getMediaFile().equals(lastParameters.getMediaFile())) LOG.info("Mediafiles different old \"" + lastParameters.getMediaFile().getPath() + "\" new \"" + parameters.getMediaFile().getPath() + "\"");
-                else LOG.info("OldParameters: "+lastParameters+" NewParameters:"+parameters);
-            }
-            
+            GrowingBufferIOStream cachedBuffer = (GrowingBufferIOStream)transcodeCache.get(parameters);
+
             if (cachedBuffer == null) {
-                LOG.info("Didnt find parameters for file " + parameters.getMediaFile().getPath());
                 InputStream transcodeStream = super.getTranscodedInputStream(parameters);
                 cachedBuffer = new GrowingBufferIOStream(transcodeStream);
-            } else {
-                LOG.info("Found parameters for file " + parameters.getMediaFile().getPath());
             }
             lastTranscode = cachedBuffer;
             lastParameters = parameters;
@@ -50,9 +43,7 @@ public class CachedTranscodingService extends TranscodingService {
 	}
 
     public long getTranscodedLength(Parameters parameters) {
-        GrowingBufferIOStream cachedBuffer = null; //transcodeCache.get(parameters);
-        if (parameters.equals(lastParameters)) cachedBuffer=lastTranscode;
-        else LOG.info("getTranscodedLength parameters don't match last:"+lastParameters+" new:"+parameters);
+        GrowingBufferIOStream cachedBuffer = (GrowingBufferIOStream)transcodeCache.get(parameters);
         if (cachedBuffer == null) {
             LOG.info("No cached buffer found - "+parameters.getMediaFile());
             return 0;

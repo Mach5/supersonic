@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -487,16 +488,12 @@ public class TranscodingService {
         private Integer maxBitRate;
         private Transcoding transcoding;
 
-        public boolean equals(Object aThat) {
-            if (this == aThat) return true;
-            if (aThat instanceof Parameters) {
-                Parameters that=(Parameters)aThat;
-                return downsample==that.downsample &&
-                    ((mediaFile == null)? that.mediaFile==null : mediaFile.equals(that.mediaFile) ) &&
-				    maxBitRate == that.maxBitRate &&
-				    ((transcoding == null)? that.transcoding==null : transcoding.equals(that.transcoding));
-            }
-            return false;
+        public boolean equals(Object that) {
+            return that instanceof Parameters &&
+                downsample==((Parameters)that).downsample &&
+                (maxBitRate == null) ? ((Parameters)that).maxBitRate == null : maxBitRate.equals(((Parameters)that).maxBitRate) &&
+                (mediaFile == null) ? (((Parameters)that).mediaFile==null) : mediaFile.equals(((Parameters)that).mediaFile) &&
+                (transcoding == null) ? (((Parameters)that).transcoding==null ) : transcoding.equals(((Parameters)that).transcoding);
         }
 
         public Parameters(MediaFile mediaFile, VideoTranscodingSettings videoTranscodingSettings) {
@@ -512,6 +509,16 @@ public class TranscodingService {
                 " videoTranscSet: "+videoTranscodingSettings;
         }
 
+        public int hashCode() {
+            try {
+                java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+                md.update(toString().getBytes());
+                return (new java.math.BigInteger(md.digest()).intValue());
+            } catch (java.security.NoSuchAlgorithmException e) {
+                return super.hashCode();
+            }
+        }
+        
         public void setMaxBitRate(Integer maxBitRate) {
             this.maxBitRate = maxBitRate;
         }
