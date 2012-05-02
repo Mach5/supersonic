@@ -314,4 +314,8 @@ public class PlayerService {
     public void setTranscodingService(TranscodingService transcodingService) {
         this.transcodingService = transcodingService;
     }
+
+    public List<Transcoding> getTranscodingsForPlayer(Player player) {
+        return transcodingService.getTranscodingsForPlayer(player);
+    }
 }
