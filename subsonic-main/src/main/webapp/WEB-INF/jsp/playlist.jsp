@@ -288,9 +288,11 @@
             if (songs.length > 0) {
                 skip(0);
             }
-        } else {
-            switchSong(player1, songs[0].streamUrl, songs[0].format);
-	}
+        } 
+        else {
+            if (player.src == "")
+                switchSong(player1, songs[0].streamUrl, songs[0].format);
+	    }
         updateCurrentImage();
         if (songs.length == 0) {
             player1.pause();
