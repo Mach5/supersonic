@@ -45,7 +45,7 @@
                 <ul class="stars column-right">
                     <li><a href="#subsonictv">SubsonicTV</a> for Roku</li>
                     <li><a href="#subsonicchannel">Subsonic Channel</a> for Roku</li>
-                    <li><a href="#xo">XO</a> for webOS</li>
+                    <li><a href="#xo">XO</a> for webOS and BlackBerry PlayBook</li>
                 </ul>
             </div>
 
@@ -364,11 +364,10 @@
                             <li>Runs on most Chumby-powered devices.</li>
                             <li>Long-term development road map.</li>
                             <li>Fully functional free trial.</li>
-                            <li>Only $5.99</li>
                         </ul>
 
                         <p>
-                            Subsonic for Chumby is provided by <a href="http://subsonic.develephant.net/">develephant</a>.
+                            Subsonic for Chumby is provided free of charge by <a href="http://subsonic.develephant.net/">develephant</a>.
                         </p>
                     </div>
                 </div>
@@ -429,7 +428,7 @@
                         <a href="inc/img/screenshots/screen39.png"><img src="inc/img/screenshots/thumb39.png" alt="" class="img-right"/></a>
 
                         <p>
-                            <a href="https://developer.palm.com/appredirect/index.php?packageid=com.ericblade.xobeta">XO</a> is a free Subsonic app for webOS.
+                            <a href="https://developer.palm.com/appredirect/?packageid=com.ericblade.xo">XO</a> is a Subsonic app for webOS.
                         </p>
 
                         <p>
@@ -438,9 +437,8 @@
                         </p>
                                 
                         <p>
-                            This is a preview release intended for feedback purposes, and is not intended to be representative of the final product.
+                            It is also available for <a href="http://appworld.blackberry.com/webstore/content/88097/">BlackBerry PlayBook</a>.
                         </p>
-
                         <p>
                             XO is developed by Eric Blade.
                         </p>
