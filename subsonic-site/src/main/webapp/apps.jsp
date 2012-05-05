@@ -363,7 +363,6 @@
                             <li>Simple and responsive navigation system.</li>
                             <li>Runs on most Chumby-powered devices.</li>
                             <li>Long-term development road map.</li>
-                            <li>Fully functional free trial.</li>
                         </ul>
 
                         <p>
