@@ -34,6 +34,8 @@ Performance
 TODO IN 4.7
 -----------------
 Use port 4040/4443 on windows.
+Increase memory limit to 120MB.
+Limit functionality of playlist mgmt.
 getAlbumList returns both "title" and "album".
 REST doc: create getVideos example.
 Create complete test plan.
@@ -148,6 +150,8 @@ Improve caching of artist list.
 
 TODO IN ANDROID 3.4
 --------------------
+Patch "Host name cannot be null"
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/137195c3dc8510ad
 Support Bluetooth play/pause buttons in ICS.
 Problem if underscore/dash in server name.
   https://mail.google.com/mail/?shva=1#inbox/1365ef6ddc03e31a
@@ -922,8 +926,8 @@ http://code.google.com/p/mobbler/
 
 My address:
 Sindre Mehus
-Ogmunds vei 11
-0488 Oslo
+Saturnveien 9
+0492 Oslo
 Norway
 
 IBAN number: NO7297223688407
