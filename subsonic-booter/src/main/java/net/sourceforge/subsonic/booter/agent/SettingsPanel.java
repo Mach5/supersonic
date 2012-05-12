@@ -61,7 +61,7 @@ public class SettingsPanel extends JPanel implements SubsonicListener {
         contextPathComboBox.setSelectedItem(getContextPathFromOptionsFile());
         int httpsPort = getHttpsPortFromOptionsFile();
         boolean httpsEnabled = httpsPort != 0;
-        httpsPortTextField.setValue(httpsEnabled ? httpsPort : 443);
+        httpsPortTextField.setValue(httpsEnabled ? httpsPort : 4443);
         httpsPortTextField.setEnabled(httpsEnabled);
         httpsPortCheckBox.setSelected(httpsEnabled);
     }
@@ -156,7 +156,7 @@ public class SettingsPanel extends JPanel implements SubsonicListener {
         defaultButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 portTextField.setValue(SubsonicDeployer.DEFAULT_PORT);
-                httpsPortTextField.setValue(443);
+                httpsPortTextField.setValue(4443);
                 httpsPortTextField.setEnabled(false);
                 httpsPortCheckBox.setSelected(false);
                 memoryTextField.setValue(SubsonicDeployer.DEFAULT_MEMORY_LIMIT);

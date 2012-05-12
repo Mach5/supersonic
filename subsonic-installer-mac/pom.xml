@@ -54,7 +54,7 @@
                                                     name="Subsonic"
                                                     mainclass="net.sourceforge.subsonic.booter.Main"
                                                     arguments="-mac"
-                                                    vmoptions="-Xmx100m"
+                                                    vmoptions="-Xmx150m"
                                                     version="${project.version}"
                                                     jvmversion="1.5+"
                                                     jar="../subsonic-booter/target/subsonic-booter-jar-with-dependencies.jar"

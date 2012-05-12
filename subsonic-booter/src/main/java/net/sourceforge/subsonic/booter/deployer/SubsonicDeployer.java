@@ -26,7 +26,7 @@ import org.mortbay.jetty.webapp.WebAppContext;
  * The following system properties may be used to customize the behaviour:
  * <ul>
  * <li><code>subsonic.contextPath</code> - The context path at which Subsonic is deployed.  Default "/".</li>
- * <li><code>subsonic.port</code> - The port Subsonic will listen to.  Default 80.</li>
+ * <li><code>subsonic.port</code> - The port Subsonic will listen to.  Default 4040.</li>
  * <li><code>subsonic.httpsPort</code> - The port Subsonic will listen to for HTTPS.  Default 0, which disables HTTPS.</li>
  * <li><code>subsonic.war</code> - Subsonic WAR file, or exploded directory.  Default "subsonic.war".</li>
  * <li><code>subsonic.createLinkFile</code> - If set to "true", a Subsonic.url file is created in the working directory.</li>
@@ -39,9 +39,9 @@ import org.mortbay.jetty.webapp.WebAppContext;
 public class SubsonicDeployer implements SubsonicDeployerService {
 
     public static final String DEFAULT_HOST = "0.0.0.0";
-    public static final int DEFAULT_PORT = 80;
+    public static final int DEFAULT_PORT = 4040;
     public static final int DEFAULT_HTTPS_PORT = 0;
-    public static final int DEFAULT_MEMORY_LIMIT = 100;
+    public static final int DEFAULT_MEMORY_LIMIT = 150;
     public static final String DEFAULT_CONTEXT_PATH = "/";
     public static final String DEFAULT_WAR = "subsonic.war";
     private static final int MAX_IDLE_TIME_MILLIS = 7 * 24 * 60 * 60 * 1000; // One week.

@@ -18,7 +18,7 @@ REM  The context path (i.e., the last part of the Subsonic URL).  Typically "/" 
 set SUBSONIC_CONTEXT_PATH=/
 
 REM  The memory limit (max Java heap size) in megabytes.
-set MAX_MEMORY=100
+set MAX_MEMORY=150
 
 java -Xmx%MAX_MEMORY%m  -Dsubsonic.home=%SUBSONIC_HOME% -Dsubsonic.host=%SUBSONIC_HOST% -Dsubsonic.port=%SUBSONIC_PORT%  -Dsubsonic.httpsPort=%SUBSONIC_HTTPS_PORT% -Dsubsonic.contextPath=%SUBSONIC_CONTEXT_PATH% -jar subsonic-booter-jar-with-dependencies.jar
 
