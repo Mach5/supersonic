@@ -16,20 +16,30 @@
 <div id="main-col">
 <h1 class="bottomspace">Subsonic Change Log</h1>
 
-<a name="4.7.beta1"><h2 class="div">Subsonic 4.7.beta1 - Mar 10, 2012</h2></a>
+<a name="4.7.beta1"><h2 class="div">Subsonic 4.7.beta1 - May 12, 2012</h2></a>
 <ul>
     <li><span class="bugid">New: </span>Major rewrite of the Subsonic core. It now uses less memory and is significantly faster.</li>
+    <li><span class="bugid">New: </span>"Star" support for managing your favorite artists, albums and songs.</li>
+    <li><span class="bugid">New: </span>Much improved playlist support: private/shared playlists, improved user interface.</li>
     <li><span class="bugid">New: </span>Added option <em>Settings &gt; Media folders &gt; Fast access mode</em> which additionally improves performance for network disks.</li>
-    <li><span class="bugid">New: </span>Use ffmpeg rather than lame for downsampling.</li>
     <li><span class="bugid">New: </span>Show media folder scanning status.</li>
+    <li><span class="bugid">New: </span>New albums lists: Starred and All.</li>
+    <li><span class="bugid">New: </span>Use ffmpeg rather than lame for downsampling.</li>
     <li><span class="bugid">New: </span>Added Polish translation, courtesy of Micha&#322; Kotas</li>
     <li><span class="bugid">New: </span>Added Catalan translation, courtesy of Josep Santal&oacute;.</li>
+    <li><span class="bugid">New: </span>Added Estonian translation, courtesy of Olav M&auml;gi.</li>
+    <li><span class="bugid">New: </span>Updated Dutch translation, courtesy of W. van der Heijden.</li>
+    <li><span class="bugid">New: </span>Updated Swedish translation, courtesy of Fritte Jensen.</li>
+    <li><span class="bugid">New: </span>Updated Catalan translation, courtesy of Josep Santalo.</li>
     <li><span class="bugid">New: </span>Added option to reset and email forgotten password or username.</li>
     <li><span class="bugid">New: </span>Make it configurable to run as a different user than root in Linux RPM.</li>
     <li><span class="bugid">New: </span>Display warning if running as root user.</li>
     <li><span class="bugid">New: </span>Avoid false alarms from Windows virus scanners.</li>
     <li><span class="bugid">Bugfix: </span>Fixed problem with players being associated to wrong users.</li>
     <li><span class="bugid">Bugfix: </span>Serve generic cover art if failing to scale original.</li>
+    <li><span class="bugid">REST: </span>Full support for accessing the media collection organized according to ID3 tags, rather than file structure.</li>
+    <li><span class="bugid">REST: </span>Added starring and playlist management.</li>
+    <li><span class="bugid">REST: </span>Added disc number, creation date and media type.</li>
     <li><span class="bugid">REST: </span>Suppress content length estimation by default. Added "estimateContentLength" parameter to stream method.</li>
     <li><span class="bugid">REST: </span>Added getAvatar method.</li>
     <li><span class="bugid">REST: </span>Added "shareRole" to createUser</li>
@@ -37,6 +47,7 @@
     <li><span class="bugid">REST: </span>Fixed a problem with the "u" and "p" parameters sometimes not being used if the JSESSIONID cookie is present.</li>
     <li><span class="bugid">REST: </span>Stream method now supports HEAD requests.</li>
     <li><span class="bugid">REST: </span>Use shorter IDs.</li>
+    <li><span class="bugid">Tech: </span>Use port 4040 by default for new Windows installs.</li>
 </ul>
 
 <a name="4.6"><h2 class="div">Subsonic 4.6 - Dec 06, 2011</h2></a>

@@ -2,10 +2,6 @@
 DONE IN 4.7
 -----------------
 Improvements to lyrics search, courtesy of Juan Carlos Díaz.
-Added Estonian translation, courtesy of Olav Mägi.
-Updated Dutch translation, courtesy of W. van der Heijden.
-Updated Swedish translation, courtesy of Fritte Jensen.
-Updated Catalan translation, courtesy of Josep Santalo.
 Update Lucene index concurrently, not afterwards.
 Fixed missing db table indexes.
 Use Lucene for random song/album search.
@@ -26,7 +22,6 @@ Update playCount, lastPlayed in Album table.
 Remove MediaFileService.getFirstChild.
 Create MediaType music, audiobook and podcast.
 REST: Optional username parameter in getPlaylists method
-Starring
 Playlist
 ID3
 Performance
@@ -39,7 +34,7 @@ Bugs:
 - Add description if nothing is starred.
 - Should avoid duplicates in Home > Random albums
 
-Update changelog.jsp
+Update documention wrt port 4040 on Windows.
 getAlbumList returns both "title" and "album".
 REST doc: create getVideos example.
 Create complete test plan.
