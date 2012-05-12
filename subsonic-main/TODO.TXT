@@ -33,9 +33,12 @@ Performance
 
 TODO IN 4.7
 -----------------
+Bugs:
+- Add description if nothing is starred.
+- Should avoid duplicates in Home > Random albums
+
 Use port 4040/4443 on windows.
 Increase memory limit to 120MB.
-Limit functionality of playlist mgmt.
 getAlbumList returns both "title" and "album".
 REST doc: create getVideos example.
 Create complete test plan.
@@ -70,6 +73,9 @@ Fix broken REST scrobbling, as reported by Ben.
 Optionally, create "Clean database" setting
 -
 
+HTTP Live Streaming
+  ffmpeg segmenting
+  https://mail.google.com/mail/?tab=cm#inbox/1373a3cb757515ee
 Evaluate HTML5.
 Extend demo music, and add video.
 Support ISO files.

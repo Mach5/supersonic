@@ -767,16 +767,17 @@ public class RESTController extends MultiActionController {
             }
             playlistService.updatePlaylist(playlist);
 
-            for (String usernameToAdd : ServletRequestUtils.getStringParameters(request, "usernameToAdd")) {
-                if (securityService.getUserByName(usernameToAdd) != null) {
-                    playlistService.addPlaylistUser(id, usernameToAdd);
-                }
-            }
-            for (String usernameToRemove : ServletRequestUtils.getStringParameters(request, "usernameToRemove")) {
-                if (securityService.getUserByName(usernameToRemove) != null) {
-                    playlistService.deletePlaylistUser(id, usernameToRemove);
-                }
-            }
+            // TODO: Add later
+//            for (String usernameToAdd : ServletRequestUtils.getStringParameters(request, "usernameToAdd")) {
+//                if (securityService.getUserByName(usernameToAdd) != null) {
+//                    playlistService.addPlaylistUser(id, usernameToAdd);
+//                }
+//            }
+//            for (String usernameToRemove : ServletRequestUtils.getStringParameters(request, "usernameToRemove")) {
+//                if (securityService.getUserByName(usernameToRemove) != null) {
+//                    playlistService.deletePlaylistUser(id, usernameToRemove);
+//                }
+//            }
             List<MediaFile> songs = playlistService.getFilesInPlaylist(id);
             boolean songsChanged = false;
 

@@ -33,18 +33,19 @@
         <td></td>
         <td>The playlist comment.</td>
     </tr>
-    <tr>
-        <td><code>usernameToAdd</code></td>
-        <td>No</td>
-        <td></td>
-        <td>Allow this user to listen to this playlist. Multiple parameters allowed.</td>
-    </tr>
-    <tr class="table-altrow">
-        <td><code>usernameToRemove</code></td>
-        <td>No</td>
-        <td></td>
-        <td>Disallow this user to listen to this playlist. Multiple parameters allowed.</td>
-    </tr>
+    <%--TODO: Add later--%>
+    <%--<tr>--%>
+        <%--<td><code>usernameToAdd</code></td>--%>
+        <%--<td>No</td>--%>
+        <%--<td></td>--%>
+        <%--<td>Allow this user to listen to this playlist. Multiple parameters allowed.</td>--%>
+    <%--</tr>--%>
+    <%--<tr class="table-altrow">--%>
+        <%--<td><code>usernameToRemove</code></td>--%>
+        <%--<td>No</td>--%>
+        <%--<td></td>--%>
+        <%--<td>Disallow this user to listen to this playlist. Multiple parameters allowed.</td>--%>
+    <%--</tr>--%>
     <tr>
         <td><code>songIdToAdd</code></td>
         <td>No</td>
