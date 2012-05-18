@@ -30,6 +30,16 @@ Increase memory limit to 150MB.
 
 TODO IN 4.7
 -----------------
+Support adding directory root (c:\) as music folder.
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/1374cd4e20cefa21
+
+   The subsonic beta does not seem to handle files without meta data well
+   anymore. When I try to play an mp3 file that has no meta data a
+   completely blank entry is made in the playlist and the song does not
+   play. There is also no output in the subsonic.log of any kind of
+   problem. Also, once this "blank" entry is in the playlist you cannot
+   remove it without clearing the entire list
+
 Bugs:
 - Add description if nothing is starred.
 - Should avoid duplicates in Home > Random albums
