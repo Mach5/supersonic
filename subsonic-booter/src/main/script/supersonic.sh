@@ -216,6 +216,9 @@ while [ $# -ge 1 ]; do
              if [[ $TERM != --* && $TERM != "start" && $TERM != "stop" && $TERM != "restart" && $TERM != "status" ]]
              then
                  SUPERSONIC_SOUNDCARD_DEVICE="$SUPERSONIC_SOUNDCARD_DEVICE $TERM"
+             elif [[ $TERM != --soundcard-device=* ]]
+             then
+                 break
              fi
          done
          ;;
