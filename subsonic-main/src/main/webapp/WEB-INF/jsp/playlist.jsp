@@ -4,7 +4,6 @@
     <%@ include file="head.jsp" %>
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/swfobject.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/range.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/timer.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/slider.js"/>"></script>
@@ -61,26 +60,9 @@
     }
 
     function createPlayer() {
-        var flashvars = {
-            backcolor:"<spring:theme code="backgroundColor"/>",
-            frontcolor:"<spring:theme code="textColor"/>",
-            id:"player1"
-        };
-        var params = {
-            allowfullscreen:"true",
-            allowscriptaccess:"always"
-        };
-        var attributes = {
-            id:"player1",
-            name:"player1"
-        };
-        swfobject.embedSWF("<c:url value="/flash/jw-player-5.6.swf"/>", "placeholder", "340", "24", "9.0.0", false, flashvars, params, attributes);
     }
 
     function playerReady(thePlayer) {
-        player = $("player1");
-        player.addModelListener("STATE", "stateListener");
-        getPlaylist();
     }
 
     function stateListener(obj) { // IDLE, BUFFERING, PLAYING, PAUSED, COMPLETED
@@ -131,6 +113,11 @@
     }
     function onPrevious() {
         skip(parseInt(getCurrentSongIndex()) - 1);
+    }
+    function onStopWeb() {
+        player1.pause();
+        player1.currentTime=0;
+        playlistService.stop(playlistCallback);	
     }
     function onPlay(path) {
         startPlayer = true;
@@ -279,17 +266,35 @@
     </c:if>
     }
 
+    function switchSong(player, url, format) {
+	if (player.canPlayType) {
+	    var formats = [format];
+        <c:forEach var="f" items="${model.transcodings}">
+            formats.push("${f.targetFormat}");
+        </c:forEach>    
+	    for (i=0; i<formats.length; i++) { 
+	        if (player.canPlayType(function (format) { switch(format) { case "mp3": return "audio/mpeg"; case "aac": case "m4a": return "audio/mp4"; case "ogg": case "oga": return "audio/ogg"; case "webm": return "audio/webm"; case "wav": return "audio/x-wav"; case "flac": return "audio/flac"; case "wma": return "audio/x-ms-wma"; } }(formats[i]))) {
+		     player.src = url + "&format=" + formats[i];
+		     break;
+                }
+	    }	
+	} else {
+	    player.src = url;
+        }
+    }
     function triggerPlayer() {
         if (startPlayer) {
             startPlayer = false;
             if (songs.length > 0) {
                 skip(0);
             }
-        }
+        } else {
+            switchSong(player1, songs[0].streamUrl, songs[0].format);
+	}
         updateCurrentImage();
         if (songs.length == 0) {
-            player.sendEvent("LOAD", new Array());
-            player.sendEvent("STOP");
+            player1.pause();
+            player1.src = "";
         }
     }
 
@@ -315,8 +320,9 @@
             list[0].provider = "video";
         }
 
-        player.sendEvent("LOAD", list);
-        player.sendEvent("PLAY");
+	switchSong(player1, song.streamUrl, song.format);
+//	player1.load();
+	player1.play();
     }
 
     function updateCurrentImage() {
@@ -415,7 +421,17 @@
             </c:if>
             <c:if test="${model.player.web}">
                 <td style="width:340px; height:24px;padding-left:10px;padding-right:10px"><div id="placeholder">
-                    <a href="http://www.adobe.com/go/getflashplayer" target="_blank"><fmt:message key="playlist.getflash"/></a>
+
+                    <audio controls="controls" preload="auto" id="player1" width=340 height=24>
+		        Your browser does not support audio
+                    </audio>
+                    <script type="text/javascript">
+                        var player1=document.getElementById("player1");
+
+                        player1.addEventListener("ended", function () { onNext(repeatEnabled); });
+                        getPlaylist();
+
+                    </script>
                 </div></td>
             </c:if>
 
@@ -451,6 +467,7 @@
 
             <c:if test="${model.player.web}">
                 <td style="white-space:nowrap;"><a href="javascript:noop()" onclick="onPrevious()"><b>&laquo;</b></a></td>
+                <td style="white-space:nowrap;"><a href="javascript:noop()" onclick="onStopWeb()">Stop</a></td>
                 <td style="white-space:nowrap;"><a href="javascript:noop()" onclick="onNext(false)"><b>&raquo;</b></a> |</td>
             </c:if>
 

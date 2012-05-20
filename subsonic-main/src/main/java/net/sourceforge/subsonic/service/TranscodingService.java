@@ -39,6 +39,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -381,6 +382,7 @@ public class TranscodingService {
 
         List<Transcoding> applicableTranscodings = new LinkedList<Transcoding>();
         String suffix = mediaFile.getFormat();
+        if (preferredTargetFormat == null || preferredTargetFormat.isEmpty() || suffix.equalsIgnoreCase(preferredTargetFormat) ) return null;
 
         for (Transcoding transcoding : getTranscodingsForPlayer(player)) {
             for (String sourceFormat : transcoding.getSourceFormatsAsArray()) {
@@ -486,11 +488,37 @@ public class TranscodingService {
         private Integer maxBitRate;
         private Transcoding transcoding;
 
+        public boolean equals(Object that) {
+            return that instanceof Parameters &&
+                downsample==((Parameters)that).downsample &&
+                (maxBitRate == null) ? ((Parameters)that).maxBitRate == null : maxBitRate.equals(((Parameters)that).maxBitRate) &&
+                (mediaFile == null) ? (((Parameters)that).mediaFile==null) : mediaFile.equals(((Parameters)that).mediaFile) &&
+                (transcoding == null) ? (((Parameters)that).transcoding==null ) : transcoding.equals(((Parameters)that).transcoding);
+        }
+
         public Parameters(MediaFile mediaFile, VideoTranscodingSettings videoTranscodingSettings) {
             this.mediaFile = mediaFile;
             this.videoTranscodingSettings = videoTranscodingSettings;
         }
 
+        public String toString() {
+            return "downsample: "+downsample+
+                " maxBitRate: "+maxBitRate+
+                " mediaFile: "+mediaFile+
+                " transcoding: "+transcoding+
+                " videoTranscSet: "+videoTranscodingSettings;
+        }
+
+        public int hashCode() {
+            try {
+                java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+                md.update(toString().getBytes());
+                return (new java.math.BigInteger(md.digest()).intValue());
+            } catch (java.security.NoSuchAlgorithmException e) {
+                return super.hashCode();
+            }
+        }
+        
         public void setMaxBitRate(Integer maxBitRate) {
             this.maxBitRate = maxBitRate;
         }

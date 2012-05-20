@@ -18,9 +18,13 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import java.lang.Math;
 import java.awt.Dimension;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,6 +61,8 @@ import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.Util;
 
+import de.rjan.subsonic.service.CachedTranscodingService;
+
 /**
  * A controller which streams the content of a {@link Playlist} to a remote
  * {@link Player}.
@@ -72,7 +78,7 @@ public class StreamController implements Controller {
     private PlaylistService playlistService;
     private SecurityService securityService;
     private SettingsService settingsService;
-    private TranscodingService transcodingService;
+    private CachedTranscodingService transcodingService;
     private AudioScrobblerService audioScrobblerService;
     private MediaFileService mediaFileService;
     private SearchService searchService;
@@ -80,7 +86,7 @@ public class StreamController implements Controller {
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         TransferStatus status = null;
-        PlaylistInputStream in = null;
+        InputStream in = null;
         Player player = playerService.getPlayer(request, response, false, true);
         User user = securityService.getUserByName(player.getUsername());
 
@@ -128,25 +134,10 @@ public class StreamController implements Controller {
 
                 if (!file.isVideo()) {
                     response.setIntHeader("ETag", file.getId());
-                    response.setHeader("Accept-Ranges", "bytes");
                 }
 
-                TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
-                long fileLength = getFileLength(parameters);
-                boolean isConversion = parameters.isDownsample() || parameters.isTranscode();
-                boolean estimateContentLength = ServletRequestUtils.getBooleanParameter(request, "estimateContentLength", false);
 
                 range = getRange(request, file);
-                if (range != null) {
-                    LOG.info("Got range: " + range);
-                    response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
-                    Util.setContentLength(response, fileLength - range.getMinimumLong());
-                    long firstBytePos = range.getMinimumLong();
-                    long lastBytePos = fileLength - 1;
-                    response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
-                } else if (!isConversion || estimateContentLength) {
-                    Util.setContentLength(response, fileLength);
-                }
 
                 String transcodedSuffix = transcodingService.getSuffix(player, file, preferredTargetFormat);
                 response.setContentType(StringUtil.getMimeType(transcodedSuffix));
@@ -173,6 +164,9 @@ public class StreamController implements Controller {
 
             in = new PlaylistInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, transcodingService,
                     audioScrobblerService, mediaFileService, searchService);
+            final int BUFFER_SIZE = 2048;
+            byte[] buf = new byte[BUFFER_SIZE];
+            in.read(buf,0,0); // read 0 bytes to initialize length
             OutputStream out = RangeOutputStream.wrap(response.getOutputStream(), range);
 
             // Enabled SHOUTcast, if requested.
@@ -187,8 +181,26 @@ public class StreamController implements Controller {
                 out = new ShoutCastOutputStream(out, player.getPlaylist(), settingsService);
             }
 
-            final int BUFFER_SIZE = 2048;
-            byte[] buf = new byte[BUFFER_SIZE];
+            if (isSingleFile) {
+                boolean estimateContentLength = ServletRequestUtils.getBooleanParameter(request, "estimateContentLength", false);
+                TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
+                long fileLength = getFileLength(parameters);
+                Util.setContentLength(response, fileLength);
+                boolean isConversion = parameters.isDownsample() || parameters.isTranscode();
+                if (range != null) {
+                    LOG.info("Got range: " + range);
+                    response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+                    long maxLength = fileLength;
+                    if (maxLength>range.getMaximumLong()) maxLength=range.getMaximumLong()+1; 
+                    Util.setContentLength(response, Math.max(maxLength - range.getMinimumLong(),0));
+                    long firstBytePos = range.getMinimumLong();
+                    long lastBytePos = maxLength - 1;
+                    response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
+                } 
+                /* else if (!isConversion || estimateContentLength) {
+                    Util.setContentLength(response, fileLength);
+                } */
+            }
 
             while (true) {
 
@@ -196,7 +208,6 @@ public class StreamController implements Controller {
                 if (status.terminated()) {
                     return null;
                 }
-
                 if (player.getPlaylist().getStatus() == Playlist.Status.STOPPED) {
                     if (isPodcast || isSingleFile) {
                         break;
@@ -245,7 +256,12 @@ public class StreamController implements Controller {
 
         if (!parameters.isDownsample() && !parameters.isTranscode()) {
             return file.getFileSize();
-        }
+        } else {
+            long length = transcodingService.getTranscodedLength(parameters);
+            LOG.info("Got length "+length+" from TranscodingService");
+            if (length > 0) return length;
+        }    
+
         Integer duration = file.getDurationSeconds();
         Integer maxBitRate = parameters.getMaxBitRate();
 
@@ -401,7 +417,7 @@ public class StreamController implements Controller {
         this.settingsService = settingsService;
     }
 
-    public void setTranscodingService(TranscodingService transcodingService) {
+    public void setTranscodingService(CachedTranscodingService transcodingService) {
         this.transcodingService = transcodingService;
     }
 

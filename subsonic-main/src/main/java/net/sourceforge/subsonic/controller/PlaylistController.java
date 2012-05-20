@@ -58,6 +58,7 @@ public class PlaylistController extends ParameterizableViewController {
         map.put("players", playerService.getPlayersForUserAndClientId(user.getUsername(), null));
         map.put("visibility", userSettings.getPlaylistVisibility());
         map.put("partyMode", userSettings.isPartyModeEnabled());
+        map.put("transcodings", playerService.getTranscodingsForPlayer(player));
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
         return result;

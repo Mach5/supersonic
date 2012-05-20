@@ -55,6 +55,14 @@ public class Schema46 extends Schema {
                     "'ogg oga aac m4a flac wav wma aif aiff ape mpc shn', 'mp3', " +
                     "'ffmpeg -i %s -ab %bk -v 0 -f mp3 -', null, null)");
 
+            template.execute("insert into transcoding2 values(null,'ogg audio'," +
+                    "'mp3 aac m4a flac wav wma aif aiff ape mpc shn', 'ogg', " +
+                    "'ffmpeg -i %s -ab %bk -v 0 -acodec libvorbis -f ogg -', null, null)");
+
+            template.execute("insert into transcoding2 values(null,'webm audio'," +
+                    "'mp3 ogg oga aac m4a flac wav wma aif aiff ape mpc shn', 'webm', " +
+                    "'ffmpeg -i %s -ab %bk -v 0 -acodec libvorbis -f webm -', null, null)");
+
             template.execute("insert into transcoding2 values(null,'flv/h264 video', " +
                     "'avi mpg mpeg mp4 m4v mkv mov wmv ogv divx m2ts', 'flv', " +
                     "'ffmpeg -ss %o -i %s -async 1 -b %bk -s %wx%h -ar 44100 -ac 2 -v 0 -f flv -vcodec libx264 -preset superfast -threads 0 -', null, null)");

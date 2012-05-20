@@ -30,6 +30,8 @@ import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
 import net.sourceforge.subsonic.service.TranscodingService;
 
+import de.rjan.subsonic.service.CachedTranscodingService;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -48,7 +50,7 @@ public class PlaylistInputStream extends InputStream {
     private final Integer maxBitRate;
     private final String preferredTargetFormat;
     private final VideoTranscodingSettings videoTranscodingSettings;
-    private final TranscodingService transcodingService;
+    private final CachedTranscodingService transcodingService;
     private final AudioScrobblerService audioScrobblerService;
     private final MediaFileService mediaFileService;
     private MediaFile currentFile;
@@ -56,7 +58,7 @@ public class PlaylistInputStream extends InputStream {
     private SearchService searchService;
 
     public PlaylistInputStream(Player player, TransferStatus status, Integer maxBitRate, String preferredTargetFormat,
-                               VideoTranscodingSettings videoTranscodingSettings, TranscodingService transcodingService,
+                               VideoTranscodingSettings videoTranscodingSettings, CachedTranscodingService transcodingService,
                                AudioScrobblerService audioScrobblerService, MediaFileService mediaFileService, SearchService searchService) {
         this.player = player;
         this.status = status;

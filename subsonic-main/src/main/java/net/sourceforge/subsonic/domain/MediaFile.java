@@ -415,7 +415,7 @@ public class MediaFile {
 
     @Override
     public boolean equals(Object o) {
-        return o instanceof MediaFile && ((MediaFile) o).path.equals(path);
+        return o instanceof MediaFile && id==((MediaFile) o).id;
     }
 
     @Override

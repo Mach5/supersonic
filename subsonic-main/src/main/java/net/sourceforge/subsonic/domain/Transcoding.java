@@ -204,15 +204,11 @@ public class Transcoding {
     }
 
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        return o instanceof Transcoding && ((Transcoding) o).targetFormat.equals(targetFormat);
+    }
 
-        Transcoding that = (Transcoding) o;
-        return !(id != null ? !id.equals(that.id) : that.id != null);
+    public String toString() {
+        return targetFormat;
     }
 
     public int hashCode() {

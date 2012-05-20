@@ -78,6 +78,7 @@ public final class StringUtil {
             {"ape", "audio/x-monkeys-audio"},
             {"mpc", "audio/x-musepack"},
             {"shn", "audio/x-shn"},
+            {"webm", "audio/webm"},
 
             {"flv", "video/x-flv"},
             {"avi", "video/avi"},

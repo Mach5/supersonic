@@ -111,7 +111,7 @@ public class RangeOutputStream extends FilterOutputStream {
             if (newPos >= start) {
                 // We are so check to make sure we don't leave it
                 if (newPos + newLen > end) {
-                    newLen = end - newPos;
+                    newLen = end - newPos + 1;
                 }
 
                 // Enable writing
@@ -130,7 +130,7 @@ public class RangeOutputStream extends FilterOutputStream {
 
                 // Make sure we don't go past the range
                 if (newPos + newLen > end) {
-                    newLen = end - newPos;
+                    newLen = end - newPos + 1;
                 }
 
                 // Enable writting
