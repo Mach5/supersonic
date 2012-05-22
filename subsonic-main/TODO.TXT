@@ -1,44 +1,10 @@
 
-DONE IN 4.7
------------------
-Improvements to lyrics search, courtesy of Juan Carlos Díaz.
-Update Lucene index concurrently, not afterwards.
-Fixed missing db table indexes.
-Use Lucene for random song/album search.
-Never remove rows from media_file, set present=false instead.
-  Would make IDs really permanent
-  Simplify archiving stuff.
-  Don't need media_file_archive longer.  Copy from music_file_info when creating new rows.
-  Add lastScanned timestamp, use this to set stuff to not present after scanning.
-  Use "present" in album list and other queries. MAKE SURE THESE WORK FIRST!
-Support old-style IDs in REST API.
-Always use fast access mode in LeftController.
-  Refactor accessMode in MediaFileService.
-Create new album list type: alphabetic, starred
-Top Rated is broken.
-MetaDataParer.guessArtist etc: Don't return empty strings.
-Added "created" and "discNumber" to Child in REST xsd
-Update playCount, lastPlayed in Album table.
-Remove MediaFileService.getFirstChild.
-Create MediaType music, audiobook and podcast.
-REST: Optional username parameter in getPlaylists method
-Playlist
-ID3
-Performance
-Use port 4040/4443 on windows.
-Increase memory limit to 150MB.
-
 TODO IN 4.7
 -----------------
 Support adding directory root (c:\) as music folder.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/1374cd4e20cefa21
 
-   The subsonic beta does not seem to handle files without meta data well
-   anymore. When I try to play an mp3 file that has no meta data a
-   completely blank entry is made in the playlist and the song does not
-   play. There is also no output in the subsonic.log of any kind of
-   problem. Also, once this "blank" entry is in the playlist you cannot
-   remove it without clearing the entire list
+Don't display "null" as artist in now playing.
 
 Bugs:
 - Add description if nothing is starred.

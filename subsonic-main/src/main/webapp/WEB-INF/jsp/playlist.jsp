@@ -95,6 +95,9 @@
         }
 
         function truncate(s) {
+            if (s == null) {
+                return s;
+            }
             var cutoff = 30;
 
             if (s.length > cutoff) {

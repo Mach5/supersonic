@@ -388,6 +388,9 @@
     }
 
     function truncate(s) {
+        if (s == null) {
+            return s;
+        }
         var cutoff = ${model.visibility.captionCutoff};
 
         if (s.length > cutoff) {
