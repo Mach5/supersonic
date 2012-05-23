@@ -1,8 +1,6 @@
 
 TODO IN 4.7
 -----------------
-Support adding directory root (c:\) as music folder.
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/1374cd4e20cefa21
 
 Don't display "null" as artist in now playing.
 
