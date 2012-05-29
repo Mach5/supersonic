@@ -2,6 +2,7 @@ DONE IN 4.7.beta2
 -----------------
 Handle media files without any tags.
 Added Czech translation, courtesy of Robert Ilyk.
+Sort albums by year.
 Show album year.
 
 TODO IN 4.7.beta2
@@ -10,7 +11,6 @@ TODO IN 4.7.beta2
 Don't display "null" as artist in now playing.
 Playlist export/import.
 
-Sort albums by year, if possible. And show year?
 Display album name or directory?
     http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&p=41514#p41514
 Bugs:

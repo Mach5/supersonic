@@ -617,6 +617,16 @@ public class MediaFileService {
                 return -1;
             }
 
+            if (a.isAlbum() && b.isAlbum() && (a.getYear() != null || b.getYear() != null)) {
+                if (a.getYear() == null) {
+                    return 1;
+                }
+                if (b.getYear() == null) {
+                    return -1;
+                }
+                return b.getYear().compareTo(a.getYear());
+            }
+
             if (a.isDirectory() && b.isDirectory()) {
                 return a.getName().compareToIgnoreCase(b.getName());
             }
