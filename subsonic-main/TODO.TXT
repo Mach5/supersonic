@@ -2,8 +2,7 @@ DONE IN 4.7.beta2
 -----------------
 Handle media files without any tags.
 Added Czech translation, courtesy of Robert Ilyk.
-
-
+Show album year.
 
 TODO IN 4.7.beta2
 -----------------

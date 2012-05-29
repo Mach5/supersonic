@@ -306,9 +306,10 @@
                             <sub:url value="main.view" var="childUrl">
                                 <sub:param name="id" value="${child.id}"/>
                             </sub:url>
-                            <td style="padding-left:0.25em" colspan="4">
+                            <td style="padding-left:0.25em" colspan="3">
                                 <a href="${childUrl}" title="${child.name}"><span style="white-space:nowrap;"><str:truncateNicely upper="${cutoff}">${child.name}</str:truncateNicely></span></a>
                             </td>
+                            <td style="padding-left:1.25em"><c:if test="${not empty child.year}"><span class="detail">${child.year}</span></c:if></td>
                         </c:when>
 
                         <c:otherwise>
