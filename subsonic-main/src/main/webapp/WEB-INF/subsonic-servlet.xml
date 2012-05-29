@@ -40,6 +40,12 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
+    <bean id="importPlaylistController" class="net.sourceforge.subsonic.controller.ImportPlaylistController">
+        <property name="viewName" value="importPlaylist"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="playlistService" ref="playlistService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
+    </bean>
     <bean id="topController" class="net.sourceforge.subsonic.controller.TopController">
         <property name="viewName" value="top"/>
         <property name="settingsService" ref="settingsService"/>
@@ -384,6 +390,7 @@
                 <prop key="/status.view">statusController</prop>
                 <prop key="/more.view">moreController</prop>
                 <prop key="/upload.view">uploadController</prop>
+                <prop key="/importPlaylist.view">importPlaylistController</prop>
                 <prop key="/setMusicFileInfo.view">setMusicFileInfoController</prop>
                 <prop key="/createShare.view">shareManagementController</prop>
                 <prop key="/setRating.view">setRatingController</prop>

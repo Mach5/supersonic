@@ -92,6 +92,7 @@
 <div style='padding-left:0.5em'>
     <div id="playlists"></div>
     <div style="margin-top: 0.3em"><a href="javascript:noop()" onclick="createEmptyPlaylist()"><fmt:message key="left.createplaylist"/></a></div>
+    <div><a href="importPlaylist.view" target="main"><fmt:message key="left.importplaylist"/></a></div>
 </div>
 
 <c:if test="${not empty model.radios}">
