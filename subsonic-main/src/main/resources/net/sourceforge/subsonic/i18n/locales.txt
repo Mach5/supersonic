@@ -46,6 +46,9 @@ pl
 # Bulgarian
 bg
 
+# Czech
+cs
+
 # Simplified Chinese
 zh_CN
 
