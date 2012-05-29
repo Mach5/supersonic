@@ -4,19 +4,24 @@ TODO IN 4.7
 
 Don't display "null" as artist in now playing.
 
+Sort albums by year, if possible. And show year?
+Display album name or directory?
+  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&start=60
+
 Bugs:
 - Add description if nothing is starred.
 - Should avoid duplicates in Home > Random albums
 
 Subclient:
   https://mail.google.com/mail/?ui=2&shva=1#inbox/1372395d5c49e70d
+  http://www.subclient.net
 Hypersonic:
   https://mail.google.com/mail/?ui=2&shva=1#inbox/1372e41e5e9b09d8
+Periscope:
+  https://mail.google.com/mail/?tab=cm#inbox/1354a2895d7f4f46
 Update documention wrt port 4040 on Windows.
 getAlbumList returns both "title" and "album".
 REST doc: create getVideos example.
-Create complete test plan.
-Test upgrade 4.6->4.7
 
 Postponed:
   - Playlist export/import.
@@ -32,7 +37,6 @@ Postponed:
   - Update apps to include PlayBook version.
   - REST: Add example links to demo server.
   - Blacklist abusers of my email.
-  - Update subsonic-tools.
   - Eliminate HomeController.Album.
   - Clicking play button on a video podcast doesn't work.
 
