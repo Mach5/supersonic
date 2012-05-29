@@ -1,13 +1,13 @@
 
-TODO IN 4.7
+TODO IN 4.7.beta2
 -----------------
 
 Don't display "null" as artist in now playing.
+Playlist export/import.
 
 Sort albums by year, if possible. And show year?
 Display album name or directory?
-  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&start=60
-
+    http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&p=41514#p41514
 Bugs:
 - Add description if nothing is starred.
 - Should avoid duplicates in Home > Random albums
@@ -24,7 +24,6 @@ getAlbumList returns both "title" and "album".
 REST doc: create getVideos example.
 
 Postponed:
-  - Playlist export/import.
   - Show toast when saving queue as playlist (and when saving settings)
   - Increase line height in playlist.jsp
   - Rename RandomPlaylistController, PlaylistInputStream.
