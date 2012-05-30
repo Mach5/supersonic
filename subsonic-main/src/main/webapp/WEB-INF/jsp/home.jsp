@@ -5,11 +5,20 @@
     <%@ include file="head.jsp" %>
     <%@ include file="jquery.jsp" %>
     <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
-    <c:if test="${model.listType eq 'random'}">
-        <meta http-equiv="refresh" content="20">
-    </c:if>
+
+    <script type="text/javascript" language="javascript">
+        function init() {
+        <c:if test="${model.listType eq 'random'}">
+            setTimeout("refresh()", 20000);
+        </c:if>
+        }
+
+        function refresh() {
+            top.main.location.href = top.main.location.href;
+        }
+    </script>
 </head>
-<body class="mainframe bgcolor1">
+<body class="mainframe bgcolor1" onload="init();">
 <h1>
     <img src="<spring:theme code="homeImage"/>" alt="">
     ${model.welcomeTitle}

@@ -50,7 +50,6 @@ public class ImportPlaylistController extends ParameterizableViewController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
 
-        // Is this a file upload request?
         try {
             if (ServletFileUpload.isMultipartContent(request)) {
 
