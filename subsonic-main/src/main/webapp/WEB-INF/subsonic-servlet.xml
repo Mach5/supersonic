@@ -44,7 +44,6 @@
         <property name="viewName" value="importPlaylist"/>
         <property name="securityService" ref="securityService"/>
         <property name="playlistService" ref="playlistService"/>
-        <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
     <bean id="topController" class="net.sourceforge.subsonic.controller.TopController">
         <property name="viewName" value="top"/>

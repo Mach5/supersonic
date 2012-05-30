@@ -10,10 +10,28 @@
     <fmt:message key="importPlaylist.title"/>
 </h1>
 
-<fmt:message key="importPlaylist.text"/>
+<c:if test="${not empty model.playlist}">
+    <p>
+        <fmt:message key="importPlaylist.success"><fmt:param value="${model.playlist.name}"/></fmt:message>
+        <script type="text/javascript" language="javascript">
+            top.left.updatePlaylists();
+        </script>
+    </p>
+</c:if>
+
+<c:if test="${not empty model.error}">
+    <p class="warning">
+        <fmt:message key="importPlaylist.error"><fmt:param value="${model.error}"/></fmt:message>
+    </p>
+</c:if>
+
+<div style="padding-bottom: 0.25em">
+    <fmt:message key="importPlaylist.text"/>
+</div>
 <form method="post" enctype="multipart/form-data" action="importPlaylist.view">
     <input type="file" id="file" name="file" size="40"/>
     <input type="submit" value="<fmt:message key="common.ok"/>"/>
 </form>
+
 
 </body></html>

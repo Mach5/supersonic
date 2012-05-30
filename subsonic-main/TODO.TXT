@@ -4,14 +4,16 @@ Handle media files without any tags.
 Added Czech translation, courtesy of Robert Ilyk.
 Sort albums by year.
 Show album year.
+Playlist import.
 
 TODO IN 4.7.beta2
 -----------------
-
+Avoid flashing refresh of home page.
+  https://mail.google.com/mail/?shva=1#inbox/13799a843b7ae8c1
 Don't display "null" as artist in now playing.
-Playlist export/import.
+Playlist export.
 
-Display album name or directory?
+Display directory name rather than album name?
     http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&p=41514#p41514
 Bugs:
 - Add description if nothing is starred.

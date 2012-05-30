@@ -18,25 +18,25 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.service.MediaFileService;
-import net.sourceforge.subsonic.service.PlaylistService;
-import net.sourceforge.subsonic.service.SecurityService;
-import net.sourceforge.subsonic.service.SettingsService;
-import net.sourceforge.subsonic.upload.MonitoredDiskFileItemFactory;
-import net.sourceforge.subsonic.upload.UploadListener;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.service.PlaylistService;
+import net.sourceforge.subsonic.service.SecurityService;
 
 /**
  * @author Sindre Mehus
@@ -45,33 +45,33 @@ public class ImportPlaylistController extends ParameterizableViewController {
 
     private SecurityService securityService;
     private PlaylistService playlistService;
-    private SettingsService settingsService;
-    private MediaFileService mediaFileService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
 
         // Is this a file upload request?
-        if (ServletFileUpload.isMultipartContent(request)) {
+        try {
+            if (ServletFileUpload.isMultipartContent(request)) {
 
-            FileItemFactory factory = new DiskFileItemFactory();
-            ServletFileUpload upload = new ServletFileUpload(factory);
-            List<?> items = upload.parseRequest(request);
-            for (Object o : items) {
-                FileItem item = (FileItem) o;
+                FileItemFactory factory = new DiskFileItemFactory();
+                ServletFileUpload upload = new ServletFileUpload(factory);
+                List<?> items = upload.parseRequest(request);
+                for (Object o : items) {
+                    FileItem item = (FileItem) o;
 
-                if ("file".equals(item.getFieldName())) {
-
-                    // TODO: Check max size.
-                    item.getSize();
-
-                    File file = new File(item.getString());
+                    if ("file".equals(item.getFieldName()) && !StringUtils.isBlank(item.getName())) {
+                        String playlistName = FilenameUtils.getBaseName(item.getName());
+                        String format = StringUtils.lowerCase(FilenameUtils.getExtension(item.getName()));
+                        String username = securityService.getCurrentUsername(request);
+                        Playlist playlist = playlistService.importPlaylist(username, playlistName, format, item.getInputStream());
+                        map.put("playlist", playlist);
+                    }
                 }
             }
-
+        } catch (Exception e) {
+            map.put("error", e.getMessage());
         }
-
 
         ModelAndView result = super.handleRequestInternal(request, response);
         result.addObject("model", map);
@@ -84,9 +84,5 @@ public class ImportPlaylistController extends ParameterizableViewController {
 
     public void setPlaylistService(PlaylistService playlistService) {
         this.playlistService = playlistService;
-    }
-
-    public void setMediaFileService(MediaFileService mediaFileService) {
-        this.mediaFileService = mediaFileService;
     }
 }
