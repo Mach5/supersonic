@@ -151,6 +151,8 @@
         | <a href="#" onclick="onEditPlaylist();"><fmt:message key="common.edit"/></a>
         | <a href="#" onclick="onDeletePlaylist();"><fmt:message key="common.delete"/></a>
     </c:if>
+    <c:url value="exportPlaylist.view" var="exportUrl"><c:param name="id" value="${model.playlist.id}"/></c:url>
+    | <a href="${exportUrl}"><fmt:message key="playlist2.export"/></a>
 
 </h2>
 

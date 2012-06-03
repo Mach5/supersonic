@@ -325,6 +325,7 @@
     <bean id="multiController" class="net.sourceforge.subsonic.controller.MultiController">
         <property name="securityService" ref="securityService"/>
         <property name="settingsService" ref="settingsService"/>
+        <property name="playlistService" ref="playlistService"/>
     </bean>
     <bean id="wapController" class="net.sourceforge.subsonic.controller.WapController">
         <property name="settingsService" ref="settingsService"/>
@@ -390,6 +391,7 @@
                 <prop key="/more.view">moreController</prop>
                 <prop key="/upload.view">uploadController</prop>
                 <prop key="/importPlaylist.view">importPlaylistController</prop>
+                <prop key="/exportPlaylist.view">multiController</prop>
                 <prop key="/setMusicFileInfo.view">setMusicFileInfoController</prop>
                 <prop key="/createShare.view">shareManagementController</prop>
                 <prop key="/setRating.view">setRatingController</prop>

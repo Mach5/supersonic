@@ -11,11 +11,11 @@ Display directory name rather than album name?
     http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&p=41514#p41514
 "R.E.M" displayed as "R.E"
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&p=41790#p41790
+Playlist export.
 
 TODO IN 4.7.beta2
 -----------------
 Don't display "null" as artist in now playing.
-Playlist export.
 Bugs:
 - Add description if nothing is starred.
 - Should avoid duplicates in Home > Random albums

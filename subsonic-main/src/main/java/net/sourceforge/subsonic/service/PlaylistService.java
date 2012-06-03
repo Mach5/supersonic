@@ -37,7 +37,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,6 +47,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.sun.org.apache.bcel.internal.classfile.ConstantString;
+
+import javax.servlet.ServletOutputStream;
 
 /**
  * Provides services for loading and saving playlists to and from persistent storage.
@@ -142,6 +146,11 @@ public class PlaylistService {
         return playlist;
     }
 
+    public void exportPlaylist(int id, ServletOutputStream out) throws Exception {
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StringUtil.ENCODING_UTF8));
+        new M3UFormat().format(getFilesInPlaylist(id), writer);
+    }
+
     public void setPlaylistDao(PlaylistDao playlistDao) {
         this.playlistDao = playlistDao;
     }
@@ -160,7 +169,7 @@ public class PlaylistService {
     private abstract static class PlaylistFormat {
         public abstract List<MediaFile> parse(BufferedReader reader, MediaFileService mediaFileService) throws IOException;
 
-        public abstract void savePlaylist(PlayQueue playQueue, PrintWriter writer) throws IOException;
+        public abstract void format(List<MediaFile> files, PrintWriter writer) throws IOException;
 
         public static PlaylistFormat getPlaylistFormat(String format) {
             if (format == null) {
@@ -212,9 +221,9 @@ public class PlaylistService {
             return result;
         }
 
-        public void savePlaylist(PlayQueue playQueue, PrintWriter writer) throws IOException {
+        public void format(List<MediaFile> files, PrintWriter writer) throws IOException {
             writer.println("#EXTM3U");
-            for (MediaFile file : playQueue.getFiles()) {
+            for (MediaFile file : files) {
                 writer.println(file.getPath());
             }
             if (writer.checkError()) {
@@ -246,11 +255,11 @@ public class PlaylistService {
             return result;
         }
 
-        public void savePlaylist(PlayQueue playQueue, PrintWriter writer) throws IOException {
+        public void format(List<MediaFile> files, PrintWriter writer) throws IOException {
             writer.println("[playlist]");
             int counter = 0;
 
-            for (MediaFile file : playQueue.getFiles()) {
+            for (MediaFile file : files) {
                 counter++;
                 writer.println("File" + counter + '=' + file.getPath());
             }
@@ -298,12 +307,12 @@ public class PlaylistService {
             return result;
         }
 
-        public void savePlaylist(PlayQueue playQueue, PrintWriter writer) throws IOException {
+        public void format(List<MediaFile> files, PrintWriter writer) throws IOException {
             writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             writer.println("<playlist version=\"1\" xmlns=\"http://xspf.org/ns/0/\">");
             writer.println("    <trackList>");
 
-            for (MediaFile file : playQueue.getFiles()) {
+            for (MediaFile file : files) {
                 writer.println("        <track><location>file://" + StringEscapeUtils.escapeXml(file.getPath()) + "</location></track>");
             }
             writer.println("    </trackList>");

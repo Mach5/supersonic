@@ -19,8 +19,10 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.PlaylistService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.StringUtil;
@@ -34,12 +36,15 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
+import org.springframework.web.bind.ServletRequestBindingException;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -56,6 +61,7 @@ public class MultiController extends MultiActionController {
 
     private SecurityService securityService;
     private SettingsService settingsService;
+    private PlaylistService playlistService;
 
     public ModelAndView login(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -179,6 +185,22 @@ public class MultiController extends MultiActionController {
         return new ModelAndView("index", "model", map);
     }
 
+    public ModelAndView exportPlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+        Playlist playlist = playlistService.getPlaylist(id);
+        if (!playlistService.isReadAllowed(playlist, securityService.getCurrentUsername(request))) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return null;
+
+        }
+        response.setContentType("application/x-download");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + StringUtil.fileSystemSafe(playlist.getName()) + ".m3u8\"");
+
+        playlistService.exportPlaylist(id, response.getOutputStream());
+        return null;
+    }
+
     private void updatePortAndContextPath(HttpServletRequest request) {
 
         int port = Integer.parseInt(System.getProperty("subsonic.port", String.valueOf(request.getLocalPort())));
@@ -210,5 +232,9 @@ public class MultiController extends MultiActionController {
 
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
+    }
+
+    public void setPlaylistService(PlaylistService playlistService) {
+        this.playlistService = playlistService;
     }
 }
