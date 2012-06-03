@@ -25,6 +25,7 @@ import net.sourceforge.subsonic.service.metadata.MetaDataParser;
 import net.sourceforge.subsonic.service.metadata.MetaDataParserFactory;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.*;
 import org.springframework.web.servlet.mvc.*;
@@ -75,7 +76,7 @@ public class EditTagsController extends ParameterizableViewController {
 
         Song song = new Song();
         song.setId(file.getId());
-        song.setFileName(file.getName());
+        song.setFileName(FilenameUtils.getBaseName(file.getPath()));
         song.setTrack(metaData.getTrackNumber());
         song.setSuggestedTrack(index + 1);
         song.setTitle(metaData.getTitle());

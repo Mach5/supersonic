@@ -204,16 +204,11 @@ public class MediaFile {
     }
 
     public String getName() {
-        // TODO: Optimize
-        if (isAlbum() && albumName != null) {
-            return albumName;
+        if (isFile()) {
+            return title != null ? title : FilenameUtils.getBaseName(path);
         }
 
-        if (isFile() && title != null) {
-            return title;
-        }
-
-        return FilenameUtils.getBaseName(path);
+        return FilenameUtils.getName(path);
     }
 
     public Integer getDiscNumber() {
