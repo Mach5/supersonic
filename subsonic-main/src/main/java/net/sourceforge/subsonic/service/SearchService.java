@@ -240,7 +240,8 @@ public class SearchService {
             BooleanQuery query = new BooleanQuery();
             query.add(new TermQuery(new Term(FIELD_MEDIA_TYPE, MediaFile.MediaType.MUSIC.name().toLowerCase())), BooleanClause.Occur.MUST);
             if (criteria.getGenre() != null) {
-                query.add(new TermQuery(new Term(FIELD_GENRE, criteria.getGenre().toLowerCase())), BooleanClause.Occur.MUST);
+                String genre = normalizeGenre(criteria.getGenre());
+                query.add(new TermQuery(new Term(FIELD_GENRE, genre)), BooleanClause.Occur.MUST);
             }
             if (criteria.getFromYear() != null || criteria.getToYear() != null) {
                 NumericRangeQuery<Integer> rangeQuery = NumericRangeQuery.newIntRange(FIELD_YEAR, criteria.getFromYear(), criteria.getToYear(), true, true);
@@ -270,6 +271,10 @@ public class SearchService {
             FileUtil.closeQuietly(reader);
         }
         return result;
+    }
+
+    private static String normalizeGenre(String genre) {
+        return genre.toLowerCase().replace(" ", "");
     }
 
     /**
@@ -418,7 +423,7 @@ public class SearchService {
                     doc.add(new Field(FIELD_ARTIST, mediaFile.getArtist(), Field.Store.YES, Field.Index.ANALYZED));
                 }
                 if (mediaFile.getGenre() != null) {
-                    doc.add(new Field(FIELD_GENRE, mediaFile.getGenre(), Field.Store.NO, Field.Index.ANALYZED));
+                    doc.add(new Field(FIELD_GENRE, normalizeGenre(mediaFile.getGenre()), Field.Store.NO, Field.Index.ANALYZED));
                 }
                 if (mediaFile.getYear() != null) {
                     doc.add(new NumericField(FIELD_YEAR, Field.Store.NO, true).setIntValue(mediaFile.getYear()));

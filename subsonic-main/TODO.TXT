@@ -12,6 +12,8 @@ Display directory name rather than album name?
 "R.E.M" displayed as "R.E"
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&p=41790#p41790
 Playlist export.
+Genre search problem.
+  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&p=41839#p41804
 
 TODO IN 4.7.beta2
 -----------------
@@ -19,6 +21,7 @@ Don't display "null" as artist in now playing.
 Bugs:
 - Add description if nothing is starred.
 - Should avoid duplicates in Home > Random albums
+Prefer albumartist in jaudiotagger?
 
 Subclient:
   https://mail.google.com/mail/?ui=2&shva=1#inbox/1372395d5c49e70d
