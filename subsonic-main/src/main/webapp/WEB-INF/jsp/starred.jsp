@@ -26,6 +26,10 @@
     <fmt:message key="starred.title"/>
 </h1>
 
+<c:if test="${empty model.artists and empty model.albums and empty model.songs}">
+    <p style="padding-top: 1em"><em><fmt:message key="starred.empty"/></em></p>
+</c:if>
+
 <c:if test="${not empty model.artists}">
     <h2><fmt:message key="search.hits.artists"/></h2>
     <table style="border-collapse:collapse">
