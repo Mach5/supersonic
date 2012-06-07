@@ -97,16 +97,16 @@ public class CoverArtController implements Controller, LastModified {
             return null;
         }
 
-        // Optimize if no scaling is required.
+        // Send default image if no path is given. (No need to cache it, since it will be cached in browser.)
         Integer size = ServletRequestUtils.getIntParameter(request, "size");
-        if (size == null) {
-            sendUnscaled(file, response);
+        if (file == null) {
+            sendDefault(size, response);
             return null;
         }
 
-        // Send default image if no path is given. (No need to cache it, since it will be cached in browser.)
-        if (file == null) {
-            sendDefault(size, response);
+        // Optimize if no scaling is required.
+        if (size == null) {
+            sendUnscaled(file, response);
             return null;
         }
 
@@ -139,12 +139,12 @@ public class CoverArtController implements Controller, LastModified {
 
     private File getArtistImage(int id) {
         Artist artist = artistDao.getArtist(id);
-        return artist == null ? null : new File(artist.getCoverArtPath());
+        return artist == null || artist.getCoverArtPath() == null ? null : new File(artist.getCoverArtPath());
     }
 
     private File getAlbumImage(int id) {
         Album album = albumDao.getAlbum(id);
-        return album == null ? null : new File(album.getCoverArtPath());
+        return album == null || album.getCoverArtPath() == null ? null : new File(album.getCoverArtPath());
     }
 
     private File getMediaFileImage(int id) {
@@ -166,7 +166,9 @@ public class CoverArtController implements Controller, LastModified {
         try {
             in = getClass().getResourceAsStream("default_cover.jpg");
             BufferedImage image = ImageIO.read(in);
-            image = scale(image, size, size);
+            if (size != null) {
+                image = scale(image, size, size);
+            }
             ImageIO.write(image, "jpeg", response.getOutputStream());
         } finally {
             IOUtils.closeQuietly(in);
