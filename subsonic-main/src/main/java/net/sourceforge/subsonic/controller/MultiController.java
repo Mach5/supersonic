@@ -161,6 +161,10 @@ public class MultiController extends MultiActionController {
         return new ModelAndView("accessDenied");
     }
 
+    public ModelAndView notFound(HttpServletRequest request, HttpServletResponse response) {
+        return new ModelAndView("notFound");
+    }
+
     public ModelAndView gettingStarted(HttpServletRequest request, HttpServletResponse response) {
         updatePortAndContextPath(request);
 

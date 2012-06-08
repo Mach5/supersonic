@@ -15,10 +15,15 @@ Playlist export.
 Genre search problem.
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&p=41839#p41804
 Show message if nothing is starred.
+Better error message if media file or playlist not found.
 
 TODO IN 4.7.beta2
 -----------------
+Wrong resolution of cover art: SANTANA2.JPG.old
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/1374cd4e20cefa21
 Don't display "null" as artist in now playing.
+
+
 
 Subclient:
   https://mail.google.com/mail/?ui=2&shva=1#inbox/1372395d5c49e70d
@@ -40,7 +45,6 @@ Postponed:
   - Show message if nothing is starred.
   - Show message if no songs are selected when doing add to playlist.
   - Encourage users to save email addresses, also for admin.  Explain why.
-  - Better error message if media file not found, in main.jsp
   - Update apps to include PlayBook version.
   - REST: Add example links to demo server.
   - Blacklist abusers of my email.

@@ -18,26 +18,21 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import net.sourceforge.subsonic.domain.Playlist;
-import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-
-import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.UserSettings;
-import net.sourceforge.subsonic.service.MediaFileService;
-import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.PlaylistService;
 import net.sourceforge.subsonic.service.SecurityService;
 import net.sourceforge.subsonic.service.SettingsService;
+import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
+import org.springframework.web.servlet.view.RedirectView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Controller for the main page.
@@ -47,10 +42,8 @@ import net.sourceforge.subsonic.service.SettingsService;
 public class PlaylistController extends ParameterizableViewController {
 
     private SecurityService securityService;
-    private PlayerService playerService;
     private PlaylistService playlistService;
     private SettingsService settingsService;
-    private MediaFileService mediaFileService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -60,6 +53,9 @@ public class PlaylistController extends ParameterizableViewController {
         User user = securityService.getCurrentUser(request);
         UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
         Playlist playlist = playlistService.getPlaylist(id);
+        if (playlist == null) {
+            return new ModelAndView(new RedirectView("notFound.view"));
+        }
 
         map.put("playlist", playlist);
         map.put("user", user);
@@ -75,19 +71,11 @@ public class PlaylistController extends ParameterizableViewController {
         this.securityService = securityService;
     }
 
-    public void setPlayerService(PlayerService playerService) {
-        this.playerService = playerService;
-    }
-
     public void setPlaylistService(PlaylistService playlistService) {
         this.playlistService = playlistService;
     }
 
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
-    }
-
-    public void setMediaFileService(MediaFileService mediaFileService) {
-        this.mediaFileService = mediaFileService;
     }
 }

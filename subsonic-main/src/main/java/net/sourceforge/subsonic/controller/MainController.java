@@ -66,6 +66,11 @@ public class MainController extends ParameterizableViewController {
 
         Player player = playerService.getPlayer(request, response);
         List<MediaFile> mediaFiles = getMediaFiles(request);
+
+        if (mediaFiles.isEmpty()) {
+            return new ModelAndView(new RedirectView("notFound.view"));
+        }
+
         MediaFile dir = mediaFiles.get(0);
         if (dir.isFile()) {
             dir = mediaFileService.getParentOf(dir);
