@@ -23,8 +23,6 @@ Wrong resolution of cover art: SANTANA2.JPG.old
   https://mail.google.com/mail/?ui=2&shva=1#inbox/1374cd4e20cefa21
 Don't display "null" as artist in now playing.
 
-
-
 Subclient:
   https://mail.google.com/mail/?ui=2&shva=1#inbox/1372395d5c49e70d
   http://www.subclient.net

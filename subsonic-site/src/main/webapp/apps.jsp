@@ -31,6 +31,7 @@
                 <ul class="stars column-right">
                     <li><a href="#zsubsonic">Z-Subsonic</a> for iPhone/iPad</li>
                     <li><a href="#substream">SubStream</a> for iPhone/iPad</li>
+                    <li><a href="#hypersonic">Hypersonic</a> for iPhone/iPad</li>
                 </ul>
             </div>
 
@@ -56,6 +57,7 @@
                     <li><a href="#subair">SubAir</a> for desktops</li>
                     <li><a href="#submariner">Submariner</a> for Mac</li>
                     <li><a href="#thumper">Thumper</a> for Mac</li>
+                    <li><a href="#subclient">Subclient</a> for Windows</li>
                 </ul>
                 <ul class="stars column-right"> 
                     <li><a href="#subgadget">SubGadget</a> for Windows</li>
@@ -558,6 +560,30 @@
                         <a href="inc/img/screenshots/screen41.png"><img src="inc/img/screenshots/thumb41.png" alt="" class="img-center"/></a>
                         <p>Supports docking, auto-hiding, keyboard shortcuts, now playing popup, album grid viewer and much more.</p>
                         <p>SubWiji is made by <a href="http://www.paulodell.co.uk/">Paul O'Dell</a>. Free of charge, but accepts donations.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="featureitem">
+                <a name="subclient"></a>
+
+                <div class="heading">Subclient<a href="#top" class="backtotop" title="Top"><img src="inc/img/top.gif" alt="" height="16" width="16"/></a></div>
+                <div class="content">
+                    <div class="wide-content">
+                        <p>
+                            <a href="http://www.subclient.net/">Subclient</a> is Java desktop client for Subsonic.
+                        </p>
+                        <a href="inc/img/screenshots/screen42.png"><img src="inc/img/screenshots/thumb42.png" alt="" class="img-center"/></a>
+
+                        <ul class="list">
+                            <li>MPlayer-based media playback.</li>
+                            <li>Tray icon and media keys supported.</li>
+                            <li>Multiple Subsonic servers can be used.</li>
+                            <li>The playlist is saved between sessions.</li>
+                            <li>Indexes, Podcasts and Playlists fetched from Subsonic server.</li>
+                            <li>Cover arts stored locally to improve performance.</li>
+                        </ul>
+                        <p>SubWiji is made by Made by Alejandro Celaya Alastrué and is free of charge.</p>
                     </div>
                 </div>
             </div>
