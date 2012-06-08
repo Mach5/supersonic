@@ -1,21 +1,4 @@
-DONE IN 4.7.beta2
------------------
-Handle media files without any tags.
-Added Czech translation, courtesy of Robert Ilyk.
-Sort albums by year.
-Show album year.
-Playlist import.
-Reduce flashing refresh of home page.
-  https://mail.google.com/mail/?shva=1#inbox/13799a843b7ae8c1
-Display directory name rather than album name?
-    http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&p=41514#p41514
-"R.E.M" displayed as "R.E"
-  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&p=41790#p41790
-Playlist export.
-Genre search problem.
-  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&p=41839#p41804
-Show message if nothing is starred.
-Better error message if media file or playlist not found.
+
 Subclient:
   https://mail.google.com/mail/?ui=2&shva=1#inbox/1372395d5c49e70d
   http://www.subclient.net

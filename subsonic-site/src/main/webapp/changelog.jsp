@@ -16,6 +16,18 @@
 <div id="main-col">
 <h1 class="bottomspace">Subsonic Change Log</h1>
 
+<a name="4.7.beta2"><h2 class="div">Subsonic 4.7.beta2 - Jun 08, 2012</h2></a>
+<ul>
+    <li><span class="bugid">New: </span>Playlist import/export.</li>
+    <li><span class="bugid">New: </span>Sort albums by year.</li>
+    <li><span class="bugid">New: </span>Show album year.</li>
+    <li><span class="bugid">New: </span>Added Czech translation, courtesy of Robert Ilyk.</li>
+    <li><span class="bugid">New: </span>Better error message if file or playlist not found.</li>
+    <li><span class="bugid">Bugfix: </span>Handle media files without any tags.</li>
+    <li><span class="bugid">Bugfix: </span>Display directory name rather than album name.</li>
+    <li><span class="bugid">Bugfix: </span>Fixed genre search problem.</li>
+</ul>
+
 <a name="4.7.beta1"><h2 class="div">Subsonic 4.7.beta1 - May 12, 2012</h2></a>
 <ul>
     <li><span class="bugid">New: </span>Major rewrite of the Subsonic core. It now uses less memory and is significantly faster.</li>
@@ -922,6 +934,7 @@
     <div class="sidebox">
         <h2>Releases</h2>
         <ul class="list">
+            <li><a href="#4.7.beta2">Subsonic 4.7.beta2</a></li>
             <li><a href="#4.7.beta1">Subsonic 4.7.beta1</a></li>
             <li><a href="#4.6">Subsonic 4.6</a></li>
             <li><a href="#4.6.beta2">Subsonic 4.6.beta2</a></li>
