@@ -16,13 +16,6 @@ Genre search problem.
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9411&p=41839#p41804
 Show message if nothing is starred.
 Better error message if media file or playlist not found.
-
-TODO IN 4.7.beta2
------------------
-Wrong resolution of cover art: SANTANA2.JPG.old
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/1374cd4e20cefa21
-Don't display "null" as artist in now playing.
-
 Subclient:
   https://mail.google.com/mail/?ui=2&shva=1#inbox/1372395d5c49e70d
   http://www.subclient.net
@@ -30,6 +23,13 @@ Hypersonic:
   https://mail.google.com/mail/?ui=2&shva=1#inbox/1372e41e5e9b09d8
 Periscope:
   https://mail.google.com/mail/?tab=cm#inbox/1354a2895d7f4f46
+
+TODO IN 4.7.beta2
+-----------------
+Wrong resolution of cover art: SANTANA2.JPG.old
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/1374cd4e20cefa21
+Don't display "null" as artist in now playing.
+
 Update documention wrt port 4040 on Windows.
 getAlbumList returns both "title" and "album".
 REST doc: create getVideos example.

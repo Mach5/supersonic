@@ -565,8 +565,8 @@
                         </p>
                         <a href="inc/img/screenshots/screen28.png"><img src="inc/img/screenshots/thumb28.png" alt="" class="img-center"/></a>
                         <p>
-                            Developed and maintained by <a href="mailto:support@periscopeplayer.com">Matt Campanile</a>.  Free trial version, $1.99 for
-                            a lifetime license.
+                            Developed and maintained by <a href="mailto:support@periscopeplayer.com">Matt Campanile</a>.
+                            Available as Lite and Pro versions.  Lite is completely free and is a fully functional player.  Pro adds some advanced features and is $4.99.
                         </p>
                     </div>
                 </div>
