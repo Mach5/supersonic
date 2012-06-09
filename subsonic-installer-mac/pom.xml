@@ -51,20 +51,20 @@
                                         <taskdef name="jarbundler" classname="net.sourceforge.jarbundler.JarBundler"/>
                                         <mkdir dir="${project.build.directory}"/>
                                         <jarbundler dir="target"
-                                                    name="Subsonic"
+                                                    name="Supersonic"
                                                     mainclass="net.sourceforge.subsonic.booter.Main"
                                                     arguments="-mac"
                                                     vmoptions="-Xmx100m"
                                                     version="${project.version}"
                                                     jvmversion="1.5+"
-                                                    jar="../subsonic-booter/target/subsonic-booter-jar-with-dependencies.jar"
-                                                    bundleid="net.sourceforge.subsonic"
-                                                    icon="src/subsonic.icns"
+                                                    jar="../subsonic-booter/target/supersonic-booter-jar-with-dependencies.jar"
+                                                    bundleid="com.github.mach5.supersonic"
+                                                    icon="src/supersonic.icns"
                                                     helpbookfolder="foobar"
                                                     verbose="true">
-                                            <resourcefilelist dir="../subsonic-main/target" files="subsonic.war"/>
-                                            <javaproperty name="subsonic.war" value="Subsonic.app/Contents/Resources/subsonic.war"/>
-                                            <javaproperty name="subsonic.home" value="/Library/Application Support/Subsonic"/>
+                                            <resourcefilelist dir="../subsonic-main/target" files="supersonic.war"/>
+                                            <javaproperty name="supersonic.war" value="Supersonic.app/Contents/Resources/supersonic.war"/>
+                                            <javaproperty name="subsonic.home" value="/Library/Application Support/Supersonic"/>
                                             <javaproperty name="subsonic.defaultMusicFolder" value="/Users/Shared/Music/iTunes/iTunes Media"/>
                                             <javaproperty name="subsonic.defaultPodcastFolder" value="/Users/Shared/Podcasts"/>
                                             <javaproperty name="subsonic.defaultPlaylistFolder" value="/Users/Shared/Playlists"/>
@@ -72,16 +72,16 @@
                                             <javaproperty name="subsonic.httpsPort" value="0"/>
                                             <javaproperty name="subsonic.contextPath" value="/"/>
                                         </jarbundler>
-                                        <replace file="target/Subsonic.app/Contents/Info.plist" token="CFBundleHelpBookFolder" value="LSUIElement"/>
-                                        <replace file="target/Subsonic.app/Contents/Info.plist" token="foobar" value="1"/>
+                                        <replace file="target/Supersonic.app/Contents/Info.plist" token="CFBundleHelpBookFolder" value="LSUIElement"/>
+                                        <replace file="target/Supersonic.app/Contents/Info.plist" token="foobar" value="1"/>
                                         <exec executable="/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker">
                                             <arg value="--doc"/>
-                                            <arg value="${basedir}/src/subsonic.pmdoc"/>
+                                            <arg value="${basedir}/src/supersonic.pmdoc"/>
                                             <arg value="--version"/>
                                             <arg value="${project.version}"/>
                                             <arg value="--no-relocate"/>
                                             <arg value="--out"/>
-                                            <arg value="${project.build.directory}/subsonic-${project.version}.pkg"/>
+                                            <arg value="${project.build.directory}/supersonic-${project.version}.pkg"/>
                                             <arg value="--verbose"/>
                                         </exec>
                                     </target>

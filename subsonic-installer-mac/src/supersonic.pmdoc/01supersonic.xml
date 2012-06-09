@@ -1,11 +1,11 @@
 <pkgref spec="1.12" uuid="73C59762-2C0C-4986-A49A-AAA21313A3D3">
     <config>
-        <identifier>net.sourceforge.subsonic.subsonic.Subsonic.pkg</identifier>
+        <identifier>com.github.mach5.supersonic.supersonic.Supersonic.pkg</identifier>
         <version>1.0</version>
         <description></description>
         <post-install type="none"/>
         <requireAuthorization/>
-        <installFrom relative="true" includeRoot="true">../target/Subsonic.app</installFrom>
+        <installFrom relative="true" includeRoot="true">../target/Supersonic.app</installFrom>
         <installTo mod="true">/Applications</installTo>
         <flags>
             <followSymbolicLinks/>
@@ -35,9 +35,9 @@
         <postinstall relative="true" mod="true">postinstall.sh</postinstall>
     </scripts>
     <contents>
-        <file-list>01subsonic-contents.xml</file-list>
-        <component id="net.sourceforge.subsonic"
-                   path="/Users/sindre/Projects/subsonic/subsonic-installer-mac/target/Subsonic.app"/>
+        <file-list>01supersonic-contents.xml</file-list>
+        <component id="com.github.mach5.supersonic"
+                   path="../target/Supersonic.app"/>
         <filter>/CVS$</filter>
         <filter>/\.svn$</filter>
         <filter>/\.cvsignore$</filter>

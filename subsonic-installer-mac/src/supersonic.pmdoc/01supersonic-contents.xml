@@ -1,6 +1,6 @@
 <pkg-contents spec="1.12">
-    <f n="Subsonic.app" o="root" g="admin" p="16893"
-       pt="/Users/sindre/Projects/subsonic/subsonic-installer-mac/target/Subsonic.app" m="true" t="file">
+    <f n="Supersonic.app" o="root" g="admin" p="16893"
+       pt="../target/Supersonic.app" m="true" t="file">
         <f n="Contents" o="root" g="admin" p="16893">
             <f n="Info.plist" o="root" g="admin" p="33204">
                 <mod>mode</mod>
@@ -16,15 +16,15 @@
             </f>
             <f n="Resources" o="root" g="admin" p="16893">
                 <f n="Java" o="root" g="admin" p="16893">
-                    <f n="subsonic-booter-jar-with-dependencies.jar" o="root" g="admin" p="33204">
+                    <f n="supersonic-booter-jar-with-dependencies.jar" o="root" g="admin" p="33204">
                         <mod>mode</mod>
                     </f>
                     <mod>mode</mod>
                 </f>
-                <f n="subsonic.icns" o="root" g="admin" p="33204">
+                <f n="supersonic.icns" o="root" g="admin" p="33204">
                     <mod>mode</mod>
                 </f>
-                <f n="subsonic.war" o="root" g="admin" p="33204">
+                <f n="supersonic.war" o="root" g="admin" p="33204">
                     <mod>mode</mod>
                 </f>
                 <mod>mode</mod>

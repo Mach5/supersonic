@@ -57,6 +57,10 @@
             <id>oss.sonatype.org</id>
             <url>http://oss.sonatype.org/content/groups/public</url>
         </pluginRepository>
+        <pluginRepository>
+            <id>ooo-maven-repo</id>
+            <url>http://ooo-maven.googlecode.com/hg/repository</url>
+        </pluginRepository>
     </pluginRepositories>
 
     <modules>
