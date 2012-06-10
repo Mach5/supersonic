@@ -1,20 +1,13 @@
-
-Subclient:
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/1372395d5c49e70d
-  http://www.subclient.net
-Hypersonic:
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/1372e41e5e9b09d8
-Periscope:
-  https://mail.google.com/mail/?tab=cm#inbox/1354a2895d7f4f46
-
-TODO IN 4.7.beta2
+TODO IN 4.7
 -----------------
-Wrong resolution of cover art: SANTANA2.JPG.old
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/1374cd4e20cefa21
+Auto-import playlists
+Make it possible to turn off album year display.
+Video has playlist features (PLay all, Add all..)
 Don't display "null" as artist in now playing.
+Admins should be able to manage all playlists.
+Show all playlist metadata. (Shared with all users, Shared with 4 users, 12 songs, 45:34)
 
 Update documention wrt port 4040 on Windows.
-getAlbumList returns both "title" and "album".
 REST doc: create getVideos example.
 
 Postponed:
@@ -759,16 +752,16 @@ Upgrade Subsonic backend: CHANGE DATE BELOW
   Backup backend database.
     Checkpoint database (db.view)
     cd /var/subsonic-backend
-    tar cvf db-backup-2011-12-06.tar db
+    tar cvf db-backup-2012-06-09.tar db
   cd subsonic-backend
   mvn clean install
 
-  mkdir /usr/local/jakarta/tomcat/webapps-2011-12-06/
+  mkdir /usr/local/jakarta/tomcat/webapps-2012-06-09/
 
   scp subsonic-site/src/main/webapp/apps.jsp root@subsonic.org:/usr/local/jakarta/tomcat/webapps/pages
-  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/ROOT.war
-  scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/demo.war
-  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/pages
+  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2012-06-09/ROOT.war
+  scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2012-06-09/demo.war
+  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2012-06-09/pages
 
 
   Blacklist abusers of my email.
@@ -780,7 +773,7 @@ Upgrade Subsonic backend: CHANGE DATE BELOW
   ps -elf | grep jsvc
   /usr/sbin/stoptomcat
   rm webapps
-  ln -s webapps-2011-12-06 webapps
+  ln -s webapps-2012-06-09 webapps
 
   rm -rf work logs/*
   /usr/sbin/starttomcat
@@ -900,15 +893,14 @@ http://kickyoutube.com/
 http://www.schillmania.com/projects/soundmanager2/
 http://code.google.com/p/mobbler/
 
+IBAN number: NO7297223688407
+SWIFT/BIC code: DNBANOKK
+
 My address:
 Sindre Mehus
 Saturnveien 9
 0492 Oslo
 Norway
-
-IBAN number: NO7297223688407
-SWIFT/BIC code: DNBANOKK
-Account number: 97223688407
 
 Bank address:
 DnB NOR

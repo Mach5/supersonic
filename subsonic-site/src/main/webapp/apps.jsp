@@ -608,7 +608,7 @@
                             <li>Indexes, Podcasts and Playlists fetched from Subsonic server.</li>
                             <li>Cover arts stored locally to improve performance.</li>
                         </ul>
-                        <p>SubWiji is made by Made by Alejandro Celaya Alastrué and is free of charge.</p>
+                        <p>Subclient is made by Alejandro Celaya Alastru&eacute; and is free of charge.</p>
                     </div>
                 </div>
             </div>
