@@ -1,9 +1,13 @@
+DONE IN 4.7
+-------------
+Don't display "null" as artist in now playing.
+
+
 TODO IN 4.7
 -----------------
 Auto-import playlists
 Make it possible to turn off album year display.
 Video has playlist features (PLay all, Add all..)
-Don't display "null" as artist in now playing.
 Admins should be able to manage all playlists.
 Show all playlist metadata. (Shared with all users, Shared with 4 users, 12 songs, 45:34)
 

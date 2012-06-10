@@ -4,14 +4,14 @@
 <head>
     <%@ include file="head.jsp" %>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/dwr/interface/chatService.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/dwr/interface/nowPlayingService.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/script/fancyzoom/FancyZoom.js"/>"></script>
-        <script type="text/javascript" src="<c:url value="/script/fancyzoom/FancyZoomHTML.js"/>"></script>
-
+    <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/chatService.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/nowPlayingService.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/script/fancyzoom/FancyZoom.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/script/fancyzoom/FancyZoomHTML.js"/>"></script>
+</head>
 <body class="bgcolor1 rightframe" style="padding-top:2em" onload="init()">
 
 <script type="text/javascript">
@@ -51,8 +51,13 @@
                 html += "<b>" + nowPlaying[i].username + "</b></td></tr>"
 
                 html += "<tr><td class='detail' style='padding-right:1em'>" +
-                        "<a title='" + nowPlaying[i].tooltip + "' target='main' href='" + nowPlaying[i].albumUrl + "'><em>" +
-                        nowPlaying[i].artist + "</em><br/>" + nowPlaying[i].title + "</a><br/>" +
+                        "<a title='" + nowPlaying[i].tooltip + "' target='main' href='" + nowPlaying[i].albumUrl + "'>";
+
+                if (nowPlaying[i].artist != null) {
+                    html += "<em>" + nowPlaying[i].artist + "</em><br/>";
+                }
+
+                html += nowPlaying[i].title + "</a><br/>" +
                         "<span class='forward'><a href='" + nowPlaying[i].lyricsUrl + "' onclick=\"return popupSize(this, 'lyrics', 430, 550)\">" +
                         "<fmt:message key="main.lyrics"/>" + "</a></span></td><td style='padding-top:1em'>";
 
