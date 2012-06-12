@@ -29,7 +29,7 @@ Maven to install a binary package for your distribution:
 cd <supersonic source folder>
 mvn clean -P full; mvn install -P full
 
-If case of dependency issues, try
+In case of dependency issues, try
 mvn install -P full -U 
 
 Then install the now built binary package for your distribution:
