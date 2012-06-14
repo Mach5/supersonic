@@ -32,6 +32,9 @@ mvn clean -P full; mvn install -P full
 In case of dependency issues, try
 mvn install -P full -U 
 
+If you would like to install a specific project only (such as the Debian package), call Maven with
+mvn -P full -p <project> -am install
+
 Then install the now built binary package for your distribution:
 
 Debian/Ubuntu/Mint
