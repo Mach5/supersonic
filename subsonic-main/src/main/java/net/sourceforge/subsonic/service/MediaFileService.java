@@ -25,6 +25,7 @@ import net.sourceforge.subsonic.dao.AlbumDao;
 import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MediaFileComparator;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.service.metadata.MetaData;
@@ -40,7 +41,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +59,7 @@ public class MediaFileService {
 
     private Ehcache mediaFileMemoryCache;
 
+    private final MediaFileComparator mediaFileComparator = new MediaFileComparator();
     private SecurityService securityService;
     private SettingsService settingsService;
     private MediaFileDao mediaFileDao;
@@ -209,7 +210,7 @@ public class MediaFileService {
         }
 
         if (sort) {
-            Collections.sort(result, new MediaFileSorter());
+            Collections.sort(result, mediaFileComparator);
         }
 
         return result;
@@ -603,60 +604,4 @@ public class MediaFileService {
         this.albumDao = albumDao;
     }
 
-    /**
-     * Comparator for sorting media files.
-     */
-    private static class MediaFileSorter implements Comparator<MediaFile> {
-
-        public int compare(MediaFile a, MediaFile b) {
-            if (a.isFile() && b.isDirectory()) {
-                return 1;
-            }
-
-            if (a.isDirectory() && b.isFile()) {
-                return -1;
-            }
-
-            if (a.isAlbum() && b.isAlbum() && (a.getYear() != null || b.getYear() != null)) {
-                if (a.getYear() == null) {
-                    return 1;
-                }
-                if (b.getYear() == null) {
-                    return -1;
-                }
-                return b.getYear().compareTo(a.getYear());
-            }
-
-            if (a.isDirectory() && b.isDirectory()) {
-                return a.getName().compareToIgnoreCase(b.getName());
-            }
-
-            // Compare by disc number, if present.
-            Integer discA = a.getDiscNumber();
-            Integer discB = b.getDiscNumber();
-            if (discA != null && discB != null) {
-                int i = discA.compareTo(discB);
-                if (i != 0) {
-                    return i;
-                }
-            }
-
-            Integer trackA = a.getTrackNumber();
-            Integer trackB = b.getTrackNumber();
-
-            if (trackA == null && trackB != null) {
-                return 1;
-            }
-
-            if (trackA != null && trackB == null) {
-                return -1;
-            }
-
-            if (trackA == null && trackB == null) {
-                return a.getName().compareToIgnoreCase(b.getName());
-            }
-
-            return trackA.compareTo(trackB);
-        }
-    }
 }

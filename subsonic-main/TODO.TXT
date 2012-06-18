@@ -1,6 +1,7 @@
 DONE IN 4.7
 -------------
 Don't display "null" as artist in now playing.
+Fixed crash on Java 7 caused by wrong sorting implementation.
 
 
 TODO IN 4.7
