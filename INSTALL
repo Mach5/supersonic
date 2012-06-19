@@ -33,7 +33,7 @@ In case of dependency issues, try
 mvn install -P full -U 
 
 If you would like to install a specific project only (such as the Debian package), call Maven with
-mvn -P full -p <project> -am install
+mvn -P full -pl <project> -am install
 
 Then install the now built binary package for your distribution:
 
