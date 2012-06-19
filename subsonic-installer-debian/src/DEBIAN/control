@@ -2,6 +2,7 @@ Package: supersonic
 Version: @VERSION@
 Section: Multimedia
 Priority: optional
+Depends: default-jre-headless
 Recommends: lame, ffmpeg
 Architecture: all
 Maintainer: Timo Reimann <devel@foo-lounge.de>
