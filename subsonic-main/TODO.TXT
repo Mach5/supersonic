@@ -3,12 +3,13 @@ DONE IN 4.7
 Don't display "null" as artist in now playing.
 Fixed crash on Java 7 caused by wrong sorting implementation.
 Added Settings > General > Sort albums by year
+Try with different encodings when importing playlists.
 
 TODO IN 4.7
 -----------------
+Retest playlist import (different encodings)
 Review resolution of albumartist.
 Auto-import playlists
-Try with different encodings when importing playlists.
 Add option to list albums alphabetically or chronologically (in which case year should not be displayed).
 Video has playlist features (PLay all, Add all..)
 Admins should be able to manage all playlists.

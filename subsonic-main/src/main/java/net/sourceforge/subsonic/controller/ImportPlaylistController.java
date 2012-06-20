@@ -43,6 +43,8 @@ import net.sourceforge.subsonic.service.SecurityService;
  */
 public class ImportPlaylistController extends ParameterizableViewController {
 
+    private static final long MAX_PLAYLIST_SIZE_MB = 5L;
+
     private SecurityService securityService;
     private PlaylistService playlistService;
 
@@ -60,6 +62,9 @@ public class ImportPlaylistController extends ParameterizableViewController {
                     FileItem item = (FileItem) o;
 
                     if ("file".equals(item.getFieldName()) && !StringUtils.isBlank(item.getName())) {
+                        if (item.getSize() > MAX_PLAYLIST_SIZE_MB * 1024L * 1024L) {
+                            throw new Exception("The playlist file is too large. Max file size is " + MAX_PLAYLIST_SIZE_MB + " MB.");
+                        }
                         String playlistName = FilenameUtils.getBaseName(item.getName());
                         String format = StringUtils.lowerCase(FilenameUtils.getExtension(item.getName()));
                         String username = securityService.getCurrentUsername(request);

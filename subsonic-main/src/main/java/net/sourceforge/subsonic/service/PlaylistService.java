@@ -18,14 +18,22 @@
  */
 package net.sourceforge.subsonic.service;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.dao.MediaFileDao;
-import net.sourceforge.subsonic.dao.PlaylistDao;
-import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.PlayQueue;
-import net.sourceforge.subsonic.domain.Playlist;
-import net.sourceforge.subsonic.util.StringUtil;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -33,22 +41,12 @@ import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.sun.org.apache.bcel.internal.classfile.ConstantString;
-
-import javax.servlet.ServletOutputStream;
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.dao.MediaFileDao;
+import net.sourceforge.subsonic.dao.PlaylistDao;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.util.StringUtil;
 
 /**
  * Provides services for loading and saving playlists to and from persistent storage.
@@ -76,7 +74,7 @@ public class PlaylistService {
     }
 
     public List<String> getPlaylistUsers(int playlistId) {
-        return  playlistDao.getPlaylistUsers(playlistId);
+        return playlistDao.getPlaylistUsers(playlistId);
     }
 
     public List<MediaFile> getFilesInPlaylist(int id) {
@@ -126,8 +124,8 @@ public class PlaylistService {
         if (playlistFormat == null) {
             throw new Exception("Unsupported playlist format: " + format);
         }
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StringUtil.ENCODING_UTF8));
-        List<MediaFile> files = playlistFormat.parse(reader, mediaFileService);
+
+        List<MediaFile> files = parseFiles(IOUtils.toByteArray(inputStream), playlistFormat);
         if (files.isEmpty()) {
             throw new Exception("No songs in the playlist were found.");
         }
@@ -146,7 +144,26 @@ public class PlaylistService {
         return playlist;
     }
 
-    public void exportPlaylist(int id, ServletOutputStream out) throws Exception {
+    private List<MediaFile> parseFiles(byte[] playlist, PlaylistFormat playlistFormat) throws IOException {
+        List<MediaFile> result = null;
+
+        // Try with multiple encodings; use the one that finds the most files.
+        String[] encodings = {StringUtil.ENCODING_LATIN, StringUtil.ENCODING_UTF8, Charset.defaultCharset().name()};
+        for (String encoding : encodings) {
+            List<MediaFile> files = parseFilesWithEncoding(playlist, playlistFormat, encoding);
+            if (result == null || result.size() < files.size()) {
+                result = files;
+            }
+        }
+        return result;
+    }
+
+    private List<MediaFile> parseFilesWithEncoding(byte[] playlist, PlaylistFormat playlistFormat, String encoding) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new ByteArrayInputStream(playlist), encoding));
+        return playlistFormat.parse(reader, mediaFileService);
+    }
+
+    public void exportPlaylist(int id, OutputStream out) throws Exception {
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(out, StringUtil.ENCODING_UTF8));
         new M3UFormat().format(getFilesInPlaylist(id), writer);
     }
