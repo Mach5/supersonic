@@ -34,6 +34,7 @@ public class GeneralSettingsCommand {
     private String index;
     private String ignoredArticles;
     private String shortcuts;
+    private boolean sortAlbumsByYear;
     private boolean gettingStartedEnabled;
     private String welcomeTitle;
     private String welcomeSubtitle;
@@ -163,6 +164,14 @@ public class GeneralSettingsCommand {
 
     public void setReloadNeeded(boolean reloadNeeded) {
         isReloadNeeded = reloadNeeded;
+    }
+
+    public boolean isSortAlbumsByYear() {
+        return sortAlbumsByYear;
+    }
+
+    public void setSortAlbumsByYear(boolean sortAlbumsByYear) {
+        this.sortAlbumsByYear = sortAlbumsByYear;
     }
 
     public boolean isGettingStartedEnabled() {

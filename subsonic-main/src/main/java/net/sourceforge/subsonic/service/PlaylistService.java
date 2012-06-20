@@ -190,10 +190,10 @@ public class PlaylistService {
         protected MediaFile getMediaFile(MediaFileService mediaFileService, String path) {
             try {
                 MediaFile file = mediaFileService.getMediaFile(path);
-                if (file.exists()) {
-                    return file;
-                } else {
+                if (file == null || !file.exists()) {
                     LOG.warn("File not found: " + path);
+                } else {
+                    return file;
                 }
             } catch (SecurityException x) {
                 LOG.warn(x.getMessage(), x);

@@ -97,6 +97,7 @@ public class MainController extends ParameterizableViewController {
         map.put("user", securityService.getCurrentUser(request));
         map.put("multipleArtists", isMultipleArtists(children));
         map.put("visibility", userSettings.getMainVisibility());
+        map.put("showAlbumYear", settingsService.isSortAlbumsByYear());
         map.put("updateNowPlaying", request.getParameter("updateNowPlaying") != null);
         map.put("partyMode", userSettings.isPartyModeEnabled());
         map.put("brand", settingsService.getBrand());

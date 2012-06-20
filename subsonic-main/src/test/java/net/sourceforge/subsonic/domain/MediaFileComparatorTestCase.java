@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  */
 public class MediaFileComparatorTestCase extends TestCase {
 
-    private final MediaFileComparator comparator = new MediaFileComparator();
+    private final MediaFileComparator comparator = new MediaFileComparator(true);
 
     public void testCompareAlbums() throws Exception {
 

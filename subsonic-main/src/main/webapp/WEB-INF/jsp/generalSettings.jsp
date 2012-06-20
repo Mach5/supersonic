@@ -100,10 +100,21 @@
             <td>
             </td>
             <td>
+                <form:checkbox path="sortAlbumsByYear" id="sortAlbumsByYear"/>
+                <label for="sortAlbumsByYear"><fmt:message key="generalsettings.sortalbumsbyyear"/></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <td>
                 <form:checkbox path="gettingStartedEnabled" id="gettingStartedEnabled"/>
                 <label for="gettingStartedEnabled"><fmt:message key="generalsettings.showgettingstarted"/></label>
             </td>
         </tr>
+
+        <tr><td colspan="2">&nbsp;</td></tr>
+
         <tr>
             <td><fmt:message key="generalsettings.welcometitle"/></td>
             <td>

@@ -41,10 +41,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static net.sourceforge.subsonic.domain.MediaFile.MediaType.*;
 
@@ -59,7 +62,6 @@ public class MediaFileService {
 
     private Ehcache mediaFileMemoryCache;
 
-    private final MediaFileComparator mediaFileComparator = new MediaFileComparator();
     private SecurityService securityService;
     private SettingsService settingsService;
     private MediaFileDao mediaFileDao;
@@ -210,7 +212,12 @@ public class MediaFileService {
         }
 
         if (sort) {
-            Collections.sort(result, mediaFileComparator);
+            Comparator<MediaFile> comparator = new MediaFileComparator(settingsService.isSortAlbumsByYear());
+            // Note: Intentionally not using Collections.sort() since it can be problematic on Java 7.
+            // http://www.oracle.com/technetwork/java/javase/compatibility-417013.html#jdk7
+            Set<MediaFile> set = new TreeSet<MediaFile>(comparator);
+            set.addAll(result);
+            result = new ArrayList<MediaFile>(set);
         }
 
         return result;

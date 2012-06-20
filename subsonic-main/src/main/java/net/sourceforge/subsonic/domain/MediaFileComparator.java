@@ -20,22 +20,40 @@ package net.sourceforge.subsonic.domain;
 
 import java.util.Comparator;
 
+import static net.sourceforge.subsonic.domain.MediaFile.MediaType.DIRECTORY;
+
 /**
  * Comparator for sorting media files.
  */
 public class MediaFileComparator implements Comparator<MediaFile> {
 
+    private final boolean sortAlbumsByYear;
+
+    public MediaFileComparator(boolean sortAlbumsByYear) {
+        this.sortAlbumsByYear = sortAlbumsByYear;
+    }
+
     public int compare(MediaFile a, MediaFile b) {
+
+        // Directories before files.
         if (a.isFile() && b.isDirectory()) {
             return 1;
         }
-
         if (a.isDirectory() && b.isFile()) {
             return -1;
         }
 
-        if (a.isAlbum() && b.isAlbum()) {
-            int i = nullSafeCompare(b.getYear(), a.getYear(), true);
+        // Non-album directories before album directories.
+        if (a.isAlbum() && b.getMediaType() == DIRECTORY) {
+            return 1;
+        }
+        if (a.getMediaType() == DIRECTORY && b.isAlbum()) {
+            return -1;
+        }
+
+        // Sort albums by year
+        if (sortAlbumsByYear && a.isAlbum() && b.isAlbum()) {
+            int i = nullSafeCompare(a.getYear(), b.getYear(), false);
             if (i != 0) {
                 return i;
             }
