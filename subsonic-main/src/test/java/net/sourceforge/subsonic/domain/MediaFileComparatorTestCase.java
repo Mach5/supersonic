@@ -54,11 +54,11 @@ public class MediaFileComparatorTestCase extends TestCase {
 
         assertEquals(-1, comparator.compare(albumA2012, albumWithoutYear));
         assertEquals(-1, comparator.compare(album2013, albumWithoutYear));
-        assertEquals(-1, comparator.compare(album2013, albumA2012));
+        assertEquals(1, comparator.compare(album2013, albumA2012));
 
         assertEquals(1, comparator.compare(albumWithoutYear, albumA2012));
         assertEquals(1, comparator.compare(albumWithoutYear, album2013));
-        assertEquals(1, comparator.compare(albumA2012, album2013));
+        assertEquals(-1, comparator.compare(albumA2012, album2013));
 
         assertEquals(-1, comparator.compare(albumA2012, albumB2012));
         assertEquals(1, comparator.compare(albumB2012, albumA2012));
