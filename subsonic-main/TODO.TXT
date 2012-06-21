@@ -5,9 +5,12 @@ Fixed crash on Java 7 caused by wrong sorting implementation.
 Added Settings > General > Sort albums by year
 Try with different encodings when importing playlists.
 Admins should be able to manage all playlists (that is visible to them)
+Use "album artist" tag if present.
 
 TODO IN 4.7
 -----------------
+Make it possible to refresh left frame?
+Go thru bug reports.
 Retest playlist import (different encodings)
 Review resolution of albumartist.
 Auto-import playlists
