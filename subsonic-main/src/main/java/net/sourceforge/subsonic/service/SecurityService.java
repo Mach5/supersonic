@@ -130,6 +130,17 @@ public class SecurityService implements UserDetailsService {
     }
 
     /**
+     * Returns whether the given user has administrative rights.
+     */
+    public boolean isAdmin(String username) {
+        if (User.USERNAME_ADMIN.equals(username)) {
+            return true;
+        }
+        User user = getUserByName(username);
+        return user != null && user.isAdminRole();
+    }
+
+    /**
      * Creates a new user.
      *
      * @param user The user to create.

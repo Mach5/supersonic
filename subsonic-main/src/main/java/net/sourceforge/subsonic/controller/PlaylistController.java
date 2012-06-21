@@ -51,7 +51,8 @@ public class PlaylistController extends ParameterizableViewController {
 
         int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
         User user = securityService.getCurrentUser(request);
-        UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
+        String username = user.getUsername();
+        UserSettings userSettings = settingsService.getUserSettings(username);
         Playlist playlist = playlistService.getPlaylist(id);
         if (playlist == null) {
             return new ModelAndView(new RedirectView("notFound.view"));
@@ -59,7 +60,7 @@ public class PlaylistController extends ParameterizableViewController {
 
         map.put("playlist", playlist);
         map.put("user", user);
-        map.put("editAllowed", user.getUsername().equals(playlist.getUsername()));
+        map.put("editAllowed", username.equals(playlist.getUsername()) || securityService.isAdmin(username));
         map.put("partyMode", userSettings.isPartyModeEnabled());
 
         ModelAndView result = super.handleRequestInternal(request, response);

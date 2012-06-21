@@ -60,12 +60,19 @@ public class PlaylistService {
     private MediaFileService mediaFileService;
     private MediaFileDao mediaFileDao;
     private PlaylistDao playlistDao;
+    private SecurityService securityService;
 
     public List<Playlist> getReadablePlaylistsForUser(String username) {
         return playlistDao.getReadablePlaylistsForUser(username);
     }
 
     public List<Playlist> getWritablePlaylistsForUser(String username) {
+
+        // Admin users are allowed to modify all playlists that are visible to them.
+        if (securityService.isAdmin(username)) {
+            return getReadablePlaylistsForUser(username);
+        }
+
         return playlistDao.getWritablePlaylistsForUser(username);
     }
 
@@ -178,6 +185,10 @@ public class PlaylistService {
 
     public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
+    }
+
+    public void setSecurityService(SecurityService securityService) {
+        this.securityService = securityService;
     }
 
     /**

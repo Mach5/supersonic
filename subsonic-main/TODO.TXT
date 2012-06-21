@@ -4,16 +4,17 @@ Don't display "null" as artist in now playing.
 Fixed crash on Java 7 caused by wrong sorting implementation.
 Added Settings > General > Sort albums by year
 Try with different encodings when importing playlists.
+Admins should be able to manage all playlists (that is visible to them)
 
 TODO IN 4.7
 -----------------
 Retest playlist import (different encodings)
 Review resolution of albumartist.
 Auto-import playlists
-Add option to list albums alphabetically or chronologically (in which case year should not be displayed).
 Video has playlist features (PLay all, Add all..)
-Admins should be able to manage all playlists.
 Show all playlist metadata. (Shared with all users, Shared with 4 users, 12 songs, 45:34)
+Something wrong with matching players/users in Now Playing.
+  https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
 
 
 Update documention wrt port 4040 on Windows.
