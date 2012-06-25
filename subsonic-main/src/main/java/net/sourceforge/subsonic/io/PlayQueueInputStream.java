@@ -39,9 +39,9 @@ import java.util.List;
  *
  * @author Sindre Mehus
  */
-public class PlaylistInputStream extends InputStream {
+public class PlayQueueInputStream extends InputStream {
 
-    private static final Logger LOG = Logger.getLogger(PlaylistInputStream.class);
+    private static final Logger LOG = Logger.getLogger(PlayQueueInputStream.class);
 
     private final Player player;
     private final TransferStatus status;
@@ -55,9 +55,9 @@ public class PlaylistInputStream extends InputStream {
     private InputStream currentInputStream;
     private SearchService searchService;
 
-    public PlaylistInputStream(Player player, TransferStatus status, Integer maxBitRate, String preferredTargetFormat,
-                               VideoTranscodingSettings videoTranscodingSettings, TranscodingService transcodingService,
-                               AudioScrobblerService audioScrobblerService, MediaFileService mediaFileService, SearchService searchService) {
+    public PlayQueueInputStream(Player player, TransferStatus status, Integer maxBitRate, String preferredTargetFormat,
+                                VideoTranscodingSettings videoTranscodingSettings, TranscodingService transcodingService,
+                                AudioScrobblerService audioScrobblerService, MediaFileService mediaFileService, SearchService searchService) {
         this.player = player;
         this.status = status;
         this.maxBitRate = maxBitRate;

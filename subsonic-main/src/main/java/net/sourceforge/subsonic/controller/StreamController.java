@@ -44,7 +44,7 @@ import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
-import net.sourceforge.subsonic.io.PlaylistInputStream;
+import net.sourceforge.subsonic.io.PlayQueueInputStream;
 import net.sourceforge.subsonic.io.RangeOutputStream;
 import net.sourceforge.subsonic.io.ShoutCastOutputStream;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
@@ -80,7 +80,7 @@ public class StreamController implements Controller {
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         TransferStatus status = null;
-        PlaylistInputStream in = null;
+        PlayQueueInputStream in = null;
         Player player = playerService.getPlayer(request, response, false, true);
         User user = securityService.getUserByName(player.getUsername());
 
@@ -171,7 +171,7 @@ public class StreamController implements Controller {
 
             status = statusService.createStreamStatus(player);
 
-            in = new PlaylistInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, transcodingService,
+            in = new PlayQueueInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, transcodingService,
                     audioScrobblerService, mediaFileService, searchService);
             OutputStream out = RangeOutputStream.wrap(response.getOutputStream(), range);
 
