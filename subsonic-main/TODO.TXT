@@ -9,10 +9,12 @@ Use "album artist" tag if present.
 Updated Slovenian translation, courtesy of Jan Jam&#353;ek
 Automatically import all playlists on start-up.
 Show all playlist metadata.
+Fixed problem with no files being showed if removing and re-adding a media folder with scans in between.
 
 TODO IN 4.7
 -----------------
-Make it possible to refresh left frame?
+Optionally, create "Clean database" setting
+Make it possible to refresh left frame? At least bypass browser cache.
 Go thru bug reports.
 Retest playlist import (different encodings)
 Video has playlist features (PLay all, Add all..)
@@ -20,6 +22,7 @@ Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
 ConcurrentModificationException
   https://mail.google.com/mail/u/0/?tab=cm#inbox/13822e43383dca84
+Collapse long list of playlists.
 
 Update documention wrt port 4040 on Windows.
 REST doc: create getVideos example.
@@ -47,7 +50,6 @@ Test getPlaylist vs old-style IDs.
 Include minisub
     http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
 Fix broken REST scrobbling, as reported by Ben.
-Optionally, create "Clean database" setting
 -
 
 HTTP Live Streaming
