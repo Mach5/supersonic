@@ -113,9 +113,10 @@
         <property name="transcodingService" ref="transcodingService"/>
     </bean>
 
-    <bean id="playlistService" class="net.sourceforge.subsonic.service.PlaylistService">
+    <bean id="playlistService" class="net.sourceforge.subsonic.service.PlaylistService" init-method="init">
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="securityService" ref="securityService"/>
+        <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
         <property name="playlistDao" ref="playlistDao"/>
     </bean>

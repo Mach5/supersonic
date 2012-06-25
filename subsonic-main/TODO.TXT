@@ -7,16 +7,15 @@ Try with different encodings when importing playlists.
 Admins should be able to manage all playlists (that is visible to them)
 Use "album artist" tag if present.
 Updated Slovenian translation, courtesy of Jan Jam&#353;ek
+Automatically import all playlists on start-up.
+Show all playlist metadata.
 
 TODO IN 4.7
 -----------------
 Make it possible to refresh left frame?
 Go thru bug reports.
 Retest playlist import (different encodings)
-Review resolution of albumartist.
-Auto-import playlists
 Video has playlist features (PLay all, Add all..)
-Show all playlist metadata. (Shared with all users, Shared with 4 users, 12 songs, 45:34)
 Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
 ConcurrentModificationException

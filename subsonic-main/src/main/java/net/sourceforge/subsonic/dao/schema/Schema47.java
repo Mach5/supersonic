@@ -200,6 +200,12 @@ public class Schema47 extends Schema {
             LOG.info("Database table 'playlist' was created successfully.");
         }
 
+        if (!columnExists(template, "imported_from", "playlist")) {
+            LOG.info("Database column 'playlist.imported_from' not found.  Creating it.");
+            template.execute("alter table playlist add imported_from varchar");
+            LOG.info("Database column 'playlist.imported_from' was added successfully.");
+        }
+
         if (!tableExists(template, "playlist_file")) {
             LOG.info("Database table 'playlist_file' not found.  Creating it.");
             template.execute("create cached table playlist_file (" +

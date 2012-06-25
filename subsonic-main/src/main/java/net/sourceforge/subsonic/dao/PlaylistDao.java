@@ -40,7 +40,8 @@ import java.util.TreeMap;
 public class PlaylistDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(PlaylistDao.class);
-    private static final String COLUMNS = "id, username, is_public, name, comment, file_count, duration_seconds, created, changed";
+    private static final String COLUMNS = "id, username, is_public, name, comment, file_count, duration_seconds, " +
+            "created, changed, imported_from";
     private final RowMapper rowMapper = new PlaylistMapper();
 
     public List<Playlist> getReadablePlaylistsForUser(String username) {
@@ -74,10 +75,14 @@ public class PlaylistDao extends AbstractDao {
         return queryOne("select " + COLUMNS + " from playlist where id=?", rowMapper, id);
     }
 
+    public List<Playlist> getAllPlaylists() {
+        return query("select " + COLUMNS + " from playlist", rowMapper);
+    }
+
     public synchronized void createPlaylist(Playlist playlist) {
         update("insert into playlist(" + COLUMNS + ") values(" + questionMarks(COLUMNS) + ")",
                 null, playlist.getUsername(), playlist.isPublic(), playlist.getName(), playlist.getComment(),
-                0, 0, playlist.getCreated(), playlist.getChanged());
+                0, 0, playlist.getCreated(), playlist.getChanged(), playlist.getImportedFrom());
 
         int id = queryForInt("select max(id) from playlist", 0);
         playlist.setId(id);
@@ -114,9 +119,9 @@ public class PlaylistDao extends AbstractDao {
     }
 
     public void updatePlaylist(Playlist playlist) {
-        update("update playlist set username=?, is_public=?, name=?, comment=?, changed=? where id=?",
+        update("update playlist set username=?, is_public=?, name=?, comment=?, changed=?, imported_from=? where id=?",
                 playlist.getUsername(), playlist.isPublic(), playlist.getName(), playlist.getComment(),
-                new Date(), playlist.getId());
+                new Date(), playlist.getImportedFrom(), playlist.getId());
     }
 
     private static class PlaylistMapper implements ParameterizedRowMapper<Playlist> {
@@ -130,7 +135,8 @@ public class PlaylistDao extends AbstractDao {
                     rs.getInt(6),
                     rs.getInt(7),
                     rs.getTimestamp(8),
-                    rs.getTimestamp(9));
+                    rs.getTimestamp(9),
+                    rs.getString(10));
         }
     }
 }

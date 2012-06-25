@@ -156,12 +156,13 @@ public class PlaylistService {
         playlistService.deletePlaylist(id);
     }
 
-    public void updatePlaylist(int id, String name, String comment, boolean isPublic) {
+    public PlaylistInfo updatePlaylist(int id, String name, String comment, boolean isPublic) {
         Playlist playlist = playlistService.getPlaylist(id);
         playlist.setName(name);
         playlist.setComment(comment);
         playlist.setPublic(isPublic);
         playlistService.updatePlaylist(playlist);
+        return getPlaylist(id);
     }
 
     public void setPlaylistService(net.sourceforge.subsonic.service.PlaylistService playlistService) {

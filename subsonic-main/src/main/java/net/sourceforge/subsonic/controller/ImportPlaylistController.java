@@ -66,9 +66,10 @@ public class ImportPlaylistController extends ParameterizableViewController {
                             throw new Exception("The playlist file is too large. Max file size is " + MAX_PLAYLIST_SIZE_MB + " MB.");
                         }
                         String playlistName = FilenameUtils.getBaseName(item.getName());
+                        String fileName = FilenameUtils.getName(item.getName());
                         String format = StringUtils.lowerCase(FilenameUtils.getExtension(item.getName()));
                         String username = securityService.getCurrentUsername(request);
-                        Playlist playlist = playlistService.importPlaylist(username, playlistName, format, item.getInputStream());
+                        Playlist playlist = playlistService.importPlaylist(username, playlistName, fileName, format, item.getInputStream());
                         map.put("playlist", playlist);
                     }
                 }

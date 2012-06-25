@@ -18,6 +18,8 @@
  */
 package net.sourceforge.subsonic.domain;
 
+import net.sourceforge.subsonic.util.StringUtil;
+
 import java.util.Date;
 
 /**
@@ -34,12 +36,13 @@ public class Playlist {
     private int durationSeconds;
     private Date created;
     private Date changed;
+    private String importedFrom;
 
     public Playlist() {
     }
 
     public Playlist(int id, String username, boolean isPublic, String name, String comment, int fileCount,
-                    int durationSeconds, Date created, Date changed) {
+                    int durationSeconds, Date created, Date changed, String importedFrom) {
         this.id = id;
         this.username = username;
         this.isPublic = isPublic;
@@ -49,6 +52,7 @@ public class Playlist {
         this.durationSeconds = durationSeconds;
         this.created = created;
         this.changed = changed;
+        this.importedFrom = importedFrom;
     }
 
     public int getId() {
@@ -107,6 +111,10 @@ public class Playlist {
         this.durationSeconds = durationSeconds;
     }
 
+    public String getDurationAsString() {
+        return StringUtil.formatDuration(durationSeconds);
+    }
+
     public Date getCreated() {
         return created;
     }
@@ -121,5 +129,13 @@ public class Playlist {
 
     public void setChanged(Date changed) {
         this.changed = changed;
+    }
+
+    public String getImportedFrom() {
+        return importedFrom;
+    }
+
+    public void setImportedFrom(String importedFrom) {
+        this.importedFrom = importedFrom;
     }
 }

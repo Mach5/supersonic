@@ -23,7 +23,7 @@
                         var isPublic = $("#newPublic").is(":checked");
                         $("#name").html(name);
                         $("#comment").html(comment);
-                        playlistService.updatePlaylist(playlist.id, name, comment, isPublic, function (){top.left.updatePlaylists()});
+                        playlistService.updatePlaylist(playlist.id, name, comment, isPublic, function (playlistInfo){playlistCallback(playlistInfo); top.left.updatePlaylists()});
                     },
                     "<fmt:message key="common.cancel"/>": function() {
                         $(this).dialog("close");
@@ -55,6 +55,16 @@
                 $("#empty").show();
             } else {
                 $("#empty").hide();
+            }
+
+
+            $("#songCount").html(playlist.fileCount);
+            $("#duration").html(playlist.durationAsString);
+
+            if (playlist.public) {
+                $("#shared").html("<fmt:message key="playlist2.shared"/>");
+            } else {
+                $("#shared").html("<fmt:message key="playlist2.notshared"/>");
             }
 
             // Delete all the rows except for the "pattern" row
@@ -139,7 +149,6 @@
 <body class="mainframe bgcolor1" onload="init()">
 
 <h1 id="name">${model.playlist.name}</h1>
-
 <h2>
     <a href="#" onclick="onPlayAll();"><fmt:message key="common.play"/></a>
 
@@ -162,7 +171,9 @@
     <fmt:message key="playlist2.created">
         <fmt:param>${model.playlist.username}</fmt:param>
         <fmt:param><fmt:formatDate type="date" dateStyle="long" value="${model.playlist.created}"/></fmt:param>
-    </fmt:message>
+    </fmt:message>.
+    <span id="shared"></span>.
+    <span id="songCount"></span> <fmt:message key="playlist2.songs"/> (<span id="duration"></span>)
 </div>
 
 <div style="height:0.7em"></div>
