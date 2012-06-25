@@ -49,7 +49,7 @@
 <c:if test="${model.user.streamRole}">
     <h2><img src="<spring:theme code="randomImage"/>" alt=""/>&nbsp;<fmt:message key="more.random.title"/></h2>
 
-    <form method="post" action="randomPlaylist.view?">
+    <form method="post" action="randomPlayQueue.view?">
         <table>
             <tr>
                 <td><fmt:message key="more.random.text"/></td>

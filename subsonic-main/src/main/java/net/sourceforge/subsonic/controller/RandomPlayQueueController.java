@@ -36,15 +36,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Controller for the creating a random playlist.
+ * Controller for the creating a random play queue.
  *
  * @author Sindre Mehus
  */
-public class RandomPlaylistController extends ParameterizableViewController {
+public class RandomPlayQueueController extends ParameterizableViewController {
 
     private PlayerService playerService;
     private List<ReloadFrame> reloadFrames;
-    private MediaFileService mediaFileService;
     private SearchService searchService;
 
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -94,10 +93,6 @@ public class RandomPlaylistController extends ParameterizableViewController {
 
     public void setReloadFrames(List<ReloadFrame> reloadFrames) {
         this.reloadFrames = reloadFrames;
-    }
-
-    public void setMediaFileService(MediaFileService mediaFileService) {
-        this.mediaFileService = mediaFileService;
     }
 
     public void setSearchService(SearchService searchService) {

@@ -105,10 +105,9 @@
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="securityService" ref="securityService"/>
     </bean>
-    <bean id="randomPlaylistController" class="net.sourceforge.subsonic.controller.RandomPlaylistController">
+    <bean id="randomPlayQueueController" class="net.sourceforge.subsonic.controller.RandomPlayQueueController">
         <property name="viewName" value="reload"/>
         <property name="playerService" ref="playerService"/>
-        <property name="mediaFileService" ref="mediaFileService"/>
         <property name="searchService" ref="searchService"/>
         <property name="reloadFrames">
             <list>
@@ -394,7 +393,7 @@
                 <prop key="/createShare.view">shareManagementController</prop>
                 <prop key="/setRating.view">setRatingController</prop>
                 <prop key="/top.view">topController</prop>
-                <prop key="/randomPlaylist.view">randomPlaylistController</prop>
+                <prop key="/randomPlayQueue.view">randomPlayQueueController</prop>
                 <prop key="/changeCoverArt.view">changeCoverArtController</prop>
                 <prop key="/login.view">multiController</prop>
                 <prop key="/recover.view">multiController</prop>

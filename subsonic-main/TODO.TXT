@@ -29,7 +29,6 @@ REST doc: create getVideos example.
 Postponed:
   - Show toast when saving queue as playlist (and when saving settings)
   - Increase line height in playlist.jsp
-  - Rename RandomPlaylistController.
   - Rename to play queue in Settings > Player.
   - Show "isPublic", #songs, duration in playlist.jsp.
   - Show message if nothing is starred.
