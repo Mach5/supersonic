@@ -171,6 +171,9 @@
         <property name="formView" value="musicFolderSettings"/>
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaScannerService" ref="mediaScannerService"/>
+        <property name="artistDao" ref="artistDao"/>
+        <property name="albumDao" ref="albumDao"/>
+        <property name="mediaFolderDao" ref="mediaFileDao"/>
     </bean>
     <bean id="networkSettingsController" class="net.sourceforge.subsonic.controller.NetworkSettingsController">
         <property name="commandClass" value="net.sourceforge.subsonic.command.NetworkSettingsCommand"/>

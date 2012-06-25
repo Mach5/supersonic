@@ -10,10 +10,10 @@ Updated Slovenian translation, courtesy of Jan Jam&#353;ek
 Automatically import all playlists on start-up.
 Show all playlist metadata.
 Fixed problem with no files being showed if removing and re-adding a media folder with scans in between.
+Added "Settings > Media folders > Clean-up database"
 
 TODO IN 4.7
 -----------------
-Optionally, create "Clean database" setting
 Make it possible to refresh left frame? At least bypass browser cache.
 Go thru bug reports.
 Retest playlist import (different encodings)

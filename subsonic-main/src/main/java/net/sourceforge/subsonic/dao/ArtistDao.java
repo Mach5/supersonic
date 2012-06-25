@@ -124,6 +124,16 @@ public class ArtistDao extends AbstractDao {
         }
     }
 
+    public void expunge() {
+        int minId = queryForInt("select id from artist where true limit 1", 0);
+        int maxId = queryForInt("select max(id) from artist", 0);
+
+        final int batchSize = 1000;
+        for (int id = minId; id <= maxId; id += batchSize) {
+            update("delete from artist where id between ? and ? and not present", id, id + batchSize);
+        }
+    }
+
     public void starArtist(int artistId, String username) {
         unstarArtist(artistId, username);
         update("insert into starred_artist(artist_id, username, created) values (?,?,?)", artistId, username, new Date());

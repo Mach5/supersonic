@@ -315,6 +315,17 @@ public class MediaFileDao extends AbstractDao {
         }
     }
 
+    public void expunge() {
+        int minId = queryForInt("select id from media_file where true limit 1", 0);
+        int maxId = queryForInt("select max(id) from media_file", 0);
+
+        final int batchSize = 1000;
+        for (int id = minId; id <= maxId; id += batchSize) {
+            update("delete from media_file where id between ? and ? and not present", id, id + batchSize);
+        }
+        update("checkpoint");
+    }
+
     private static class MediaFileMapper implements ParameterizedRowMapper<MediaFile> {
         public MediaFile mapRow(ResultSet rs, int rowNum) throws SQLException {
             return new MediaFile(

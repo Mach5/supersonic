@@ -82,6 +82,11 @@
         <fmt:message key="musicfoldersettings.fastcache.description"/>
     </p>
 
+    <p class="forward"><a href="musicFolderSettings.view?expunge"><fmt:message key="musicfoldersettings.expunge"/></a></p>
+    <p class="detail" style="width:60%;white-space:normal;margin-top:-10px;">
+        <fmt:message key="musicfoldersettings.expunge.description"/>
+    </p>
+
     <%--<div>--%>
         <%--<form:checkbox path="organizeByFolderStructure" cssClass="checkbox" id="organizeByFolderStructure"/>--%>
         <%--<form:label path="organizeByFolderStructure"><fmt:message key="musicfoldersettings.organizebyfolderstructure"/></form:label>--%>

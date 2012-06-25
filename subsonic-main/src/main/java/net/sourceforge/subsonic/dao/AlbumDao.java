@@ -199,6 +199,16 @@ public class AlbumDao extends AbstractDao {
         }
     }
 
+    public void expunge() {
+        int minId = queryForInt("select id from album where true limit 1", 0);
+        int maxId = queryForInt("select max(id) from album", 0);
+
+        final int batchSize = 1000;
+        for (int id = minId; id <= maxId; id += batchSize) {
+            update("delete from album where id between ? and ? and not present", id, id + batchSize);
+        }
+    }
+
     public void starAlbum(int albumId, String username) {
         unstarAlbum(albumId, username);
         update("insert into starred_album(album_id, username, created) values (?,?,?)", albumId, username, new Date());
