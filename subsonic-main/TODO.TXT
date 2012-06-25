@@ -14,10 +14,15 @@ Added "Settings > Media folders > Clean-up database"
 
 TODO IN 4.7
 -----------------
+"Top rated" slow (BKKKPewsey)
+Problems importing playlists (BKKKPewsey)
+Displayed album year doesn't update when editing corresponding tag (Foyaxe)
+Album art broken on IE8.
+Test that sorting by track ID actually work, also when title doesn't contain track number.
 Make it possible to refresh left frame? At least bypass browser cache.
 Go thru bug reports.
+  http://forum.subsonic.org/forum/viewtopic.php?t=5708
 Retest playlist import (different encodings)
-Video has playlist features (PLay all, Add all..)
 Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
 ConcurrentModificationException
@@ -48,6 +53,9 @@ Test getPlaylist vs old-style IDs.
 Include minisub
     http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
 Fix broken REST scrobbling, as reported by Ben.
+JWPlayer subtitle plugin
+  http://forum.subsonic.org/forum/viewtopic.php?t=5708
+
 -
 
 HTTP Live Streaming
