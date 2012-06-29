@@ -11,15 +11,19 @@ Automatically import all playlists on start-up.
 Show all playlist metadata.
 Fixed problem with no files being showed if removing and re-adding a media folder with scans in between.
 Added "Settings > Media folders > Clean-up database"
+Fixed slow "Top rated".
 
 TODO IN 4.7
 -----------------
 Backup database in installer.
-"Top rated" slow (BKKKPewsey)
+Add "Force rescan" option.
 Problems importing playlists (BKKKPewsey)
+Video files not displayed?
+  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1382b15b29249d42
 Displayed album year doesn't update when editing corresponding tag (Foyaxe)
 Album art broken on IE8.
 Test that sorting by track ID actually work, also when title doesn't contain track number.
+  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1381ca3eb2016cb5
 Make it possible to refresh left frame? At least bypass browser cache.
 Go thru bug reports.
   http://forum.subsonic.org/forum/viewtopic.php?t=5708
