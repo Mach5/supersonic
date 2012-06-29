@@ -14,6 +14,7 @@ Added "Settings > Media folders > Clean-up database"
 
 TODO IN 4.7
 -----------------
+Backup database in installer.
 "Top rated" slow (BKKKPewsey)
 Problems importing playlists (BKKKPewsey)
 Displayed album year doesn't update when editing corresponding tag (Foyaxe)
@@ -30,6 +31,7 @@ ConcurrentModificationException
 Collapse long list of playlists.
 Update documention wrt port 4040 on Windows.
 REST doc: create getVideos example.
+Setup crashplan.
 
 Postponed:
   - Show toast when saving queue as playlist (and when saving settings)
