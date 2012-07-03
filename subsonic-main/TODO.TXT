@@ -15,8 +15,11 @@ Fixed slow "Top rated".
 
 TODO IN 4.7
 -----------------
+Covers listed as music files in demo.subsonic.org
+Collapse long list of playlists.
 Backup database in installer.
 Add "Force rescan" option.
+Less aggressive caching of left.view?
 Problems importing playlists (BKKKPewsey)
 Video files not displayed?
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1382b15b29249d42
@@ -32,7 +35,6 @@ Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
 ConcurrentModificationException
   https://mail.google.com/mail/u/0/?tab=cm#inbox/13822e43383dca84
-Collapse long list of playlists.
 Update documention wrt port 4040 on Windows.
 REST doc: create getVideos example.
 Setup crashplan.
