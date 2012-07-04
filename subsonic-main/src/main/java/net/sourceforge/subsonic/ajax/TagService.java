@@ -110,6 +110,7 @@ public class TagService {
             newMetaData.setTrackNumber(trackNumber);
             parser.setMetaData(file, newMetaData);
             mediaFileService.refreshMediaFile(file);
+            mediaFileService.refreshMediaFile(mediaFileService.getParentOf(file));
             return "UPDATED";
 
         } catch (Exception x) {

@@ -16,17 +16,17 @@ Less aggressive caching of left.view
 Collapse long list of playlists.
 Make it possible to refresh left frame.
 
+Displayed album year doesn't update when editing corresponding tag (Foyaxe)
+
 TODO IN 4.7
 -----------------
+Update documention wrt port 4040 on Windows.
 Backup database in installer.
 Add "Force rescan" option.
 Problems importing playlists (BKKKPewsey)
 Video files not displayed?
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1382b15b29249d42
-Displayed album year doesn't update when editing corresponding tag (Foyaxe)
 Album art broken on IE8.
-Test that sorting by track ID actually work, also when title doesn't contain track number.
-  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1381ca3eb2016cb5
 Go thru bug reports.
   http://forum.subsonic.org/forum/viewtopic.php?t=5708
 Retest playlist import (different encodings)
@@ -34,7 +34,6 @@ Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
 ConcurrentModificationException
   https://mail.google.com/mail/u/0/?tab=cm#inbox/13822e43383dca84
-Update documention wrt port 4040 on Windows.
 REST doc: create getVideos example.
 Setup crashplan.
 
