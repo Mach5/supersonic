@@ -24,14 +24,25 @@
             playlistService.createEmptyPlaylist(playlistCallback);
         }
 
+        function showAllPlaylists() {
+            $('#playlistOverflow').show('blind');
+            $('#showAllPlaylists').hide('blind');
+        }
+
         function playlistCallback(playlists) {
             this.playlists = playlists;
 
             $("#playlists").empty();
+            $("#playlistOverflow").empty();
             for (var i = 0; i < playlists.length; i++) {
                 var playlist = playlists[i];
+                var overflow = i > 9;
                 $("<p class='dense'><a target='main' href='playlist.view?id=" +
-                        playlist.id + "'>" + playlist.name + "&nbsp;(" + playlist.fileCount + ")</a></p>").appendTo("#playlists");
+                        playlist.id + "'>" + playlist.name + "&nbsp;(" + playlist.fileCount + ")</a></p>").appendTo(overflow ? "#playlistOverflow" : "#playlists");
+            }
+
+            if (playlists.length > 10 && !$('#playlistOverflow').is(":visible")) {
+                $('#showAllPlaylists').show();
             }
         }
     </script>
@@ -77,9 +88,12 @@
 </c:if>
 
 <h2 class="bgcolor1"><fmt:message key="left.playlists"/></h2>
-<div style='padding-left:0.5em'>
+<div id="playlistWrapper" style='padding-left:0.5em'>
     <div id="playlists"></div>
-    <div style="margin-top: 0.3em"><a href="javascript:noop()" onclick="createEmptyPlaylist()"><fmt:message key="left.createplaylist"/></a></div>
+    <div id="playlistOverflow" style="display:none"></div>
+    <div style="padding-top: 0.3em"/>
+    <div id="showAllPlaylists" style="display: none"><a href="javascript:noop()" onclick="showAllPlaylists()"><fmt:message key="left.showallplaylists"/></a></div>
+    <div><a href="javascript:noop()" onclick="createEmptyPlaylist()"><fmt:message key="left.createplaylist"/></a></div>
     <div><a href="importPlaylist.view" target="main"><fmt:message key="left.importplaylist"/></a></div>
 </div>
 
