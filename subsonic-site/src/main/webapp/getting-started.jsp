@@ -22,8 +22,7 @@
             </p>
             <p>
                 After installing and starting Subsonic, open the Subsonic web page. The web address may differ depending
-                on your installation options, but is typically <a href="http://localhost" target="_blank">http://localhost</a>
-                or <a href="http://localhost:4040" target="_blank">http://localhost:4040</a>.
+                on your installation options, but is typically <a href="http://localhost:4040" target="_blank">http://localhost:4040</a>.
             </p>
 
             <a name="1"><h2>1 Setting up music folders</h2></a>
@@ -72,8 +71,7 @@
             </p>
             <p>
                 When you get to the point where the router asks for <em>private and public ports</em>, enter the port number the
-                Subsonic server is using (normally 80 on Windows and 4040 on other operating systems) for both values.
-                If asked for a <em>protocol</em>, select TCP.
+                Subsonic server is using (normally port 4040) for both values. If asked for a <em>protocol</em>, select TCP.
             </p>
 
             <p>If you are unsure what any of this means you will probably need to consult someone with network configuration

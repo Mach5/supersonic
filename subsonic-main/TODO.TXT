@@ -15,12 +15,10 @@ Fixed slow "Top rated".
 Less aggressive caching of left.view
 Collapse long list of playlists.
 Make it possible to refresh left frame.
-
 Displayed album year doesn't update when editing corresponding tag (Foyaxe)
 
 TODO IN 4.7
 -----------------
-Update documention wrt port 4040 on Windows.
 Backup database in installer.
 Add "Force rescan" option.
 Problems importing playlists (BKKKPewsey)

@@ -55,7 +55,7 @@
                 If you're upgrading an existing Subsonic installation, you don't have to uninstall the old version first. In any case, the existing Subsonic settings are preserved.
             </p>
             <p>
-                After installing and starting Subsonic, open the Subsonic web page on <a href="http://localhost">http://localhost</a>.
+                After installing and starting Subsonic, open the Subsonic web page on <a href="http://localhost:4040">http://localhost:4040</a>.
             </p>
         </div>
     </div>
