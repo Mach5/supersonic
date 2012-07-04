@@ -51,21 +51,27 @@
 <body class="bgcolor2 leftframe" onload="init()">
 <a name="top"></a>
 
-<c:if test="${model.scanning}">
-    <div style="padding-bottom:1.0em">
-        <div class="warning"><fmt:message key="left.scanning"/></div>
-        <div class="forward"><a href="left.view"><fmt:message key="common.refresh"/></a></div>
-    </div>
-</c:if>
-
 <div style="padding-bottom:0.5em">
     <c:forEach items="${model.indexes}" var="index">
         <a href="#${index.index}" accesskey="${index.index}">${index.index}</a>
     </c:forEach>
 </div>
 
+<div style="padding-bottom:0.5em">
+    <div class="forward">
+        <c:choose>
+            <c:when test="${model.scanning}">
+                <a href="left.view"><fmt:message key="common.refresh"/></a>
+            </c:when>
+            <c:otherwise>
+                <a href="left.view?refresh=true"><fmt:message key="common.refresh"/></a>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</div>
+
 <c:if test="${fn:length(model.musicFolders) > 1}">
-    <div style="padding-top:1em">
+    <div style="padding-top:0.3em">
         <select name="musicFolderId" style="width:100%" onchange="location='left.view?musicFolderId=' + options[selectedIndex].value;" >
             <option value="-1"><fmt:message key="left.allfolders"/></option>
             <c:forEach items="${model.musicFolders}" var="musicFolder">

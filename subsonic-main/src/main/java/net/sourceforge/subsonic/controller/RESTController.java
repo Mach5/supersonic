@@ -202,7 +202,8 @@ public class RESTController extends MultiActionController {
                     new Attribute("id", shortcut.getId()));
         }
 
-        SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists = leftController.getMusicFolderContent(musicFolders).getIndexedArtists();
+        SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists =
+                leftController.getMusicFolderContent(musicFolders, false).getIndexedArtists();
 
         for (Map.Entry<MusicIndex, SortedSet<MusicIndex.Artist>> entry : indexedArtists.entrySet()) {
             builder.add("index", "name", entry.getKey().getIndex(), false);
@@ -222,7 +223,7 @@ public class RESTController extends MultiActionController {
         // Add children
         Player player = playerService.getPlayer(request, response);
         String username = securityService.getCurrentUsername(request);
-        List<MediaFile> singleSongs = leftController.getSingleSongs(musicFolders);
+        List<MediaFile> singleSongs = leftController.getSingleSongs(musicFolders, false);
 
         for (MediaFile singleSong : singleSongs) {
             builder.add("child", createAttributesForMediaFile(player, singleSong, username), true);

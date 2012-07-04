@@ -78,7 +78,7 @@ public class WapController extends MultiActionController {
             map.put("noMusic", true);
         } else {
 
-            SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> allArtists = musicIndexService.getIndexedArtists(folders);
+            SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> allArtists = musicIndexService.getIndexedArtists(folders, false);
 
             // If an index is given as parameter, only show music files for this index.
             String index = request.getParameter("index");

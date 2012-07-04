@@ -52,18 +52,20 @@ public class MusicIndexService {
     /**
      * Returns a map from music indexes to sets of artists that are direct children of the given music folders.
      *
+     *
      * @param folders The music folders.
+     * @param refresh Whether to look for updates by checking the last-modified timestamp of the music folders.
      * @return A map from music indexes to sets of artists that are direct children of this music file.
      * @throws IOException If an I/O error occurs.
      */
-    public SortedMap<MusicIndex, SortedSet<Artist>> getIndexedArtists(List<MusicFolder> folders) throws IOException {
+    public SortedMap<MusicIndex, SortedSet<Artist>> getIndexedArtists(List<MusicFolder> folders, boolean refresh) throws IOException {
 
         String[] ignoredArticles = settingsService.getIgnoredArticlesAsArray();
         String[] shortcuts = settingsService.getShortcutsAsArray();
         final List<MusicIndex> indexes = createIndexesFromExpression(settingsService.getIndexString());
 
         Comparator<MusicIndex> indexComparator = new MusicIndexComparator(indexes);
-        SortedSet<Artist> artists = createArtists(folders, ignoredArticles, shortcuts);
+        SortedSet<Artist> artists = createArtists(folders, ignoredArticles, shortcuts, refresh);
         SortedMap<MusicIndex, SortedSet<Artist>> result = new TreeMap<MusicIndex, SortedSet<Artist>>(indexComparator);
 
         for (Artist artist : artists) {
@@ -127,20 +129,21 @@ public class MusicIndexService {
         return result;
     }
 
-    private SortedSet<Artist> createArtists(List<MusicFolder> folders, String[] ignoredArticles, String[] shortcuts) throws IOException {
+    private SortedSet<Artist> createArtists(List<MusicFolder> folders, String[] ignoredArticles, String[] shortcuts, boolean refresh) throws IOException {
         return settingsService.isOrganizeByFolderStructure() ?
-                createArtistsByFolderStructure(folders, ignoredArticles, shortcuts) :
+                createArtistsByFolderStructure(folders, ignoredArticles, shortcuts, refresh) :
                 createArtistsByTagStructure(folders, ignoredArticles, shortcuts);
     }
 
-    private SortedSet<Artist> createArtistsByFolderStructure(List<MusicFolder> folders, String[] ignoredArticles, String[] shortcuts) {
+    private SortedSet<Artist> createArtistsByFolderStructure(List<MusicFolder> folders, String[] ignoredArticles,
+                                                             String[] shortcuts, boolean refresh) {
         SortedMap<String, Artist> artistMap = new TreeMap<String, Artist>();
         Set<String> shortcutSet = new HashSet<String>(Arrays.asList(shortcuts));
 
         for (MusicFolder folder : folders) {
 
-            MediaFile root = mediaFileService.getMediaFile(folder.getPath(), true);
-            List<MediaFile> children = mediaFileService.getChildrenOf(root, false, true, true, true);
+            MediaFile root = mediaFileService.getMediaFile(folder.getPath(), !refresh);
+            List<MediaFile> children = mediaFileService.getChildrenOf(root, false, true, true, !refresh);
             for (MediaFile child : children) {
                 if (shortcutSet.contains(child.getName())) {
                     continue;

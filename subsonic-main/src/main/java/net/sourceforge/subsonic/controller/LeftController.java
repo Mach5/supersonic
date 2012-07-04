@@ -34,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.service.PlaylistService;
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.LastModified;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
@@ -139,8 +140,8 @@ public class LeftController extends ParameterizableViewController {
         List<MusicFolder> musicFoldersToUse = selectedMusicFolder == null ? allMusicFolders : Arrays.asList(selectedMusicFolder);
         String[] shortcuts = settingsService.getShortcutsAsArray();
         UserSettings userSettings = settingsService.getUserSettings(username);
-
-        MusicFolderContent musicFolderContent = getMusicFolderContent(musicFoldersToUse);
+        boolean refresh = ServletRequestUtils.getBooleanParameter(request, "refresh", false);
+        MusicFolderContent musicFolderContent = getMusicFolderContent(musicFoldersToUse, refresh);
 
         map.put("player", playerService.getPlayer(request, response));
         map.put("scanning", mediaScannerService.isScanning());
@@ -193,11 +194,11 @@ public class LeftController extends ParameterizableViewController {
         return settingsService.getMusicFolderById(musicFolderId);
     }
 
-    protected List<MediaFile> getSingleSongs(List<MusicFolder> folders) throws IOException {
+    protected List<MediaFile> getSingleSongs(List<MusicFolder> folders, boolean refresh) throws IOException {
         List<MediaFile> result = new ArrayList<MediaFile>();
         for (MusicFolder folder : folders) {
-            MediaFile parent = mediaFileService.getMediaFile(folder.getPath(), true);
-            result.addAll(mediaFileService.getChildrenOf(parent, true, false, true, true));
+            MediaFile parent = mediaFileService.getMediaFile(folder.getPath(), !refresh);
+            result.addAll(mediaFileService.getChildrenOf(parent, true, false, true, !refresh));
         }
         return result;
     }
@@ -217,9 +218,9 @@ public class LeftController extends ParameterizableViewController {
         return result;
     }
 
-    public MusicFolderContent getMusicFolderContent(List<MusicFolder> musicFoldersToUse) throws Exception {
-        SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists = musicIndexService.getIndexedArtists(musicFoldersToUse);
-        List<MediaFile> singleSongs = getSingleSongs(musicFoldersToUse);
+    public MusicFolderContent getMusicFolderContent(List<MusicFolder> musicFoldersToUse, boolean refresh) throws Exception {
+        SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists = musicIndexService.getIndexedArtists(musicFoldersToUse, refresh);
+        List<MediaFile> singleSongs = getSingleSongs(musicFoldersToUse, refresh);
         return new MusicFolderContent(indexedArtists, singleSongs);
     }
 
