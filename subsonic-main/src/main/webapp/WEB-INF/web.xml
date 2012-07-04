@@ -136,17 +136,6 @@
         </init-param>
     </filter>
 
-    <filter>
-        <description>The "Expires" HTTP header is set to avoid overly eager browser caching of
-            pages that implements LastModified.</description>
-        <filter-name>ExpiresFilter</filter-name>
-        <filter-class>net.sourceforge.subsonic.filter.ResponseHeaderFilter</filter-class>
-        <init-param>
-            <param-name>Expires</param-name>
-            <param-value>Thu, 01 Dec 1994 16:00:00 GMT</param-value>
-        </init-param>
-    </filter>
-
     <filter-mapping>
         <filter-name>CacheFilter</filter-name>
         <url-pattern>/icons/*</url-pattern>
@@ -183,11 +172,6 @@
     <filter-mapping>
         <filter-name>NoCacheFilter</filter-name>
         <url-pattern>/home.view</url-pattern>
-    </filter-mapping>
-
-    <filter-mapping>
-        <filter-name>ExpiresFilter</filter-name>
-        <url-pattern>/left.view</url-pattern>
     </filter-mapping>
 
     <filter>

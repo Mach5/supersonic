@@ -12,6 +12,7 @@ Show all playlist metadata.
 Fixed problem with no files being showed if removing and re-adding a media folder with scans in between.
 Added "Settings > Media folders > Clean-up database"
 Fixed slow "Top rated".
+Less aggressive caching of left.view
 
 TODO IN 4.7
 -----------------
@@ -19,7 +20,6 @@ Covers listed as music files in demo.subsonic.org
 Collapse long list of playlists.
 Backup database in installer.
 Add "Force rescan" option.
-Less aggressive caching of left.view?
 Problems importing playlists (BKKKPewsey)
 Video files not displayed?
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1382b15b29249d42

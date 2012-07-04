@@ -60,7 +60,7 @@ import net.sourceforge.subsonic.util.StringUtil;
  *
  * @author Sindre Mehus
  */
-public class LeftController extends ParameterizableViewController implements LastModified {
+public class LeftController extends ParameterizableViewController {
 
     private static final Logger LOG = Logger.getLogger(LeftController.class);
 
@@ -77,8 +77,11 @@ public class LeftController extends ParameterizableViewController implements Las
     private MediaFileService mediaFileService;
     private MusicIndexService musicIndexService;
     private PlayerService playerService;
-    private PlaylistService playlistService;
 
+    /**
+     * Note: This class intentionally does not implement org.springframework.web.servlet.mvc.LastModified
+     * as we don't need browser-side caching of left.jsp.  This method is only used by RESTController.
+     */
     public long getLastModified(HttpServletRequest request) {
         saveSelectedMusicFolder(request);
 
@@ -242,10 +245,6 @@ public class LeftController extends ParameterizableViewController implements Las
 
     public void setPlayerService(PlayerService playerService) {
         this.playerService = playerService;
-    }
-
-    public void setPlaylistService(PlaylistService playlistService) {
-        this.playlistService = playlistService;
     }
 
     public static class MusicFolderContent {
