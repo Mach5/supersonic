@@ -161,14 +161,6 @@ public class MediaFileService {
         return getMediaFile(mediaFile.getParentPath());
     }
 
-    public List<MediaFile> getChildrenOf(String parentPath, boolean includeFiles, boolean includeDirectories, boolean sort) {
-        return getChildrenOf(new File(parentPath), includeFiles, includeDirectories, sort);
-    }
-
-    public List<MediaFile> getChildrenOf(File parent, boolean includeFiles, boolean includeDirectories, boolean sort) {
-        return getChildrenOf(getMediaFile(parent), includeFiles, includeDirectories, sort);
-    }
-
     /**
      * Returns all media files that are children of a given media file.
      *

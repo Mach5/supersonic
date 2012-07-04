@@ -208,7 +208,8 @@ public class DownloadController implements Controller, LastModified {
         ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
         out.setMethod(ZipOutputStream.STORED);  // No compression.
 
-        List<MediaFile> allChildren = mediaFileService.getChildrenOf(dir, true, true, true);
+        MediaFile parent = mediaFileService.getMediaFile(dir);
+        List<MediaFile> allChildren = mediaFileService.getChildrenOf(parent, true, true, true);
         List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
         for (int index : indexes) {
             mediaFiles.add(allChildren.get(index));
