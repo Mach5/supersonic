@@ -53,18 +53,6 @@
     </c:forEach>
 </div>
 
-<c:if test="${model.statistics.songCount gt 0}">
-    <div class="detail">
-        <fmt:message key="left.statistics">
-            <fmt:param value="${model.statistics.artistCount}"/>
-            <fmt:param value="${model.statistics.albumCount}"/>
-            <fmt:param value="${model.statistics.songCount}"/>
-            <fmt:param value="${model.bytes}"/>
-            <fmt:param value="${model.hours}"/>
-        </fmt:message>
-    </div>
-</c:if>
-
 <c:if test="${fn:length(model.musicFolders) > 1}">
     <div style="padding-top:1em">
         <select name="musicFolderId" style="width:100%" onchange="location='left.view?musicFolderId=' + options[selectedIndex].value;" >
@@ -156,7 +144,20 @@
     </p>
 </c:forEach>
 
+<c:if test="${model.statistics.songCount gt 0}">
+    <div class="detail" style="padding-top: 0.1em; padding-left: 0.7em">
+        <fmt:message key="left.statistics">
+            <fmt:param value="${model.statistics.artistCount}"/>
+            <fmt:param value="${model.statistics.albumCount}"/>
+            <fmt:param value="${model.statistics.songCount}"/>
+            <fmt:param value="${model.bytes}"/>
+            <fmt:param value="${model.hours}"/>
+        </fmt:message>
+    </div>
+</c:if>
+
 <div style="height:5em"></div>
+
 
 <div class="bgcolor2" style="opacity: 1.0; clear: both; position: fixed; bottom: 0; right: 0; left: 0;
       padding: 0.25em 0.75em 0.25em 0.75em; border-top:1px solid black; max-width: 850px;">
