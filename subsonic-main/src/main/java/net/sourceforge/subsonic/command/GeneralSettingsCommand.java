@@ -45,6 +45,7 @@ public class GeneralSettingsCommand {
     private String themeIndex;
     private Theme[] themes;
     private boolean isReloadNeeded;
+    private boolean toast;
 
     public String getMusicFileTypes() {
         return musicFileTypes;
@@ -180,5 +181,13 @@ public class GeneralSettingsCommand {
 
     public void setGettingStartedEnabled(boolean gettingStartedEnabled) {
         this.gettingStartedEnabled = gettingStartedEnabled;
+    }
+
+    public boolean isToast() {
+        return toast;
+    }
+
+    public void setToast(boolean toast) {
+        this.toast = toast;
     }
 }

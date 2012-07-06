@@ -39,6 +39,7 @@ public class AdvancedSettingsCommand {
     private boolean ldapAutoShadowing;
     private String brand;
     private boolean isReloadNeeded;
+    private boolean toast;
 
     public String getDownsampleCommand() {
         return downsampleCommand;
@@ -142,5 +143,13 @@ public class AdvancedSettingsCommand {
 
     public boolean isReloadNeeded() {
         return isReloadNeeded;
+    }
+
+    public boolean isToast() {
+        return toast;
+    }
+
+    public void setToast(boolean toast) {
+        this.toast = toast;
     }
 }

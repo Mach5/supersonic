@@ -85,6 +85,7 @@ public class GeneralSettingsController extends SimpleFormController {
         int localeIndex = Integer.parseInt(command.getLocaleIndex());
         Locale locale = settingsService.getAvailableLocales()[localeIndex];
 
+        command.setToast(true);
         command.setReloadNeeded(!settingsService.getIndexString().equals(command.getIndex()) ||
                                 !settingsService.getIgnoredArticles().equals(command.getIgnoredArticles()) ||
                                 !settingsService.getShortcuts().equals(command.getShortcuts()) ||

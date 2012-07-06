@@ -3,11 +3,13 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
 </head>
 <body class="mainframe bgcolor1">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="musicFolder"/>
+    <c:param name="toast" value="${command.reload}"/>
 </c:import>
 
 <form:form commandName="command" action="musicFolderSettings.view" method="post">

@@ -1,19 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
+<%--@elvariable id="command" type="net.sourceforge.subsonic.command.AdvancedSettingsCommand"--%>
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
     <script type="text/javascript" language="javascript">
         function enableLdapFields() {
-            var checkbox = $("ldap");
-            var table = $("ldapTable");
-
-            if (checkbox && checkbox.checked) {
-                table.show();
-            } else {
-                table.hide();
-            }
+            $("#ldap").is(":checked") ? $("#ldapTable").show() : $("#ldapTable").hide();
         }
     </script>
 </head>
@@ -24,6 +18,7 @@
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="advanced"/>
+    <c:param name="toast" value="${command.toast}"/>
 </c:import>
 
 <form:form method="post" action="advancedSettings.view" commandName="command">
@@ -76,7 +71,7 @@
 
         <tr>
             <td colspan="2">
-                <form:checkbox path="ldapEnabled" id="ldap" cssClass="checkbox" onclick="javascript:enableLdapFields()"/>
+                <form:checkbox path="ldapEnabled" id="ldap" cssClass="checkbox" onclick="enableLdapFields()"/>
                 <label for="ldap"><fmt:message key="advancedsettings.ldapenabled"/></label>
                 <c:import url="helpToolTip.jsp"><c:param name="topic" value="ldap"/></c:import>
             </td>

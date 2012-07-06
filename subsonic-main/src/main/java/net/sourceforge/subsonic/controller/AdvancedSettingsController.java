@@ -56,6 +56,7 @@ public class AdvancedSettingsController extends SimpleFormController {
     protected void doSubmitAction(Object comm) throws Exception {
         AdvancedSettingsCommand command = (AdvancedSettingsCommand) comm;
 
+        command.setToast(true);
         command.setReloadNeeded(false);
         settingsService.setDownsamplingCommand(command.getDownsampleCommand());
 

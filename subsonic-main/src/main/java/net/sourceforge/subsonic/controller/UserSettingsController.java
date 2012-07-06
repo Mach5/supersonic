@@ -91,6 +91,7 @@ public class UserSettingsController extends SimpleFormController {
             updateUser(command);
         }
         resetCommand(command);
+        command.setToast(true);
     }
 
     private void deleteUser(UserSettingsCommand command) {
