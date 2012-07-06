@@ -113,7 +113,10 @@
                 mediaFileIds.push($("#songId" + i).html());
             }
         }
-        playlistService.appendToPlaylist(playlistId, mediaFileIds, function (){top.left.updatePlaylists();});
+        playlistService.appendToPlaylist(playlistId, mediaFileIds, function (){
+            top.left.updatePlaylists();
+            $().toastmessage("showSuccessToast", "<fmt:message key="playlist.toast.appendtoplaylist"/>");
+        });
     }
 
 </script>

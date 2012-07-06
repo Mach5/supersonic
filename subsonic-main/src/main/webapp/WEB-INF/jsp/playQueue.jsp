@@ -198,7 +198,10 @@
         playQueueService.sortByAlbum(playQueueCallback);
     }
     function onSavePlaylist() {
-        playQueueService.savePlaylist(function () {top.left.updatePlaylists();});
+        playQueueService.savePlaylist(function () {
+            top.left.updatePlaylists();
+            $().toastmessage("showSuccessToast", "<fmt:message key="playlist.toast.saveasplaylist"/>");
+        });
     }
     function onAppendPlaylist() {
         playlistService.getWritablePlaylists(playlistCallback);
@@ -220,7 +223,10 @@
                 mediaFileIds.push(songs[i].id);
             }
         }
-        playlistService.appendToPlaylist(playlistId, mediaFileIds, function (){top.left.updatePlaylists();});
+        playlistService.appendToPlaylist(playlistId, mediaFileIds, function (){
+            top.left.updatePlaylists();
+            $().toastmessage("showSuccessToast", "<fmt:message key="playlist.toast.appendtoplaylist"/>");
+        });
     }
 
     function playQueueCallback(playQueue) {
