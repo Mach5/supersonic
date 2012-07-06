@@ -16,9 +16,11 @@ Less aggressive caching of left.view
 Collapse long list of playlists.
 Make it possible to refresh left frame.
 Displayed album year doesn't update when editing corresponding tag (Foyaxe)
+Include minisub
 
 TODO IN 4.7
 -----------------
+REST doc: create getVideos example.
 Backup database in installer.
 Add "Force rescan" option.
 Problems importing playlists (BKKKPewsey)
@@ -32,7 +34,6 @@ Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
 ConcurrentModificationException
   https://mail.google.com/mail/u/0/?tab=cm#inbox/13822e43383dca84
-REST doc: create getVideos example.
 Setup crashplan.
 
 Postponed:
@@ -54,8 +55,6 @@ Support comment and ratings for Album table.
 JSON exception with ampersand.
 minisub doesn't play.
 Test getPlaylist vs old-style IDs.
-Include minisub
-    http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
 Fix broken REST scrobbling, as reported by Ben.
 JWPlayer subtitle plugin
   http://forum.subsonic.org/forum/viewtopic.php?t=5708

@@ -114,11 +114,13 @@
         </table>
     </form>
 </c:if>
-<h2><img src="<spring:theme code="androidImage"/>" alt=""/>&nbsp;<fmt:message key="more.apps.title"/></h2>
-<fmt:message key="more.apps.text"/>
 
-<h2><img src="<spring:theme code="wapImage"/>" alt=""/>&nbsp;<fmt:message key="more.mobile.title"/></h2>
-<fmt:message key="more.mobile.text"><fmt:param value="${model.brand}"/></fmt:message>
+<a href="http://subsonic.org/pages/apps.jsp" target="_blank"><img alt="Apps" src="/icons/apps.png" style="float: right;margin-left: 3em; margin-right: 3em"/></a>
+<h2><img src="<spring:theme code="androidImage"/>" alt=""/>&nbsp;<fmt:message key="more.apps.title"/></h2>
+<fmt:message key="more.apps.text"/> 
+<a href="/mini/index.html" target="_blank"><img alt="MiniSub" src="/icons/minisub.png" style="float: right;margin-left: 3em; margin-right: 3em"/></a>
+<h2><fmt:message key="more.minisub.title"/></h2>
+<fmt:message key="more.minisub.text"/>
 
 <h2><img src="<spring:theme code="podcastImage"/>" alt=""/>&nbsp;<fmt:message key="more.podcast.title"/></h2>
 <fmt:message key="more.podcast.text"/>
