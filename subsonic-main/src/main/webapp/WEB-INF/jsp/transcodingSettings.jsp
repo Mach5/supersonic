@@ -2,11 +2,13 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
 </head>
 <body class="mainframe bgcolor1">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="transcoding"/>
+    <c:param name="toast" value="${model.toast}"/>
 </c:import>
 
 <form method="post" action="transcodingSettings.view">

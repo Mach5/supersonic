@@ -1,12 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
+<%--@elvariable id="command" type="net.sourceforge.subsonic.command.passwordsettingscommand"--%>
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
 </head>
 <body class="mainframe bgcolor1">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="password"/>
+    <c:param name="toast" value="${command.toast}"/>
     <c:param name="restricted" value="true"/>
 </c:import>
 

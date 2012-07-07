@@ -47,6 +47,7 @@ public class TranscodingSettingsController extends ParameterizableViewController
 
         if (isFormSubmission(request)) {
             handleParameters(request, map);
+            map.put("toast", true);
         }
 
         ModelAndView result = super.handleRequestInternal(request, response);

@@ -1,12 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
+<%--@elvariable id="command" type="net.sourceforge.subsonic.command.PodcastSettingsCommand"--%>
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
 </head>
 <body class="mainframe bgcolor1">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="podcast"/>
+    <c:param name="toast" value="${command.toast}"/>
 </c:import>
 
 <form:form commandName="command" action="podcastSettings.view" method="post">

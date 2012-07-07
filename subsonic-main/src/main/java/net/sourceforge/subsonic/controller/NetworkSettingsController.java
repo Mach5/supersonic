@@ -59,6 +59,7 @@ public class NetworkSettingsController extends SimpleFormController {
 
     protected void doSubmitAction(Object cmd) throws Exception {
         NetworkSettingsCommand command = (NetworkSettingsCommand) cmd;
+        command.setToast(true);
 
         settingsService.setPortForwardingEnabled(command.isPortForwardingEnabled());
         settingsService.setUrlRedirectionEnabled(command.isUrlRedirectionEnabled());

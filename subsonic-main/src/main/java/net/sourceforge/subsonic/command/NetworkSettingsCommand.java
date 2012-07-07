@@ -33,6 +33,7 @@ public class NetworkSettingsCommand {
     private boolean trial;
     private Date trialExpires;
     private boolean trialExpired;
+    private boolean toast;
 
     public void setPortForwardingEnabled(boolean portForwardingEnabled) {
         this.portForwardingEnabled = portForwardingEnabled;
@@ -88,5 +89,13 @@ public class NetworkSettingsCommand {
 
     public boolean isTrialExpired() {
         return trialExpired;
+    }
+
+    public boolean isToast() {
+        return toast;
+    }
+
+    public void setToast(boolean toast) {
+        this.toast = toast;
     }
 }

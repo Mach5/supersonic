@@ -17,6 +17,7 @@ Collapse long list of playlists.
 Make it possible to refresh left frame.
 Displayed album year doesn't update when editing corresponding tag (Foyaxe)
 Include minisub
+Show toast when saving queue as playlist (and when saving settings)
 
 TODO IN 4.7
 -----------------
@@ -38,7 +39,6 @@ ConcurrentModificationException
 Setup crashplan.
 
 Postponed:
-  - Show toast when saving queue as playlist (and when saving settings)
   - Increase line height in playlist.jsp
   - Rename to play queue in Settings > Player.
   - Show "isPublic", #songs, duration in playlist.jsp.
