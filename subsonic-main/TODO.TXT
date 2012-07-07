@@ -22,7 +22,6 @@ REST: Added getUsers.
 
 TODO IN 4.7
 -----------------
-REST doc: create getVideos example.
 Replace usage of dwr.util and prototype with jquery.
 Backup database in installer.
 Add "Force rescan" option.

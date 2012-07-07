@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.8.0">
+
+    <videos>
+      <video id="7228" parent="7217" title="Ringeren i Notre Dame" album="Barn" isDir="false" coverArt="7217" created="2011-04-15T11:47:20" duration="5226" bitRate="1339" size="874815058" suffix="avi" contentType="video/avi" isVideo="true" path="Barn/Ringeren i Notre Dame.avi" transcodedSuffix="flv" transcodedContentType="video/x-flv"/>
+      <video id="7229" parent="7217" title="Tarzan" album="Barn" isDir="false" coverArt="7217" created="2011-04-27T20:41:24" duration="5086" bitRate="1791" size="1138861232" suffix="avi" contentType="video/avi" isVideo="true" path="Barn/Tarzan.avi" transcodedSuffix="flv" transcodedContentType="video/x-flv"/>
+      <video id="7231" parent="7217" title="UP" album="Barn" isDir="false" coverArt="7217" created="2010-07-20T22:19:49" duration="5532" bitRate="1517" size="1049047040" suffix="avi" contentType="video/avi" isVideo="true" path="Barn/UP.avi" transcodedSuffix="flv" transcodedContentType="video/x-flv"/>
+    </videos>
+
+</subsonic-response>

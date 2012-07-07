@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<subsonic-response xmlns="http://subsonic.org/restapi"
-                   status="ok" version="1.8.0">
+<subsonic-response xmlns="http://subsonic.org/restapi" status="ok" version="1.8.0">
     <users>
-        <user username="sindre" email="sindre@activeobjects.no" scrobblingEnabled="true" adminRole="false" settingsRole="true" downloadRole="true" uploadRole="false" playlistRole="true"
-              coverArtRole="true" commentRole="true" podcastRole="true" streamRole="true" jukeboxRole="true" shareRole="false"/>
-        <user username="magnus" email="magnus@activeobjects.no" scrobblingEnabled="true" adminRole="false" settingsRole="true" downloadRole="true" uploadRole="false" playlistRole="true"
-              coverArtRole="true" commentRole="true" podcastRole="true" streamRole="true" jukeboxRole="true" shareRole="false"/>
+        <user username="admin"  scrobblingEnabled="true" adminRole="true" settingsRole="true" downloadRole="true" uploadRole="true" playlistRole="true" coverArtRole="true" commentRole="true" podcastRole="true" streamRole="true" jukeboxRole="true" shareRole="true"/>
+        <user username="john" email="johsn@dfsdf" scrobblingEnabled="false" adminRole="false" settingsRole="true" downloadRole="false" uploadRole="false" playlistRole="true" coverArtRole="false" commentRole="false" podcastRole="false" streamRole="true" jukeboxRole="false" shareRole="false"/>
+        <user username="sindre" email="sindre@activeobjects.no" scrobblingEnabled="false" adminRole="false" settingsRole="true" downloadRole="false" uploadRole="false" playlistRole="true" coverArtRole="false" commentRole="false" podcastRole="false" streamRole="true" jukeboxRole="false" shareRole="false"/>
     </users>
 </subsonic-response>
-
