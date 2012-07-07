@@ -1589,26 +1589,51 @@ public class RESTController extends MultiActionController {
         UserSettings userSettings = settingsService.getUserSettings(username);
 
         XMLBuilder builder = createXMLBuilder(request, response, true);
-        List<Attribute> attributes = Arrays.asList(
-                new Attribute("username", requestedUser.getUsername()),
-                new Attribute("email", requestedUser.getEmail()),
-                new Attribute("scrobblingEnabled", userSettings.isLastFmEnabled()),
-                new Attribute("adminRole", requestedUser.isAdminRole()),
-                new Attribute("settingsRole", requestedUser.isSettingsRole()),
-                new Attribute("downloadRole", requestedUser.isDownloadRole()),
-                new Attribute("uploadRole", requestedUser.isUploadRole()),
-                new Attribute("playlistRole", true),  // Since 1.8.0
-                new Attribute("coverArtRole", requestedUser.isCoverArtRole()),
-                new Attribute("commentRole", requestedUser.isCommentRole()),
-                new Attribute("podcastRole", requestedUser.isPodcastRole()),
-                new Attribute("streamRole", requestedUser.isStreamRole()),
-                new Attribute("jukeboxRole", requestedUser.isJukeboxRole()),
-                new Attribute("shareRole", requestedUser.isShareRole())
-        );
+        List<Attribute> attributes = createAttributesForUser(requestedUser, userSettings);
 
         builder.add("user", attributes, true);
         builder.endAll();
         response.getWriter().print(builder);
+    }
+
+    public void getUsers(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+
+        User currentUser = securityService.getCurrentUser(request);
+        if (!currentUser.isAdminRole()) {
+            error(request, response, ErrorCode.NOT_AUTHORIZED, currentUser.getUsername() + " is not authorized to get details for other users.");
+            return;
+        }
+
+        XMLBuilder builder = createXMLBuilder(request, response, true);
+        builder.add("users", false);
+        for (User user : securityService.getAllUsers()) {
+            UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
+            List<Attribute> attributes = createAttributesForUser(user, userSettings);
+            builder.add("user", attributes, true);
+
+        }
+        builder.endAll();
+        response.getWriter().print(builder);
+    }
+
+    private List<Attribute> createAttributesForUser(User user, UserSettings userSettings) {
+        return Arrays.asList(
+                new Attribute("username", user.getUsername()),
+                new Attribute("email", user.getEmail()),
+                new Attribute("scrobblingEnabled", userSettings.isLastFmEnabled()),
+                new Attribute("adminRole", user.isAdminRole()),
+                new Attribute("settingsRole", user.isSettingsRole()),
+                new Attribute("downloadRole", user.isDownloadRole()),
+                new Attribute("uploadRole", user.isUploadRole()),
+                new Attribute("playlistRole", true),  // Since 1.8.0
+                new Attribute("coverArtRole", user.isCoverArtRole()),
+                new Attribute("commentRole", user.isCommentRole()),
+                new Attribute("podcastRole", user.isPodcastRole()),
+                new Attribute("streamRole", user.isStreamRole()),
+                new Attribute("jukeboxRole", user.isJukeboxRole()),
+                new Attribute("shareRole", user.isShareRole())
+        );
     }
 
     public void createUser(HttpServletRequest request, HttpServletResponse response) throws Exception {

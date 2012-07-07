@@ -339,6 +339,7 @@
         <td style="white-space: nowrap; padding-right: 0.6em">User management</td>
         <td>
             <code><a href="#getUser">getUser</a></code>,
+            <code><a href="#getUsers">getUsers</a></code>,
             <code><a href="#createUser">createUser</a></code>,
             <code><a href="#deleteUser">deleteUser</a></code>,
             <code><a href="#changePassword">changePassword</a></code>
@@ -399,6 +400,7 @@
 <%@ include file="api-addChatMessage.jsp" %>
 
 <%@ include file="api-getUser.jsp" %>
+<%@ include file="api-getUsers.jsp" %>
 <%@ include file="api-createUser.jsp" %>
 <%@ include file="api-deleteUser.jsp" %>
 <%@ include file="api-changePassword.jsp" %>

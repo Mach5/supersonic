@@ -27,6 +27,7 @@
             <xs:element name="jukeboxStatus" type="sub:JukeboxStatus" minOccurs="1" maxOccurs="1"/>
             <xs:element name="jukeboxPlaylist" type="sub:JukeboxPlaylist" minOccurs="1" maxOccurs="1"/>
             <xs:element name="license" type="sub:License" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="users" type="sub:Users" minOccurs="1" maxOccurs="1"/>
             <xs:element name="user" type="sub:User" minOccurs="1" maxOccurs="1"/>
             <xs:element name="chatMessages" type="sub:ChatMessages" minOccurs="1" maxOccurs="1"/>
             <xs:element name="albumList" type="sub:AlbumList" minOccurs="1" maxOccurs="1"/>
@@ -407,6 +408,12 @@
         <xs:attribute name="email" type="xs:string" use="optional"/>
         <xs:attribute name="key" type="xs:string" use="optional"/>
         <xs:attribute name="date" type="xs:dateTime" use="optional"/>
+    </xs:complexType>
+
+    <xs:complexType name="Users">
+        <xs:sequence>
+            <xs:element name="user" type="sub:User" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
     </xs:complexType>
 
     <xs:complexType name="User">
