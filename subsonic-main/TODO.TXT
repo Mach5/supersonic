@@ -22,6 +22,8 @@ REST: Added getUsers.
 
 TODO IN 4.7
 -----------------
+HLS support
+update changelog for beta3
 Album art broken on IE8.
 Backup database in installer.
 Problems importing playlists (BKKKPewsey)
@@ -38,11 +40,8 @@ Setup crashplan.
 Add "Force rescan" option.
 
 Postponed:
-Replace usage of dwr.util and prototype with jquery.
   - Increase line height in playlist.jsp
   - Rename to play queue in Settings > Player.
-  - Show "isPublic", #songs, duration in playlist.jsp.
-  - Show message if nothing is starred.
   - Show message if no songs are selected when doing add to playlist.
   - Encourage users to save email addresses, also for admin.  Explain why.
   - Update apps to include PlayBook version.
@@ -51,6 +50,7 @@ Replace usage of dwr.util and prototype with jquery.
   - Eliminate HomeController.Album.
   - Clicking play button on a video podcast doesn't work.
 
+Replace usage of dwr.util and prototype with jquery.
 Handle albums without artist. Don't create them?
 Support comment and ratings for Album table.
 JSON exception with ampersand.
@@ -65,6 +65,30 @@ JWPlayer subtitle plugin
 HTTP Live Streaming
   ffmpeg segmenting
   https://mail.google.com/mail/?tab=cm#inbox/1373a3cb757515ee
+  https://developer.apple.com/library/ios/#documentation/NetworkingInternet/Conceptual/StreamingMediaGuide/Introduction/Introduction.html
+  http://tools.ietf.org/html/draft-pantos-http-live-streaming-08
+  HLS clients: Safari or VLC.
+  Typically H264/AAC in a MPEG2 Transport Stream (.ts)
+  rfc:  Each media segment MUST be formatted as an MPEG-2 Transport Stream.
+  EXT-X-DISCONTINUITY
+  EXT-X-TARGETDURATION
+  EXT-X-VERSION
+  EXT-X-ALLOW-CACHE
+  Examples in rfc
+  ffmpeg -itsoffset and -copyts options
+  ffmpeg -ss %o -t 10 -i %s -async 1 -b %bk -s %wx%h -ar 44100 -ac 2 -v 0 -f mpegts -vcodec libx264 -preset superfast -threads 0 -
+  REST: Document new "duration" parameter.
+  Set proper content type for mpeg ts.
+  Don't keep ffmpeg config in transcoding2.
+  Support multiple bitrates.
+  Don't kill concurrent streams.
+  Move downsample command to settings > transcoding
+  Should not dynamically change video dimensions?
+  Add default hls and downsample command to web pages.
+  Use explicit columns when populating transcoding2.
+  REST doc of new hls method.
+  How to specify bitrate.
+
 Evaluate HTML5.
 Extend demo music, and add video.
 Support ISO files.
@@ -88,20 +112,13 @@ Support custom domain name in sharing (Settings > Advanced)
 Rename "offsetSeconds" to "timeOffset" in StreamController, and update API doc.
 Add "byteOffset" parameter as well.
 Add rating attributes to <directory> in getMusicDirectory.
-Subsonic Chumby
-  http://www.activeobjects.no/subsonic/forum/viewtopic.php?t=7154
-  http://forum.chumby.com/viewtopic.php?id=6733
 REST: add method to get everything in search index (binary, compressed)?
 
-Favorite rather than rating?
 Bookmark support (for audiobooks, podcasts)
 Stream from devices
   https://mail.google.com/mail/?shva=1#inbox/13352f77f870eba1
-Instant playlist
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/1323fe922bb985af
 Go through tracker.
 Does canaca allow outgoing port 4040?
-Backend service to email license keys on request.
 Recursive getFolders API method?
   https://mail.google.com/mail/?shva=1#inbox/13090cd32a9922bd
 Checkbox, combobox bg color

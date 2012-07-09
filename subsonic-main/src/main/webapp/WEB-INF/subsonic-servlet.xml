@@ -292,6 +292,11 @@
         <property name="transcodingService" ref="transcodingService"/>
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
     </bean>
+    <bean id="hlsController" class="net.sourceforge.subsonic.controller.HLSController">
+        <property name="settingsService" ref="settingsService"/>
+        <property name="playerService" ref="playerService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
+    </bean>
     <bean id="videoPlayerController" class="net.sourceforge.subsonic.controller.VideoPlayerController">
         <property name="viewName" value="videoPlayer"/>
         <property name="mediaFileService" ref="mediaFileService"/>
@@ -357,6 +362,7 @@
         <property name="albumDao" ref="albumDao"/>
         <property name="downloadController" ref="downloadController"/>
         <property name="streamController" ref="streamController"/>
+        <property name="hlsController" ref="hlsController"/>
         <property name="coverArtController" ref="coverArtController"/>
         <property name="avatarController" ref="avatarController"/>
         <property name="userSettingsController" ref="userSettingsController"/>

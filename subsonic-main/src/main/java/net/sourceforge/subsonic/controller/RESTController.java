@@ -20,6 +20,7 @@ package net.sourceforge.subsonic.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -113,6 +114,7 @@ public class RESTController extends MultiActionController {
     private HomeController homeController;
     private StatusService statusService;
     private StreamController streamController;
+    private HLSController hlsController;
     private ShareService shareService;
     private PlaylistService playlistService;
     private ChatService chatService;
@@ -1163,6 +1165,17 @@ public class RESTController extends MultiActionController {
         return null;
     }
 
+    public ModelAndView hls(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        request = wrapRequest(request);
+        User user = securityService.getCurrentUser(request);
+        if (!user.isStreamRole()) {
+            error(request, response, ErrorCode.NOT_AUTHORIZED, user.getUsername() + " is not authorized to play files.");
+            return null;
+        }
+        hlsController.handleRequest(request, response);
+        return null;
+    }
+
     public void scrobble(HttpServletRequest request, HttpServletResponse response) throws Exception {
         request = wrapRequest(request);
         XMLBuilder builder = createXMLBuilder(request, response, true);
@@ -1917,6 +1930,10 @@ public class RESTController extends MultiActionController {
 
     public void setStreamController(StreamController streamController) {
         this.streamController = streamController;
+    }
+
+    public void setHlsController(HLSController hlsController) {
+        this.hlsController = hlsController;
     }
 
     public void setChatService(ChatService chatService) {
