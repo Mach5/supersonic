@@ -135,6 +135,7 @@ public class StreamController implements Controller {
                 long fileLength = getFileLength(parameters);
                 boolean isConversion = parameters.isDownsample() || parameters.isTranscode();
                 boolean estimateContentLength = ServletRequestUtils.getBooleanParameter(request, "estimateContentLength", false);
+                boolean isHls = ServletRequestUtils.getBooleanParameter(request, "hls", false);
 
                 range = getRange(request, file);
                 if (range != null) {
@@ -144,7 +145,7 @@ public class StreamController implements Controller {
                     long firstBytePos = range.getMinimumLong();
                     long lastBytePos = fileLength - 1;
                     response.setHeader("Content-Range", "bytes " + firstBytePos + "-" + lastBytePos + "/" + fileLength);
-                } else if (!isConversion || estimateContentLength) {
+                } else if (!isHls && (!isConversion || estimateContentLength)) {
                     Util.setContentLength(response, fileLength);
                 }
 
@@ -308,13 +309,16 @@ public class StreamController implements Controller {
         Integer existingHeight = file.getHeight();
         Integer maxBitRate = ServletRequestUtils.getIntParameter(request, "maxBitRate");
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
+        int defaultDuration = file.getDurationSeconds() == null ? Integer.MAX_VALUE : file.getDurationSeconds() - timeOffset;
+        int duration = ServletRequestUtils.getIntParameter(request, "duration", defaultDuration);
+        boolean hls = ServletRequestUtils.getBooleanParameter(request, "hls", false);
 
         Dimension dim = getRequestedVideoSize(request.getParameter("size"));
         if (dim == null) {
             dim = getSuitableVideoSize(existingWidth, existingHeight, maxBitRate);
         }
 
-        return new VideoTranscodingSettings(dim.width, dim.height, timeOffset);
+        return new VideoTranscodingSettings(dim.width, dim.height, timeOffset, duration, hls);
     }
 
     protected Dimension getRequestedVideoSize(String sizeSpec) {

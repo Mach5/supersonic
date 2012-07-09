@@ -91,6 +91,7 @@ public final class StringUtil {
             {"ogv", "video/ogg"},
             {"divx", "video/divx"},
             {"m2ts", "video/MP2T"},
+            {"ts", "video/MP2T"},
 
             {"gif", "image/gif"},
             {"jpg", "image/jpeg"},
