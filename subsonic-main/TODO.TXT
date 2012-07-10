@@ -81,7 +81,6 @@ HTTP Live Streaming
   Don't kill concurrent streams.
   Add default hls and downsample command to web pages.
   Use explicit columns when populating transcoding2.
-  Support specifying multiple maxBitRate parameters.  Rename to bitRates?
   Return XML error in hls method.
 
 Evaluate HTML5.

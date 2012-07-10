@@ -9,6 +9,7 @@
     Creates an HLS (<a href="http://en.wikipedia.org/wiki/HTTP_Live_Streaming" target="_blank">HTTP Live Streaming</a>)
     playlist used for streaming video.  HLS is a streaming protocol implemented by Apple and works by breaking the overall
     stream into a sequence of small HTTP-based file downloads. It's supported by iOS and newer versions of Android.
+    This method also supports <strong>adaptive bitrate streaming</strong>, see the <code>bitRate</code> parameter.
 </p>
 <table width="100%" class="bottomspace">
     <tr>
@@ -24,14 +25,16 @@
         <td>A string which uniquely identifies the video file to stream.</td>
     </tr>
     <tr>
-        <td><code>maxBitRate</code></td>
+        <td><code>bitRate</code></td>
         <td>No</td>
         <td></td>
         <td>If specified, the server will attempt to limit the bitrate to this value, in kilobits per second.
-            If set to zero, no limit is imposed.</td>
+            If this parameter is specified more than once, the server will create a <strong>variant playlist</strong>,
+            suitable for adaptive bitrate streaming. The playlist will support streaming at all the specified bitrates.</td>
     </tr>
 
 </table>
 <p>
-    Returns an M3U8 playlist on success, or an XML document on error (in which case the HTTP content type will start with "text/xml").
+    Returns an M3U8 playlist on success (content type "application/vnd.apple.mpegurl"), or an XML document on error
+    (in which case the HTTP content type will start with "text/xml").
 </p>
