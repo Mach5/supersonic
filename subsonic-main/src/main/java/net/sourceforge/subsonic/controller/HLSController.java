@@ -56,31 +56,50 @@ public class HLSController implements Controller {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown duration for media file: " + id);
             return null;
         }
-        Integer maxBitRate = ServletRequestUtils.getIntParameter(request, "maxBitRate");
 
         Player player = playerService.getPlayer(request, response);
         response.setContentType("application/vnd.apple.mpegurl");
         response.setCharacterEncoding(StringUtil.ENCODING_UTF8);
+        int[] bitRates = ServletRequestUtils.getIntParameters(request, "bitRate");
 
         PrintWriter writer = response.getWriter();
+        if (bitRates.length > 1) {
+            generateVariantPlaylist(id, bitRates, writer);
+        } else {
+            generateNormalPlaylist(id, player, bitRates.length == 1 ? bitRates[0] : null, duration, writer);
+        }
+
+        return null;
+    }
+
+    private void generateVariantPlaylist(int id, int[] bitRatesKbps, PrintWriter writer) {
+        writer.println("#EXTM3U");
+        writer.println("#EXT-X-VERSION:1");
+
+        for (int bitRateKbps : bitRatesKbps) {
+            writer.println("#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=" + bitRateKbps * 1000L); // TODO: Or 1024?
+            writer.println("/hls.view?id=" + id + "&bitRate=" + bitRateKbps);
+        }
+    }
+
+    private void generateNormalPlaylist(int id, Player player, Integer bitRate, int totalDuration, PrintWriter writer) {
         writer.println("#EXTM3U");
         writer.println("#EXT-X-VERSION:1");
         writer.println("#EXT-X-TARGETDURATION:" + SEGMENT_DURATION);
 
-        for (int i = 0; i < duration / SEGMENT_DURATION; i++) {
+        for (int i = 0; i < totalDuration / SEGMENT_DURATION; i++) {
             int offset = i * SEGMENT_DURATION;
             writer.println("#EXTINF:" + SEGMENT_DURATION + ",");
-            writer.println(createStreamUrl(player, id, offset, SEGMENT_DURATION, maxBitRate));
+            writer.println(createStreamUrl(player, id, offset, SEGMENT_DURATION, bitRate));
         }
 
-        int remainder = duration % SEGMENT_DURATION;
+        int remainder = totalDuration % SEGMENT_DURATION;
         if (remainder > 0) {
             writer.println("#EXTINF:" + remainder + ",");
-            int offset = duration - remainder;
-            writer.println(createStreamUrl(player, id, offset, remainder, maxBitRate));
+            int offset = totalDuration - remainder;
+            writer.println(createStreamUrl(player, id, offset, remainder, bitRate));
         }
         writer.println("#EXT-X-ENDLIST");
-        return null;
     }
 
     private String createStreamUrl(Player player, int id, int offset, int duration, Integer maxBitRate) {
