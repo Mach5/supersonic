@@ -128,6 +128,7 @@ public class TranscodingSettingsController extends ParameterizableViewController
         }
         settingsService.setDownsamplingCommand(StringUtils.trim(request.getParameter("downsampleCommand")));
         settingsService.setHlsCommand(StringUtils.trim(request.getParameter("hlsCommand")));
+        settingsService.save();
     }
 
     private String getParameter(HttpServletRequest request, String name, Integer id) {
