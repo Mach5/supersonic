@@ -79,10 +79,8 @@ HTTP Live Streaming
   ffmpeg -ss %o -t 10 -i %s -async 1 -b %bk -s %wx%h -ar 44100 -ac 2 -v 0 -f mpegts -vcodec libx264 -preset superfast -threads 0 -
   REST: Document new "duration" parameter.
   Set proper content type for mpeg ts.
-  Don't keep ffmpeg config in transcoding2.
   Support multiple bitrates.
   Don't kill concurrent streams.
-  Move downsample command to settings > transcoding
   Should not dynamically change video dimensions?
   Add default hls and downsample command to web pages.
   Use explicit columns when populating transcoding2.
