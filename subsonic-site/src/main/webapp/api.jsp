@@ -293,6 +293,7 @@
         <td>
             <code><a href="#stream">stream</a></code>,
             <code><a href="#download">download</a></code>,
+            <code><a href="#hls">hls</a></code>,
             <code><a href="#getCoverArt">getCoverArt</a></code>,
             <code><a href="#getLyrics">getLyrics</a></code>,
             <code><a href="#getAvatar">getAvatar</a></code>
@@ -378,6 +379,7 @@
 
 <%@ include file="api-stream.jsp" %>
 <%@ include file="api-download.jsp" %>
+<%@ include file="api-hls.jsp" %>
 <%@ include file="api-getCoverArt.jsp" %>
 <%@ include file="api-getLyrics.jsp" %>
 <%@ include file="api-getAvatar.jsp" %>

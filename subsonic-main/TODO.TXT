@@ -22,6 +22,7 @@ REST: Added getUsers.
 
 TODO IN 4.7
 -----------------
+Add minisub chrome app to apps.jsp
 HLS support
 update changelog for beta3
 Album art broken on IE8.
@@ -78,11 +79,10 @@ HTTP Live Streaming
   ffmpeg -itsoffset and -copyts options
   REST: Document new "duration" parameter.
   Don't kill concurrent streams.
-  Should not dynamically change video dimensions?
   Add default hls and downsample command to web pages.
   Use explicit columns when populating transcoding2.
-  REST doc of new hls method.
-  How to specify bitrate.
+  Support specifying multiple maxBitRate parameters.  Rename to bitRates?
+  Return XML error in hls method.
 
 Evaluate HTML5.
 Extend demo music, and add video.
