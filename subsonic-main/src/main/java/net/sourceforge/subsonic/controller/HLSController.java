@@ -56,6 +56,7 @@ public class HLSController implements Controller {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unknown duration for media file: " + id);
             return null;
         }
+        Integer maxBitRate = ServletRequestUtils.getIntParameter(request, "maxBitRate");
 
         Player player = playerService.getPlayer(request, response);
         response.setContentType("application/vnd.apple.mpegurl");
@@ -63,26 +64,33 @@ public class HLSController implements Controller {
 
         PrintWriter writer = response.getWriter();
         writer.println("#EXTM3U");
+        writer.println("#EXT-X-VERSION:1");
         writer.println("#EXT-X-TARGETDURATION:" + SEGMENT_DURATION);
 
         for (int i = 0; i < duration / SEGMENT_DURATION; i++) {
             int offset = i * SEGMENT_DURATION;
             writer.println("#EXTINF:" + SEGMENT_DURATION + ",");
-            writer.println(createStreamUrl(player, id, SEGMENT_DURATION, offset));
+            writer.println(createStreamUrl(player, id, offset, SEGMENT_DURATION, maxBitRate));
         }
 
         int remainder = duration % SEGMENT_DURATION;
         if (remainder > 0) {
             writer.println("#EXTINF:" + remainder + ",");
             int offset = duration - remainder;
-            writer.println(createStreamUrl(player, id, remainder, offset));
+            writer.println(createStreamUrl(player, id, offset, remainder, maxBitRate));
         }
         writer.println("#EXT-X-ENDLIST");
         return null;
     }
 
-    private String createStreamUrl(Player player, int id, int remainder, int offset) {
-        return "/stream?id=" + id + "&hls=true&timeOffset=" + offset + "&player=" + player.getId() + "&duration=" + remainder;
+    private String createStreamUrl(Player player, int id, int offset, int duration, Integer maxBitRate) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("/stream?id=").append(id).append("&hls=true&timeOffset=").append(offset).append("&player=")
+                .append(player.getId()).append("&duration=").append(duration);
+        if (maxBitRate != null) {
+            builder.append("&maxBitRate=").append(maxBitRate);
+        }
+        return builder.toString();
     }
 
     public void setMediaFileService(MediaFileService mediaFileService) {

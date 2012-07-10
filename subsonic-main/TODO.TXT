@@ -77,7 +77,6 @@ HTTP Live Streaming
   Examples in rfc
   ffmpeg -itsoffset and -copyts options
   REST: Document new "duration" parameter.
-  Support multiple bitrates.
   Don't kill concurrent streams.
   Should not dynamically change video dimensions?
   Add default hls and downsample command to web pages.
