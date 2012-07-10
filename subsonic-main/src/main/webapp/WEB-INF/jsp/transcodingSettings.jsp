@@ -5,6 +5,8 @@
     <%@ include file="jquery.jsp" %>
 </head>
 <body class="mainframe bgcolor1">
+<script type="text/javascript" src="<c:url value="/script/wz_tooltip.js"/>"></script>
+<script type="text/javascript" src="<c:url value="/script/tip_balloon.js"/>"></script>
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="transcoding"/>
@@ -53,6 +55,20 @@
         </td>
     </tr>
 </table>
+
+
+    <table style="white-space:nowrap" class="indent">
+        <tr>
+            <td style="font-weight: bold;">
+                <fmt:message key="advancedsettings.downsamplecommand"/>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="downsamplecommand"/></c:import>
+            </td>
+            <td>
+                <input style="font-family:monospace" type="text" name="downsampleCommand" size="100" value="${model.downsampleCommand}"/>
+            </td>
+        </tr>
+    </table>
+
 
     <p style="padding-top:0.75em">
         <input type="submit" value="<fmt:message key="common.save"/>" style="margin-right:0.3em">

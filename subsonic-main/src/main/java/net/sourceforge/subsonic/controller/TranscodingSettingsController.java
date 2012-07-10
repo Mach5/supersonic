@@ -53,6 +53,8 @@ public class TranscodingSettingsController extends ParameterizableViewController
         ModelAndView result = super.handleRequestInternal(request, response);
         map.put("transcodings", transcodingService.getAllTranscodings());
         map.put("transcodeDirectory", transcodingService.getTranscodeDirectory());
+        map.put("downsampleCommand", settingsService.getDownsamplingCommand());
+        map.put("hlsCommand", settingsService.getHlsCommand());
         map.put("brand", settingsService.getBrand());
 
         result.addObject("model", map);
@@ -124,6 +126,7 @@ public class TranscodingSettingsController extends ParameterizableViewController
                 map.put("newTranscoding", transcoding);
             }
         }
+        settingsService.setDownsamplingCommand(StringUtils.trim(request.getParameter("downsampleCommand")));
     }
 
     private String getParameter(HttpServletRequest request, String name, Integer id) {
