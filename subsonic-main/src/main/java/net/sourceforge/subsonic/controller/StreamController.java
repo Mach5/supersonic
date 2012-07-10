@@ -149,8 +149,12 @@ public class StreamController implements Controller {
                     Util.setContentLength(response, fileLength);
                 }
 
-                String transcodedSuffix = transcodingService.getSuffix(player, file, preferredTargetFormat);
-                response.setContentType(StringUtil.getMimeType(transcodedSuffix));
+                if (isHls) {
+                    response.setContentType(StringUtil.getMimeType("ts")); // HLS is always MPEG TS.
+                } else {
+                    String transcodedSuffix = transcodingService.getSuffix(player, file, preferredTargetFormat);
+                    response.setContentType(StringUtil.getMimeType(transcodedSuffix));
+                }
 
                 if (file.isVideo()) {
                     videoTranscodingSettings = createVideoTranscodingSettings(file, request);

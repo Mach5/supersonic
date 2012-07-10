@@ -76,9 +76,7 @@ HTTP Live Streaming
   EXT-X-ALLOW-CACHE
   Examples in rfc
   ffmpeg -itsoffset and -copyts options
-  ffmpeg -ss %o -t 10 -i %s -async 1 -b %bk -s %wx%h -ar 44100 -ac 2 -v 0 -f mpegts -vcodec libx264 -preset superfast -threads 0 -
   REST: Document new "duration" parameter.
-  Set proper content type for mpeg ts.
   Support multiple bitrates.
   Don't kill concurrent streams.
   Should not dynamically change video dimensions?
