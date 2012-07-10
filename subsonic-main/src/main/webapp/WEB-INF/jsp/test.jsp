@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<video src="http://localhost:8080/rest/hls.view?u=admin&p=admin&v=1.6&c=android&id=7227&bitRate=1000&bitrate=100" controls="controls">
+<video src="http://localhost:8080/rest/hls.view?u=admin&p=admin&v=1.6&c=android&id=7227&bitRate=100&bitRate=1000" controls autoplay>
 
 </video>
 

@@ -51,13 +51,13 @@ public class Schema46 extends Schema {
                              "step2 varchar," +
                              "step3 varchar)");
 
-            template.execute("insert into transcoding2 values(null,'mp3 audio'," +
+            template.execute("insert into transcoding2(name, source_formats, target_format, step1) values('mp3 audio'," +
                     "'ogg oga aac m4a flac wav wma aif aiff ape mpc shn', 'mp3', " +
-                    "'ffmpeg -i %s -ab %bk -v 0 -f mp3 -', null, null)");
+                    "'ffmpeg -i %s -ab %bk -v 0 -f mp3 -')");
 
-            template.execute("insert into transcoding2 values(null,'flv/h264 video', " +
+            template.execute("insert into transcoding2(name, source_formats, target_format, step1) values('flv/h264 video', " +
                     "'avi mpg mpeg mp4 m4v mkv mov wmv ogv divx m2ts', 'flv', " +
-                    "'ffmpeg -ss %o -i %s -async 1 -b %bk -s %wx%h -ar 44100 -ac 2 -v 0 -f flv -vcodec libx264 -preset superfast -threads 0 -', null, null)");
+                    "'ffmpeg -ss %o -i %s -async 1 -b %bk -s %wx%h -ar 44100 -ac 2 -v 0 -f flv -vcodec libx264 -preset superfast -threads 0 -')");
 
             LOG.info("Database table 'transcoding2' was created successfully.");
         }

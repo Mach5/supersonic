@@ -77,7 +77,7 @@ public class HLSController implements Controller {
         writer.println("#EXT-X-VERSION:1");
 
         for (int bitRateKbps : bitRatesKbps) {
-            writer.println("#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=" + bitRateKbps * 1000L); // TODO: Or 1024?
+            writer.println("#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=" + bitRateKbps * 1000L);
             writer.println("/hls.view?id=" + id + "&bitRate=" + bitRateKbps);
         }
     }
