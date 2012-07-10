@@ -77,9 +77,6 @@ HTTP Live Streaming
   EXT-X-ALLOW-CACHE
   Examples in rfc
   ffmpeg -itsoffset and -copyts options
-  REST: Document new "duration" parameter.
-  Don't kill concurrent streams.
-  Add default hls and downsample command to web pages.
   Use explicit columns when populating transcoding2.
   Return XML error in hls method.
 

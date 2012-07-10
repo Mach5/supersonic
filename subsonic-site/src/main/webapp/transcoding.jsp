@@ -49,6 +49,19 @@
             </p>
 
             <p>
+                The recommended <b>downsample</b> command is:
+            </p>
+            <p>
+                <code>ffmpeg -i %s -ab %bk -v 0 -f mp3 -</code>
+            </p>
+            <p>
+                The recommended <b>HTTP Live Streaming</b> (HLS) command is:
+            </p>
+            <p>
+                <code>ffmpeg -ss %o -t %d -i %s -async 1 -b %bk -s %wx%h -ar 44100 -ac 2 -v 0 -f mpegts -vcodec libx264 -preset superfast -threads 0 -</code>
+            </p>
+
+            <p>
                 Note that "%s" is substituted with the path of the original file at run-time, and "%b" is substituted with
                 the max bitrate of the player. "%t", "%a" and "%l" are substituted with the song's title, artist and album.
             </p>
