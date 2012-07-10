@@ -18,12 +18,10 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.service.MediaFileService;
 import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.util.StringUtil;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,7 +30,6 @@ import org.springframework.web.servlet.mvc.Controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
-import java.net.MalformedURLException;
 
 /**
  * Controller which produces the HLS (Http Live Streaming) playlist.
@@ -41,10 +38,8 @@ import java.net.MalformedURLException;
  */
 public class HLSController implements Controller {
 
-    private static final Logger LOG = Logger.getLogger(HLSController.class);
     private static final int SEGMENT_DURATION = 10;
 
-    private SettingsService settingsService;
     private PlayerService playerService;
     private MediaFileService mediaFileService;
 
@@ -73,43 +68,21 @@ public class HLSController implements Controller {
         for (int i = 0; i < duration / SEGMENT_DURATION; i++) {
             int offset = i * SEGMENT_DURATION;
             writer.println("#EXTINF:" + SEGMENT_DURATION + ",");
-            writer.println(createStreamUrl(request, player, id, SEGMENT_DURATION, offset));
+            writer.println(createStreamUrl(player, id, SEGMENT_DURATION, offset));
         }
 
         int remainder = duration % SEGMENT_DURATION;
         if (remainder > 0) {
             writer.println("#EXTINF:" + remainder + ",");
             int offset = duration - remainder;
-            writer.println(createStreamUrl(request, player, id, remainder, offset));
+            writer.println(createStreamUrl(player, id, remainder, offset));
         }
         writer.println("#EXT-X-ENDLIST");
         return null;
     }
 
-    private String createStreamUrl(HttpServletRequest request, Player player, int id, int remainder, int offset) throws MalformedURLException {
-        String url = request.getRequestURL().toString();
-        url = url.replaceFirst("/rest/hls\\..*", "/stream?");
-        url = url.replaceFirst("/hls\\..*", "/stream?");
-        url += "id=" + id + "&hls=true&timeOffset=" + offset + "&player=" + player.getId() + "&duration=" + remainder;
-
-        // Rewrite URLs in case we're behind a proxy.
-        if (settingsService.isRewriteUrlEnabled()) {
-            String referer = request.getHeader("referer");
-            url = StringUtil.rewriteUrl(url, referer);
-        }
-
-        // Change protocol and port, if specified. (To make it work with players that don't support SSL.)
-        int streamPort = settingsService.getStreamPort();
-        if (streamPort != 0) {
-            url = StringUtil.toHttpUrl(url, streamPort);
-            LOG.info("Using non-SSL port " + streamPort + " in HLS playlist.");
-        }
-
-        return url;
-    }
-
-    public void setSettingsService(SettingsService settingsService) {
-        this.settingsService = settingsService;
+    private String createStreamUrl(Player player, int id, int remainder, int offset) {
+        return "/stream?id=" + id + "&hls=true&timeOffset=" + offset + "&player=" + player.getId() + "&duration=" + remainder;
     }
 
     public void setMediaFileService(MediaFileService mediaFileService) {
