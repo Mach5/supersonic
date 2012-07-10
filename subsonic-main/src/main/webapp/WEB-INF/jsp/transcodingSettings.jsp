@@ -67,6 +67,15 @@
                 <input style="font-family:monospace" type="text" name="downsampleCommand" size="100" value="${model.downsampleCommand}"/>
             </td>
         </tr>
+        <tr>
+            <td style="font-weight: bold;">
+                <fmt:message key="advancedsettings.hlscommand"/>
+                <c:import url="helpToolTip.jsp"><c:param name="topic" value="hlscommand"/></c:import>
+            </td>
+            <td>
+                <input style="font-family:monospace" type="text" name="hlsCommand" size="100" value="${model.hlsCommand}"/>
+            </td>
+        </tr>
     </table>
 
 
