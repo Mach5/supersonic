@@ -293,7 +293,6 @@
         <property name="audioScrobblerService" ref="audioScrobblerService"/>
     </bean>
     <bean id="hlsController" class="net.sourceforge.subsonic.controller.HLSController">
-        <property name="settingsService" ref="settingsService"/>
         <property name="playerService" ref="playerService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
     </bean>
