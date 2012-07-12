@@ -19,13 +19,18 @@ Displayed album year doesn't update when editing corresponding tag (Foyaxe)
 Include minisub
 Show toast when saving queue as playlist (and when saving settings)
 REST: Added getUsers.
+HLS support
+Album art broken on IE8.
 
 TODO IN 4.7
 -----------------
+HLS audio support.
+Return XML error in hls, stream, download methods.
+  https://mail.google.com/mail/u/0/?shva=1#inbox/1386e28c63be12bd
 Add minisub chrome app to apps.jsp
-HLS support
+Rename Subsonos
+  https://mail.google.com/mail/u/0/?shva=1#inbox/13878f3b5727f23c
 update changelog for beta3
-Album art broken on IE8.
 Backup database in installer.
 Problems importing playlists (BKKKPewsey)
 Video files not displayed?
@@ -62,22 +67,6 @@ JWPlayer subtitle plugin
   http://forum.subsonic.org/forum/viewtopic.php?t=5708
 
 -
-
-HTTP Live Streaming
-  ffmpeg segmenting
-  https://mail.google.com/mail/?tab=cm#inbox/1373a3cb757515ee
-  https://developer.apple.com/library/ios/#documentation/NetworkingInternet/Conceptual/StreamingMediaGuide/Introduction/Introduction.html
-  http://tools.ietf.org/html/draft-pantos-http-live-streaming-08
-  HLS clients: Safari or VLC.
-  Typically H264/AAC in a MPEG2 Transport Stream (.ts)
-  rfc:  Each media segment MUST be formatted as an MPEG-2 Transport Stream.
-  EXT-X-DISCONTINUITY
-  EXT-X-TARGETDURATION
-  EXT-X-VERSION
-  EXT-X-ALLOW-CACHE
-  Examples in rfc
-  ffmpeg -itsoffset and -copyts options
-  Return XML error in hls method.
 
 Evaluate HTML5.
 Extend demo music, and add video.
@@ -137,7 +126,6 @@ Playing only first three seconds of podcast
   http://mail.google.com/a/activeobjects.no/#inbox/12e341aeae9535eb
 GPU-accellerated ffmpeg
   https://mail.google.com/a/activeobjects.no/#inbox/12f50fffffd6fecf
-Add to playlist from main.jsp
 Sencha Touch
 Subsonic for Boxee
 Linux locale issue
@@ -155,6 +143,8 @@ TODO IN ANDROID 3.4
 Patch "Host name cannot be null"
   https://mail.google.com/mail/?ui=2&shva=1#inbox/137195c3dc8510ad
 Support Bluetooth play/pause buttons in ICS.
+Wifi lock.
+HLS video.
 Problem if underscore/dash in server name.
   https://mail.google.com/mail/?shva=1#inbox/1365ef6ddc03e31a
 Music controls in notification.
