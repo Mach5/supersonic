@@ -55,11 +55,9 @@ PARAMETERS
     </div>
     <c:if test="${not empty param.appearAfter}">
         <script type="text/javascript">
-            if (window.addEventListener) {
-                window.addEventListener('load', function() {
-                    setTimeout("$('#${divId}').fadeIn(500)", ${param.appearAfter});
-                }, false);
-            }
+            $(document).ready(function () {
+                setTimeout("$('#${divId}').fadeIn(500)", ${param.appearAfter});
+            });
         </script>
     </c:if>
 </div>
