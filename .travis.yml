@@ -1,5 +1,10 @@
 language: java
 
+jdk:
+    - openjdk7
+    - openjdk6
+    - oraclejdk7
+
 notifications:
   email:
     - supersonic-dev@googlegroups.com
