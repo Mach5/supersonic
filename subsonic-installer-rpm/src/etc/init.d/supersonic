@@ -58,7 +58,7 @@ do_start()
     [ -e /tmp/supersonic ] && chown -R $SUPERSONIC_USER /tmp/supersonic
 
     echo $"Starting $NAME ..."
-    su -c "$DAEMON $DAEMON_ARGS" $SUPERSONIC_USER
+    su -c "$DAEMON $DAEMON_ARGS start" $SUPERSONIC_USER
     RETVAL=$?
     echo
     [ $RETVAL -eq 0 ] && touch $LOCKFILE

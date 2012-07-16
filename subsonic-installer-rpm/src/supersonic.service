@@ -1,0 +1,60 @@
+# It's not recommended to modify this file in-place, because it will be
+# overwritten during package upgrades.  If you want to customize, the
+# best way is to create a file "/etc/systemd/system/supersonic.service",
+# containing
+#	.include /lib/systemd/system/supersonic.service
+#	...make your changes here...
+# For more info about custom unit files, see
+# http://fedoraproject.org/wiki/Systemd#How_do_I_customize_a_unit_file.2F_add_a_custom_unit_file.3F
+
+# For example, if you want to change the server's HTTPS port number to 4043,
+# create a file named "/etc/systemd/system/supersonic.service" containing:
+#	.include /lib/systemd/system/supersonic.service
+#	[Service]
+#	Environment=HTTPS_PORT=4043
+# This will override the setting appearing below.
+
+# Note: do not use a PGDATA pathname containing spaces, or you will
+# break supersonic-setup.
+
+# Note: in F-17 and beyond, /usr/lib/... is recommended in the .include line
+# though /lib/... will still work.
+
+[Unit]
+Description=SuperSonic media server
+After=network.target
+
+[Service]
+
+# Common customisations.
+Environment=SUPERSONIC_HOME=/var/supersonic
+Environment=SUPERSONIC_HOST=0.0.0.0
+Environment=SUPERSONIC_PORT=4040
+Environment=SUPERSONIC_HTTPS_PORT=4043
+Environment=SUPERSONIC_CONTEXT_PATH=/
+Environment=SUPERSONIC_MAX_MEMORY=100
+Environment=SUPERSONIC_DEFAULT_MUSIC_FOLDER=/var/music
+Environment=SUPERSONIC_DEFAULT_PODCAST_FOLDER=/var/music/Podcast
+Environment=SUPERSONIC_DEFAULT_PLAYLIST_FOLDER=/var/playlists
+Environment=SUPERSONIC_LOGFILE=${SUPERSONIC_HOME}/supersonic_sh.log
+
+# NOTE: If you uncomment this do not forget to adjust the sound card 
+#Environment=SUPERSONIC_SOUNDCARD_ARGS=-Djavax.sound.sampled.SourceDataLine=#aw0
+
+# User and Group
+User=supersonic
+Group=supersonic
+
+WorkingDirectory=/usr/share/supersonic
+
+### PREREQ:
+#
+# /usr/bin/mkdir -f /tmp/supersonic /var/supersonic
+# /usr/bin/chown -R ${SUPERSONIC_USER}.${SUPERSONIC_USER} /tmp/supersonic /var/supersonic
+#
+
+# Daemon
+ExecStart=/bin/bash -c "exec /usr/bin/java -Xmx${SUPERSONIC_MAX_MEMORY}m -Dsubsonic.home=${SUPERSONIC_HOME} -Dsubsonic.host=${SUPERSONIC_HOST} -Dsubsonic.port=${SUPERSONIC_PORT} -Dsubsonic.httpsPort=${SUPERSONIC_HTTPS_PORT} -Dsubsonic.contextPath=${SUPERSONIC_CONTEXT_PATH} -Dsubsonic.defaultMusicFolder=${SUPERSONIC_DEFAULT_MUSIC_FOLDER} -Dsubsonic.defaultPodcastFolder=${SUPERSONIC_DEFAULT_PODCAST_FOLDER} -Dsubsonic.defaultPlaylistFolder=${SUPERSONIC_DEFAULT_PLAYLIST_FOLDER} ${SUPERSONIC_SOUNDCARD_ARGS} -Djava.awt.headless=true -verbose:gc -jar supersonic-booter-jar-with-dependencies.jar > ${SUPERSONIC_LOGFILE} 2>&1"
+
+[Install]
+WantedBy=multi-user.target
