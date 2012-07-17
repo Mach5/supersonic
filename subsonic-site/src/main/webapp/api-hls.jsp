@@ -1,7 +1,7 @@
 <h2 class="div"><a name="hls"></a>hls</h2>
 
 <p>
-    <code>http://your-server/rest/hls.view</code>
+    <code>http://your-server/rest/hls.m3u8</code>
     <br>Since <a href="#versions">1.8.0</a>
 </p>
 

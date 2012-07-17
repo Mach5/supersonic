@@ -60,6 +60,10 @@
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>subsonic</servlet-name>
+        <url-pattern>/hls/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>subsonic</servlet-name>
         <url-pattern>/share/*</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
