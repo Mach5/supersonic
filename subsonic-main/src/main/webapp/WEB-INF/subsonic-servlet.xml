@@ -448,7 +448,7 @@
                 <prop key="/rest/**">restController</prop>
                 <prop key="/play.m3u">m3uController</prop>
                 <prop key="/stream/**">streamController</prop>
-                <prop key="/hls.view">hlsController</prop>
+                <prop key="/hls/**">hlsController</prop>
                 <prop key="/share/**">externalPlayerController</prop>
             </props>
         </property>

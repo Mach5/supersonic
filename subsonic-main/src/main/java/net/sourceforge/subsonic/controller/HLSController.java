@@ -64,7 +64,7 @@ public class HLSController implements Controller {
 
         PrintWriter writer = response.getWriter();
         if (bitRates.length > 1) {
-            generateVariantPlaylist(id, bitRates, writer);
+            generateVariantPlaylist(id, player, bitRates, writer);
         } else {
             generateNormalPlaylist(id, player, bitRates.length == 1 ? bitRates[0] : null, duration, writer);
         }
@@ -72,14 +72,16 @@ public class HLSController implements Controller {
         return null;
     }
 
-    private void generateVariantPlaylist(int id, int[] bitRatesKbps, PrintWriter writer) {
+    private void generateVariantPlaylist(int id, Player player, int[] bitRatesKbps, PrintWriter writer) {
         writer.println("#EXTM3U");
         writer.println("#EXT-X-VERSION:1");
+//        writer.println("#EXT-X-TARGETDURATION:" + SEGMENT_DURATION);
 
         for (int bitRateKbps : bitRatesKbps) {
             writer.println("#EXT-X-STREAM-INF:PROGRAM-ID=1,BANDWIDTH=" + bitRateKbps * 1000L);
-            writer.println("/hls.view?id=" + id + "&bitRate=" + bitRateKbps);
+            writer.println("/hls/hls.m3u8?id=" + id + "&player=" + player.getId() + "&bitRate=" + bitRateKbps);
         }
+//        writer.println("#EXT-X-ENDLIST");
     }
 
     private void generateNormalPlaylist(int id, Player player, Integer bitRate, int totalDuration, PrintWriter writer) {
@@ -104,7 +106,7 @@ public class HLSController implements Controller {
 
     private String createStreamUrl(Player player, int id, int offset, int duration, Integer maxBitRate) {
         StringBuilder builder = new StringBuilder();
-        builder.append("/stream?id=").append(id).append("&hls=true&timeOffset=").append(offset).append("&player=")
+        builder.append("/stream/stream.ts?id=").append(id).append("&hls=true&timeOffset=").append(offset).append("&player=")
                 .append(player.getId()).append("&duration=").append(duration);
         if (maxBitRate != null) {
             builder.append("&maxBitRate=").append(maxBitRate);
