@@ -1,8 +1,17 @@
 language: java
 
+before_install:
+  # download the latest android sdk and unzip
+  - wget http://dl.google.com/android/android-sdk_r20.0.1-linux.tgz
+  - tar -zxf android-sdk_r20.0.1-linux.tgz
+  # setup ANDROID_HOME and PATH environment variables
+  - export ANDROID_HOME=~/builds/Mach5/supersonic/android-sdk-linux
+  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+  # update the sdk for the tools, platform-tools, and current API level (android-10 = API level 10 = 2.3.3)
+  - android update sdk --filter platform,platform-tool,android-10 --no-ui
+
 notifications:
-  email:
-    - supersonic-dev@googlegroups.com
+  email: false
 
 # blacklist upstream build since they will not have a TravisCI config
 branches:
