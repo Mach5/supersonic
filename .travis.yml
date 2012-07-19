@@ -3,13 +3,13 @@ language: java
 before_install:
   # download the latest android sdk and unzip
   - df -h
-  - wget http://dl.google.com/android/android-sdk_r20.0.1-linux.tgz -o /run/android-sdk.tgz
-  - ( cd /run && tar -zxf android-sdk_r20.0.1-linux.tgz )
-  - rm /run/android-sdk_r20.0.1-linux.tgz
+  - wget http://dl.google.com/android/android-sdk_r20.0.1-linux.tgz -o /boot/android-sdk.tgz
+  - ( cd /boot && tar -zxf android-sdk_r20.0.1-linux.tgz )
+  - rm /boot/android-sdk_r20.0.1-linux.tgz
   - df -h
   # setup ANDROID_HOME and PATH environment variables
   #- export ANDROID_HOME=~/builds/Mach5/supersonic/android-sdk-linux
-  - export ANDROID_HOME=/run/android-sdk-linux
+  - export ANDROID_HOME=/boot/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   # update the sdk for the tools, platform-tools, and current API level (android-10 = API level 10 = 2.3.3)
   - android update sdk --filter platform,platform-tool,android-10 --no-ui
