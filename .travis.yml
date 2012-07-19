@@ -6,8 +6,7 @@ jdk:
     - oraclejdk7
 
 notifications:
-  email:
-    - supersonic-dev@googlegroups.com
+  email: false
 
 # blacklist upstream build since they will not have a TravisCI config
 branches:
