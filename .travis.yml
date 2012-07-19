@@ -11,7 +11,8 @@ before_install:
   - export ANDROID_HOME=~/builds/Mach5/supersonic/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   # update the sdk for the tools, platform-tools, and current API level (android-10 = API level 10 = 2.3.3)
-  - android update sdk --filter platform,platform-tool,android-10 --no-ui
+  #- android update sdk --filter platform,platform-tool,android-10 --no-ui
+  - android update sdk --filter android-10 --no-ui
   - df -h
 
 notifications:
