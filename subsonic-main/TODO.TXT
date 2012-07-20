@@ -27,13 +27,13 @@ TODO IN 4.7
 Slow scan, also incremental?
   Add debug logging.
 REST: Add index to getArtists
+Music folders with dashes ignored
+  http://forum.subsonic.org/forum/viewtopic.php?f=5&t=9904&p=43570&hilit=dash#p43570
 mediastreamvalidator
 HLS audio support.
 Return XML error in hls, stream, download methods.
   https://mail.google.com/mail/u/0/?shva=1#inbox/1386e28c63be12bd
 Add minisub chrome app to apps.jsp
-Rename Subsonos
-  https://mail.google.com/mail/u/0/?shva=1#inbox/13878f3b5727f23c
 update changelog for beta3
 Backup database in installer.
 Problems importing playlists (BKKKPewsey)

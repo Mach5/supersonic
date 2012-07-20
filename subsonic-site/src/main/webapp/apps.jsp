@@ -40,7 +40,7 @@
             <div class="floatcontainer margin10-t margin10-b">
                 <ul class="stars column-left">
                     <li><a href="#sonicair">SonicAir</a> for BlackBerry PlayBook</li>
-                    <li><a href="#subsonos">Subsonos</a> for Sonos</li>
+                    <li><a href="#mmtm">My Music To Me</a> for Sonos</li>
                     <li><a href="#chumby">Subsonic</a> for Chumby</li>
                 </ul>
                 <ul class="stars column-right">
@@ -349,20 +349,20 @@
 
 
             <div class="featureitem">
-                <a name="subsonos"></a>
+                <a name="mmtm"></a>
 
-                <div class="heading">Subsonos <a href="#top" class="backtotop" title="Top"><img src="inc/img/top.gif" alt="" height="16" width="16"/></a></div>
+                <div class="heading">My Music To Me <a href="#top" class="backtotop" title="Top"><img src="inc/img/top.gif" alt="" height="16" width="16"/></a></div>
                 <div class="content">
                     <div class="wide-content">
                         <p>
-                            <a href="http://www.subsonos.com/">Subsonos</a> allows Subsonic users to enjoy their entire collection by streaming over a Sonos music system.
+                            <a href="http://www.mymusicto.me/">My Music To Me</a> (MMTM) allows Subsonic users to enjoy their entire collection by streaming over a Sonos music system.
                         </p>
 
                         <a href="inc/img/screenshots/screen37.png"><img src="inc/img/screenshots/thumb37.png" alt="" class="img-center"/></a>
 
                         <p>
-                            Subsonos is a translation service (or proxy) that sits between your Sonos music system and your Subsonic streaming server.
-                            Developed by NerdyHearn, Subsonos is currently in beta.
+                            MMTM is a translation service (or proxy) that sits between your Sonos music system and your Subsonic streaming server.
+                            It's developed by <a href="http://www.nerdyhearn.com/">NerdyHearn</a>.
                         </p>
                     </div>
                 </div>
