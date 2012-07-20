@@ -72,6 +72,9 @@
                 <ul class="stars column-left">
                     <li><a href="#perisonic">Perisonic</a> for Google Chrome</li>
                 </ul>
+                <ul class="stars column-right">
+                    <li><a href="#minisub">MiniSub</a> for Google Chrome</li>
+                </ul>
             </div>
 
             <p>
@@ -107,6 +110,7 @@
             <%@ include file="apps-subwiji.jsp" %>
             <%@ include file="apps-subclient.jsp" %>
             <%@ include file="apps-perisonic.jsp" %>
+            <%@ include file="apps-minisub.jsp" %>
 
         </div>
 

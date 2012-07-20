@@ -33,7 +33,6 @@ mediastreamvalidator
 HLS audio support.
 Return XML error in hls, stream, download methods.
   https://mail.google.com/mail/u/0/?shva=1#inbox/1386e28c63be12bd
-Add minisub chrome app to apps.jsp
 update changelog for beta3
 Backup database in installer.
 Problems importing playlists (BKKKPewsey)
