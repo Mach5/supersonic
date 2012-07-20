@@ -59,13 +59,14 @@ public class MusicIndexService {
      * @throws IOException If an I/O error occurs.
      */
     public SortedMap<MusicIndex, SortedSet<Artist>> getIndexedArtists(List<MusicFolder> folders, boolean refresh) throws IOException {
+        SortedSet<Artist> artists = createArtists(folders, refresh);
+        return sortArtists(artists);
+    }
 
-        String[] ignoredArticles = settingsService.getIgnoredArticlesAsArray();
-        String[] shortcuts = settingsService.getShortcutsAsArray();
-        final List<MusicIndex> indexes = createIndexesFromExpression(settingsService.getIndexString());
-
+    private SortedMap<MusicIndex, SortedSet<Artist>> sortArtists(SortedSet<Artist> artists) {
+        List<MusicIndex> indexes = createIndexesFromExpression(settingsService.getIndexString());
         Comparator<MusicIndex> indexComparator = new MusicIndexComparator(indexes);
-        SortedSet<Artist> artists = createArtists(folders, ignoredArticles, shortcuts, refresh);
+
         SortedMap<MusicIndex, SortedSet<Artist>> result = new TreeMap<MusicIndex, SortedSet<Artist>>(indexComparator);
 
         for (Artist artist : artists) {
@@ -129,7 +130,9 @@ public class MusicIndexService {
         return result;
     }
 
-    private SortedSet<Artist> createArtists(List<MusicFolder> folders, String[] ignoredArticles, String[] shortcuts, boolean refresh) throws IOException {
+    private SortedSet<Artist> createArtists(List<MusicFolder> folders, boolean refresh) throws IOException {
+        String[] ignoredArticles = settingsService.getIgnoredArticlesAsArray();
+        String[] shortcuts = settingsService.getShortcutsAsArray();
         return settingsService.isOrganizeByFolderStructure() ?
                 createArtistsByFolderStructure(folders, ignoredArticles, shortcuts, refresh) :
                 createArtistsByTagStructure(folders, ignoredArticles, shortcuts);
