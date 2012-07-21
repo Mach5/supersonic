@@ -21,10 +21,11 @@ Show toast when saving queue as playlist (and when saving settings)
 REST: Added getUsers.
 HLS support
 Album art broken on IE8.
+getStatistics is slow.
 
 TODO IN 4.7
 -----------------
-getStatistics is slow.
+select max(id) is slow.
 "ArtistId that is returned sometimes doesn't link to any albums in the getArtist."
   https://mail.google.com/mail/u/0/?shva=1#starred/1387fa174f135961
 Slow scan, also incremental?
