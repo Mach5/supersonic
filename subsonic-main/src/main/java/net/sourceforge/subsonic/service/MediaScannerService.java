@@ -62,7 +62,7 @@ public class MediaScannerService {
 
     public void init() {
         deleteOldIndexFiles();
-        statistics = mediaFileDao.getStatistics();
+        statistics = settingsService.getMediaLibraryStatistics();
         schedule();
     }
 
@@ -156,6 +156,7 @@ public class MediaScannerService {
             Date lastScanned = new Date();
             Map<String, Integer> albumCount = new HashMap<String, Integer>();
             scanCount = 0;
+            statistics.reset();
 
             searchService.startIndexing();
 
@@ -174,9 +175,12 @@ public class MediaScannerService {
             albumDao.markNonPresent(lastScanned);
 
             // Update statistics
-            LOG.info("Updating statistics.");
-            statistics = mediaFileDao.getStatistics();
+            statistics.incrementArtists(albumCount.size());
+            for (Integer albums : albumCount.values()) {
+                statistics.incrementAlbums(albums);
+            }
 
+            settingsService.setMediaLibraryStatistics(statistics);
             settingsService.setLastScanned(lastScanned);
             settingsService.save(false);
             LOG.info("Completed media library scan.");
@@ -213,10 +217,18 @@ public class MediaScannerService {
         } else {
             updateAlbum(file, lastScanned, albumCount);
             updateArtist(file, lastScanned, albumCount);
+            statistics.incrementSongs(1);
         }
 
         mediaFileDao.markPresent(file.getPath(), lastScanned);
         artistDao.markPresent(file.getArtist(), lastScanned);
+
+        if (file.getDurationSeconds() != null) {
+            statistics.incrementTotalDurationInSeconds(file.getDurationSeconds());
+        }
+        if (file.getFileSize() != null) {
+            statistics.incrementTotalLengthInBytes(file.getFileSize());
+        }
     }
 
     private void updateAlbum(MediaFile file, Date lastScanned, Map<String, Integer> albumCount) {

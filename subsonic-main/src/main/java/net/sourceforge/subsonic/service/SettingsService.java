@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.HttpClient;
@@ -122,6 +123,7 @@ public class SettingsService {
     private static final String KEY_LAST_SCANNED = "LastScanned";
     private static final String KEY_ORGANIZE_BY_FOLDER_STRUCTURE = "OrganizeByFolderStructure";
     private static final String KEY_SORT_ALBUMS_BY_YEAR = "SortAlbumsByYear";
+    private static final String KEY_MEDIA_LIBRARY_STATISTICS = "MediaLibraryStatistics";
 
     // Default values.
     private static final String DEFAULT_INDEX_STRING = "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ)";
@@ -184,6 +186,7 @@ public class SettingsService {
     private static final long DEFAULT_SETTINGS_CHANGED = 0L;
     private static final boolean DEFAULT_ORGANIZE_BY_FOLDER_STRUCTURE = true;
     private static final boolean DEFAULT_SORT_ALBUMS_BY_YEAR = true;
+    private static final String DEFAULT_MEDIA_LIBRARY_STATISTICS = "0 0 0 0 0";
 
     // Array of obsolete keys.  Used to clean property file.
     private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort",
@@ -318,6 +321,14 @@ public class SettingsService {
 
     private void setBoolean(String key, boolean value) {
         setProperty(key, String.valueOf(value));
+    }
+
+    private String getString(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
+    }
+
+    private void setString(String key, String value) {
+        setProperty(key, value);
     }
 
     public String getIndexString() {
@@ -831,6 +842,14 @@ public class SettingsService {
 
     public void setSortAlbumsByYear(boolean b) {
         setBoolean(KEY_SORT_ALBUMS_BY_YEAR, b);
+    }
+
+    public MediaLibraryStatistics getMediaLibraryStatistics() {
+        return MediaLibraryStatistics.parse(getString(KEY_MEDIA_LIBRARY_STATISTICS, DEFAULT_MEDIA_LIBRARY_STATISTICS));
+    }
+
+    public void setMediaLibraryStatistics(MediaLibraryStatistics statistics) {
+        setString(KEY_MEDIA_LIBRARY_STATISTICS, statistics.format());
     }
 
     /**
