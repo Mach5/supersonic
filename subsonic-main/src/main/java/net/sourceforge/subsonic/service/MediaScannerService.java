@@ -164,16 +164,22 @@ public class MediaScannerService {
                 MediaFile root = mediaFileService.getMediaFile(musicFolder.getPath(), false);
                 scanFile(root, musicFolder, lastScanned, albumCount);
             }
+            LOG.info("Scanned media library with " + scanCount + " entries.");
+
+            LOG.info("Marking non-present files.");
             mediaFileDao.markNonPresent(lastScanned);
+            LOG.info("Marking non-present artists.");
             artistDao.markNonPresent(lastScanned);
+            LOG.info("Marking non-present albums.");
             albumDao.markNonPresent(lastScanned);
 
             // Update statistics
+            LOG.info("Updating statistics.");
             statistics = mediaFileDao.getStatistics();
 
             settingsService.setLastScanned(lastScanned);
             settingsService.save(false);
-            LOG.info("Scanned media library with " + scanCount + " entries.");
+            LOG.info("Completed media library scan.");
 
         } catch (Throwable x) {
             LOG.error("Failed to scan media library.", x);

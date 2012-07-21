@@ -24,6 +24,9 @@ Album art broken on IE8.
 
 TODO IN 4.7
 -----------------
+getStatistics is slow.
+"ArtistId that is returned sometimes doesn't link to any albums in the getArtist."
+  https://mail.google.com/mail/u/0/?shva=1#starred/1387fa174f135961
 Slow scan, also incremental?
   Add debug logging.
 REST: Add index to getArtists
@@ -960,3 +963,11 @@ Use color: #ff8200
 Getting started, yellow marker
 Use brush: circle fuzzy 17, transparency 67.3
 Use color: #ffe200
+
+CrashPlan
+---------
+To make it work on subsonic.org:
+- Put jre in /usr/local/crashplan/jre (copy from forum.subsonic.org)
+- Install libffi for Centos
+- Extract libjnidispatch.so from jna-3.2.5 and put it in /usr/local/crashplan
+- Remote UI: http://support.crashplan.com/doku.php/how_to/configure_a_headless_client
