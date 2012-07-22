@@ -22,14 +22,14 @@ REST: Added getUsers.
 HLS support
 Album art broken on IE8.
 getStatistics is slow.
+Slow scan.
+REST: getArtists now only returns album artists.
 
 TODO IN 4.7
 -----------------
 select max(id) is slow.
 "ArtistId that is returned sometimes doesn't link to any albums in the getArtist."
   https://mail.google.com/mail/u/0/?shva=1#starred/1387fa174f135961
-Slow scan, also incremental?
-  Add debug logging.
 REST: Add index to getArtists
 Music folders with dashes ignored
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=9904&p=43570&hilit=dash#p43570
@@ -49,12 +49,9 @@ Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
 ConcurrentModificationException
   https://mail.google.com/mail/u/0/?tab=cm#inbox/13822e43383dca84
-Setup crashplan.
 Add "Force rescan" option.
 SourceForge, hosted apps retirement
   https://mail.google.com/mail/u/0/?tab=cm#inbox/1386c503c5c2c564
-ping.view returns HTML when incorrect credentials are passed to it.
-  https://mail.google.com/mail/u/0/?tab=cm#inbox/1386e28c63be12bd
 
 Postponed:
   - Increase line height in playlist.jsp

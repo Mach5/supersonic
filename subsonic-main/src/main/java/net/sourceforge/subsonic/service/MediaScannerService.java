@@ -221,7 +221,7 @@ public class MediaScannerService {
         }
 
         mediaFileDao.markPresent(file.getPath(), lastScanned);
-        artistDao.markPresent(file.getArtist(), lastScanned);
+        artistDao.markPresent(file.getAlbumArtist(), lastScanned);
 
         if (file.getDurationSeconds() != null) {
             statistics.incrementTotalDurationInSeconds(file.getDurationSeconds());
@@ -279,14 +279,14 @@ public class MediaScannerService {
     }
 
     private void updateArtist(MediaFile file, Date lastScanned, Map<String, Integer> albumCount) {
-        if (file.getArtist() == null || !file.isAudio()) {
+        if (file.getAlbumArtist() == null || !file.isAudio()) {
             return;
         }
 
-        Artist artist = artistDao.getArtist(file.getArtist());
+        Artist artist = artistDao.getArtist(file.getAlbumArtist());
         if (artist == null) {
             artist = new Artist();
-            artist.setName(file.getArtist());
+            artist.setName(file.getAlbumArtist());
         }
         if (artist.getCoverArtPath() == null) {
             MediaFile parent = mediaFileService.getParentOf(file);
