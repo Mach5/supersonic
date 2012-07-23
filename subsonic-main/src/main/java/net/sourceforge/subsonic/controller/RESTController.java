@@ -20,7 +20,6 @@ package net.sourceforge.subsonic.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -38,6 +37,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.sourceforge.subsonic.ajax.PlayQueueService;
 import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.service.MusicIndexService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
@@ -105,6 +105,7 @@ public class RESTController extends MultiActionController {
     private SecurityService securityService;
     private PlayerService playerService;
     private MediaFileService mediaFileService;
+    private MusicIndexService musicIndexService;
     private TranscodingService transcodingService;
     private DownloadController downloadController;
     private CoverArtController coverArtController;
@@ -204,13 +205,13 @@ public class RESTController extends MultiActionController {
                     new Attribute("id", shortcut.getId()));
         }
 
-        SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists =
+        SortedMap<MusicIndex, SortedSet<MusicIndex.SortableArtistWithMediaFiles>> indexedArtists =
                 leftController.getMusicFolderContent(musicFolders, false).getIndexedArtists();
 
-        for (Map.Entry<MusicIndex, SortedSet<MusicIndex.Artist>> entry : indexedArtists.entrySet()) {
+        for (Map.Entry<MusicIndex, SortedSet<MusicIndex.SortableArtistWithMediaFiles>> entry : indexedArtists.entrySet()) {
             builder.add("index", "name", entry.getKey().getIndex(), false);
 
-            for (MusicIndex.Artist artist : entry.getValue()) {
+            for (MusicIndex.SortableArtistWithMediaFiles artist : entry.getValue()) {
                 for (MediaFile mediaFile : artist.getMediaFiles()) {
                     if (mediaFile.isDirectory()) {
                         builder.add("artist", true,
@@ -243,9 +244,14 @@ public class RESTController extends MultiActionController {
         builder.add("artists", false);
 
         List<Artist> artists = artistDao.getAlphabetialArtists(0, Integer.MAX_VALUE);
-        for (Artist artist : artists) {
-            AttributeSet attributes = createAttributesForArtist(artist, username);
-            builder.add("artist", attributes, true);
+        SortedMap<MusicIndex, SortedSet<MusicIndex.SortableArtistWithArtist>> indexedArtists = musicIndexService.getIndexedArtists(artists);
+        for (Map.Entry<MusicIndex, SortedSet<MusicIndex.SortableArtistWithArtist>> entry : indexedArtists.entrySet()) {
+            builder.add("index", "name", entry.getKey().getIndex(), false);
+            for (MusicIndex.SortableArtistWithArtist sortableArtist : entry.getValue()) {
+                AttributeSet attributes = createAttributesForArtist(sortableArtist.getArtist(), username);
+                builder.add("artist", attributes, true);
+            }
+            builder.end();
         }
 
         builder.endAll();
@@ -1994,6 +2000,10 @@ public class RESTController extends MultiActionController {
 
     public void setMediaFileDao(MediaFileDao mediaFileDao) {
         this.mediaFileDao = mediaFileDao;
+    }
+
+    public void setMusicIndexService(MusicIndexService musicIndexService) {
+        this.musicIndexService = musicIndexService;
     }
 
     public static enum ErrorCode {

@@ -116,19 +116,14 @@ public class MusicIndex implements Serializable {
     /**
      * An artist in an index.
      */
-    public static class Artist implements Comparable<Artist>, Serializable {
+    public abstract static class SortableArtist implements Comparable<SortableArtist> {
 
         private final String name;
         private final String sortableName;
-        private final List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
 
-        public Artist(String name, String sortableName) {
+        public SortableArtist(String name, String sortableName) {
             this.name = name;
             this.sortableName = sortableName;
-        }
-
-        public void addMediaFile(MediaFile mediaFile) {
-            mediaFiles.add(mediaFile);
         }
 
         public String getName() {
@@ -139,11 +134,7 @@ public class MusicIndex implements Serializable {
             return sortableName;
         }
 
-        public List<MediaFile> getMediaFiles() {
-            return mediaFiles;
-        }
-
-        public int compareTo(Artist artist) {
+        public int compareTo(SortableArtist artist) {
             return sortableName.compareToIgnoreCase(artist.sortableName);
         }
 
@@ -155,13 +146,44 @@ public class MusicIndex implements Serializable {
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            Artist artist = (Artist) o;
+            SortableArtist artist = (SortableArtist) o;
             return sortableName.equalsIgnoreCase(artist.sortableName);
         }
 
         @Override
         public int hashCode() {
             return sortableName.hashCode();
+        }
+    }
+
+    public static class SortableArtistWithMediaFiles extends SortableArtist {
+
+        private final List<MediaFile> mediaFiles = new ArrayList<MediaFile>();
+
+        public SortableArtistWithMediaFiles(String name, String sortableName) {
+            super(name, sortableName);
+        }
+
+        public void addMediaFile(MediaFile mediaFile) {
+            mediaFiles.add(mediaFile);
+        }
+
+        public List<MediaFile> getMediaFiles() {
+            return mediaFiles;
+        }
+    }
+
+    public static class SortableArtistWithArtist extends SortableArtist {
+
+        private final Artist artist;
+
+        public SortableArtistWithArtist(String name, String sortableName, Artist artist) {
+            super(name, sortableName);
+            this.artist = artist;
+        }
+
+        public Artist getArtist() {
+            return artist;
         }
     }
 }

@@ -344,6 +344,7 @@
         <property name="securityService" ref="securityService"/>
         <property name="playerService" ref="playerService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="musicIndexService" ref="musicIndexService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="statusService" ref="statusService"/>
         <property name="searchService" ref="searchService"/>
