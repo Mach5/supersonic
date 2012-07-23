@@ -24,12 +24,11 @@ Album art broken on IE8.
 getStatistics is slow.
 Slow scan.
 REST: getArtists now only returns album artists.
+use mp3 in hls.
 
 TODO IN 4.7
 -----------------
 select max(id) is slow.
-"ArtistId that is returned sometimes doesn't link to any albums in the getArtist."
-  https://mail.google.com/mail/u/0/?shva=1#starred/1387fa174f135961
 REST: Add index to getArtists
 Music folders with dashes ignored
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=9904&p=43570&hilit=dash#p43570
