@@ -33,10 +33,8 @@ import java.util.SortedSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sourceforge.subsonic.service.PlaylistService;
 import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.LastModified;
 import org.springframework.web.servlet.mvc.ParameterizableViewController;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
@@ -219,7 +217,7 @@ public class LeftController extends ParameterizableViewController {
     }
 
     public MusicFolderContent getMusicFolderContent(List<MusicFolder> musicFoldersToUse, boolean refresh) throws Exception {
-        SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists = musicIndexService.getIndexedArtists(musicFoldersToUse, refresh);
+        SortedMap<MusicIndex, SortedSet<MusicIndex.SortableArtistWithMediaFiles>> indexedArtists = musicIndexService.getIndexedArtists(musicFoldersToUse, refresh);
         List<MediaFile> singleSongs = getSingleSongs(musicFoldersToUse, refresh);
         return new MusicFolderContent(indexedArtists, singleSongs);
     }
@@ -250,15 +248,15 @@ public class LeftController extends ParameterizableViewController {
 
     public static class MusicFolderContent {
 
-        private final SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists;
+        private final SortedMap<MusicIndex, SortedSet<MusicIndex.SortableArtistWithMediaFiles>> indexedArtists;
         private final List<MediaFile> singleSongs;
 
-        public MusicFolderContent(SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> indexedArtists, List<MediaFile> singleSongs) {
+        public MusicFolderContent(SortedMap<MusicIndex, SortedSet<MusicIndex.SortableArtistWithMediaFiles>> indexedArtists, List<MediaFile> singleSongs) {
             this.indexedArtists = indexedArtists;
             this.singleSongs = singleSongs;
         }
 
-        public SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> getIndexedArtists() {
+        public SortedMap<MusicIndex, SortedSet<MusicIndex.SortableArtistWithMediaFiles>> getIndexedArtists() {
             return indexedArtists;
         }
 

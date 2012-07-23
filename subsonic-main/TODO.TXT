@@ -25,11 +25,11 @@ getStatistics is slow.
 Slow scan.
 REST: getArtists now only returns album artists.
 use mp3 in hls.
+REST: Add index to getArtists
 
 TODO IN 4.7
 -----------------
 select max(id) is slow.
-REST: Add index to getArtists
 Music folders with dashes ignored
   http://forum.subsonic.org/forum/viewtopic.php?f=5&t=9904&p=43570&hilit=dash#p43570
 mediastreamvalidator
