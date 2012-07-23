@@ -99,7 +99,7 @@ public class SettingsService {
     private static final String KEY_LICENSE_CODE = "LicenseCode";
     private static final String KEY_LICENSE_DATE = "LicenseDate";
     private static final String KEY_DOWNSAMPLING_COMMAND = "DownsamplingCommand3";
-    private static final String KEY_HLS_COMMAND = "HlsCommand";
+    private static final String KEY_HLS_COMMAND = "HlsCommand2";
     private static final String KEY_JUKEBOX_COMMAND = "JukeboxCommand";
     private static final String KEY_REWRITE_URL = "RewriteUrl";
     private static final String KEY_LDAP_ENABLED = "LdapEnabled";
@@ -163,7 +163,7 @@ public class SettingsService {
     private static final String DEFAULT_LICENSE_CODE = null;
     private static final String DEFAULT_LICENSE_DATE = null;
     private static final String DEFAULT_DOWNSAMPLING_COMMAND = "ffmpeg -i %s -ab %bk -v 0 -f mp3 -";
-    private static final String DEFAULT_HLS_COMMAND = "ffmpeg -ss %o -t %d -i %s -async 1 -b %bk -s %wx%h -ar 44100 -ac 2 -v 0 -f mpegts -vcodec libx264 -preset superfast -threads 0 -";
+    private static final String DEFAULT_HLS_COMMAND = "ffmpeg -ss %o -t %d -i %s -async 1 -b %bk -s %wx%h -ar 44100 -ac 2 -v 0 -f mpegts -vcodec libx264 -preset superfast -acodec libmp3lame -threads 0 -";
     private static final String DEFAULT_JUKEBOX_COMMAND = "ffmpeg -ss %o -i %s -v 0 -f au -";
     private static final boolean DEFAULT_REWRITE_URL = true;
     private static final boolean DEFAULT_LDAP_ENABLED = false;
@@ -190,7 +190,7 @@ public class SettingsService {
 
     // Array of obsolete keys.  Used to clean property file.
     private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort",
-            "DownsamplingCommand", "DownsamplingCommand2", "AutoCoverBatch", "MusicMask", "VideoMask", "CoverArtMask");
+            "DownsamplingCommand", "DownsamplingCommand2", "AutoCoverBatch", "MusicMask", "VideoMask", "CoverArtMask, HlsCommand");
 
     private static final String LOCALES_FILE = "/net/sourceforge/subsonic/i18n/locales.txt";
     private static final String THEMES_FILE = "/net/sourceforge/subsonic/theme/themes.txt";
