@@ -26,6 +26,7 @@ Slow scan.
 REST: getArtists now only returns album artists.
 use mp3 in hls.
 REST: Add index to getArtists
+Added new theme "SubStandard", courtesy of Dan Eriksen.
 
 TODO IN 4.7
 -----------------
@@ -165,6 +166,7 @@ ICS theme
 https://mail.google.com/mail/?tab=cm#inbox/135bb6c0d53edd42
 Browser / web page widget for Android
 
+Sleep timer.
 Maintain track order for offline files.
 Check for lingering .partial files.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
