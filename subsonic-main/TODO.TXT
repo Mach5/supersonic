@@ -29,9 +29,7 @@ REST: Add index to getArtists
 
 TODO IN 4.7
 -----------------
-select max(id) is slow.
-Music folders with dashes ignored
-  http://forum.subsonic.org/forum/viewtopic.php?f=5&t=9904&p=43570&hilit=dash#p43570
+select max(id) is slow. Use "where xxx"
 mediastreamvalidator
 HLS audio support.
 Return XML error in hls, stream, download methods.
