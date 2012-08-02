@@ -100,6 +100,15 @@
     </filter-mapping>
 
     <filter>
+        <filter-name>RESTFilter</filter-name>
+        <filter-class>net.sourceforge.subsonic.filter.RESTFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RESTFilter</filter-name>
+        <url-pattern>/rest/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
         <filter-name>RequestEncodingFilter</filter-name>
         <filter-class>net.sourceforge.subsonic.filter.RequestEncodingFilter</filter-class>
         <init-param>

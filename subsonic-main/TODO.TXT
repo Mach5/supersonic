@@ -31,8 +31,6 @@ HLS audio support.
 
 TODO IN 4.7
 -----------------
-select max(id) is slow.
-mediastreamvalidator
 Return XML error in hls, stream, download methods.
   https://mail.google.com/mail/u/0/?shva=1#inbox/1386e28c63be12bd
 update changelog for beta3

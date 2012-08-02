@@ -94,6 +94,8 @@ import static net.sourceforge.subsonic.util.XMLBuilder.AttributeSet;
  * Multi-controller used for the REST API.
  * <p/>
  * For documentation, please refer to api.jsp.
+ * <p/>
+ * Note: Exceptions thrown from the methods are intercepted by RESTFilter.
  *
  * @author Sindre Mehus
  */
@@ -1826,14 +1828,14 @@ public class RESTController extends MultiActionController {
         }
     }
 
-    private String getErrorMessage(Exception x) {
+    @Deprecated private String getErrorMessage(Exception x) {
         if (x.getMessage() != null) {
             return x.getMessage();
         }
         return x.getClass().getSimpleName();
     }
 
-    private void error(HttpServletRequest request, HttpServletResponse response, ErrorCode code, String message) throws IOException {
+    public static void error(HttpServletRequest request, HttpServletResponse response, ErrorCode code, String message) throws IOException {
         XMLBuilder builder = createXMLBuilder(request, response, false);
         builder.add("error", true,
                 new XMLBuilder.Attribute("code", code.getCode()),
@@ -1842,7 +1844,7 @@ public class RESTController extends MultiActionController {
         response.getWriter().print(builder);
     }
 
-    private XMLBuilder createXMLBuilder(HttpServletRequest request, HttpServletResponse response, boolean ok) throws IOException {
+    private static XMLBuilder createXMLBuilder(HttpServletRequest request, HttpServletResponse response, boolean ok) throws IOException {
         String format = ServletRequestUtils.getStringParameter(request, "f", "xml");
         boolean json = "json".equals(format);
         boolean jsonp = "jsonp".equals(format);
