@@ -6,7 +6,6 @@ TODO IN 4.7
 -----------------
 Backup database in installer.
 Go thru bug reports.
-  http://forum.subsonic.org/forum/viewtopic.php?t=5708
 Retest playlist import (different encodings)
 Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
