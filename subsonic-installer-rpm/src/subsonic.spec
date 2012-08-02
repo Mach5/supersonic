@@ -35,6 +35,12 @@ if [ -e /etc/init.d/subsonic ]; then
   service subsonic stop
 fi
 
+# Backup database.
+if [ -e /var/subsonic/db ]; then
+  rm -rf /var/subsonic/db.backup
+  cp -R /var/subsonic/db /var/subsonic/db.backup
+fi
+
 exit 0
 
 %post

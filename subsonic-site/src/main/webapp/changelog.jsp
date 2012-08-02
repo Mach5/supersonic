@@ -40,6 +40,7 @@
     <li><span class="bugid">REST: </span>Added support for HTTP Live Streaming.</li>
     <li><span class="bugid">REST: </span>getArtists now only returns album artists.</li>
     <li><span class="bugid">REST: </span>Add index to getArtists.</li>
+    <li><span class="bugid">Tech: </span>Create database backup when upgrading.</li>
 </ul>
 
 <a name="4.7.beta2"><h2 class="div">Subsonic 4.7.beta2 - Jun 08, 2012</h2></a>

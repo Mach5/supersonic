@@ -4,7 +4,6 @@ DONE IN 4.7
 
 TODO IN 4.7
 -----------------
-Backup database in installer.
 Go thru bug reports.
 Retest playlist import (different encodings)
 Something wrong with matching players/users in Now Playing.
