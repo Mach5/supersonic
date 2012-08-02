@@ -131,7 +131,7 @@ public class StreamController implements Controller {
                     response.setHeader("Accept-Ranges", "bytes");
                 }
 
-                TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
+                TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, null);
                 long fileLength = getFileLength(parameters);
                 boolean isConversion = parameters.isDownsample() || parameters.isTranscode();
                 boolean estimateContentLength = ServletRequestUtils.getBooleanParameter(request, "estimateContentLength", false);
@@ -156,7 +156,7 @@ public class StreamController implements Controller {
                     response.setContentType(StringUtil.getMimeType(transcodedSuffix));
                 }
 
-                if (file.isVideo()) {
+                if (file.isVideo() || isHls) {
                     videoTranscodingSettings = createVideoTranscodingSettings(file, request);
                 }
             }

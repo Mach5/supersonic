@@ -7,7 +7,7 @@
 
 <p>
     Creates an HLS (<a href="http://en.wikipedia.org/wiki/HTTP_Live_Streaming" target="_blank">HTTP Live Streaming</a>)
-    playlist used for streaming video.  HLS is a streaming protocol implemented by Apple and works by breaking the overall
+    playlist used for streaming video or audio.  HLS is a streaming protocol implemented by Apple and works by breaking the overall
     stream into a sequence of small HTTP-based file downloads. It's supported by iOS and newer versions of Android.
     This method also supports <strong>adaptive bitrate streaming</strong>, see the <code>bitRate</code> parameter.
 </p>
@@ -22,7 +22,7 @@
         <td><code>id</code></td>
         <td>Yes</td>
         <td></td>
-        <td>A string which uniquely identifies the video file to stream.</td>
+        <td>A string which uniquely identifies the media file to stream.</td>
     </tr>
     <tr>
         <td><code>bitRate</code></td>
