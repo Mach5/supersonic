@@ -18,6 +18,7 @@
  */
 package net.sourceforge.subsonic.filter;
 
+import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.controller.RESTController;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.util.NestedServletException;
@@ -43,6 +44,8 @@ import static net.sourceforge.subsonic.controller.RESTController.ErrorCode.MISSI
  */
 public class RESTFilter implements Filter {
 
+    private static final Logger LOG = Logger.getLogger(RESTFilter.class);
+
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         try {
             chain.doFilter(req, res);
@@ -52,12 +55,15 @@ public class RESTFilter implements Filter {
     }
 
     private void handleException(Throwable x, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        if (x instanceof NestedServletException) {
+        if (x instanceof NestedServletException && x.getCause() != null) {
             x = x.getCause();
         }
 
         RESTController.ErrorCode code = (x instanceof ServletRequestBindingException) ? MISSING_PARAMETER : GENERIC;
-        RESTController.error(request, response, code, getErrorMessage(x));
+        String msg = getErrorMessage(x);
+        LOG.warn("Error in REST API: " + msg, x);
+
+        RESTController.error(request, response, code, msg);
     }
 
     private String getErrorMessage(Throwable x) {
