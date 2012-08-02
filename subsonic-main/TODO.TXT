@@ -1,43 +1,10 @@
 DONE IN 4.7
 -------------
-Don't display "null" as artist in now playing.
-Fixed crash on Java 7 caused by wrong sorting implementation.
-Added Settings > General > Sort albums by year
-Try with different encodings when importing playlists.
-Admins should be able to manage all playlists (that is visible to them)
-Use "album artist" tag if present.
-Updated Slovenian translation, courtesy of Jan Jam&#353;ek
-Automatically import all playlists on start-up.
-Show all playlist metadata.
-Fixed problem with no files being showed if removing and re-adding a media folder with scans in between.
-Added "Settings > Media folders > Clean-up database"
-Fixed slow "Top rated".
-Less aggressive caching of left.view
-Collapse long list of playlists.
-Make it possible to refresh left frame.
-Displayed album year doesn't update when editing corresponding tag (Foyaxe)
-Include minisub
-Show toast when saving queue as playlist (and when saving settings)
-REST: Added getUsers.
-HLS support
-Album art broken on IE8.
-getStatistics is slow.
-Slow scan.
-REST: getArtists now only returns album artists.
-use mp3 in hls.
-REST: Add index to getArtists
-Added new theme "SubStandard", courtesy of Dan Eriksen.
-HLS audio support.
+
 
 TODO IN 4.7
 -----------------
-Return XML error in hls, stream, download methods.
-  https://mail.google.com/mail/u/0/?shva=1#inbox/1386e28c63be12bd
-update changelog for beta3
 Backup database in installer.
-Problems importing playlists (BKKKPewsey)
-Video files not displayed?
-  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1382b15b29249d42
 Go thru bug reports.
   http://forum.subsonic.org/forum/viewtopic.php?t=5708
 Retest playlist import (different encodings)

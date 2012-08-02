@@ -16,6 +16,32 @@
 <div id="main-col">
 <h1 class="bottomspace">Subsonic Change Log</h1>
 
+<a name="4.7.beta3"><h2 class="div">Subsonic 4.7.beta3 - Aug 03, 2012</h2></a>
+<ul>
+    <li><span class="bugid">New: </span>Make it possible to refresh list of artists without rescanning.</li>
+    <li><span class="bugid">New: </span>Added Settings &gt; Media folders &gt; Clean-up database.</li>
+    <li><span class="bugid">New: </span>Added Settings &gt; General &gt; Sort albums by year.</li>
+    <li><span class="bugid">New: </span>Included MiniSub app.</li>
+    <li><span class="bugid">New: </span>Automatically import all playlists on start-up.</li>
+    <li><span class="bugid">New: </span>Collapse long list of playlists.</li>
+    <li><span class="bugid">New: </span>Use "album artist" tag if present.</li>
+    <li><span class="bugid">New: </span>Updated Slovenian translation, courtesy of Jan Jam&#353;ek.</li>
+    <li><span class="bugid">New: </span>Added new theme "SubStandard", courtesy of Dan Eriksen.</li>
+    <li><span class="bugid">Bugfix: </span>Improved speed when scanning large media libraries.</li>
+    <li><span class="bugid">Bugfix: </span>More robust playlist import.</li>
+    <li><span class="bugid">Bugfix: </span>Fixed problem with no files being showed if removing and re-adding a media folder.</li>
+    <li><span class="bugid">Bugfix: </span>Fixed crash on Java 7.</li>
+    <li><span class="bugid">Bugfix: </span>Fixed slow "Top rated".</li>
+    <li><span class="bugid">Bugfix: </span>Fixed album art on Internet Explorer.</li>
+    <li><span class="bugid">Bugfix: </span>Don't display "null" as artist in now playing.</li>
+    <li><span class="bugid">Bugfix: </span>Admins can now manage all playlists (that is visible to them).</li>
+    <li><span class="bugid">Bugfix: </span>Displayed album year now updates when editing corresponding tag.</li>
+    <li><span class="bugid">REST: </span>Added getUsers method.</li>
+    <li><span class="bugid">REST: </span>Added support for HTTP Live Streaming.</li>
+    <li><span class="bugid">REST: </span>getArtists now only returns album artists.</li>
+    <li><span class="bugid">REST: </span>Add index to getArtists.</li>
+</ul>
+
 <a name="4.7.beta2"><h2 class="div">Subsonic 4.7.beta2 - Jun 08, 2012</h2></a>
 <ul>
     <li><span class="bugid">New: </span>Playlist import/export.</li>
@@ -934,6 +960,7 @@
     <div class="sidebox">
         <h2>Releases</h2>
         <ul class="list">
+            <li><a href="#4.7.beta3">Subsonic 4.7.beta3</a></li>
             <li><a href="#4.7.beta2">Subsonic 4.7.beta2</a></li>
             <li><a href="#4.7.beta1">Subsonic 4.7.beta1</a></li>
             <li><a href="#4.6">Subsonic 4.6</a></li>
