@@ -27,12 +27,12 @@ REST: getArtists now only returns album artists.
 use mp3 in hls.
 REST: Add index to getArtists
 Added new theme "SubStandard", courtesy of Dan Eriksen.
+HLS audio support.
 
 TODO IN 4.7
 -----------------
-select max(id) is slow. Use "where xxx"
+select max(id) is slow.
 mediastreamvalidator
-HLS audio support.
 Return XML error in hls, stream, download methods.
   https://mail.google.com/mail/u/0/?shva=1#inbox/1386e28c63be12bd
 update changelog for beta3

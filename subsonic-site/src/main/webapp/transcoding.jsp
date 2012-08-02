@@ -58,7 +58,7 @@
                 The recommended <b>HTTP Live Streaming</b> (HLS) command is:
             </p>
             <p>
-                <code>ffmpeg -ss %o -t %d -i %s -async 1 -b %bk -s %wx%h -ar 44100 -ac 2 -v 0 -f mpegts -vcodec libx264 -preset superfast -threads 0 -</code>
+                <code>ffmpeg -ss %o -t %d -i %s -async 1 -b %bk -s %wx%h -ar 44100 -ac 2 -v 0 -f mpegts -vcodec libx264 -preset superfast -acodec libmp3lame -threads 0 -</code>
             </p>
 
             <p>
