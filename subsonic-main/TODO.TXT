@@ -21,7 +21,6 @@ Postponed:
   - Encourage users to save email addresses, also for admin.  Explain why.
   - Update apps to include PlayBook version.
   - REST: Add example links to demo server.
-  - Blacklist abusers of my email.
   - Eliminate HomeController.Album.
   - Clicking play button on a video podcast doesn't work.
 
@@ -749,15 +748,12 @@ Upgrade Subsonic backend: CHANGE DATE BELOW
   cd subsonic-backend
   mvn clean install
 
-  mkdir /usr/local/jakarta/tomcat/webapps-2012-06-09/
+  mkdir /usr/local/jakarta/tomcat/webapps-2012-08-03/
 
   scp subsonic-site/src/main/webapp/apps.jsp root@subsonic.org:/usr/local/jakarta/tomcat/webapps/pages
-  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2012-06-09/ROOT.war
-  scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2012-06-09/demo.war
-  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2012-06-09/pages
-
-
-  Blacklist abusers of my email.
+  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2012-08-03/ROOT.war
+  scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2012-08-03/demo.war
+  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2012-08-03/pages
 
 
   Checkpoint database (db.view)
@@ -766,7 +762,7 @@ Upgrade Subsonic backend: CHANGE DATE BELOW
   ps -elf | grep jsvc
   /usr/sbin/stoptomcat
   rm webapps
-  ln -s webapps-2012-06-09 webapps
+  ln -s webapps-2012-08-03 webapps
 
   rm -rf work logs/*
   /usr/sbin/starttomcat
