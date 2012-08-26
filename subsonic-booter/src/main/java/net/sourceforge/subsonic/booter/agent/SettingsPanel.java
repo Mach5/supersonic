@@ -273,7 +273,7 @@ public class SettingsPanel extends JPanel implements SubsonicListener {
     }
 
     private File getOptionsFile() throws SettingsException {
-        File file = new File("subsonic-service.exe.vmoptions");
+        File file = new File("supersonic-service.exe.vmoptions");
         if (!file.isFile() || !file.exists()) {
             throw new SettingsException("File " + file.getAbsolutePath() + " not found.");
         }
