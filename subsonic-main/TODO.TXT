@@ -4,6 +4,10 @@ DONE IN 4.7
 
 TODO IN 4.7
 -----------------
+Add timestamp to scrobble method.
+  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1396a4f77f824dcc
+FLAC crashes Flash in Firefox.
+  http://forum.subsonic.org/forum/viewtopic.php?f=2&t=10027&p=44673#p44673
 Go thru bug reports.
 Retest playlist import (different encodings)
 Something wrong with matching players/users in Now Playing.
@@ -110,7 +114,10 @@ TODO IN ANDROID 3.4
 --------------------
 Patch "Host name cannot be null"
   https://mail.google.com/mail/?ui=2&shva=1#inbox/137195c3dc8510ad
+  https://mail.google.com/mail/u/0/?shva=1#inbox/138ec0b544998d8b
 Support Bluetooth play/pause buttons in ICS.
+Subphonic
+  http://forum.subsonic.org/forum/viewtopic.php?f=5&t=9864
 Wifi lock.
 HLS video.
 Problem if underscore/dash in server name.
