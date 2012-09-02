@@ -168,8 +168,8 @@ public class MultiController extends MultiActionController {
 
         int sumToday = paymentDao.getPaymentAmount(startOfToday.getTime(), endOfToday.getTime());
         int sumYesterday = paymentDao.getPaymentAmount(startOfYesterday.getTime(), startOfToday.getTime());
-        int sumMonth = paymentDao.getPaymentAmount(startOfMonth.getTime(), endOfToday.getTime());
-        int dayAverageThisMonth = sumMonth / startOfToday.get(Calendar.DATE);
+        int sumMonth = paymentDao.getPaymentAmount(startOfMonth.getTime(), startOfToday.getTime());
+        int dayAverageThisMonth = sumMonth / startOfYesterday.get(Calendar.DATE);
 
         map.put("sumToday", sumToday);
         map.put("sumYesterday", sumYesterday);

@@ -4,6 +4,8 @@ DONE IN 4.7
 
 TODO IN 4.7
 -----------------
+Prefill minisub
+  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1394bd52aaaf4969
 Add timestamp to scrobble method.
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1396a4f77f824dcc
 FLAC crashes Flash in Firefox.
