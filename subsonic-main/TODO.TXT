@@ -4,10 +4,14 @@ DONE IN 4.7
 
 TODO IN 4.7
 -----------------
-Prefill minisub
-  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1394bd52aaaf4969
+Rescan looses comments and play statistics.
+  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=135#p45185
+
 Add timestamp to scrobble method.
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1396a4f77f824dcc
+
+Prefill minisub
+  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1394bd52aaaf4969
 FLAC crashes Flash in Firefox.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=10027&p=44673#p44673
 Go thru bug reports.
