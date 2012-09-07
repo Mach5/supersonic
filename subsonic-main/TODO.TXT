@@ -1,6 +1,6 @@
 DONE IN 4.7
 -------------
-
+Bugfix: Play queue no longer scrolls to the top when clicking on links.
 
 TODO IN 4.7
 -----------------

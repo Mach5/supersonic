@@ -38,7 +38,7 @@
                     },
                     "<fmt:message key="common.cancel"/>": function() {
                         $(this).dialog("close");
-                    }
+                    } 
                 }});
             getPlaylist();
         }
@@ -100,7 +100,9 @@
                 }
 
                 $("#pattern" + id).addClass((i % 2 == 0) ? "bgcolor2" : "bgcolor1");
-                $("#pattern" + id).show();
+
+                // Note: show() method causes page to scroll to top.
+                $("#pattern" + id).css("display", "table-row");
             }
         }
 
@@ -150,15 +152,15 @@
 
 <h1 id="name">${model.playlist.name}</h1>
 <h2>
-    <a href="#" onclick="onPlayAll();"><fmt:message key="common.play"/></a>
+    <a href="javascript:void(0)" onclick="onPlayAll();"><fmt:message key="common.play"/></a>
 
     <c:if test="${model.user.downloadRole}">
         <c:url value="download.view" var="downloadUrl"><c:param name="playlist" value="${model.playlist.id}"/></c:url>
         | <a href="${downloadUrl}"><fmt:message key="common.download"/></a>
     </c:if>
     <c:if test="${model.editAllowed}">
-        | <a href="#" onclick="onEditPlaylist();"><fmt:message key="common.edit"/></a>
-        | <a href="#" onclick="onDeletePlaylist();"><fmt:message key="common.delete"/></a>
+        | <a href="javascript:void(0)" onclick="onEditPlaylist();"><fmt:message key="common.edit"/></a>
+        | <a href="javascript:void(0)" onclick="onDeletePlaylist();"><fmt:message key="common.delete"/></a>
     </c:if>
     <c:url value="exportPlaylist.view" var="exportUrl"><c:param name="id" value="${model.playlist.id}"/></c:url>
     | <a href="${exportUrl}"><fmt:message key="playlist2.export"/></a>
@@ -183,12 +185,12 @@
 <table style="border-collapse:collapse;white-space:nowrap">
     <tbody id="playlistBody">
     <tr id="pattern" style="display:none;margin:0;padding:0;border:0">
-        <td class="bgcolor1"><a href="#">
+        <td class="bgcolor1"><a href="javascript:void(0)">
             <img id="starSong" onclick="onStar(this.id.substring(8) - 1)" src="<spring:theme code="ratingOffImage"/>" alt="" title=""></a></td>
-        <td class="bgcolor1"><a href="#">
+        <td class="bgcolor1"><a href="javascript:void(0)">
             <img id="play" src="<spring:theme code="playImage"/>" alt="<fmt:message key="common.play"/>" title="<fmt:message key="common.play"/>"
                  onclick="onPlay(this.id.substring(4) - 1)"></a></td>
-        <td class="bgcolor1"><a href="#">
+        <td class="bgcolor1"><a href="javascript:void(0)">
             <img id="add" src="<spring:theme code="addImage"/>" alt="<fmt:message key="common.add"/>" title="<fmt:message key="common.add"/>"
                  onclick="onAdd(this.id.substring(3) - 1)"></a></td>
 
@@ -199,13 +201,13 @@
         <td style="padding-right:1.25em;text-align:right;"><span id="duration" class="detail">Duration</span></td>
 
         <c:if test="${model.editAllowed}">
-            <td class="bgcolor1"><a href="#">
+            <td class="bgcolor1"><a href="javascript:void(0)">
                 <img id="removeSong" onclick="onRemove(this.id.substring(10) - 1)" src="<spring:theme code="removeImage"/>"
                      alt="<fmt:message key="playlist.remove"/>" title="<fmt:message key="playlist.remove"/>"></a></td>
-            <td class="bgcolor1"><a href="#">
+            <td class="bgcolor1"><a href="javascript:void(0)">
                 <img id="up" onclick="onUp(this.id.substring(2) - 1)" src="<spring:theme code="upImage"/>"
                      alt="<fmt:message key="playlist.up"/>" title="<fmt:message key="playlist.up"/>"></a></td>
-            <td class="bgcolor1"><a href="#">
+            <td class="bgcolor1"><a href="javascript:void(0)">
                 <img id="down" onclick="onDown(this.id.substring(4) - 1)" src="<spring:theme code="downImage"/>"
                      alt="<fmt:message key="playlist.down"/>" title="<fmt:message key="playlist.down"/>"></a></td>
         </c:if>
