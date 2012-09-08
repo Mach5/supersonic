@@ -311,8 +311,10 @@
                 $("#fileSize" + id).html(song.fileSize);
             }
 
-            $("#pattern" + id).show();
             $("#pattern" + id).addClass((i % 2 == 0) ? "bgcolor1" : "bgcolor2");
+
+            // Note: show() method causes page to scroll to top.
+            $("#pattern" + id).css("display", "table-row");
         }
 
         if (playQueue.sendM3U) {
@@ -474,8 +476,8 @@
             </c:if>
 
             <c:if test="${model.user.streamRole and not model.player.web}">
-                <td style="white-space:nowrap;" id="stop"><b><a href="#" onclick="onStop()"><fmt:message key="playlist.stop"/></a></b> | </td>
-                <td style="white-space:nowrap;" id="start"><b><a href="#" onclick="onStart()"><fmt:message key="playlist.start"/></a></b> | </td>
+                <td style="white-space:nowrap;" id="stop"><b><a href="javascript:void(0)" onclick="onStop()"><fmt:message key="playlist.stop"/></a></b> | </td>
+                <td style="white-space:nowrap;" id="start"><b><a href="javascript:void(0)" onclick="onStart()"><fmt:message key="playlist.start"/></a></b> | </td>
             </c:if>
 
             <c:if test="${model.player.jukebox}">
@@ -504,18 +506,18 @@
             </c:if>
 
             <c:if test="${model.player.web}">
-                <td style="white-space:nowrap;"><a href="#" onclick="onPrevious()"><b>&laquo;</b></a></td>
-                <td style="white-space:nowrap;"><a href="#" onclick="onNext(false)"><b>&raquo;</b></a> |</td>
+                <td style="white-space:nowrap;"><a href="javascript:void(0)" onclick="onPrevious()"><b>&laquo;</b></a></td>
+                <td style="white-space:nowrap;"><a href="javascript:void(0)" onclick="onNext(false)"><b>&raquo;</b></a> |</td>
             </c:if>
 
-            <td style="white-space:nowrap;"><a href="#" onclick="onClear()"><fmt:message key="playlist.clear"/></a> |</td>
-            <td style="white-space:nowrap;"><a href="#" onclick="onShuffle()"><fmt:message key="playlist.shuffle"/></a> |</td>
+            <td style="white-space:nowrap;"><a href="javascript:void(0)" onclick="onClear()"><fmt:message key="playlist.clear"/></a> |</td>
+            <td style="white-space:nowrap;"><a href="javascript:void(0)" onclick="onShuffle()"><fmt:message key="playlist.shuffle"/></a> |</td>
 
             <c:if test="${model.player.web or model.player.jukebox or model.player.external}">
-                <td style="white-space:nowrap;"><a href="#" onclick="onToggleRepeat()"><span id="toggleRepeat"><fmt:message key="playlist.repeat_on"/></span></a> |</td>
+                <td style="white-space:nowrap;"><a href="javascript:void(0)" onclick="onToggleRepeat()"><span id="toggleRepeat"><fmt:message key="playlist.repeat_on"/></span></a> |</td>
             </c:if>
 
-            <td style="white-space:nowrap;"><a href="#" onclick="onUndo()"><fmt:message key="playlist.undo"/></a> |</td>
+            <td style="white-space:nowrap;"><a href="javascript:void(0)" onclick="onUndo()"><fmt:message key="playlist.undo"/></a> |</td>
 
             <c:if test="${model.user.settingsRole}">
                 <td style="white-space:nowrap;"><a href="playerSettings.view?id=${model.player.id}" target="main"><fmt:message key="playlist.settings"/></a> |</td>
@@ -555,16 +557,16 @@
 <table style="border-collapse:collapse;white-space:nowrap;">
     <tbody id="playlistBody">
         <tr id="pattern" style="display:none;margin:0;padding:0;border:0">
-            <td class="bgcolor2"><a href="#">
+            <td class="bgcolor2"><a href="javascript:void(0)">
                 <img id="starSong" onclick="onStar(this.id.substring(8) - 1)" src="<spring:theme code="ratingOffImage"/>"
                      alt="" title=""></a></td>
-            <td class="bgcolor2"><a href="#">
+            <td class="bgcolor2"><a href="javascript:void(0)">
                 <img id="removeSong" onclick="onRemove(this.id.substring(10) - 1)" src="<spring:theme code="removeImage"/>"
                      alt="<fmt:message key="playlist.remove"/>" title="<fmt:message key="playlist.remove"/>"></a></td>
-            <td class="bgcolor2"><a href="#">
+            <td class="bgcolor2"><a href="javascript:void(0)">
                 <img id="up" onclick="onUp(this.id.substring(2) - 1)" src="<spring:theme code="upImage"/>"
                      alt="<fmt:message key="playlist.up"/>" title="<fmt:message key="playlist.up"/>"></a></td>
-            <td class="bgcolor2"><a href="#">
+            <td class="bgcolor2"><a href="javascript:void(0)">
                 <img id="down" onclick="onDown(this.id.substring(4) - 1)" src="<spring:theme code="downImage"/>"
                      alt="<fmt:message key="playlist.down"/>" title="<fmt:message key="playlist.down"/>"></a></td>
 
@@ -582,7 +584,7 @@
                         <span id="title">Title</span>
                     </c:when>
                     <c:otherwise>
-                        <a id="titleUrl" href="#">Title</a>
+                        <a id="titleUrl" href="javascript:void(0)">Title</a>
                     </c:otherwise>
                 </c:choose>
             </td>
