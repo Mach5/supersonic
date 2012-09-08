@@ -3,6 +3,7 @@ DONE IN 4.7
 Bugfix: Play queue no longer scrolls to the top when clicking on links.
 Bugfix: MiniSub link ignores context path
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=15#p44270
+Rephrase "Share this playlist with other users." to "Make this playlist visible to other users".
 
 TODO IN 4.7
 -----------------
@@ -15,7 +16,6 @@ Skipping broken for external players w/ playlist?
 Playlist import issue
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=9983&p=44894#p44074
 Reconsider album artist.
-Rephrase "Share this playlist with other users." to "Make playlist visible to other users".
 Prefill minisub
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1394bd52aaaf4969
 Add timestamp to scrobble method.
