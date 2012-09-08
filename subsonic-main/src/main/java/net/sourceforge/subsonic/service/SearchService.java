@@ -274,7 +274,7 @@ public class SearchService {
     }
 
     private static String normalizeGenre(String genre) {
-        return genre.toLowerCase().replace(" ", "");
+        return genre.toLowerCase().replace(" ", "").replace("-", "");
     }
 
     /**
