@@ -44,9 +44,9 @@
     </pluginRepositories>
 
     <scm>
-        <connection>scm:svn:https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk</connection>
-        <developerConnection>scm:svn:https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk</developerConnection>
-        <url>http://subsonic.svn.sourceforge.net/viewvc/subsonic/</url>
+        <connection>scm:svn:svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk</connection>
+        <developerConnection>scm:svn:svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk</developerConnection>
+        <url>https://sourceforge.net/p/subsonic/code</url>
     </scm>
 
     <ciManagement>

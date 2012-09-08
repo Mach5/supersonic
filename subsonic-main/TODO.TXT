@@ -1,6 +1,11 @@
 DONE IN 4.7
 -------------
-
+Bugfix: Play queue no longer scrolls to the top when clicking on links.
+Bugfix: MiniSub link ignores context path
+  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=15#p44270
+Rephrase "Share this playlist with other users." to "Make this playlist visible to other users".
+Bugfix: Will not create a random playlist with a "-" in the genre
+  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=90#p44890
 
 TODO IN 4.7
 -----------------
@@ -10,11 +15,21 @@ Rescan looses comments and play statistics.
 Add timestamp to scrobble method.
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1396a4f77f824dcc
 
+Don't show toast when clicking "Scan media folders now".
+S1000 Data file size limit is reached in statement
+  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=75#p44643 (sent email Sep 7)
+Skipping broken for external players w/ playlist?
+  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=90#p44901
+Playlist import issue
+  http://forum.subsonic.org/forum/viewtopic.php?f=2&t=9983&p=44894#p44074
+Reconsider album artist.
 Prefill minisub
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1394bd52aaaf4969
+Add timestamp to scrobble method.
+  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1396a4f77f824dcc
 FLAC crashes Flash in Firefox.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=10027&p=44673#p44673
-Go thru bug reports.
+
 Retest playlist import (different encodings)
 Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
