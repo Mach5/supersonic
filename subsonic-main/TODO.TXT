@@ -6,11 +6,11 @@ Bugfix: MiniSub link ignores context path
 Rephrase "Share this playlist with other users." to "Make this playlist visible to other users".
 Bugfix: Will not create a random playlist with a "-" in the genre
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=90#p44890
+Bugfix: Rescan looses comments and play statistics.
+  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=135#p45185
 
 TODO IN 4.7
 -----------------
-Rescan looses comments and play statistics.
-  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=135#p45185
 
 Add timestamp to scrobble method.
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1396a4f77f824dcc
