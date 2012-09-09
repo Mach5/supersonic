@@ -11,11 +11,9 @@ Bugfix: Rescan looses comments and play statistics.
 
 TODO IN 4.7
 -----------------
-
 Add timestamp to scrobble method.
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1396a4f77f824dcc
 
-Don't show toast when clicking "Scan media folders now".
 S1000 Data file size limit is reached in statement
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=75#p44643 (sent email Sep 7)
 Skipping broken for external players w/ playlist?
@@ -25,21 +23,19 @@ Playlist import issue
 Reconsider album artist.
 Prefill minisub
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1394bd52aaaf4969
-Add timestamp to scrobble method.
-  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1396a4f77f824dcc
 FLAC crashes Flash in Firefox.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=10027&p=44673#p44673
 
 Retest playlist import (different encodings)
 Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
-ConcurrentModificationException
-  https://mail.google.com/mail/u/0/?tab=cm#inbox/13822e43383dca84
-Add "Force rescan" option.
 SourceForge, hosted apps retirement
   https://mail.google.com/mail/u/0/?tab=cm#inbox/1386c503c5c2c564
 
 Postponed:
+  - ConcurrentModificationException
+      https://mail.google.com/mail/u/0/?tab=cm#inbox/13822e43383dca84
+  - Add "Force rescan" option.
   - Increase line height in playlist.jsp
   - Rename to play queue in Settings > Player.
   - Show message if no songs are selected when doing add to playlist.
@@ -52,8 +48,6 @@ Postponed:
 Replace usage of dwr.util and prototype with jquery.
 Handle albums without artist. Don't create them?
 Support comment and ratings for Album table.
-JSON exception with ampersand.
-minisub doesn't play.
 Test getPlaylist vs old-style IDs.
 Fix broken REST scrobbling, as reported by Ben.
 JWPlayer subtitle plugin
