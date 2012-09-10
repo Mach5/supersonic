@@ -282,7 +282,7 @@ public class PlaylistService {
         public abstract void format(List<MediaFile> files, PrintWriter writer) throws IOException;
 
 
-        protected MediaFile getMediaFile(MediaFileService mediaFileService, String path) {
+        protected MediaFile getMediaFile(String path) {
             try {
                 MediaFile file = mediaFileService.getMediaFile(path);
                 if (file != null && file.exists()) {
@@ -302,7 +302,7 @@ public class PlaylistService {
             String line = reader.readLine();
             while (line != null) {
                 if (!line.startsWith("#")) {
-                    MediaFile file = getMediaFile(mediaFileService, line);
+                    MediaFile file = getMediaFile(line);
                     if (file != null) {
                         ok.add(file);
                     } else {
@@ -340,7 +340,7 @@ public class PlaylistService {
                 Matcher matcher = pattern.matcher(line);
                 if (matcher.find()) {
                     String path = matcher.group(1);
-                    MediaFile file = getMediaFile(mediaFileService, path);
+                    MediaFile file = getMediaFile(path);
                     if (file != null) {
                         ok.add(file);
                     } else {
@@ -396,7 +396,7 @@ public class PlaylistService {
                 String location = track.getChildText("location", ns);
                 if (location != null && location.startsWith("file://")) {
                     location = location.replaceFirst("file://", "");
-                    MediaFile file = getMediaFile(mediaFileService, location);
+                    MediaFile file = getMediaFile(location);
                     if (file != null) {
                         ok.add(file);
                     } else {
