@@ -10,6 +10,7 @@ Bugfix: Rescan looses comments and play statistics.
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=135#p45185
 Auto-import playlists after scan.
 Update playlist statistics after rescan.
+Upgraded to JW Player 5.10
 
 TODO IN 4.7
 -----------------
