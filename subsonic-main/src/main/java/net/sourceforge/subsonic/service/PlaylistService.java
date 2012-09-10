@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.sourceforge.subsonic.domain.MusicFolder;
+import net.sourceforge.subsonic.util.Util;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -290,6 +292,9 @@ public class PlaylistService {
                 }
 
                 file = normalizePath(file);
+                if (file == null) {
+                    return null;
+                }
                 MediaFile mediaFile = mediaFileService.getMediaFile(file);
                 if (mediaFile != null && mediaFile.exists()) {
                     return mediaFile;
@@ -302,17 +307,35 @@ public class PlaylistService {
             return null;
         }
 
+        /**
+         * Paths in an external playlist may not have the same upper/lower case as in the (case sensitive) media_file table.
+         * This methods attempts to normalize the external path to match the one stored in the table.
+         */
         private File normalizePath(File file) throws IOException {
 
-            return file;
+            // Only relevant for Windows where paths are case insensitive.
+            if (!Util.isWindows()) {
+                return file;
+            }
 
-//            TODO
-//            String canonicalPath = file.getCanonicalPath();
-//
-//            for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
-//
-//            }
+            // Find the most specific music folder.
+            String canonicalPath = file.getCanonicalPath();
+            MusicFolder containingMusicFolder = null;
+            for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
+                String musicFolderPath = musicFolder.getPath().getPath();
+                if (canonicalPath.toLowerCase().startsWith(musicFolderPath.toLowerCase())) {
+                    if (containingMusicFolder == null || containingMusicFolder.getPath().length() < musicFolderPath.length()) {
+                        containingMusicFolder = musicFolder;
+                    }
+                }
+            }
 
+            if (containingMusicFolder == null) {
+                return null;
+            }
+
+            return new File(containingMusicFolder.getPath().getPath() + canonicalPath.substring(containingMusicFolder.getPath().getPath().length()));
+            // TODO: Consider slashes.
         }
     }
 
