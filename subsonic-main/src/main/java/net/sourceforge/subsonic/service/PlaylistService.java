@@ -218,6 +218,23 @@ public class PlaylistService {
         }
     }
 
+    public void updatePlaylistStatistics() {
+        try {
+            LOG.info("Starting playlist statistics update.");
+            doUpdatePlaylistStatistics();
+            LOG.info("Completed playlist statistics update.");
+        } catch (Throwable x) {
+            LOG.warn("Failed to update playlist statistics: " + x, x);
+        }
+    }
+
+    private void doUpdatePlaylistStatistics() {
+        for (Playlist playlist : playlistDao.getAllPlaylists()) {
+            List<MediaFile> files = getFilesInPlaylist(playlist.getId());
+            setFilesInPlaylist(playlist.getId(), files);
+        }
+    }
+
     private void importPlaylistIfNotExisting(File file, List<Playlist> allPlaylists) throws Exception {
         String format = FilenameUtils.getExtension(file.getPath());
         if (getPlaylistFormat(format) == null) {

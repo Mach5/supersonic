@@ -9,9 +9,13 @@ Bugfix: Will not create a random playlist with a "-" in the genre
 Bugfix: Rescan looses comments and play statistics.
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=135#p45185
 Auto-import playlists after scan.
+Update playlist statistics after rescan.
 
 TODO IN 4.7
 -----------------
+Unable to download podcast with invalid char in name
+  https://sourceforge.net/p/subsonic/bugs/51/
+  https://mail.google.com/mail/u/0/?shva=1#inbox/139a8b17f0a8e862
 Add timestamp to scrobble method.
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1396a4f77f824dcc
 S1000 Data file size limit is reached in statement
@@ -20,7 +24,6 @@ Skipping broken for external players w/ playlist?
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=90#p44901
 Playlist import issue
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=9983&p=44894#p44074
-  Update playlist statistics after rescan.
   Transform path so that it matches media_file.path
 Reconsider album artist.
 Prefill minisub
@@ -28,7 +31,6 @@ Prefill minisub
 FLAC crashes Flash in Firefox.
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=10027&p=44673#p44673
 
-Retest playlist import (different encodings)
 Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
 SourceForge, hosted apps retirement
