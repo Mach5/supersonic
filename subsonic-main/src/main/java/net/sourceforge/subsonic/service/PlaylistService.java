@@ -133,7 +133,7 @@ public class PlaylistService {
     }
 
     public Playlist importPlaylist(String username, String playlistName, String fileName, String format, InputStream inputStream) throws Exception {
-        PlaylistFormat playlistFormat = PlaylistFormat.getPlaylistFormat(format);
+        PlaylistFormat playlistFormat = getPlaylistFormat(format);
         if (playlistFormat == null) {
             throw new Exception("Unsupported playlist format: " + format);
         }
@@ -218,7 +218,7 @@ public class PlaylistService {
 
     private void importPlaylistIfNotExisting(File file, List<Playlist> allPlaylists) throws Exception {
         String format = FilenameUtils.getExtension(file.getPath());
-        if (PlaylistFormat.getPlaylistFormat(format) == null) {
+        if (getPlaylistFormat(format) == null) {
             return;
         }
 
@@ -235,6 +235,22 @@ public class PlaylistService {
         } finally {
             IOUtils.closeQuietly(in);
         }
+    }
+
+    private PlaylistFormat getPlaylistFormat(String format) {
+        if (format == null) {
+            return null;
+        }
+        if (format.equalsIgnoreCase("m3u") || format.equalsIgnoreCase("m3u8")) {
+            return new M3UFormat();
+        }
+        if (format.equalsIgnoreCase("pls")) {
+            return new PLSFormat();
+        }
+        if (format.equalsIgnoreCase("xspf")) {
+            return new XSPFFormat();
+        }
+        return null;
     }
 
     public void setPlaylistDao(PlaylistDao playlistDao) {
@@ -256,30 +272,15 @@ public class PlaylistService {
     public void setSettingsService(SettingsService settingsService) {
         this.settingsService = settingsService;
     }
+
     /**
      * Abstract superclass for playlist formats.
      */
-
-    private abstract static class PlaylistFormat {
+    private abstract class PlaylistFormat {
         public abstract Pair<List<MediaFile>, List<String>> parse(BufferedReader reader, MediaFileService mediaFileService) throws IOException;
 
         public abstract void format(List<MediaFile> files, PrintWriter writer) throws IOException;
 
-        public static PlaylistFormat getPlaylistFormat(String format) {
-            if (format == null) {
-                return null;
-            }
-            if (format.equalsIgnoreCase("m3u") || format.equalsIgnoreCase("m3u8")) {
-                return new M3UFormat();
-            }
-            if (format.equalsIgnoreCase("pls")) {
-                return new PLSFormat();
-            }
-            if (format.equalsIgnoreCase("xspf")) {
-                return new XSPFFormat();
-            }
-            return null;
-        }
 
         protected MediaFile getMediaFile(MediaFileService mediaFileService, String path) {
             try {
@@ -294,7 +295,7 @@ public class PlaylistService {
         }
     }
 
-    private static class M3UFormat extends PlaylistFormat {
+    private class M3UFormat extends PlaylistFormat {
         public Pair<List<MediaFile>, List<String>> parse(BufferedReader reader, MediaFileService mediaFileService) throws IOException {
             List<MediaFile> ok = new ArrayList<MediaFile>();
             List<String> error = new ArrayList<String>();
@@ -327,7 +328,7 @@ public class PlaylistService {
     /**
      * Implementation of PLS playlist format.
      */
-    private static class PLSFormat extends PlaylistFormat {
+    private class PLSFormat extends PlaylistFormat {
         public Pair<List<MediaFile>, List<String>> parse(BufferedReader reader, MediaFileService mediaFileService) throws IOException {
             List<MediaFile> ok = new ArrayList<MediaFile>();
             List<String> error = new ArrayList<String>();
@@ -371,7 +372,7 @@ public class PlaylistService {
     /**
      * Implementation of XSPF (http://www.xspf.org/) playlist format.
      */
-    private static class XSPFFormat extends PlaylistFormat {
+    private class XSPFFormat extends PlaylistFormat {
         public Pair<List<MediaFile>, List<String>> parse(BufferedReader reader, MediaFileService mediaFileService) throws IOException {
             List<MediaFile> ok = new ArrayList<MediaFile>();
             List<String> error = new ArrayList<String>();

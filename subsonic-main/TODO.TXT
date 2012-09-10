@@ -21,7 +21,7 @@ Skipping broken for external players w/ playlist?
 Playlist import issue
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=9983&p=44894#p44074
   Update playlist statistics after rescan.
-  Create case-insensitive getMediaFile?
+  Transform path so that it matches media_file.path
 Reconsider album artist.
 Prefill minisub
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1394bd52aaaf4969
