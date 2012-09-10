@@ -284,14 +284,35 @@ public class PlaylistService {
 
         protected MediaFile getMediaFile(String path) {
             try {
-                MediaFile file = mediaFileService.getMediaFile(path);
-                if (file != null && file.exists()) {
-                    return file;
+                File file = new File(path);
+                if (!file.exists()) {
+                    return null;
+                }
+
+                file = normalizePath(file);
+                MediaFile mediaFile = mediaFileService.getMediaFile(file);
+                if (mediaFile != null && mediaFile.exists()) {
+                    return mediaFile;
                 }
             } catch (SecurityException x) {
                 // Ignored
+            } catch (IOException x) {
+                // Ignored
             }
             return null;
+        }
+
+        private File normalizePath(File file) throws IOException {
+
+            return file;
+
+//            TODO
+//            String canonicalPath = file.getCanonicalPath();
+//
+//            for (MusicFolder musicFolder : settingsService.getAllMusicFolders()) {
+//
+//            }
+
         }
     }
 
