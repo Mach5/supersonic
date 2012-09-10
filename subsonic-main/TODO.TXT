@@ -8,18 +8,20 @@ Bugfix: Will not create a random playlist with a "-" in the genre
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=90#p44890
 Bugfix: Rescan looses comments and play statistics.
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=135#p45185
+Auto-import playlists after scan.
 
 TODO IN 4.7
 -----------------
 Add timestamp to scrobble method.
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1396a4f77f824dcc
-
 S1000 Data file size limit is reached in statement
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=75#p44643 (sent email Sep 7)
 Skipping broken for external players w/ playlist?
   http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=90#p44901
 Playlist import issue
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=9983&p=44894#p44074
+  Update playlist statistics after rescan.
+  Create case-insensitive getMediaFile?
 Reconsider album artist.
 Prefill minisub
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1394bd52aaaf4969

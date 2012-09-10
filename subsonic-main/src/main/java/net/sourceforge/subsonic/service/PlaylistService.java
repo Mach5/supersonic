@@ -35,8 +35,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sourceforge.subsonic.domain.User;
-import net.sourceforge.subsonic.util.Pair;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -51,6 +49,8 @@ import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.dao.PlaylistDao;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.util.Pair;
 import net.sourceforge.subsonic.util.StringUtil;
 
 /**
@@ -67,14 +67,6 @@ public class PlaylistService {
     private PlaylistDao playlistDao;
     private SecurityService securityService;
     private SettingsService settingsService;
-
-    public void init() {
-        try {
-            importPlaylists();
-        } catch (Throwable x) {
-            LOG.warn("Failed to import playlists: " + x, x);
-        }
-    }
 
     public List<Playlist> getReadablePlaylistsForUser(String username) {
         return playlistDao.getReadablePlaylistsForUser(username);
@@ -194,10 +186,17 @@ public class PlaylistService {
         new M3UFormat().format(getFilesInPlaylist(id), writer);
     }
 
-    /**
-     * Implementation of M3U playlist format.
-     */
-    private void importPlaylists() throws Exception {
+    public void importPlaylists() {
+        try {
+            LOG.info("Starting playlist import.");
+            doImportPlaylists();
+            LOG.info("Completed playlist import.");
+        } catch (Throwable x) {
+            LOG.warn("Failed to import playlists: " + x, x);
+        }
+    }
+
+    private void doImportPlaylists() throws Exception {
         String playlistFolderPath = settingsService.getPlaylistFolder();
         if (playlistFolderPath == null) {
             return;

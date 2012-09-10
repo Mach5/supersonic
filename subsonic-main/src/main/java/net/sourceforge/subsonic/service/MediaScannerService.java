@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.lang.ObjectUtils;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.AlbumDao;
 import net.sourceforge.subsonic.dao.ArtistDao;
@@ -36,7 +38,6 @@ import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.util.FileUtil;
-import org.apache.commons.lang.ObjectUtils;
 
 /**
  * Provides services for scanning the music library.
@@ -54,6 +55,7 @@ public class MediaScannerService {
     private Timer timer;
     private SettingsService settingsService;
     private SearchService searchService;
+    private PlaylistService playlistService;
     private MediaFileService mediaFileService;
     private MediaFileDao mediaFileDao;
     private ArtistDao artistDao;
@@ -142,6 +144,7 @@ public class MediaScannerService {
             @Override
             public void run() {
                 doScanLibrary();
+                playlistService.importPlaylists();
             }
         };
 
@@ -368,5 +371,9 @@ public class MediaScannerService {
 
     public void setAlbumDao(AlbumDao albumDao) {
         this.albumDao = albumDao;
+    }
+
+    public void setPlaylistService(PlaylistService playlistService) {
+        this.playlistService = playlistService;
     }
 }
