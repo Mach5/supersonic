@@ -18,6 +18,28 @@
  */
 package net.sourceforge.subsonic.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.ajax.ChatService;
 import net.sourceforge.subsonic.ajax.LyricsInfo;
@@ -62,26 +84,6 @@ import net.sourceforge.subsonic.service.StatusService;
 import net.sourceforge.subsonic.service.TranscodingService;
 import net.sourceforge.subsonic.util.StringUtil;
 import net.sourceforge.subsonic.util.XMLBuilder;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.web.bind.ServletRequestUtils;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import static net.sourceforge.subsonic.security.RESTRequestParameterProcessingFilter.decrypt;
 import static net.sourceforge.subsonic.util.XMLBuilder.Attribute;
@@ -1101,14 +1103,24 @@ public class RESTController extends MultiActionController {
             return;
         }
 
-        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
-        MediaFile file = mediaFileService.getMediaFile(id);
-        if (file == null) {
-            error(request, response, ErrorCode.NOT_FOUND, "File not found: " + id);
+        boolean submission = ServletRequestUtils.getBooleanParameter(request, "submission", true);
+        int[] ids = ServletRequestUtils.getRequiredIntParameters(request, "id");
+        long[] times = ServletRequestUtils.getLongParameters(request, "time");
+        if (times.length > 0 && times.length != ids.length) {
+            error(request, response, ErrorCode.GENERIC, "Wrong number of timestamps: " + times.length);
             return;
         }
-        boolean submission = ServletRequestUtils.getBooleanParameter(request, "submission", true);
-        audioScrobblerService.register(file, player.getUsername(), submission);
+
+        for (int i = 0; i < ids.length; i++) {
+            int id = ids[i];
+            MediaFile file = mediaFileService.getMediaFile(id);
+            if (file == null) {
+                LOG.warn("File to scrobble not found: " + id);
+                continue;
+            }
+            Date time = times.length == 0 ? null : new Date(times[i]);
+            audioScrobblerService.register(file, player.getUsername(), submission, time);
+        }
 
         builder.endAll();
         response.getWriter().print(builder);

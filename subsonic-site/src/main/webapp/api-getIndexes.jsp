@@ -26,7 +26,7 @@
         <td><code>ifModifiedSince</code></td>
         <td>No</td>
         <td></td>
-        <td>If specified, only return a result if the artist collection has changed since the given time.</td>
+        <td>If specified, only return a result if the artist collection has changed since the given time (in milliseconds since 1 Jan 1970).</td>
     </tr>
 </table>
 <p>

@@ -11,25 +11,20 @@ Bugfix: Rescan looses comments and play statistics.
 Auto-import playlists after scan.
 Update playlist statistics after rescan.
 Upgraded to JW Player 5.10
-
-TODO IN 4.7
------------------
-Unable to download podcast with invalid char in name
-  https://sourceforge.net/p/subsonic/bugs/51/
-  https://mail.google.com/mail/u/0/?shva=1#inbox/139a8b17f0a8e862
-Add timestamp to scrobble method.
-  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1396a4f77f824dcc
-S1000 Data file size limit is reached in statement
-  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=75#p44643 (sent email Sep 7)
-Skipping broken for external players w/ playlist?
-  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=90#p44901
 Playlist import issue
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=9983&p=44894#p44074
   Transform path so that it matches media_file.path
+REST: Add timestamp to scrobble method, and support multiple entries.
+  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1396a4f77f824dcc
+
+TODO IN 4.7
+-----------------
+S1000 Data file size limit is reached in statement
+  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=75#p44643 (sent email Sep 7)
 Reconsider album artist.
 Prefill minisub
   https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1394bd52aaaf4969
-FLAC crashes Flash in Firefox.
+FLAC crashes Flash in Firefox (with server on Linux).
   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=10027&p=44673#p44673
 
 Something wrong with matching players/users in Now Playing.

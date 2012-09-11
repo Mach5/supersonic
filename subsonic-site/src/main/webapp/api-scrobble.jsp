@@ -9,6 +9,10 @@
     "Scrobbles" a given music file on last.fm. Requires that the user has configured his/her last.fm
     credentials on the Subsonic server (Settings &gt; Personal).
 </p>
+<p>
+    Since <a href="#versions">1.8.0</a> you may specify multiple <code>id</code> (and optionally <code>time</code>) parameters to
+    scrobble multiple files.
+</p>
 <table width="100%" class="bottomspace">
     <tr>
         <th class="param-heading">Parameter</th>
@@ -23,6 +27,12 @@
         <td>A string which uniquely identifies the file to scrobble.</td>
     </tr>
     <tr>
+        <td><code>time</code></td>
+        <td>No</td>
+        <td></td>
+        <td>(Since <a href="#versions">1.8.0</a>) The time (in milliseconds since 1 Jan 1970) at which the song was listened to.</td>
+    </tr>
+    <tr class="table-altrow">
         <td><code>submission</code></td>
         <td>No</td>
         <td>True</td>

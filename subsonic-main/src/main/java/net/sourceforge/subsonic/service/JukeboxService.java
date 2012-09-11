@@ -18,19 +18,20 @@
  */
 package net.sourceforge.subsonic.service;
 
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.PlayQueue;
+import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.Transcoding;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.service.jukebox.AudioPlayer;
 import net.sourceforge.subsonic.util.FileUtil;
-import org.apache.commons.io.IOUtils;
-
-import java.io.InputStream;
 
 import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.EOM;
 
@@ -170,7 +171,7 @@ public class JukeboxService implements AudioPlayer.Listener {
 
     private void scrobble(MediaFile file, boolean submission) {
         if (player.getClientId() == null) {  // Don't scrobble REST players.
-            audioScrobblerService.register(file, player.getUsername(), submission);
+            audioScrobblerService.register(file, player.getUsername(), submission, null);
         }
     }
 

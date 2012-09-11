@@ -18,21 +18,21 @@
  */
 package net.sourceforge.subsonic.io;
 
-import net.sourceforge.subsonic.Logger;
-import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
-import net.sourceforge.subsonic.service.MediaFileService;
-import net.sourceforge.subsonic.service.SearchService;
-import net.sourceforge.subsonic.util.FileUtil;
-import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.PlayQueue;
-import net.sourceforge.subsonic.domain.TransferStatus;
-import net.sourceforge.subsonic.service.AudioScrobblerService;
-import net.sourceforge.subsonic.service.TranscodingService;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.PlayQueue;
+import net.sourceforge.subsonic.domain.Player;
+import net.sourceforge.subsonic.domain.TransferStatus;
+import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
+import net.sourceforge.subsonic.service.AudioScrobblerService;
+import net.sourceforge.subsonic.service.MediaFileService;
+import net.sourceforge.subsonic.service.SearchService;
+import net.sourceforge.subsonic.service.TranscodingService;
+import net.sourceforge.subsonic.util.FileUtil;
 
 /**
  * Implementation of {@link InputStream} which reads from a {@link net.sourceforge.subsonic.domain.PlayQueue}.
@@ -121,7 +121,7 @@ public class PlayQueueInputStream extends InputStream {
             LOG.info(player.getUsername() + " listening to \"" + FileUtil.getShortPath(file.getFile()) + "\"");
             mediaFileService.incrementPlayCount(file);
             if (player.getClientId() == null) {  // Don't scrobble REST players.
-                audioScrobblerService.register(file, player.getUsername(), false);
+                audioScrobblerService.register(file, player.getUsername(), false, null);
             }
 
             TranscodingService.Parameters parameters = transcodingService.getParameters(file, player, maxBitRate, preferredTargetFormat, videoTranscodingSettings);
@@ -145,7 +145,7 @@ public class PlayQueueInputStream extends InputStream {
             }
         } finally {
             if (player.getClientId() == null) {  // Don't scrobble REST players.
-                audioScrobblerService.register(currentFile, player.getUsername(), true);
+                audioScrobblerService.register(currentFile, player.getUsername(), true, null);
             }
             currentInputStream = null;
             currentFile = null;

@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import net.sourceforge.subsonic.domain.MediaFile;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -41,6 +40,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.HttpConnectionParams;
 
 import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.UserSettings;
 import net.sourceforge.subsonic.util.StringUtil;
 
@@ -56,10 +56,8 @@ public class AudioScrobblerService {
 
     private static final Logger LOG = Logger.getLogger(AudioScrobblerService.class);
     private static final int MAX_PENDING_REGISTRATION = 2000;
-    private static final long MIN_REGISTRATION_INTERVAL = 30000L;
 
     private RegistrationThread thread;
-    private final Map<String, Long> lastRegistrationTimes = new HashMap<String, Long>();
     private final LinkedBlockingQueue<RegistrationData> queue = new LinkedBlockingQueue<RegistrationData>();
 
     private SettingsService settingsService;
@@ -71,8 +69,9 @@ public class AudioScrobblerService {
      * @param mediaFile  The media file to register.
      * @param username   The user which played the music file.
      * @param submission Whether this is a submission or a now playing notification.
+     * @param time Event time, or {@code null} to use current time.
      */
-    public synchronized void register(MediaFile mediaFile, String username, boolean submission) {
+    public synchronized void register(MediaFile mediaFile, String username, boolean submission, Date time) {
 
         if (thread == null) {
             thread = new RegistrationThread();
@@ -84,7 +83,7 @@ public class AudioScrobblerService {
             return;
         }
 
-        RegistrationData registrationData = createRegistrationData(mediaFile, username, submission);
+        RegistrationData registrationData = createRegistrationData(mediaFile, username, submission, time);
         if (registrationData == null) {
             return;
         }
@@ -99,7 +98,7 @@ public class AudioScrobblerService {
     /**
      * Returns registration details, or <code>null</code> if not eligible for registration.
      */
-    private RegistrationData createRegistrationData(MediaFile mediaFile, String username, boolean submission) {
+    private RegistrationData createRegistrationData(MediaFile mediaFile, String username, boolean submission, Date time) {
 
         if (mediaFile == null || mediaFile.isVideo()) {
             return null;
@@ -110,17 +109,6 @@ public class AudioScrobblerService {
             return null;
         }
 
-        long now = System.currentTimeMillis();
-
-        // Don't register submissions more often than every 30 seconds.
-        if (submission) {
-            Long lastRegistrationTime = lastRegistrationTimes.get(username);
-            if (lastRegistrationTime != null && now - lastRegistrationTime < MIN_REGISTRATION_INTERVAL) {
-                return null;
-            }
-            lastRegistrationTimes.put(username, now);
-        }
-
         RegistrationData reg = new RegistrationData();
         reg.username = userSettings.getLastFmUsername();
         reg.password = userSettings.getLastFmPassword();
@@ -128,7 +116,7 @@ public class AudioScrobblerService {
         reg.album = mediaFile.getAlbumName();
         reg.title = mediaFile.getTitle();
         reg.duration = mediaFile.getDurationSeconds() == null ? 0 : mediaFile.getDurationSeconds();
-        reg.time = new Date(now);
+        reg.time = time == null ? new Date() : time;
         reg.submission = submission;
 
         return reg;
@@ -165,7 +153,7 @@ public class AudioScrobblerService {
             LOG.warn("Failed to scrobble song '" + registrationData.title + "' at Last.fm.  Invalid session.");
         } else if (lines[0].startsWith("OK")) {
             LOG.debug("Successfully registered " + (registrationData.submission ? "submission" : "now playing") +
-                    " for song '" + registrationData.title + "' for user " + registrationData.username + " at Last.fm.");
+                    " for song '" + registrationData.title + "' for user " + registrationData.username + " at Last.fm: " + registrationData.time);
         }
     }
 
@@ -310,7 +298,7 @@ public class AudioScrobblerService {
                 LOG.error("Failed to reschedule Last.fm registration for " + registrationData.title, e);
             }
             try {
-                sleep(15L * 60L * 1000L);  // Wait 15 minutes.
+                sleep(60L * 1000L);  // Wait 60 seconds.
             } catch (InterruptedException e) {
                 LOG.error("Failed to sleep after Last.fm registration failure for " + registrationData.title, e);
             }
