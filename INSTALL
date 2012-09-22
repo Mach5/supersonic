@@ -26,7 +26,7 @@ Change directory into the folder which holds the Supersonic source code and run
 Maven to install a binary package for your distribution:
 
 cd <supersonic source folder>
-#If you would like to install a specific project only. I.e. for Debian replace <project> with Debian.
+#If you would like to install a specific project only. I.e. for Debian replace <project> with supersonic-installer-debian.
 mvn -P full -pl <project> -am install
 
 #Else to build for every available platform
