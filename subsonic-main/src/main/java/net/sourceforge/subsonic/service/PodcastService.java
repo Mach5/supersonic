@@ -208,14 +208,21 @@ public class PodcastService {
     }
 
     private void addMediaFileIdToEpisodes(List<PodcastEpisode> episodes) {
-        for (PodcastEpisode episode : episodes) {
-            if (episode.getPath() != null) {
-                MediaFile mediaFile = mediaFileService.getMediaFile(episode.getPath());
-                if (mediaFile != null) {
-                    episode.setMediaFileId(mediaFile.getId());
-                }
-            }
-        }
+    	for (PodcastEpisode episode : episodes) {
+    		try {
+    			if (episode.getPath() != null) {
+    				MediaFile mediaFile = mediaFileService.getMediaFile(episode.getPath());
+    				if (mediaFile != null) {
+    					episode.setMediaFileId(mediaFile.getId());
+    				}
+    			}
+    		}
+    		// If there was an error loading an episode, remove it.
+    		catch (Exception e) {
+    			podcastDao.deleteEpisode(episode.getId());
+			LOG.info("Deleted Podcast episode '" + episode.getTitle() + "' because:" e.getMessage());
+    		}
+    	}
     }
 
     private PodcastEpisode getEpisode(int channelId, String url) {
