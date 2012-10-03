@@ -100,7 +100,7 @@ public class PodcastService {
             for (PodcastEpisode episode : getEpisodes(channel.getId(), false)) {
                 if (episode.getStatus() == PodcastStatus.DOWNLOADING) {
                     deleteEpisode(episode.getId(), false);
-                    LOG.info("Deleted Podcast episode '" + episode.getTitle() + "' since download was interrupted.");
+                    LOG.warn("Deleted Podcast episode '" + episode.getTitle() + "' since download was interrupted.");
                 }
             }
         }
