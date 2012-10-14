@@ -9,7 +9,7 @@ First install the packages needed to build Supersonic. It depends on Java and
 the Maven build environment:
 
 Debian/Ubuntu/Mint
-sudo apt-get install maven2 openjdk-6-jdk
+sudo apt-get install maven2 openjdk-6-jdk lintian
 
 RedHat/Fedora
 su -c "yum install java-1.6.0-openjdk-devel maven2"
