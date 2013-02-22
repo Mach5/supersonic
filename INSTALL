@@ -29,7 +29,7 @@ cd <supersonic source folder>
 
 If you would like to install a specific project only use the following syntax and replace <project> accordingly.
 Each project name is specified by its POM file and happens to match the directory name in Supersonic. For instance,
-to build the Debian project replace <project> with supersonic-installer-debian.
+to build the Debian project replace <project> with subsonic-installer-debian.
 
 mvn -P full -pl <project> -am install
 
