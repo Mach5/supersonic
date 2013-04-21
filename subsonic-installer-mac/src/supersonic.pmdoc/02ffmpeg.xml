@@ -1,12 +1,12 @@
 <pkgref spec="1.12" uuid="0682ACDA-6655-4284-B345-FFDCAB2CBE59">
     <config>
-        <identifier>net.sourceforge.subsonic.subsonic.ffmpeg.pkg</identifier>
+        <identifier>com.github.mach5.supersonic.supersonic.ffmpeg.pkg</identifier>
         <version>1.0</version>
         <description/>
         <post-install type="none"/>
         <requireAuthorization/>
         <installFrom relative="true" mod="true">../../subsonic-transcode/mac/ffmpeg</installFrom>
-        <installTo mod="true">/Library/Application Support/Subsonic/transcode</installTo>
+        <installTo mod="true">/Library/Application Support/Supersonic/transcode</installTo>
         <flags>
             <followSymbolicLinks/>
         </flags>

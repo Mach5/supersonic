@@ -1,8 +1,8 @@
 <pkmkdoc spec="1.12">
     <properties>
-        <title>Subsonic</title>
-        <build>/Users/sindre/Projects/subsonic/subsonic-installer-mac/target/Subsonic.pkg</build>
-        <organization>net.sourceforge.subsonic</organization>
+        <title>Supersonic</title>
+        <build>../target/Supersonic.pkg</build>
+        <organization>com.github.mach5.supersonic</organization>
         <userSees ui="easy"/>
         <min-target os="3"/>
         <domain anywhere="true"/>
@@ -12,23 +12,23 @@
         <scripts></scripts>
     </distribution>
     <contents>
-        <choice title="Subsonic" id="choice0" starts_selected="true" starts_enabled="true" starts_hidden="false">
-            <pkgref id="net.sourceforge.subsonic.subsonic.Subsonic.pkg"/>
+        <choice title="Supersonic" id="choice0" starts_selected="true" starts_enabled="true" starts_hidden="false">
+            <pkgref id="com.github.mach5.supersonic.supersonic.Supersonic.pkg"/>
         </choice>
         <choice title="ffmpeg" id="choice2" starts_selected="true" starts_enabled="true" starts_hidden="false">
-            <pkgref id="net.sourceforge.subsonic.subsonic.ffmpeg.pkg"/>
+            <pkgref id="com.github.mach5.supersonic.supersonic.ffmpeg.pkg"/>
         </choice>
         <choice title="lame" id="choice3" starts_selected="true" starts_enabled="true" starts_hidden="false">
-            <pkgref id="net.sourceforge.subsonic.subsonic.lame.pkg"/>
+            <pkgref id="com.github.mach5.supersonic.supersonic.lame.pkg"/>
         </choice>
     </contents>
     <resources bg-scale="proportional" bg-align="bottomleft">
         <locale lang="en">
-            <resource relative="true" mod="true" type="background">subsonic.icns</resource>
+            <resource relative="true" mod="true" type="background">supersonic.icns</resource>
         </locale>
     </resources>
     <flags/>
-    <item type="file">01subsonic.xml</item>
+    <item type="file">01supersonic.xml</item>
     <item type="file">02ffmpeg.xml</item>
     <item type="file">03lame.xml</item>
     <mod>properties.title</mod>

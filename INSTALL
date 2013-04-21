@@ -8,9 +8,8 @@ Linux
 First install the packages needed to build Supersonic. It depends on Java and
 the Maven build environment:
 
-
 Debian/Ubuntu/Mint
-sudo apt-get install maven2 openjdk-6-jdk
+sudo apt-get install maven2 openjdk-6-jdk lintian
 
 RedHat/Fedora
 su -c "yum install java-1.6.0-openjdk-devel maven2"
@@ -27,7 +26,21 @@ Change directory into the folder which holds the Supersonic source code and run
 Maven to install a binary package for your distribution:
 
 cd <supersonic source folder>
+
+If you would like to install a specific project only use the following syntax and replace <project> accordingly.
+Each project name is specified by its POM file and happens to match the directory name in Supersonic. For instance,
+to build the Debian project replace <project> with subsonic-installer-debian.
+
+mvn -P full -pl <project> -am install
+
+To build for every available platform do
+
 mvn clean -P full; mvn install -P full
+
+In case of dependency issues, try
+
+mvn install -P full -U 
+
 
 
 Then install the now built binary package for your distribution:

@@ -6,6 +6,7 @@ Summary:        A web-based music streamer, jukebox and Podcast receiver
 Group:          Applications/Multimedia
 License:        GPLv3
 URL:            http://subsonic.org
+Obsoletes:	subsonic
 
 %description
 Supersonic is a web-based music streamer, jukebox and Podcast receiver,
@@ -15,9 +16,11 @@ from home.
 
 Apps for Android, iPhone and Windows Phone are also available.
 
-Java 1.6 or higher is required to run Subsonic.
+Java 1.6 or higher is required to run Supersonic.
 
+Supersonic is a free clone of Subsonic.
 Subsonic can be found at http://subsonic.org
+Supersonic can be found at https://github.com/Mach5/supersonic
 
 %files
 %defattr(644,root,root,755)
@@ -31,6 +34,10 @@ Subsonic can be found at http://subsonic.org
 
 %pre
 # Stop Subsonic service.
+if [ -e /etc/init.d/subsonic ]; then
+  service subsonic stop
+fi
+# Stop Supersonic service.
 if [ -e /etc/init.d/supersonic ]; then
   service supersonic stop
 fi
@@ -38,18 +45,18 @@ fi
 exit 0
 
 %post
-ln -sf /usr/share/subsonic/subsonic.sh /usr/bin/subsonic
-chmod 750 /var/subsonic
+ln -sf /usr/share/supersonic/supersonic.sh /usr/bin/supersonic
+chmod 750 /var/supersonic
 
 # Clear jetty cache.
-rm -rf /var/subsonic/jetty
+rm -rf /var/supersonic/jetty
 
 # For SELinux: Set security context
-chcon -t java_exec_t /etc/init.d/subsonic 2>/dev/null
+chcon -t java_exec_t /etc/init.d/supersonic 2>/dev/null
 
-# Configure and start Subsonic service.
-chkconfig --add subsonic
-service subsonic start
+# Configure and start Supersonic service.
+chkconfig --add supersonic
+service supersonic start
 
 exit 0
 
@@ -58,13 +65,13 @@ exit 0
 if [ $1 = 0 ] ; then
 
   # Stop the service.
-  [ -e /etc/init.d/subsonic ] && service subsonic stop
+  [ -e /etc/init.d/supersonic ] && service supersonic stop
 
   # Remove symlink.
-  rm -f /usr/bin/subsonic
+  rm -f /usr/bin/supersonic
 
   # Remove startup scripts.
-  chkconfig --del subsonic
+  chkconfig --del supersonic
 
 fi
 

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ###################################################################################
 # Shell script for starting Supersonic.  See https://github.com/Mach5/supersonic
@@ -17,6 +17,7 @@ SUPERSONIC_ARGFILE=${SUPERSONIC_HOME}/supersonic.args
 SUPERSONIC_DEFAULT_MUSIC_FOLDER=/var/music
 SUPERSONIC_DEFAULT_PODCAST_FOLDER=/var/music/Podcast
 SUPERSONIC_DEFAULT_PLAYLIST_FOLDER=/var/playlists
+SUPERSONIC_SOUNDCARD_DEVICE=
 
 quiet=0
 
@@ -45,6 +46,7 @@ usage() {
     echo "                                only has effect the first time Supersonic is started. Default '/var/music/Podcast'"
     echo "  --default-playlist-folder=DIR Configure Supersonic to use this folder for playlists.  This option "
     echo "                                only has effect the first time Supersonic is started. Default '/var/playlists'"
+    echo "  --soundcard-device=DEVICE     If provided, use the given soundcard device as output"
     exit 1
 }
 
@@ -82,9 +84,10 @@ start() {
 
         # Restarts must persist argument across calls to start()
         if [ "$1" = "keepargs" ]; then
-            SUPERSONIC_ARGS=`cat ${SUPERSONIC_ARGFILE}`
+            mapfile -t SUPERSONIC_ARGS < ${SUPERSONIC_ARGFILE}
         else
-            SUPERSONIC_ARGS="-Xmx${SUPERSONIC_MAX_MEMORY}m \
+            SUPERSONIC_ARGS=()
+            SUPERSONIC_ARGS=(-Xmx${SUPERSONIC_MAX_MEMORY}m \
             -Dsubsonic.home=${SUPERSONIC_HOME} \
             -Dsubsonic.host=${SUPERSONIC_HOST} \
             -Dsubsonic.port=${SUPERSONIC_PORT} \
@@ -92,14 +95,15 @@ start() {
             -Dsubsonic.contextPath=${SUPERSONIC_CONTEXT_PATH} \
             -Dsubsonic.defaultMusicFolder=${SUPERSONIC_DEFAULT_MUSIC_FOLDER} \
             -Dsubsonic.defaultPodcastFolder=${SUPERSONIC_DEFAULT_PODCAST_FOLDER} \
-            -Dsubsonic.defaultPlaylistFolder=${SUPERSONIC_DEFAULT_PLAYLIST_FOLDER} \
-            -Djava.awt.headless=true \
+            -Dsubsonic.defaultPlaylistFolder=${SUPERSONIC_DEFAULT_PLAYLIST_FOLDER})
+            [ "$SUPERSONIC_SOUNDCARD_DEVICE" ] && SUPERSONIC_ARGS+=(-Djavax.sound.sampled.SourceDataLine=#"$SUPERSONIC_SOUNDCARD_DEVICE")
+            SUPERSONIC_ARGS+=(-Djava.awt.headless=true \
             -verbose:gc \
-            -jar supersonic-booter-jar-with-dependencies.jar"
-            echo ${SUPERSONIC_ARGS} > ${SUPERSONIC_ARGFILE}
+            -jar supersonic-booter-jar-with-dependencies.jar)
+            echo "${SUPERSONIC_ARGS[@]}" > ${SUPERSONIC_ARGFILE}
         fi
 
-        ${JAVA} ${SUPERSONIC_ARGS} > ${LOG} 2>&1 &
+        ${JAVA} "${SUPERSONIC_ARGS[@]}" > ${LOG} 2>&1 &
 
         # Write pid to pidfile if it is defined.
         if [ $SUPERSONIC_PIDFILE ]; then
@@ -203,6 +207,20 @@ while [ $# -ge 1 ]; do
          ;;
       --default-playlist-folder=?*)
          SUPERSONIC_DEFAULT_PLAYLIST_FOLDER=${1#--default-playlist-folder=}
+         ;;
+      --soundcard-device=?*)
+         SUPERSONIC_SOUNDCARD_DEVICE=${1#--soundcard-device=}
+         # parse remaining arguments for possible device name terms
+         for TERM in "$@"
+         do
+             if [[ $TERM != --* && $TERM != "start" && $TERM != "stop" && $TERM != "restart" && $TERM != "status" ]]
+             then
+                 SUPERSONIC_SOUNDCARD_DEVICE="$SUPERSONIC_SOUNDCARD_DEVICE $TERM"
+             elif [[ $TERM != --soundcard-device=* ]]
+             then
+                 break
+             fi
+         done
          ;;
       start)
          start

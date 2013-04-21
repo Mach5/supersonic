@@ -100,7 +100,7 @@ public class PodcastService {
             for (PodcastEpisode episode : getEpisodes(channel.getId(), false)) {
                 if (episode.getStatus() == PodcastStatus.DOWNLOADING) {
                     deleteEpisode(episode.getId(), false);
-                    LOG.info("Deleted Podcast episode '" + episode.getTitle() + "' since download was interrupted.");
+                    LOG.warn("Deleted Podcast episode '" + episode.getTitle() + "' since download was interrupted.");
                 }
             }
         }
@@ -208,14 +208,21 @@ public class PodcastService {
     }
 
     private void addMediaFileIdToEpisodes(List<PodcastEpisode> episodes) {
-        for (PodcastEpisode episode : episodes) {
-            if (episode.getPath() != null) {
-                MediaFile mediaFile = mediaFileService.getMediaFile(episode.getPath());
-                if (mediaFile != null) {
-                    episode.setMediaFileId(mediaFile.getId());
-                }
-            }
-        }
+    	for (PodcastEpisode episode : episodes) {
+    		try {
+    			if (episode.getPath() != null) {
+    				MediaFile mediaFile = mediaFileService.getMediaFile(episode.getPath());
+    				if (mediaFile != null) {
+    					episode.setMediaFileId(mediaFile.getId());
+    				}
+    			}
+    		}
+    		// If there was an error loading an episode, remove it.
+    		catch (SecurityException e) {
+    			podcastDao.deleteEpisode(episode.getId());
+			LOG.info("Deleted Podcast episode '" + episode.getTitle() + "' because:" + e.getMessage());
+    		}
+    	}
     }
 
     private PodcastEpisode getEpisode(int channelId, String url) {

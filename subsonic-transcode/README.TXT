@@ -51,7 +51,7 @@ cd ffmpeg
 ./configure --disable-ffplay --disable-ffprobe --disable-ffserver --enable-gpl --enable-nonfree --enable-postproc \
   --enable-pthreads --enable-libfaac --enable-libmp3lame --enable-libvpx --enable-libtheora --enable-libvorbis \
   --enable-libx264 --enable-libxvid --enable-zlib --enable-libopencore-amrnb --enable-libopencore-amrwb \
-  --enable-libvpx --enable-version3 --enable-bzlib \
+  --enable-version3 --enable-bzlib \
   --enable-static --disable-shared --extra-libs=-static --extra-cflags=--static
 make
 sudo checkinstall --pkgname=ffmpeg --pkgversion="5:$(date +%Y%m%d%H%M)-git" --backup=no --deldoc=yes --fstrans=no --default

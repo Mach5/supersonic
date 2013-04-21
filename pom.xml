@@ -57,6 +57,10 @@
             <id>oss.sonatype.org</id>
             <url>http://oss.sonatype.org/content/groups/public</url>
         </pluginRepository>
+        <pluginRepository>
+            <id>ooo-maven-repo</id>
+            <url>http://ooo-maven.googlecode.com/hg/repository</url>
+        </pluginRepository>
     </pluginRepositories>
 
     <modules>
@@ -76,7 +80,82 @@
                 <module>subsonic-assembly</module>
             </modules>
         </profile>
-
+        <profile>
+            <id>static-resource-optimization</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>net.alchim31.maven</groupId>
+                            <artifactId>yuicompressor-maven-plugin</artifactId>
+                            <version>1.1</version>
+                        </plugin>
+                        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+                        <plugin>
+                            <groupId>org.eclipse.m2e</groupId>
+                            <artifactId>lifecycle-mapping</artifactId>
+                            <version>1.0.0</version>
+                            <configuration>
+                                <lifecycleMappingMetadata>
+                                    <pluginExecutions>
+                                        <pluginExecution>
+                                            <pluginExecutionFilter>
+                                                <groupId>net.alchim31.maven</groupId>
+                                                <artifactId>yuicompressor-maven-plugin</artifactId>
+                                                <versionRange>[1.1,)</versionRange>
+                                                <goals>
+                                                    <goal>compress</goal>
+                                                </goals>
+                                            </pluginExecutionFilter>
+                                            <action>
+                                                <execute >
+                                                    <runOnIncremental>false</runOnIncremental>
+                                                </execute >
+                                            </action>
+                                        </pluginExecution>
+                                        <pluginExecution>
+                                            <pluginExecutionFilter>
+                                                <groupId>net.alchim31.maven</groupId>
+                                                <artifactId>yuicompressor-maven-plugin</artifactId>
+                                                <versionRange>[1.1,)</versionRange>
+                                                <goals>
+                                                    <goal>jslint</goal>
+                                                </goals>
+                                            </pluginExecutionFilter>
+                                            <action>
+                                                <execute >
+                                                    <runOnIncremental>false</runOnIncremental>
+                                                </execute >
+                                            </action>
+                                        </pluginExecution>
+                                    </pluginExecutions>
+                                </lifecycleMappingMetadata>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+                <plugins>
+                    <plugin>
+                        <groupId>net.alchim31.maven</groupId>
+                        <artifactId>yuicompressor-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jslint</goal>
+                                    <goal>compress</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <nosuffix>true</nosuffix>
+                            <force>true</force>
+                            <nomunge>true</nomunge>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <dependencyManagement>
@@ -168,11 +247,6 @@
                     <version>1.0</version>
                 </plugin>
                 <plugin>
-                    <groupId>net.alchim31.maven</groupId>
-                    <artifactId>yuicompressor-maven-plugin</artifactId>
-                    <version>1.1</version>
-                </plugin>
-                <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
                     <version>3.0.0</version>
@@ -192,36 +266,6 @@
                                         <versionRange>[1.6,)</versionRange>
                                         <goals>
                                             <goal>run</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <execute >
-                                            <runOnIncremental>false</runOnIncremental>
-                                        </execute >
-                                    </action>
-                                </pluginExecution>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>net.alchim31.maven</groupId>
-                                        <artifactId>yuicompressor-maven-plugin</artifactId>
-                                        <versionRange>[1.1,)</versionRange>
-                                        <goals>
-                                            <goal>compress</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <execute >
-                                            <runOnIncremental>false</runOnIncremental>
-                                        </execute >
-                                    </action>
-                                </pluginExecution>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>net.alchim31.maven</groupId>
-                                        <artifactId>yuicompressor-maven-plugin</artifactId>
-                                        <versionRange>[1.1,)</versionRange>
-                                        <goals>
-                                            <goal>jslint</goal>
                                         </goals>
                                     </pluginExecutionFilter>
                                     <action>
@@ -268,24 +312,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>net.alchim31.maven</groupId>
-                <artifactId>yuicompressor-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jslint</goal>
-                            <goal>compress</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <nosuffix>true</nosuffix>
-                    <force>true</force>
-                    <nomunge>true</nomunge>
-                </configuration>
             </plugin>
 
         </plugins>

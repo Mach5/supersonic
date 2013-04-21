@@ -6,3 +6,6 @@ target/
 *.war
 *.ear
 *.swp
+.project
+.settings
+.classpath

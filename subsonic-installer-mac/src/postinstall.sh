@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SUBSONIC_HOME="/Library/Application Support/Subsonic"
+SUBSONIC_HOME="/Library/Application Support/Supersonic"
 
 chmod oug+rwx "$SUBSONIC_HOME"
 chown root:admin "$SUBSONIC_HOME"
@@ -10,4 +10,4 @@ chown root:admin "$SUBSONIC_HOME/transcode"
 
 rm -rf "$SUBSONIC_HOME/jetty"
 
-echo Subsonic installation done
+echo Supersonic installation done
