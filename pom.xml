@@ -8,15 +8,15 @@
     <name>Supersonic</name>
     <packaging>pom</packaging>
     <organization>
-        <name>Mach5</name>
-        <url>https://github.com/mach5/supersonic</url>
+        <name>Der-Jan</name>
+        <url>https://github.com/Der-Jan/supersonic</url>
     </organization>
     <inceptionYear>2011</inceptionYear>
 
     <scm>
-        <url>https://github.com/mach5/supersonic</url>
-        <connection>scm:git:git://github.com/mach5/supersonic.git</connection>
-        <developerConnection>scm:git:git@github.com:mach5/supersonic.git</developerConnection>
+        <url>https://github.com/Der-Jan/supersonic</url>
+        <connection>scm:git:git://github.com/Der-Jan/supersonic.git</connection>
+        <developerConnection>scm:git:git@github.com:Der-Jan/supersonic.git</developerConnection>
     </scm>
 
     <properties>
