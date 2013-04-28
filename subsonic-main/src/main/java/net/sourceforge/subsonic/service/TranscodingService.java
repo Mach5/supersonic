@@ -148,7 +148,7 @@ public class TranscodingService {
      *         {@link #getTranscodedInputStream} method with the same arguments.
      */
     public boolean isTranscodingRequired(MediaFile mediaFile, Player player) {
-        return getTranscoding(mediaFile, player, null) != null;
+        return getTranscoding(mediaFile, player, null, false) != null;
     }
 
     /**
@@ -160,7 +160,7 @@ public class TranscodingService {
      * @return The file suffix, e.g., "mp3".
      */
     public String getSuffix(Player player, MediaFile file, String preferredTargetFormat) {
-        Transcoding transcoding = getTranscoding(file, player, preferredTargetFormat);
+        Transcoding transcoding = getTranscoding(file, player, preferredTargetFormat, false);
         return transcoding != null ? transcoding.getTargetFormat() : file.getFormat();
     }
 
@@ -192,7 +192,8 @@ public class TranscodingService {
             maxBitRate = transcodeScheme.getMaxBitRate();
         }
 
-        Transcoding transcoding = getTranscoding(mediaFile, player, preferredTargetFormat);
+        boolean hls = videoTranscodingSettings != null && videoTranscodingSettings.isHls();
+        Transcoding transcoding = getTranscoding(mediaFile, player, preferredTargetFormat, hls);
         if (transcoding != null) {
             parameters.setTranscoding(transcoding);
             if (maxBitRate == null) {
@@ -296,6 +297,7 @@ public class TranscodingService {
      * <li>Replacing occurrences of "%a" with the artist name of the given music file.</li>
      * <li>Replacing occurrcences of "%b" with the max bitrate.</li>
      * <li>Replacing occurrcences of "%o" with the video time offset (used for scrubbing).</li>
+     * <li>Replacing occurrcences of "%d" with the video duration (used for HLS).</li>
      * <li>Replacing occurrcences of "%w" with the video image width.</li>
      * <li>Replacing occurrcences of "%h" with the video image height.</li>
      * <li>Prepending the path of the transcoder directory if the transcoder is found there.</li>
@@ -346,6 +348,9 @@ public class TranscodingService {
             if (cmd.contains("%o") && videoTranscodingSettings != null) {
                 cmd = cmd.replace("%o", String.valueOf(videoTranscodingSettings.getTimeOffset()));
             }
+            if (cmd.contains("%d") && videoTranscodingSettings != null) {
+                cmd = cmd.replace("%d", String.valueOf(videoTranscodingSettings.getDuration()));
+            }
             if (cmd.contains("%w") && videoTranscodingSettings != null) {
                 cmd = cmd.replace("%w", String.valueOf(videoTranscodingSettings.getWidth()));
             }
@@ -377,7 +382,11 @@ public class TranscodingService {
      * Returns an applicable transcoding for the given file and player, or <code>null</code> if no
      * transcoding should be done.
      */
-    private Transcoding getTranscoding(MediaFile mediaFile, Player player, String preferredTargetFormat) {
+    private Transcoding getTranscoding(MediaFile mediaFile, Player player, String preferredTargetFormat, boolean hls) {
+
+        if (hls) {
+            return new Transcoding(null, "hls", mediaFile.getFormat(), "ts", settingsService.getHlsCommand(), null, null, true);
+        }
 
         List<Transcoding> applicableTranscodings = new LinkedList<Transcoding>();
         String suffix = mediaFile.getFormat();

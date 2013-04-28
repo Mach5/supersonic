@@ -27,8 +27,9 @@ ripserver "Ripserver"
 # Midnight fun theme, courtesy of Don Pearson http://www.midnightfun.co.uk/
 midnightfun "Midnight Fun"
 
-# Theme by Dan Eriksen
+# Themes by Dan Eriksen
 coolandclean "Cool and Clean"
+subStandard "SubStandard"
 
 # Theme by David D.
 monochrome "Monochrome"

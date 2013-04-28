@@ -18,6 +18,9 @@
  */
 package net.sourceforge.subsonic.domain;
 
+import net.sourceforge.subsonic.Logger;
+import net.sourceforge.subsonic.util.StringUtil;
+
 /**
  * Contains media libaray statistics, including the number of artists, albums and songs.
  *
@@ -25,6 +28,8 @@ package net.sourceforge.subsonic.domain;
  * @version $Revision: 1.1 $ $Date: 2005/11/17 18:29:03 $
  */
 public class MediaLibraryStatistics {
+
+    private static final Logger LOG = Logger.getLogger(MediaLibraryStatistics.class);
 
     private int artistCount;
     private int albumCount;
@@ -38,6 +43,37 @@ public class MediaLibraryStatistics {
         this.songCount = songCount;
         this.totalLengthInBytes = totalLengthInBytes;
         this.totalDurationInSeconds = totalDurationInSeconds;
+    }
+
+    public MediaLibraryStatistics() {
+    }
+
+    public void reset() {
+        artistCount = 0;
+        albumCount = 0;
+        songCount = 0;
+        totalLengthInBytes = 0;
+        totalDurationInSeconds = 0;
+    }
+
+    public void incrementArtists(int n) {
+        artistCount += n;
+    }
+
+    public void incrementAlbums(int n) {
+        albumCount += n;
+    }
+
+    public void incrementSongs(int n) {
+        songCount += n;
+    }
+
+    public void incrementTotalLengthInBytes(long n) {
+        totalLengthInBytes += n;
+    }
+
+    public void incrementTotalDurationInSeconds(long n) {
+        totalDurationInSeconds += n;
     }
 
     public int getArtistCount() {
@@ -58,5 +94,24 @@ public class MediaLibraryStatistics {
 
     public long getTotalDurationInSeconds() {
         return totalDurationInSeconds;
+    }
+
+    public String format() {
+        return artistCount + " " + albumCount + " " + songCount + " " + totalLengthInBytes + " " + totalDurationInSeconds;
+    }
+
+    public static MediaLibraryStatistics parse(String s) {
+        try {
+            String[] strings = StringUtil.split(s);
+            return new MediaLibraryStatistics(
+                    Integer.parseInt(strings[0]),
+                    Integer.parseInt(strings[1]),
+                    Integer.parseInt(strings[2]),
+                    Long.parseLong(strings[3]),
+                    Long.parseLong(strings[4]));
+        } catch (Exception e) {
+            LOG.warn("Failed to parse media library statistics: " + s);
+            return new MediaLibraryStatistics();
+        }
     }
 }

@@ -1,0 +1,117 @@
+/*
+ * CSS styleshet for the "subStandard" theme.
+ *
+ * Author: Dan Eriksen (dan.o.eriksen[at]gmail.com)
+ *
+ * Icons used are released under a Creative Commons Attribution-Share Alike license
+ * Heading icons are part of the TWG Retina Icon pack created by Alex Shutin (http://blog.twg.ca/2010/11/retina-display-icon-set/twg_retina_icons/) and are slightly altered by author.
+*/
+
+@import "default.css";
+
+/* The primary background colour.*/
+.bgcolor1 {
+
+    background-color: #AEAEAE;
+}
+
+/* The secondary background colour*/
+.bgcolor2, .ruleTableHeader, .log {
+    background-color: #AEAEAE;
+}
+
+/* Background for selected headers.*/
+.headerSelected {
+    color: #FFDA23;
+    background-color: #AEAEAE;
+}
+
+
+
+/* Foreground colour used for h1, h2, b, tr, details and albumcomments. */
+h1, h2, b, tr, .detail, .albumComment {
+    color: #FFFFFF;
+}
+
+/* Table sizing */
+table {
+    font-size: 100%;
+    line-height: 130%;
+    padding: 0;
+    border: 0;
+    margin: 0 0 0 0;
+}
+
+/* Main frame image & colour */
+.mainframe {
+    background-image:url( "../icons/subStandard/background_main.png" );
+    background-repeat:no-repeat;
+    background-attachment:fixed;
+    background-color: #AEAEAE;
+    background-position:right;
+}
+
+/* Right frame background. */
+.rightframe {
+    background-color: #AEAEAE;
+}
+
+/* Back image */
+.back {
+    background-image:url( "../icons/subStandard/back.png" );
+}
+
+/* Forward image */
+.forward {
+    background-image:url( "../icons/subStandard/forward.png" );
+}
+
+/* Link colour */
+a:link, a:active, a:visited, a:link *, a:active *, a:visited * {
+    color: #FFFFFF;
+}
+
+/* Link hover colour */
+a:hover, a:hover * {
+    text-decoration: none;
+    color: #FFDA23;
+}
+
+/* Colour for warning messages. */
+.warning {
+    color: #AA1F15;
+}
+
+/* The primary foreground colour. */
+body {
+    background-color: #AEAEAE;
+    scrollbar-arrow-color: #FFFFFF;
+    scrollbar-track-color: #AEAEAE;
+}
+
+/* The album comments. */
+.albumComment {
+    width: 50em;
+    font-size: 8pt;
+    line-height: 1.4em;
+    padding-top: 0.25em;
+}
+
+/* The log. */
+.log {
+    font-weight: bold;
+    white-space: nowrap;
+    font-size: 8pt;
+    line-height: 1em;
+    background-color:transparent;
+}
+
+/* The help, status & web payer settings tables. */
+.ruleTableHeader, .ruleTableCell {
+    margin: 5px;
+    padding: 5px;
+}
+/* Simple white border. */
+.border1, .ruleTableHeader, .ruleTableCell, .headerSelected, .log {
+    border: 1px solid white;
+}

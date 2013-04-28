@@ -1,48 +1,22 @@
 DONE IN 4.7
 -------------
-Don't display "null" as artist in now playing.
-Fixed crash on Java 7 caused by wrong sorting implementation.
-Added Settings > General > Sort albums by year
-Try with different encodings when importing playlists.
-Admins should be able to manage all playlists (that is visible to them)
-Use "album artist" tag if present.
-Updated Slovenian translation, courtesy of Jan Jam&#353;ek
-Automatically import all playlists on start-up.
-Show all playlist metadata.
-Fixed problem with no files being showed if removing and re-adding a media folder with scans in between.
-Added "Settings > Media folders > Clean-up database"
-Fixed slow "Top rated".
-Less aggressive caching of left.view
-Collapse long list of playlists.
-Make it possible to refresh left frame.
-Displayed album year doesn't update when editing corresponding tag (Foyaxe)
-Include minisub
-Show toast when saving queue as playlist (and when saving settings)
-REST: Added getUsers.
+
 
 TODO IN 4.7
 -----------------
-Album art broken on IE8.
-Backup database in installer.
-Problems importing playlists (BKKKPewsey)
-Video files not displayed?
-  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1382b15b29249d42
 Go thru bug reports.
-  http://forum.subsonic.org/forum/viewtopic.php?t=5708
 Retest playlist import (different encodings)
 Something wrong with matching players/users in Now Playing.
   https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
 ConcurrentModificationException
   https://mail.google.com/mail/u/0/?tab=cm#inbox/13822e43383dca84
-Setup crashplan.
 Add "Force rescan" option.
+SourceForge, hosted apps retirement
+  https://mail.google.com/mail/u/0/?tab=cm#inbox/1386c503c5c2c564
 
 Postponed:
-Replace usage of dwr.util and prototype with jquery.
   - Increase line height in playlist.jsp
   - Rename to play queue in Settings > Player.
-  - Show "isPublic", #songs, duration in playlist.jsp.
-  - Show message if nothing is starred.
   - Show message if no songs are selected when doing add to playlist.
   - Encourage users to save email addresses, also for admin.  Explain why.
   - Update apps to include PlayBook version.
@@ -51,6 +25,7 @@ Replace usage of dwr.util and prototype with jquery.
   - Eliminate HomeController.Album.
   - Clicking play button on a video podcast doesn't work.
 
+Replace usage of dwr.util and prototype with jquery.
 Handle albums without artist. Don't create them?
 Support comment and ratings for Album table.
 JSON exception with ampersand.
@@ -62,9 +37,6 @@ JWPlayer subtitle plugin
 
 -
 
-HTTP Live Streaming
-  ffmpeg segmenting
-  https://mail.google.com/mail/?tab=cm#inbox/1373a3cb757515ee
 Evaluate HTML5.
 Extend demo music, and add video.
 Support ISO files.
@@ -88,20 +60,13 @@ Support custom domain name in sharing (Settings > Advanced)
 Rename "offsetSeconds" to "timeOffset" in StreamController, and update API doc.
 Add "byteOffset" parameter as well.
 Add rating attributes to <directory> in getMusicDirectory.
-Subsonic Chumby
-  http://www.activeobjects.no/subsonic/forum/viewtopic.php?t=7154
-  http://forum.chumby.com/viewtopic.php?id=6733
 REST: add method to get everything in search index (binary, compressed)?
 
-Favorite rather than rating?
 Bookmark support (for audiobooks, podcasts)
 Stream from devices
   https://mail.google.com/mail/?shva=1#inbox/13352f77f870eba1
-Instant playlist
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/1323fe922bb985af
 Go through tracker.
 Does canaca allow outgoing port 4040?
-Backend service to email license keys on request.
 Recursive getFolders API method?
   https://mail.google.com/mail/?shva=1#inbox/13090cd32a9922bd
 Checkbox, combobox bg color
@@ -130,7 +95,6 @@ Playing only first three seconds of podcast
   http://mail.google.com/a/activeobjects.no/#inbox/12e341aeae9535eb
 GPU-accellerated ffmpeg
   https://mail.google.com/a/activeobjects.no/#inbox/12f50fffffd6fecf
-Add to playlist from main.jsp
 Sencha Touch
 Subsonic for Boxee
 Linux locale issue
@@ -148,6 +112,8 @@ TODO IN ANDROID 3.4
 Patch "Host name cannot be null"
   https://mail.google.com/mail/?ui=2&shva=1#inbox/137195c3dc8510ad
 Support Bluetooth play/pause buttons in ICS.
+Wifi lock.
+HLS video.
 Problem if underscore/dash in server name.
   https://mail.google.com/mail/?shva=1#inbox/1365ef6ddc03e31a
 Music controls in notification.
@@ -163,6 +129,7 @@ ICS theme
 https://mail.google.com/mail/?tab=cm#inbox/135bb6c0d53edd42
 Browser / web page widget for Android
 
+Sleep timer.
 Maintain track order for offline files.
 Check for lingering .partial files.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
@@ -956,3 +923,11 @@ Use color: #ff8200
 Getting started, yellow marker
 Use brush: circle fuzzy 17, transparency 67.3
 Use color: #ffe200
+
+CrashPlan
+---------
+To make it work on subsonic.org:
+- Put jre in /usr/local/crashplan/jre (copy from forum.subsonic.org)
+- Install libffi for Centos
+- Extract libjnidispatch.so from jna-3.2.5 and put it in /usr/local/crashplan
+- Remote UI: http://support.crashplan.com/doku.php/how_to/configure_a_headless_client

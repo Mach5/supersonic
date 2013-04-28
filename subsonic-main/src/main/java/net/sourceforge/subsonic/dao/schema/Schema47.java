@@ -132,6 +132,12 @@ public class Schema47 extends Schema {
             LOG.info("Database table 'album' was created successfully.");
         }
 
+        // Added in 4.7.beta3
+        if (!rowExists(template, "table_name='ALBUM' and column_name='NAME' and ordinal_position=1",
+                "information_schema.system_indexinfo")) {
+            template.execute("create index idx_album_name on album(name)");
+        }
+
         if (!tableExists(template, "starred_media_file")) {
             LOG.info("Database table 'starred_media_file' not found.  Creating it.");
             template.execute("create table starred_media_file (" +

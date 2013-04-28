@@ -20,7 +20,6 @@ package net.sourceforge.subsonic.dao;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
-import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
@@ -166,11 +165,6 @@ public class MediaFileDao extends AbstractDao {
         return queryOne("select play_count, last_played, comment from music_file_info where path=?", musicFileInfoRowMapper, path);
     }
 
-    @Deprecated
-    public List<String> getArtists() {
-        return queryForStrings("select distinct artist from media_file where artist is not null and present order by artist");
-    }
-
     public void deleteMediaFile(String path) {
         update("update media_file set present=false, children_last_updated=? where path=?", new Date(0L), path);
     }
@@ -284,28 +278,13 @@ public class MediaFileDao extends AbstractDao {
         return queryForDate("select created from starred_media_file where media_file_id=? and username=?", null, id, username);
     }
 
-    /**
-     * Returns media library statistics, including the number of artists, albums and songs.
-     *
-     * @return Media library statistics.
-     */
-    public MediaLibraryStatistics getStatistics() {
-        int artistCount = queryForInt("select count(1) from artist where present", 0);
-        int albumCount = queryForInt("select count(1) from album where present", 0);
-        int songCount = queryForInt("select count(1) from media_file where type in (?, ?, ?, ?) and present", 0, VIDEO.name(), MUSIC.name(), AUDIOBOOK.name(), PODCAST.name());
-        long totalLengthInBytes = queryForLong("select sum(file_size) from media_file where present", 0L);
-        long totalDurationInSeconds = queryForLong("select sum(duration_seconds) from media_file where present", 0L);
-
-        return new MediaLibraryStatistics(artistCount, albumCount, songCount, totalLengthInBytes, totalDurationInSeconds);
-    }
-
     public void markPresent(String path, Date lastScanned) {
         update("update media_file set present=?, last_scanned=? where path=?", true, lastScanned, path);
     }
 
     public void markNonPresent(Date lastScanned) {
-        int minId = queryForInt("select id from media_file where true limit 1", 0);
-        int maxId = queryForInt("select max(id) from media_file", 0);
+        int minId = queryForInt("select top 1 id from media_file where last_scanned != ? and present", 0, lastScanned);
+        int maxId = queryForInt("select max(id) from media_file where last_scanned != ? and present", 0, lastScanned);
 
         final int batchSize = 1000;
         Date childrenLastUpdated = new Date(0L);  // Used to force a children rescan if file is later resurrected.
@@ -316,8 +295,8 @@ public class MediaFileDao extends AbstractDao {
     }
 
     public void expunge() {
-        int minId = queryForInt("select id from media_file where true limit 1", 0);
-        int maxId = queryForInt("select max(id) from media_file", 0);
+        int minId = queryForInt("select top 1 id from media_file where not present", 0);
+        int maxId = queryForInt("select max(id) from media_file where not present", 0);
 
         final int batchSize = 1000;
         for (int id = minId; id <= maxId; id += batchSize) {
