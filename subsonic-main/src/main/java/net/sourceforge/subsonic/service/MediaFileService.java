@@ -386,6 +386,9 @@ public class MediaFileService {
     }
 
     private MediaFile createMediaFile(File file) {
+
+        MediaFile existingFile = mediaFileDao.getMediaFile(file.getPath());
+
         MediaFile mediaFile = new MediaFile();
         Date lastModified = new Date(FileUtil.lastModified(file));
         mediaFile.setPath(file.getPath());
@@ -393,7 +396,9 @@ public class MediaFileService {
         mediaFile.setParentPath(file.getParent());
         mediaFile.setChanged(lastModified);
         mediaFile.setLastScanned(new Date());
-        mediaFile.setPlayCount(0);
+        mediaFile.setPlayCount(existingFile == null ? 0 : existingFile.getPlayCount());
+        mediaFile.setLastPlayed(existingFile == null ? null : existingFile.getLastPlayed());
+        mediaFile.setComment(existingFile == null ? null : existingFile.getComment());
         mediaFile.setChildrenLastUpdated(new Date(0));
         mediaFile.setCreated(lastModified);
         mediaFile.setMediaType(DIRECTORY);

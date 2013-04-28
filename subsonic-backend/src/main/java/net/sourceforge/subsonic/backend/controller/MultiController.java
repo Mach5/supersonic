@@ -54,7 +54,7 @@ public class MultiController extends MultiActionController {
 
     private static final Logger LOG = Logger.getLogger(RedirectionController.class);
 
-    private static final String SUBSONIC_VERSION = "4.6";
+    private static final String SUBSONIC_VERSION = "4.7";
     private static final String SUBSONIC_BETA_VERSION = "4.7.beta3";
 
     private static final Date LICENSE_DATE_THRESHOLD;
@@ -168,8 +168,8 @@ public class MultiController extends MultiActionController {
 
         int sumToday = paymentDao.getPaymentAmount(startOfToday.getTime(), endOfToday.getTime());
         int sumYesterday = paymentDao.getPaymentAmount(startOfYesterday.getTime(), startOfToday.getTime());
-        int sumMonth = paymentDao.getPaymentAmount(startOfMonth.getTime(), endOfToday.getTime());
-        int dayAverageThisMonth = sumMonth / startOfToday.get(Calendar.DATE);
+        int sumMonth = paymentDao.getPaymentAmount(startOfMonth.getTime(), startOfToday.getTime());
+        int dayAverageThisMonth = sumMonth / startOfYesterday.get(Calendar.DATE);
 
         map.put("sumToday", sumToday);
         map.put("sumYesterday", sumYesterday);

@@ -46,7 +46,7 @@
 
             var width = "${model.popout ? '100%' : '600'}";
             var height = "${model.popout ? '85%' : '360'}";
-            swfobject.embedSWF("<c:url value="/flash/jw-player-5.6.swf"/>", "placeholder1", width, height, "9.0.0", false, flashvars, params, attributes);
+            swfobject.embedSWF("<c:url value="/flash/jw-player-5.10.swf"/>", "placeholder1", width, height, "9.0.0", false, flashvars, params, attributes);
         }
 
         function playerReady(thePlayer) {
