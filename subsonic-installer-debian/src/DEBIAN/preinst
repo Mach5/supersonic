@@ -6,7 +6,7 @@ set -e
 if [ -e /etc/init.d/subsonic ]; then
   invoke-rc.d subsonic stop
 fi
-s
+
 # Backup database.
 if [ -e /var/subsonic/db ]; then
   rm -rf /var/subsonic/db.backup
