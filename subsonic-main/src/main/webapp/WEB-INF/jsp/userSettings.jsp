@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1"%>
+<%--@elvariable id="command" type="net.sourceforge.subsonic.command.UserSettingsCommand"--%>
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
 </head>
 
 <body class="mainframe bgcolor1" onload="enablePasswordChangeFields();">
@@ -12,23 +13,24 @@
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="user"/>
+    <c:param name="toast" value="${command.toast}"/>
 </c:import>
 
 <script type="text/javascript" language="javascript">
     function enablePasswordChangeFields() {
-        var changePasswordCheckbox = $("passwordChange");
-        var ldapCheckbox = $("ldapAuthenticated");
-        var passwordChangeTable = $("passwordChangeTable");
-        var passwordChangeCheckboxTable = $("passwordChangeCheckboxTable");
+        var changePasswordCheckbox = $("#passwordChange");
+        var ldapCheckbox = $("#ldapAuthenticated");
+        var passwordChangeTable = $("#passwordChangeTable");
+        var passwordChangeCheckboxTable = $("#passwordChangeCheckboxTable");
 
-        if (changePasswordCheckbox && changePasswordCheckbox.checked && (ldapCheckbox == null || !ldapCheckbox.checked)) {
+        if (changePasswordCheckbox && changePasswordCheckbox.is(":checked") && (ldapCheckbox == null || !ldapCheckbox.is(":checked"))) {
             passwordChangeTable.show();
         } else {
             passwordChangeTable.hide();
         }
 
         if (changePasswordCheckbox) {
-            if (ldapCheckbox && ldapCheckbox.checked) {
+            if (ldapCheckbox && ldapCheckbox.is(":checked")) {
                 passwordChangeCheckboxTable.hide();
             } else {
                 passwordChangeCheckboxTable.show();
@@ -86,10 +88,6 @@
                 <td><label for="share"><fmt:message key="usersettings.share"/></label></td>
             </tr>
             <tr>
-                <td style="padding-top:1em"><form:checkbox path="playlistRole" id="playlist" cssClass="checkbox"/></td>
-                <td style="padding-top:1em"><label for="playlist"><fmt:message key="usersettings.playlist"/></label></td>
-            </tr>
-            <tr>
                 <td><form:checkbox path="coverArtRole" id="coverArt" cssClass="checkbox"/></td>
                 <td><label for="coverArt"><fmt:message key="usersettings.coverart"/></label></td>
             </tr>
@@ -133,7 +131,7 @@
     <c:if test="${command.ldapEnabled and not command.admin}">
         <table>
             <tr>
-                <td><form:checkbox path="ldapAuthenticated" id="ldapAuthenticated" cssClass="checkbox" onclick="javascript:enablePasswordChangeFields()"/></td>
+                <td><form:checkbox path="ldapAuthenticated" id="ldapAuthenticated" cssClass="checkbox" onclick="enablePasswordChangeFields()"/></td>
                 <td><label for="ldapAuthenticated"><fmt:message key="usersettings.ldap"/></label></td>
                 <td><c:import url="helpToolTip.jsp"><c:param name="topic" value="ldap"/></c:import></td>
             </tr>

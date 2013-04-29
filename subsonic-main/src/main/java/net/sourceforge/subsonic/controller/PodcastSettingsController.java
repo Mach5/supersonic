@@ -47,6 +47,7 @@ public class PodcastSettingsController extends SimpleFormController {
 
     protected void doSubmitAction(Object comm) throws Exception {
         PodcastSettingsCommand command = (PodcastSettingsCommand) comm;
+        command.setToast(true);
 
         settingsService.setPodcastUpdateInterval(Integer.parseInt(command.getInterval()));
         settingsService.setPodcastEpisodeRetentionCount(Integer.parseInt(command.getEpisodeRetentionCount()));

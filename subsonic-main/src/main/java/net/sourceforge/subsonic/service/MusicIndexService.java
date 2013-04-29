@@ -32,11 +32,11 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import net.sourceforge.subsonic.dao.MediaFileDao;
+import net.sourceforge.subsonic.domain.Artist;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
-import net.sourceforge.subsonic.domain.MusicIndex.Artist;
+import net.sourceforge.subsonic.domain.MusicIndex.SortableArtist;
 
 /**
  * Provides services for grouping artists by index.
@@ -47,30 +47,37 @@ public class MusicIndexService {
 
     private SettingsService settingsService;
     private MediaFileService mediaFileService;
-    private MediaFileDao mediaFileDao;
 
     /**
      * Returns a map from music indexes to sets of artists that are direct children of the given music folders.
      *
+     *
      * @param folders The music folders.
+     * @param refresh Whether to look for updates by checking the last-modified timestamp of the music folders.
      * @return A map from music indexes to sets of artists that are direct children of this music file.
      * @throws IOException If an I/O error occurs.
      */
-    public SortedMap<MusicIndex, SortedSet<Artist>> getIndexedArtists(List<MusicFolder> folders) throws IOException {
+    public SortedMap<MusicIndex, SortedSet<MusicIndex.SortableArtistWithMediaFiles>> getIndexedArtists(List<MusicFolder> folders, boolean refresh) throws IOException {
+        SortedSet<MusicIndex.SortableArtistWithMediaFiles> artists = createSortableArtists(folders, refresh);
+        return sortArtists(artists);
+    }
 
-        String[] ignoredArticles = settingsService.getIgnoredArticlesAsArray();
-        String[] shortcuts = settingsService.getShortcutsAsArray();
-        final List<MusicIndex> indexes = createIndexesFromExpression(settingsService.getIndexString());
+    public SortedMap<MusicIndex, SortedSet<MusicIndex.SortableArtistWithArtist>> getIndexedArtists(List<Artist> artists) throws IOException {
+        SortedSet<MusicIndex.SortableArtistWithArtist> sortableArtists = createSortableArtists(artists);
+        return sortArtists(sortableArtists);
+    }
 
+    private <T extends SortableArtist> SortedMap<MusicIndex, SortedSet<T>> sortArtists(SortedSet<T> artists) {
+        List<MusicIndex> indexes = createIndexesFromExpression(settingsService.getIndexString());
         Comparator<MusicIndex> indexComparator = new MusicIndexComparator(indexes);
-        SortedSet<Artist> artists = createArtists(folders, ignoredArticles, shortcuts);
-        SortedMap<MusicIndex, SortedSet<Artist>> result = new TreeMap<MusicIndex, SortedSet<Artist>>(indexComparator);
 
-        for (Artist artist : artists) {
+        SortedMap<MusicIndex, SortedSet<T>> result = new TreeMap<MusicIndex, SortedSet<T>>(indexComparator);
+
+        for (T artist : artists) {
             MusicIndex index = getIndex(artist, indexes);
-            SortedSet<Artist> artistSet = result.get(index);
+            SortedSet<T> artistSet = result.get(index);
             if (artistSet == null) {
-                artistSet = new TreeSet<Artist>();
+                artistSet = new TreeSet<T>();
                 result.put(index, artistSet);
             }
             artistSet.add(artist);
@@ -127,55 +134,43 @@ public class MusicIndexService {
         return result;
     }
 
-    private SortedSet<Artist> createArtists(List<MusicFolder> folders, String[] ignoredArticles, String[] shortcuts) throws IOException {
-        return settingsService.isOrganizeByFolderStructure() ?
-                createArtistsByFolderStructure(folders, ignoredArticles, shortcuts) :
-                createArtistsByTagStructure(folders, ignoredArticles, shortcuts);
-    }
-
-    private SortedSet<Artist> createArtistsByFolderStructure(List<MusicFolder> folders, String[] ignoredArticles, String[] shortcuts) {
-        SortedMap<String, Artist> artistMap = new TreeMap<String, Artist>();
+    private SortedSet<MusicIndex.SortableArtistWithMediaFiles> createSortableArtists(List<MusicFolder> folders, boolean refresh) throws IOException {
+        String[] ignoredArticles = settingsService.getIgnoredArticlesAsArray();
+        String[] shortcuts = settingsService.getShortcutsAsArray();
+        SortedMap<String, MusicIndex.SortableArtistWithMediaFiles> artistMap = new TreeMap<String, MusicIndex.SortableArtistWithMediaFiles>();
         Set<String> shortcutSet = new HashSet<String>(Arrays.asList(shortcuts));
 
         for (MusicFolder folder : folders) {
 
-            MediaFile root = mediaFileService.getMediaFile(folder.getPath(), true);
-            List<MediaFile> children = mediaFileService.getChildrenOf(root, false, true, true, true);
+            MediaFile root = mediaFileService.getMediaFile(folder.getPath(), !refresh);
+            List<MediaFile> children = mediaFileService.getChildrenOf(root, false, true, true, !refresh);
             for (MediaFile child : children) {
                 if (shortcutSet.contains(child.getName())) {
                     continue;
                 }
 
                 String sortableName = createSortableName(child.getName(), ignoredArticles);
-                Artist artist = artistMap.get(sortableName);
+                MusicIndex.SortableArtistWithMediaFiles artist = artistMap.get(sortableName);
                 if (artist == null) {
-                    artist = new Artist(child.getName(), sortableName);
+                    artist = new MusicIndex.SortableArtistWithMediaFiles(child.getName(), sortableName);
                     artistMap.put(sortableName, artist);
                 }
                 artist.addMediaFile(child);
             }
         }
 
-        return new TreeSet<Artist>(artistMap.values());
+        return new TreeSet<MusicIndex.SortableArtistWithMediaFiles>(artistMap.values());
     }
 
-    private SortedSet<Artist> createArtistsByTagStructure(List<MusicFolder> folders, String[] ignoredArticles, String[] shortcuts) {
-        Set<String> shortcutSet = new HashSet<String>(Arrays.asList(shortcuts));
-        SortedSet<Artist> artists = new TreeSet<Artist>();
-
-        // TODO: Filter by folder
-        for (String artistName : mediaFileDao.getArtists()) {
-
-            if (shortcutSet.contains(artistName)) {
-                continue;
-            }
-
-            String sortableName = createSortableName(artistName, ignoredArticles);
-            Artist artist = new Artist(artistName, sortableName);
-            artists.add(artist);
+    private SortedSet<MusicIndex.SortableArtistWithArtist> createSortableArtists(List<Artist> artists) {
+        TreeSet<MusicIndex.SortableArtistWithArtist> result = new TreeSet<MusicIndex.SortableArtistWithArtist>();
+        String[] ignoredArticles = settingsService.getIgnoredArticlesAsArray();
+        for (Artist artist : artists) {
+            String sortableName = createSortableName(artist.getName(), ignoredArticles);
+            result.add(new MusicIndex.SortableArtistWithArtist(artist.getName(), sortableName, artist));
         }
 
-        return artists;
+        return result;
     }
 
     private String createSortableName(String name, String[] ignoredArticles) {
@@ -197,7 +192,7 @@ public class MusicIndexService {
      * @param indexes List of available indexes.
      * @return The music index to which this music file belongs, or {@link MusicIndex#OTHER} if no index applies.
      */
-    private MusicIndex getIndex(Artist artist, List<MusicIndex> indexes) {
+    private MusicIndex getIndex(SortableArtist artist, List<MusicIndex> indexes) {
         String sortableName = artist.getSortableName().toUpperCase();
         for (MusicIndex index : indexes) {
             for (String prefix : index.getPrefixes()) {
@@ -215,10 +210,6 @@ public class MusicIndexService {
 
     public void setMediaFileService(MediaFileService mediaFileService) {
         this.mediaFileService = mediaFileService;
-    }
-
-    public void setMediaFileDao(MediaFileDao mediaFileDao) {
-        this.mediaFileDao = mediaFileDao;
     }
 
     private static class MusicIndexComparator implements Comparator<MusicIndex>, Serializable {

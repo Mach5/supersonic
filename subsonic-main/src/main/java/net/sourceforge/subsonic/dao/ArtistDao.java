@@ -115,12 +115,22 @@ public class ArtistDao extends AbstractDao {
     }
 
     public void markNonPresent(Date lastScanned) {
-        int minId = queryForInt("select id from artist where true limit 1", 0);
-        int maxId = queryForInt("select max(id) from artist", 0);
+        int minId = queryForInt("select top 1 id from artist where last_scanned != ? and present", 0, lastScanned);
+        int maxId = queryForInt("select max(id) from artist where last_scanned != ? and present", 0, lastScanned);
 
         final int batchSize = 1000;
         for (int id = minId; id <= maxId; id += batchSize) {
             update("update artist set present=false where id between ? and ? and last_scanned != ? and present", id, id + batchSize, lastScanned);
+        }
+    }
+
+    public void expunge() {
+        int minId = queryForInt("select top 1 id from artist where not present", 0);
+        int maxId = queryForInt("select max(id) from artist where not present", 0);
+
+        final int batchSize = 1000;
+        for (int id = minId; id <= maxId; id += batchSize) {
+            update("delete from artist where id between ? and ? and not present", id, id + batchSize);
         }
     }
 

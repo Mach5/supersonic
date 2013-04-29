@@ -3,9 +3,8 @@
 
 <%--
 PARAMETERS
+  albumId: ID of album.
   coverArtSize: Height and width of cover art.
-  coverArtPath: Path to cover art, or nil if generic cover art image should be displayed.
-  albumPath: Path to album.
   albumName: Album name to display as caption and img alt.
   showLink: Whether to make the cover art image link to the album page.
   showZoom: Whether to display a link for zooming the cover art.
@@ -26,25 +25,21 @@ PARAMETERS
 
 <div style="width:${size}; max-width:${size}; height:${size}; max-height:${size}" title="${param.albumName}">
     <sub:url value="main.view" var="mainUrl">
-        <sub:param name="path" value="${param.albumPath}"/>
+        <sub:param name="id" value="${param.albumId}"/>
     </sub:url>
 
     <sub:url value="/coverArt.view" var="coverArtUrl">
         <c:if test="${not empty param.coverArtSize}">
             <sub:param name="size" value="${param.coverArtSize}"/>
         </c:if>
-        <c:if test="${not empty param.coverArtPath}">
-            <sub:param name="path" value="${param.coverArtPath}"/>
-        </c:if>
+        <sub:param name="id" value="${param.albumId}"/>
     </sub:url>
     <sub:url value="/coverArt.view" var="zoomCoverArtUrl">
-        <c:if test="${not empty param.coverArtPath}">
-            <sub:param name="path" value="${param.coverArtPath}"/>
-        </c:if>
+        <sub:param name="id" value="${param.albumId}"/>
     </sub:url>
 
     <str:randomString count="5" type="alphabet" var="divId"/>
-    <div class="outerpair1" id="${divId}" style="opacity:${opacity}">
+    <div class="outerpair1" id="${divId}" style="display:none">
         <div class="outerpair2">
             <div class="shadowbox">
                 <div class="innerbox">
@@ -60,11 +55,9 @@ PARAMETERS
     </div>
     <c:if test="${not empty param.appearAfter}">
         <script type="text/javascript">
-            if (window.addEventListener) {
-                window.addEventListener('load', function() {
-                    setTimeout("new Effect.Opacity('${divId}', { from: 0.0, to: 1.0, duration: 0.5 })", ${param.appearAfter});
-                }, false);
-            }
+            $(document).ready(function () {
+                setTimeout("$('#${divId}').fadeIn(500)", ${param.appearAfter});
+            });
         </script>
     </c:if>
 </div>
@@ -72,7 +65,7 @@ PARAMETERS
 <div style="text-align:right; padding-right: 8px;">
     <c:if test="${param.showChange}">
         <sub:url value="/changeCoverArt.view" var="changeCoverArtUrl">
-            <sub:param name="path" value="${param.albumPath}"/>
+            <sub:param name="id" value="${param.albumId}"/>
         </sub:url>
         <a class="detail" href="${changeCoverArtUrl}"><fmt:message key="coverart.change"/></a>
     </c:if>

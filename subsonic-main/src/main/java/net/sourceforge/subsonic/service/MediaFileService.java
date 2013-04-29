@@ -25,6 +25,7 @@ import net.sourceforge.subsonic.dao.AlbumDao;
 import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.Album;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.MediaFileComparator;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.service.metadata.JaudiotaggerParser;
 import net.sourceforge.subsonic.service.metadata.MetaData;
@@ -45,6 +46,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static net.sourceforge.subsonic.domain.MediaFile.MediaType.*;
 
@@ -118,7 +121,7 @@ public class MediaFileService {
     }
 
     private MediaFile checkLastModified(MediaFile mediaFile, boolean useFastCache) {
-        if (useFastCache || mediaFile.getLastModified().getTime() >= FileUtil.lastModified(mediaFile.getFile())) {
+        if (useFastCache || mediaFile.getChanged().getTime() >= FileUtil.lastModified(mediaFile.getFile())) {
             return mediaFile;
         }
         mediaFile = createMediaFile(mediaFile.getFile());
@@ -156,14 +159,6 @@ public class MediaFileService {
             return null;
         }
         return getMediaFile(mediaFile.getParentPath());
-    }
-
-    public List<MediaFile> getChildrenOf(String parentPath, boolean includeFiles, boolean includeDirectories, boolean sort) {
-        return getChildrenOf(new File(parentPath), includeFiles, includeDirectories, sort);
-    }
-
-    public List<MediaFile> getChildrenOf(File parent, boolean includeFiles, boolean includeDirectories, boolean sort) {
-        return getChildrenOf(getMediaFile(parent), includeFiles, includeDirectories, sort);
     }
 
     /**
@@ -209,7 +204,12 @@ public class MediaFileService {
         }
 
         if (sort) {
-            Collections.sort(result, new MediaFileSorter());
+            Comparator<MediaFile> comparator = new MediaFileComparator(settingsService.isSortAlbumsByYear());
+            // Note: Intentionally not using Collections.sort() since it can be problematic on Java 7.
+            // http://www.oracle.com/technetwork/java/javase/compatibility-417013.html#jdk7
+            Set<MediaFile> set = new TreeSet<MediaFile>(comparator);
+            set.addAll(result);
+            result = new ArrayList<MediaFile>(set);
         }
 
         return result;
@@ -286,12 +286,14 @@ public class MediaFileService {
     /**
      * Returns albums in alphabetial order.
      *
+     *
      * @param offset Number of albums to skip.
      * @param count  Maximum number of albums to return.
+     * @param byArtist Whether to sort by artist name
      * @return Albums in alphabetical order.
      */
-    public List<MediaFile> getAlphabetialAlbums(int offset, int count) {
-        return mediaFileDao.getAlphabetialAlbums(offset, count);
+    public List<MediaFile> getAlphabetialAlbums(int offset, int count, boolean byArtist) {
+        return mediaFileDao.getAlphabetialAlbums(offset, count, byArtist);
     }
 
     public Date getMediaFileStarredDate(int id, String username) {
@@ -312,7 +314,7 @@ public class MediaFileService {
     private void updateChildren(MediaFile parent) {
 
         // Check timestamps.
-        if (parent.getChildrenLastUpdated().getTime() >= parent.getLastModified().getTime()) {
+        if (parent.getChildrenLastUpdated().getTime() >= parent.getChanged().getTime()) {
             return;
         }
 
@@ -336,7 +338,7 @@ public class MediaFileService {
         }
 
         // Update timestamp in parent.
-        parent.setChildrenLastUpdated(parent.getLastModified());
+        parent.setChildrenLastUpdated(parent.getChanged());
         parent.setPresent(true);
         mediaFileDao.createOrUpdateMediaFile(parent);
     }
@@ -384,14 +386,19 @@ public class MediaFileService {
     }
 
     private MediaFile createMediaFile(File file) {
+
+        MediaFile existingFile = mediaFileDao.getMediaFile(file.getPath());
+
         MediaFile mediaFile = new MediaFile();
         Date lastModified = new Date(FileUtil.lastModified(file));
         mediaFile.setPath(file.getPath());
         mediaFile.setFolder(securityService.getRootFolderForFile(file));
         mediaFile.setParentPath(file.getParent());
-        mediaFile.setLastModified(lastModified);
+        mediaFile.setChanged(lastModified);
         mediaFile.setLastScanned(new Date());
-        mediaFile.setPlayCount(0);
+        mediaFile.setPlayCount(existingFile == null ? 0 : existingFile.getPlayCount());
+        mediaFile.setLastPlayed(existingFile == null ? null : existingFile.getLastPlayed());
+        mediaFile.setComment(existingFile == null ? null : existingFile.getComment());
         mediaFile.setChildrenLastUpdated(new Date(0));
         mediaFile.setCreated(lastModified);
         mediaFile.setMediaType(DIRECTORY);
@@ -403,6 +410,7 @@ public class MediaFileService {
             if (parser != null) {
                 MetaData metaData = parser.getMetaData(file);
                 mediaFile.setArtist(metaData.getArtist());
+                mediaFile.setAlbumArtist(metaData.getArtist());
                 mediaFile.setAlbumName(metaData.getAlbumName());
                 mediaFile.setTitle(metaData.getTitle());
                 mediaFile.setDiscNumber(metaData.getDiscNumber());
@@ -436,12 +444,13 @@ public class MediaFileService {
                 if (firstChild != null) {
                     mediaFile.setMediaType(ALBUM);
 
-                    // Guess artist/album name.
+                    // Guess artist/album name and year.
                     MetaDataParser parser = metaDataParserFactory.getParser(firstChild);
                     if (parser != null) {
                         MetaData metaData = parser.getMetaData(firstChild);
                         mediaFile.setArtist(metaData.getArtist());
                         mediaFile.setAlbumName(metaData.getAlbumName());
+                        mediaFile.setYear(metaData.getYear());
                     }
 
                     // Look for cover art.
@@ -587,7 +596,7 @@ public class MediaFileService {
             updateMediaFile(parent);
         }
 
-        Album album = albumDao.getAlbum(file.getArtist(), file.getAlbumName());
+        Album album = albumDao.getAlbum(file.getAlbumArtist(), file.getAlbumName());
         if (album != null) {
             album.setLastPlayed(now);
             album.setPlayCount(album.getPlayCount() + 1);
@@ -599,50 +608,4 @@ public class MediaFileService {
         this.albumDao = albumDao;
     }
 
-    /**
-     * Comparator for sorting media files.
-     */
-    private static class MediaFileSorter implements Comparator<MediaFile> {
-
-        public int compare(MediaFile a, MediaFile b) {
-            if (a.isFile() && b.isDirectory()) {
-                return 1;
-            }
-
-            if (a.isDirectory() && b.isFile()) {
-                return -1;
-            }
-
-            if (a.isDirectory() && b.isDirectory()) {
-                return a.getName().compareToIgnoreCase(b.getName());
-            }
-
-            // Compare by disc number, if present.
-            Integer discA = a.getDiscNumber();
-            Integer discB = b.getDiscNumber();
-            if (discA != null && discB != null) {
-                int i = discA.compareTo(discB);
-                if (i != 0) {
-                    return i;
-                }
-            }
-
-            Integer trackA = a.getTrackNumber();
-            Integer trackB = b.getTrackNumber();
-
-            if (trackA == null && trackB != null) {
-                return 1;
-            }
-
-            if (trackA != null && trackB == null) {
-                return -1;
-            }
-
-            if (trackA == null && trackB == null) {
-                return a.getName().compareToIgnoreCase(b.getName());
-            }
-
-            return trackA.compareTo(trackB);
-        }
-    }
 }

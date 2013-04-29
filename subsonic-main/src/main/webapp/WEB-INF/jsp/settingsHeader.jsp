@@ -1,6 +1,13 @@
-
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="iso-8859-1" %>
 <%@ include file="include.jsp" %>
+
+<c:if test="${param.toast}">
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $().toastmessage("showSuccessToast", "<fmt:message key="common.settingssaved"/>");
+        });
+    </script>
+</c:if>
 
 <c:set var="categories" value="${param.restricted ? 'personal password player share' : 'musicFolder general advanced personal user player share network transcoding internetRadio podcast'}"/>
 <h1>

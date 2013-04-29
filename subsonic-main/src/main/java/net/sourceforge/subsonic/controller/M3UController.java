@@ -21,7 +21,7 @@ package net.sourceforge.subsonic.controller;
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.service.PlayerService;
 import net.sourceforge.subsonic.service.SettingsService;
 import net.sourceforge.subsonic.service.TranscodingService;
@@ -81,8 +81,8 @@ public class M3UController implements Controller {
     private void createClientSidePlaylist(PrintWriter out, Player player, String url) throws Exception {
         out.println("#EXTM3U");
         List<MediaFile> result;
-        synchronized (player.getPlaylist()) {
-            result = player.getPlaylist().getFiles();
+        synchronized (player.getPlayQueue()) {
+            result = player.getPlayQueue().getFiles();
         }
         for (MediaFile mediaFile : result) {
             Integer duration = mediaFile.getDurationSeconds();
@@ -90,7 +90,7 @@ public class M3UController implements Controller {
                 duration = -1;
             }
             out.println("#EXTINF:" + duration + "," + mediaFile.getArtist() + " - " + mediaFile.getTitle());
-            out.println(url + "player=" + player.getId() + "&pathUtf8Hex=" + StringUtil.utf8HexEncode(mediaFile.getPath()) + "&suffix=." + transcodingService.getSuffix(player, mediaFile, null));
+            out.println(url + "player=" + player.getId() + "&id=" +mediaFile.getId() + "&suffix=." + transcodingService.getSuffix(player, mediaFile, null));
         }
     }
 
@@ -110,8 +110,8 @@ public class M3UController implements Controller {
     }
 
     private String getSuffix(Player player) {
-        Playlist playlist = player.getPlaylist();
-        return playlist.isEmpty() ? null : transcodingService.getSuffix(player, playlist.getFile(0), null);
+        PlayQueue playQueue = player.getPlayQueue();
+        return playQueue.isEmpty() ? null : transcodingService.getSuffix(player, playQueue.getFile(0), null);
     }
 
     public void setPlayerService(PlayerService playerService) {

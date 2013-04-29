@@ -3,6 +3,7 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
 </head>
 <body class="mainframe bgcolor1">
@@ -11,6 +12,7 @@
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="player"/>
+    <c:param name="toast" value="${command.reloadNeeded}"/>
     <c:param name="restricted" value="${not command.admin}"/>
 </c:import>
 
@@ -171,7 +173,7 @@
 </c:choose>
 
 <c:if test="${command.reloadNeeded}">
-    <script language="javascript" type="text/javascript">parent.frames.playlist.location.href="playlist.view?"</script>
+    <script language="javascript" type="text/javascript">parent.frames.playQueue.location.href="playQueue.view?"</script>
 </c:if>
 
 </body></html>

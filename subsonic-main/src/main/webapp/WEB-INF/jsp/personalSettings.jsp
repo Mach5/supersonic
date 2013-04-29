@@ -3,19 +3,12 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
 
     <script type="text/javascript" language="javascript">
         function enableLastFmFields() {
-            var checkbox = $("lastFm");
-            var table = $("lastFmTable");
-
-            if (checkbox && checkbox.checked) {
-                table.show();
-            } else {
-                table.hide();
-            }
+            $("#lastFm").is(":checked") ? $("#lastFmTable").show() : $("#lastFmTable").hide();
         }
     </script>
 </head>
@@ -27,6 +20,7 @@
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="personal"/>
     <c:param name="restricted" value="${not command.user.adminRole}"/>
+    <c:param name="toast" value="${command.reloadNeeded}"/>
 </c:import>
 
 <h2><fmt:message key="personalsettings.title"><fmt:param>${command.user.username}</fmt:param></fmt:message></h2>
@@ -154,7 +148,7 @@
 
     <table class="indent">
         <tr>
-            <td><form:checkbox path="lastFmEnabled" id="lastFm" cssClass="checkbox" onclick="javascript:enableLastFmFields()"/></td>
+            <td><form:checkbox path="lastFmEnabled" id="lastFm" cssClass="checkbox" onclick="enableLastFmFields()"/></td>
             <td><label for="lastFm"><fmt:message key="personalsettings.lastfmenabled"/></label></td>
         </tr>
     </table>

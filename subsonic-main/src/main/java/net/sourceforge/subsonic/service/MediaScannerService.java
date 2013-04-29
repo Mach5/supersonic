@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.commons.lang.ObjectUtils;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.AlbumDao;
 import net.sourceforge.subsonic.dao.ArtistDao;
@@ -53,6 +55,7 @@ public class MediaScannerService {
     private Timer timer;
     private SettingsService settingsService;
     private SearchService searchService;
+    private PlaylistService playlistService;
     private MediaFileService mediaFileService;
     private MediaFileDao mediaFileDao;
     private ArtistDao artistDao;
@@ -61,7 +64,7 @@ public class MediaScannerService {
 
     public void init() {
         deleteOldIndexFiles();
-        statistics = mediaFileDao.getStatistics();
+        statistics = settingsService.getMediaLibraryStatistics();
         schedule();
     }
 
@@ -141,6 +144,8 @@ public class MediaScannerService {
             @Override
             public void run() {
                 doScanLibrary();
+                playlistService.importPlaylists();
+                playlistService.updatePlaylistStatistics();
             }
         };
 
@@ -155,6 +160,7 @@ public class MediaScannerService {
             Date lastScanned = new Date();
             Map<String, Integer> albumCount = new HashMap<String, Integer>();
             scanCount = 0;
+            statistics.reset();
 
             searchService.startIndexing();
 
@@ -163,16 +169,25 @@ public class MediaScannerService {
                 MediaFile root = mediaFileService.getMediaFile(musicFolder.getPath(), false);
                 scanFile(root, musicFolder, lastScanned, albumCount);
             }
+            LOG.info("Scanned media library with " + scanCount + " entries.");
+
+            LOG.info("Marking non-present files.");
             mediaFileDao.markNonPresent(lastScanned);
+            LOG.info("Marking non-present artists.");
             artistDao.markNonPresent(lastScanned);
+            LOG.info("Marking non-present albums.");
             albumDao.markNonPresent(lastScanned);
 
             // Update statistics
-            statistics = mediaFileDao.getStatistics();
+            statistics.incrementArtists(albumCount.size());
+            for (Integer albums : albumCount.values()) {
+                statistics.incrementAlbums(albums);
+            }
 
+            settingsService.setMediaLibraryStatistics(statistics);
             settingsService.setLastScanned(lastScanned);
             settingsService.save(false);
-            LOG.info("Scanned media library with " + scanCount + " entries.");
+            LOG.info("Completed media library scan.");
 
         } catch (Throwable x) {
             LOG.error("Failed to scan media library.", x);
@@ -206,26 +221,35 @@ public class MediaScannerService {
         } else {
             updateAlbum(file, lastScanned, albumCount);
             updateArtist(file, lastScanned, albumCount);
+            statistics.incrementSongs(1);
         }
 
         mediaFileDao.markPresent(file.getPath(), lastScanned);
-        artistDao.markPresent(file.getArtist(), lastScanned);
+        artistDao.markPresent(file.getAlbumArtist(), lastScanned);
+
+        if (file.getDurationSeconds() != null) {
+            statistics.incrementTotalDurationInSeconds(file.getDurationSeconds());
+        }
+        if (file.getFileSize() != null) {
+            statistics.incrementTotalLengthInBytes(file.getFileSize());
+        }
     }
 
     private void updateAlbum(MediaFile file, Date lastScanned, Map<String, Integer> albumCount) {
-        if (file.getAlbumName() == null || file.getArtist() == null || !file.isAudio()) {
+        if (file.getAlbumName() == null || file.getArtist() == null || file.getParentPath() == null || !file.isAudio()) {
             return;
         }
 
-        Album album = albumDao.getAlbum(file.getArtist(), file.getAlbumName());
+        Album album = albumDao.getAlbumForFile(file);
         if (album == null) {
             album = new Album();
+            album.setPath(file.getParentPath());
             album.setName(file.getAlbumName());
             album.setArtist(file.getArtist());
-            album.setCreated(file.getLastModified());
+            album.setCreated(file.getChanged());
         }
         if (album.getCoverArtPath() == null) {
-            MediaFile parent = mediaFileService.getMediaFile(file.getParentPath());
+            MediaFile parent = mediaFileService.getParentOf(file);
             if (parent != null) {
                 album.setCoverArtPath(parent.getCoverArtPath());
             }
@@ -250,20 +274,26 @@ public class MediaScannerService {
         if (firstEncounter) {
             searchService.index(album);
         }
+
+        // Update the file's album artist, if necessary.
+        if (!ObjectUtils.equals(album.getArtist(), file.getAlbumArtist())) {
+            file.setAlbumArtist(album.getArtist());
+             mediaFileDao.createOrUpdateMediaFile(file);
+        }
     }
 
     private void updateArtist(MediaFile file, Date lastScanned, Map<String, Integer> albumCount) {
-        if (file.getArtist() == null || !file.isAudio()) {
+        if (file.getAlbumArtist() == null || !file.isAudio()) {
             return;
         }
 
-        Artist artist = artistDao.getArtist(file.getArtist());
+        Artist artist = artistDao.getArtist(file.getAlbumArtist());
         if (artist == null) {
             artist = new Artist();
-            artist.setName(file.getArtist());
+            artist.setName(file.getAlbumArtist());
         }
         if (artist.getCoverArtPath() == null) {
-            MediaFile parent = mediaFileService.getMediaFile(file.getParentPath());
+            MediaFile parent = mediaFileService.getParentOf(file);
             if (parent != null) {
                 artist.setCoverArtPath(parent.getCoverArtPath());
             }
@@ -342,5 +372,9 @@ public class MediaScannerService {
 
     public void setAlbumDao(AlbumDao albumDao) {
         this.albumDao = albumDao;
+    }
+
+    public void setPlaylistService(PlaylistService playlistService) {
+        this.playlistService = playlistService;
     }
 }

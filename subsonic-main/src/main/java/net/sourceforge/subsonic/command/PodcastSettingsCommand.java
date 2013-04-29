@@ -31,6 +31,7 @@ public class PodcastSettingsCommand {
     private String folder;
     private String episodeRetentionCount;
     private String episodeDownloadCount;
+    private boolean toast;
 
     public String getInterval() {
         return interval;
@@ -62,5 +63,13 @@ public class PodcastSettingsCommand {
 
     public void setEpisodeDownloadCount(String episodeDownloadCount) {
         this.episodeDownloadCount = episodeDownloadCount;
+    }
+
+    public boolean isToast() {
+        return toast;
+    }
+
+    public void setToast(boolean toast) {
+        this.toast = toast;
     }
 }

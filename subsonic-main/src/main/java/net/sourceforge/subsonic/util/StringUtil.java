@@ -92,6 +92,7 @@ public final class StringUtil {
             {"ogv", "video/ogg"},
             {"divx", "video/divx"},
             {"m2ts", "video/MP2T"},
+            {"ts", "video/MP2T"},
 
             {"gif", "image/gif"},
             {"jpg", "image/jpeg"},
@@ -100,7 +101,7 @@ public final class StringUtil {
             {"bmp", "image/bmp"},
     };
 
-    private static final String[] FILE_SYSTEM_UNSAFE = {"/", "\\", "..", ":", "\"", "?", "*"};
+    private static final String[] FILE_SYSTEM_UNSAFE = {"/", "\\", "..", ":", "\"", "?", "*", "|"};
 
     /**
      * Disallow external instantiation.

@@ -28,13 +28,13 @@ import net.sourceforge.subsonic.domain.Theme;
  */
 public class GeneralSettingsCommand {
 
-    private String playlistFolder;
     private String musicFileTypes;
     private String videoFileTypes;
     private String coverArtFileTypes;
     private String index;
     private String ignoredArticles;
     private String shortcuts;
+    private boolean sortAlbumsByYear;
     private boolean gettingStartedEnabled;
     private String welcomeTitle;
     private String welcomeSubtitle;
@@ -45,14 +45,7 @@ public class GeneralSettingsCommand {
     private String themeIndex;
     private Theme[] themes;
     private boolean isReloadNeeded;
-
-    public String getPlaylistFolder() {
-        return playlistFolder;
-    }
-
-    public void setPlaylistFolder(String playlistFolder) {
-        this.playlistFolder = playlistFolder;
-    }
+    private boolean toast;
 
     public String getMusicFileTypes() {
         return musicFileTypes;
@@ -174,11 +167,27 @@ public class GeneralSettingsCommand {
         isReloadNeeded = reloadNeeded;
     }
 
+    public boolean isSortAlbumsByYear() {
+        return sortAlbumsByYear;
+    }
+
+    public void setSortAlbumsByYear(boolean sortAlbumsByYear) {
+        this.sortAlbumsByYear = sortAlbumsByYear;
+    }
+
     public boolean isGettingStartedEnabled() {
         return gettingStartedEnabled;
     }
 
     public void setGettingStartedEnabled(boolean gettingStartedEnabled) {
         this.gettingStartedEnabled = gettingStartedEnabled;
+    }
+
+    public boolean isToast() {
+        return toast;
+    }
+
+    public void setToast(boolean toast) {
+        this.toast = toast;
     }
 }

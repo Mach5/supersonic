@@ -57,6 +57,11 @@ Section "Supersonic"
   # Remove previous Jetty temp directory.
   RMDir /r "c:\supersonic\jetty"
 
+  # Backup database.
+  RMDir /r "c:\supesonic\db.backup"
+  CreateDirectory "c:\supersonic\db.backup"
+  CopyFiles /SILENT "c:\supersonic\db\*" "c:\supersonic\db.backup"
+
   # Set output path to the installation directory.
   SetOutPath $INSTDIR
 

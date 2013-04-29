@@ -56,6 +56,7 @@ public class ShareSettingsController extends ParameterizableViewController {
         if (isFormSubmission(request)) {
             String error = handleParameters(request);
             map.put("error", error);
+            map.put("toast", true);
         }
 
         ModelAndView result = super.handleRequestInternal(request, response);

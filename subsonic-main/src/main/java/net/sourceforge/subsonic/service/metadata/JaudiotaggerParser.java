@@ -74,14 +74,17 @@ public class JaudiotaggerParser extends MetaDataParser {
             AudioFile audioFile = AudioFileIO.read(file);
             Tag tag = audioFile.getTag();
             if (tag != null) {
-                metaData.setArtist(getTagField(tag, FieldKey.ARTIST));
                 metaData.setAlbumName(getTagField(tag, FieldKey.ALBUM));
                 metaData.setTitle(getTagField(tag, FieldKey.TITLE));
                 metaData.setYear(parseInteger(getTagField(tag, FieldKey.YEAR)));
                 metaData.setGenre(mapGenre(getTagField(tag, FieldKey.GENRE)));
                 metaData.setDiscNumber(parseInteger(getTagField(tag, FieldKey.DISC_NO)));
                 metaData.setTrackNumber(parseTrackNumber(getTagField(tag, FieldKey.TRACK)));
-            }
+
+                String songArtist = getTagField(tag, FieldKey.ARTIST);
+                String albumArtist = getTagField(tag, FieldKey.ALBUM_ARTIST);
+                metaData.setArtist(StringUtils.isBlank(albumArtist) ? songArtist : albumArtist);
+        }
 
             AudioHeader audioHeader = audioFile.getAudioHeader();
             if (audioHeader != null) {
@@ -192,6 +195,7 @@ public class JaudiotaggerParser extends MetaDataParser {
             Tag tag = audioFile.getTagOrCreateAndSetDefault();
 
             tag.setField(FieldKey.ARTIST, StringUtils.trimToEmpty(metaData.getArtist()));
+            tag.setField(FieldKey.ALBUM_ARTIST, StringUtils.trimToEmpty(metaData.getArtist()));
             tag.setField(FieldKey.ALBUM, StringUtils.trimToEmpty(metaData.getAlbumName()));
             tag.setField(FieldKey.TITLE, StringUtils.trimToEmpty(metaData.getTitle()));
             tag.setField(FieldKey.GENRE, StringUtils.trimToEmpty(metaData.getGenre()));

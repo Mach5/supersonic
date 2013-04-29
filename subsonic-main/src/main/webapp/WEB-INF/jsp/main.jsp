@@ -4,15 +4,14 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
     <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
     <c:if test="${not model.updateNowPlaying}">
         <meta http-equiv="refresh" content="180;URL=nowPlaying.view?">
     </c:if>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/interface/starService.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/scriptaculous.js?load=effects"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/playlistService.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/fancyzoom/FancyZoom.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/fancyzoom/FancyZoomHTML.js"/>"></script>
 </head><body class="mainframe bgcolor1" onload="init();">
@@ -30,6 +29,13 @@
 <script type="text/javascript" language="javascript">
     function init() {
         setupZoom('<c:url value="/"/>');
+
+        $("#dialog-select-playlist").dialog({resizable: true, height: 220, position: 'top', modal: true, autoOpen: false,
+            buttons: {
+                "<fmt:message key="common.cancel"/>": function() {
+                    $(this).dialog("close");
+                }
+            }});
     }
 
     <!-- actionSelected() is invoked when the users selects from the "More actions..." combo box. -->
@@ -46,16 +52,16 @@
         } else if (id == "download") {
             location.href = "${downloadUrl}&" + getSelectedIndexes();
         } else if (id == "appendPlaylist") {
-            parent.frames.main.location.href = "${appendPlaylistUrl}&" + getSelectedIndexes();
+            onAppendPlaylist();
         }
-        $("moreActions").selectedIndex = 0;
+        $("#moreActions").prop("selectedIndex", 0);
     }
 
     function getSelectedIndexes() {
         var result = "";
         for (var i = 0; i < ${fn:length(model.children)}; i++) {
-            var checkbox = $("songIndex" + i);
-            if (checkbox != null  && checkbox.checked) {
+            var checkbox = $("#songIndex" + i);
+            if (checkbox != null  && checkbox.is(":checked")) {
                 result += "i=" + i + "&";
             }
         }
@@ -64,30 +70,53 @@
 
     function selectAll(b) {
         for (var i = 0; i < ${fn:length(model.children)}; i++) {
-            var checkbox = $("songIndex" + i);
+            var checkbox = $("#songIndex" + i);
             if (checkbox != null) {
-                checkbox.checked = b;
+                if (b) {
+                    checkbox.attr("checked", "checked");
+                } else {
+                    checkbox.removeAttr("checked");
+                }
             }
         }
     }
 
     function toggleStar(mediaFileId, imageId) {
-        if ($(imageId).src.indexOf("<spring:theme code="starOnImage"/>") != -1) {
-            $(imageId).src = "<spring:theme code="starOffImage"/>";
+        if ($(imageId).attr("src").indexOf("<spring:theme code="ratingOnImage"/>") != -1) {
+            $(imageId).attr("src", "<spring:theme code="ratingOffImage"/>");
             starService.unstar(mediaFileId);
         }
-        else if ($(imageId).src.indexOf("<spring:theme code="starOnSmallImage"/>") != -1) {
-            $(imageId).src = "<spring:theme code="starOffSmallImage"/>";
-            starService.unstar(mediaFileId);
-        }
-        else if ($(imageId).src.indexOf("<spring:theme code="starOffImage"/>") != -1) {
-            $(imageId).src = "<spring:theme code="starOnImage"/>";
+        else if ($(imageId).attr("src").indexOf("<spring:theme code="ratingOffImage"/>") != -1) {
+            $(imageId).attr("src", "<spring:theme code="ratingOnImage"/>");
             starService.star(mediaFileId);
         }
-        else if ($(imageId).src.indexOf("<spring:theme code="starOffSmallImage"/>") != -1) {
-            $(imageId).src = "<spring:theme code="starOnSmallImage"/>";
-            starService.star(mediaFileId);
+    }
+
+    function onAppendPlaylist() {
+        playlistService.getWritablePlaylists(playlistCallback);
+    }
+    function playlistCallback(playlists) {
+        $("#dialog-select-playlist-list").empty();
+        for (var i = 0; i < playlists.length; i++) {
+            var playlist = playlists[i];
+            $("<p class='dense'><b><a href='#' onclick='appendPlaylist(" + playlist.id + ")'>" + playlist.name + "</a></b></p>").appendTo("#dialog-select-playlist-list");
         }
+        $("#dialog-select-playlist").dialog("open");
+    }
+    function appendPlaylist(playlistId) {
+        $("#dialog-select-playlist").dialog("close");
+
+        var mediaFileIds = new Array();
+        for (var i = 0; i < ${fn:length(model.children)}; i++) {
+            var checkbox = $("#songIndex" + i);
+            if (checkbox && checkbox.is(":checked")) {
+                mediaFileIds.push($("#songId" + i).html());
+            }
+        }
+        playlistService.appendToPlaylist(playlistId, mediaFileIds, function (){
+            top.left.updatePlaylists();
+            $().toastmessage("showSuccessToast", "<fmt:message key="playlist.toast.appendtoplaylist"/>");
+        });
     }
 
 </script>
@@ -101,13 +130,13 @@
 </c:if>
 
 <h1>
-    <a href="#" onclick="toggleStar(${model.dir.id}, 'starImage'); return false;">
+    <a href="#" onclick="toggleStar(${model.dir.id}, '#starImage'); return false;">
         <c:choose>
             <c:when test="${not empty model.dir.starredDate}">
-                <img id="starImage" src="<spring:theme code="starOnImage"/>" alt="">
+                <img id="starImage" src="<spring:theme code="ratingOnImage"/>" alt="">
             </c:when>
             <c:otherwise>
-                <img id="starImage" src="<spring:theme code="starOffImage"/>" alt="">
+                <img id="starImage" src="<spring:theme code="ratingOffImage"/>" alt="">
             </c:otherwise>
         </c:choose>
     </a>
@@ -140,15 +169,11 @@
         <c:set var="needSep" value="true"/>
     </c:if>
 
-    <c:set var="path">
-        <sub:escapeJavaScript string="${model.dir.path}"/>
-    </c:set>
-
     <c:if test="${model.user.streamRole}">
         <c:if test="${needSep}">|</c:if>
-        <a href="javascript:noop()" onclick="top.playlist.onPlay('${path}');"><fmt:message key="main.playall"/></a> |
-        <a href="javascript:noop()" onclick="top.playlist.onPlayRandom('${path}', 10);"><fmt:message key="main.playrandom"/></a> |
-        <a href="javascript:noop()" onclick="top.playlist.onAdd('${path}');"><fmt:message key="main.addall"/></a>
+        <a href="#" onclick="top.playQueue.onPlay(${model.dir.id});"><fmt:message key="main.playall"/></a> |
+        <a href="#" onclick="top.playQueue.onPlayRandom(${model.dir.id}, 10);"><fmt:message key="main.playrandom"/></a> |
+        <a href="#" onclick="top.playQueue.onAdd(${model.dir.id});"><fmt:message key="main.addall"/></a>
         <c:set var="needSep" value="true"/>
     </c:if>
 
@@ -156,7 +181,7 @@
 
         <c:if test="${model.user.downloadRole}">
             <sub:url value="download.view" var="downloadUrl">
-                <sub:param name="path" value="${model.dir.path}"/>
+                <sub:param name="id" value="${model.dir.id}"/>
             </sub:url>
             <c:if test="${needSep}">|</c:if>
             <a href="${downloadUrl}"><fmt:message key="common.download"/></a>
@@ -165,7 +190,7 @@
 
         <c:if test="${model.user.coverArtRole}">
             <sub:url value="editTags.view" var="editTagsUrl">
-                <sub:param name="path" value="${model.dir.path}"/>
+                <sub:param name="id" value="${model.dir.id}"/>
             </sub:url>
             <c:if test="${needSep}">|</c:if>
             <a href="${editTagsUrl}"><fmt:message key="main.tags"/></a>
@@ -245,8 +270,8 @@
 
 <script type='text/javascript'>
     function toggleComment() {
-        $("commentForm").toggle();
-        $("comment").toggle();
+        $("#commentForm").toggle();
+        $("#comment").toggle();
     }
 </script>
 
@@ -270,7 +295,6 @@
                 <tr style="margin:0;padding:0;border:0">
                     <c:import url="playAddDownload.jsp">
                         <c:param name="id" value="${child.id}"/>
-                        <c:param name="path" value="${child.path}"/>
                         <c:param name="video" value="${child.video and model.player.web}"/>
                         <c:param name="playEnabled" value="${model.user.streamRole and not model.partyMode}"/>
                         <c:param name="addEnabled" value="${model.user.streamRole and (not model.partyMode or not child.directory)}"/>
@@ -285,13 +309,15 @@
                             <sub:url value="main.view" var="childUrl">
                                 <sub:param name="id" value="${child.id}"/>
                             </sub:url>
-                            <td style="padding-left:0.25em" colspan="4">
+                            <td style="padding-left:0.25em" colspan="3">
                                 <a href="${childUrl}" title="${child.name}"><span style="white-space:nowrap;"><str:truncateNicely upper="${cutoff}">${child.name}</str:truncateNicely></span></a>
                             </td>
+                            <td style="padding-left:1.25em"><c:if test="${model.showAlbumYear and not empty child.year}"><span class="detail">${child.year}</span></c:if></td>
                         </c:when>
 
                         <c:otherwise>
-                            <td ${htmlClass} style="padding-left:0.25em"><input type="checkbox" class="checkbox" id="songIndex${loopStatus.count - 1}"></td>
+                            <td ${htmlClass} style="padding-left:0.25em"><input type="checkbox" class="checkbox" id="songIndex${loopStatus.count - 1}">
+                                <span id="songId${loopStatus.count - 1}" style="display: none">${child.id}</span></td>
 
                             <c:if test="${model.visibility.trackNumberVisible}">
                                 <td ${htmlClass} style="padding-right:0.5em;text-align:right">
@@ -370,13 +396,12 @@
         <c:forEach items="${model.coverArts}" var="coverArt" varStatus="loopStatus">
             <div style="float:left; padding:5px">
                 <c:import url="coverArt.jsp">
-                    <c:param name="albumPath" value="${coverArt.parentFile.path}"/>
-                    <c:param name="albumName" value="${coverArt.parentFile.name}"/>
+                    <c:param name="albumId" value="${coverArt.id}"/>
+                    <c:param name="albumName" value="${coverArt.name}"/>
                     <c:param name="coverArtSize" value="${model.coverArtSize}"/>
-                    <c:param name="coverArtPath" value="${coverArt.path}"/>
-                    <c:param name="showLink" value="${coverArt.parentFile.path ne model.dir.path}"/>
-                    <c:param name="showZoom" value="${coverArt.parentFile.path eq model.dir.path}"/>
-                    <c:param name="showChange" value="${(coverArt.parentFile.path eq model.dir.path) and model.user.coverArtRole}"/>
+                    <c:param name="showLink" value="${coverArt ne model.dir}"/>
+                    <c:param name="showZoom" value="${coverArt eq model.dir}"/>
+                    <c:param name="showChange" value="${(coverArt eq model.dir) and model.user.coverArtRole}"/>
                     <c:param name="showCaption" value="true"/>
                     <c:param name="appearAfter" value="${loopStatus.count * 30}"/>
                 </c:import>
@@ -386,7 +411,7 @@
         <c:if test="${model.showGenericCoverArt}">
             <div style="float:left; padding:5px">
                 <c:import url="coverArt.jsp">
-                    <c:param name="albumPath" value="${model.dir.path}"/>
+                    <c:param name="albumId" value="${model.dir.id}"/>
                     <c:param name="coverArtSize" value="${model.coverArtSize}"/>
                     <c:param name="showLink" value="false"/>
                     <c:param name="showZoom" value="false"/>
@@ -415,23 +440,19 @@
 </tr>
 </table>
 
-<c:if test="${model.dir.album and (model.user.shareRole or model.user.downloadRole or model.user.playlistRole)}">
-    <select id="moreActions" onchange="actionSelected(this.options[selectedIndex].id);" style="margin-bottom:1.0em">
-        <option id="top" selected="selected"><fmt:message key="main.more"/></option>
-        <option style="color:blue;"><fmt:message key="main.more.selection"/></option>
-        <option id="selectAll">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.more.selectall"/></option>
-        <option id="selectNone">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.more.selectnone"/></option>
-        <c:if test="${model.user.shareRole}">
-            <option id="share">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="main.more.share"/></option>
-        </c:if>
-        <c:if test="${model.user.downloadRole}">
-            <option id="download">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="common.download"/></option>
-        </c:if>
-        <c:if test="${model.user.playlistRole}">
-            <option id="appendPlaylist">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.append"/></option>
-        </c:if>
-    </select>
-</c:if>
+<select id="moreActions" onchange="actionSelected(this.options[selectedIndex].id);" style="margin-bottom:1.0em">
+    <option id="top" selected="selected"><fmt:message key="main.more"/></option>
+    <option style="color:blue;"><fmt:message key="main.more.selection"/></option>
+    <option id="selectAll">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.more.selectall"/></option>
+    <option id="selectNone">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.more.selectnone"/></option>
+    <c:if test="${model.user.shareRole}">
+        <option id="share">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="main.more.share"/></option>
+    </c:if>
+    <c:if test="${model.user.downloadRole}">
+        <option id="download">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="common.download"/></option>
+    </c:if>
+    <option id="appendPlaylist">&nbsp;&nbsp;&nbsp;&nbsp;<fmt:message key="playlist.append"/></option>
+</select>
 
 <div style="padding-bottom: 1em">
     <c:if test="${not empty model.previousAlbum}">
@@ -450,6 +471,11 @@
             <str:truncateNicely upper="30">${fn:escapeXml(model.nextAlbum.name)}</str:truncateNicely>
         </a></div>
     </c:if>
+</div>
+
+<div id="dialog-select-playlist" title="<fmt:message key="main.addtoplaylist.title"/>" style="display: none;">
+    <p><fmt:message key="main.addtoplaylist.text"/></p>
+    <div id="dialog-select-playlist-list"></div>
 </div>
 
 </body>

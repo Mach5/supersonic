@@ -18,45 +18,49 @@
  */
 package net.sourceforge.subsonic.controller;
 
-import java.util.HashMap;
-import java.util.Map;
+import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.User;
+import net.sourceforge.subsonic.domain.UserSettings;
+import net.sourceforge.subsonic.service.PlaylistService;
+import net.sourceforge.subsonic.service.SecurityService;
+import net.sourceforge.subsonic.service.SettingsService;
+import org.springframework.web.bind.ServletRequestUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.ParameterizableViewController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.ParameterizableViewController;
-
-import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.User;
-import net.sourceforge.subsonic.domain.UserSettings;
-import net.sourceforge.subsonic.service.PlayerService;
-import net.sourceforge.subsonic.service.SecurityService;
-import net.sourceforge.subsonic.service.SettingsService;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Controller for the playlist frame.
+ * Controller for the main page.
  *
  * @author Sindre Mehus
  */
 public class PlaylistController extends ParameterizableViewController {
 
-    private PlayerService playerService;
     private SecurityService securityService;
+    private PlaylistService playlistService;
     private SettingsService settingsService;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        User user = securityService.getCurrentUser(request);
-        UserSettings userSettings = settingsService.getUserSettings(user.getUsername());
-        Player player = playerService.getPlayer(request, response);
-
         Map<String, Object> map = new HashMap<String, Object>();
+
+        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+        User user = securityService.getCurrentUser(request);
+        String username = user.getUsername();
+        UserSettings userSettings = settingsService.getUserSettings(username);
+        Playlist playlist = playlistService.getPlaylist(id);
+        if (playlist == null) {
+            return new ModelAndView(new RedirectView("notFound.view"));
+        }
+
+        map.put("playlist", playlist);
         map.put("user", user);
-        map.put("player", player);
-        map.put("players", playerService.getPlayersForUserAndClientId(user.getUsername(), null));
-        map.put("visibility", userSettings.getPlaylistVisibility());
+        map.put("editAllowed", username.equals(playlist.getUsername()) || securityService.isAdmin(username));
         map.put("partyMode", userSettings.isPartyModeEnabled());
         map.put("transcodings", playerService.getTranscodingsForPlayer(player));
         ModelAndView result = super.handleRequestInternal(request, response);
@@ -64,12 +68,12 @@ public class PlaylistController extends ParameterizableViewController {
         return result;
     }
 
-    public void setPlayerService(PlayerService playerService) {
-        this.playerService = playerService;
-    }
-
     public void setSecurityService(SecurityService securityService) {
         this.securityService = securityService;
+    }
+
+    public void setPlaylistService(PlaylistService playlistService) {
+        this.playlistService = playlistService;
     }
 
     public void setSettingsService(SettingsService settingsService) {

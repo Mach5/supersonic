@@ -4,11 +4,11 @@
 <head>
     <%@ include file="head.jsp" %>
 
-    <sub:url value="videoPlayer.view" var="baseUrl"><sub:param name="path" value="${model.video.path}"/></sub:url>
-    <sub:url value="main.view" var="backUrl"><sub:param name="path" value="${model.video.path}"/></sub:url>
+    <sub:url value="videoPlayer.view" var="baseUrl"><sub:param name="id" value="${model.video.id}"/></sub:url>
+    <sub:url value="main.view" var="backUrl"><sub:param name="id" value="${model.video.id}"/></sub:url>
 
     <sub:url value="/stream" var="streamUrl">
-        <sub:param name="path" value="${model.video.path}"/>
+        <sub:param name="id" value="${model.video.id}"/>
     </sub:url>
 
     <script type="text/javascript" src="<c:url value="/script/swfobject.js"/>"></script>
@@ -46,7 +46,7 @@
 
             var width = "${model.popout ? '100%' : '600'}";
             var height = "${model.popout ? '85%' : '360'}";
-            swfobject.embedSWF("<c:url value="/flash/jw-player-5.6.swf"/>", "placeholder1", width, height, "9.0.0", false, flashvars, params, attributes);
+            swfobject.embedSWF("<c:url value="/flash/jw-player-5.10.swf"/>", "placeholder1", width, height, "9.0.0", false, flashvars, params, attributes);
         }
 
         function playerReady(thePlayer) {

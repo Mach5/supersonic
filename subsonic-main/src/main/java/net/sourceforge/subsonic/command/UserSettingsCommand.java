@@ -33,7 +33,6 @@ public class UserSettingsCommand {
     private boolean isAdminRole;
     private boolean isDownloadRole;
     private boolean isUploadRole;
-    private boolean isPlaylistRole;
     private boolean isCoverArtRole;
     private boolean isCommentRole;
     private boolean isPodcastRole;
@@ -57,6 +56,7 @@ public class UserSettingsCommand {
     private EnumHolder[] transcodeSchemeHolders;
     private boolean transcodingSupported;
     private String transcodeDirectory;
+    private boolean toast;
 
     public String getUsername() {
         return username;
@@ -88,14 +88,6 @@ public class UserSettingsCommand {
 
     public void setUploadRole(boolean uploadRole) {
         isUploadRole = uploadRole;
-    }
-
-    public boolean isPlaylistRole() {
-        return isPlaylistRole;
-    }
-
-    public void setPlaylistRole(boolean playlistRole) {
-        isPlaylistRole = playlistRole;
     }
 
     public boolean isCoverArtRole() {
@@ -275,7 +267,6 @@ public class UserSettingsCommand {
         isAdminRole = user != null && user.isAdminRole();
         isDownloadRole = user != null && user.isDownloadRole();
         isUploadRole = user != null && user.isUploadRole();
-        isPlaylistRole = user != null && user.isPlaylistRole();
         isCoverArtRole = user != null && user.isCoverArtRole();
         isCommentRole = user != null && user.isCommentRole();
         isPodcastRole = user != null && user.isPodcastRole();
@@ -284,5 +275,13 @@ public class UserSettingsCommand {
         isSettingsRole = user != null && user.isSettingsRole();
         isShareRole = user != null && user.isShareRole();
         isLdapAuthenticated = user != null && user.isLdapAuthenticated();
+    }
+
+    public void setToast(boolean toast) {
+        this.toast = toast;
+    }
+
+    public boolean isToast() {
+        return toast;
     }
 }

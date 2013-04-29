@@ -4,9 +4,8 @@
 <html>
 <head>
     <%@ include file="head.jsp" %>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
+    <%@ include file="jquery.jsp" %>
     <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/dwr/util.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/dwr/interface/multiService.js"/>"></script>
     <script type="text/javascript" language="javascript">
 
@@ -19,8 +18,13 @@
         }
 
         function updateStatus(networkStatus) {
-            dwr.util.setValue("portForwardingStatus", networkStatus.portForwardingStatusText);
+            $("#portForwardingStatus").html(networkStatus.portForwardingStatusText);
+            $("#urlRedirectionStatus").html(networkStatus.urlRedirectionStatusText);
             window.setTimeout("refreshStatus()", 1000);
+        }
+
+        function enableUrlRedirectionFields() {
+            $("#urlRedirectFrom").prop("disabled", !$("#urlRedirectionEnabled").is(":checked"));
         }
 
     </script>
@@ -31,6 +35,7 @@
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="network"/>
+    <c:param name="toast" value="${command.toast}"/>
 </c:import>
 
 <p style="padding-top:1em"><fmt:message key="networksettings.text"/></p>

@@ -3,19 +3,15 @@
 <html>
 <head>
     <%@ include file="head.jsp" %>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/scriptaculous.js?load=effects"/>"></script>
+    <style type="text/css">
+        #wrapper { position:absolute; left:64px; top:128px; width:320; height:196; background-color:#CCCC00; }
+    </style>
 </head>
-<body>
+<body style="padding-top: 10em">
 
-<div id="tFfBc" style="opacity:0;">
-    <img src="/coverArt.view?size=200" alt="">
-</div>
+<video src="http://localhost:4040/rest/hls.m3u8?u=admin&p=admin&v=1.6&c=android&id=7227&bitRate=1000" controls autoplay>
 
-<ul>
-    <li><a href="#" onclick="new Effect.Opacity('tFfBc', { from: 1, to: 0 }); return false;">Hide this box</a></li>
-    <li><a href="#" onclick="new Effect.Opacity('tFfBc', { from: 0, to: 1 }); return false;">Show this box</a></li>
-</ul>
+</video>
 
 </body>
 </html>

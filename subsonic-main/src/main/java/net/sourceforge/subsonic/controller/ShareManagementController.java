@@ -35,7 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.Share;
 
 /**
@@ -90,10 +90,10 @@ public class ShareManagementController extends MultiActionController {
             }
         } else if (playerId != null) {
             Player player = playerService.getPlayerById(playerId);
-            Playlist playlist = player.getPlaylist();
+            PlayQueue playQueue = player.getPlayQueue();
             List<MediaFile> result1;
-            synchronized (playlist) {
-                result1 = playlist.getFiles();
+            synchronized (playQueue) {
+                result1 = playQueue.getFiles();
             }
             result = result1;
         }

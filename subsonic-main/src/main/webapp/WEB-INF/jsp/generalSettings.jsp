@@ -3,6 +3,7 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
 </head>
 
@@ -12,18 +13,12 @@
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="general"/>
+    <c:param name="toast" value="${command.toast}"/>
 </c:import>
 
 <form:form method="post" action="generalSettings.view" commandName="command">
 
     <table style="white-space:nowrap" class="indent">
-        <tr>
-            <td><fmt:message key="generalsettings.playlistfolder"/></td>
-            <td>
-                <form:input path="playlistFolder" size="70"/>
-                <c:import url="helpToolTip.jsp"><c:param name="topic" value="playlistfolder"/></c:import>
-            </td>
-        </tr>
 
         <tr>
             <td><fmt:message key="generalsettings.musicmask"/></td>
@@ -107,10 +102,21 @@
             <td>
             </td>
             <td>
+                <form:checkbox path="sortAlbumsByYear" id="sortAlbumsByYear"/>
+                <label for="sortAlbumsByYear"><fmt:message key="generalsettings.sortalbumsbyyear"/></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+            </td>
+            <td>
                 <form:checkbox path="gettingStartedEnabled" id="gettingStartedEnabled"/>
                 <label for="gettingStartedEnabled"><fmt:message key="generalsettings.showgettingstarted"/></label>
             </td>
         </tr>
+
+        <tr><td colspan="2">&nbsp;</td></tr>
+
         <tr>
             <td><fmt:message key="generalsettings.welcometitle"/></td>
             <td>
@@ -154,7 +160,7 @@
 <c:if test="${command.reloadNeeded}">
     <script language="javascript" type="text/javascript">
         parent.frames.left.location.href="left.view?";
-        parent.frames.playlist.location.href="playlist.view?";
+        parent.frames.playQueue.location.href="playQueue.view?";
     </script>
 </c:if>
 

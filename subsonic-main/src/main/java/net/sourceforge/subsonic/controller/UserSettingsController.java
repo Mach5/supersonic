@@ -91,6 +91,7 @@ public class UserSettingsController extends SimpleFormController {
             updateUser(command);
         }
         resetCommand(command);
+        command.setToast(true);
     }
 
     private void deleteUser(UserSettingsCommand command) {
@@ -111,7 +112,6 @@ public class UserSettingsController extends SimpleFormController {
         user.setAdminRole(command.isAdminRole());
         user.setDownloadRole(command.isDownloadRole());
         user.setUploadRole(command.isUploadRole());
-        user.setPlaylistRole(command.isPlaylistRole());
         user.setCoverArtRole(command.isCoverArtRole());
         user.setCommentRole(command.isCommentRole());
         user.setPodcastRole(command.isPodcastRole());

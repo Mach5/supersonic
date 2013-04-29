@@ -53,8 +53,8 @@ public class VideoPlayerController extends ParameterizableViewController {
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         Map<String, Object> map = new HashMap<String, Object>();
-        String path = request.getParameter("path");
-        MediaFile file = mediaFileService.getMediaFile(path);
+        int id = ServletRequestUtils.getRequiredIntParameter(request, "id");
+        MediaFile file = mediaFileService.getMediaFile(id);
 
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
         timeOffset = Math.max(0, timeOffset);
@@ -74,7 +74,7 @@ public class VideoPlayerController extends ParameterizableViewController {
         map.put("bitRates", BIT_RATES);
 
         if (!settingsService.isLicenseValid() && settingsService.getVideoTrialExpires() == null) {
-            Date expiryDate = new Date(System.currentTimeMillis() + TRIAL_DAYS * 24L * 3600L * 1000L);
+            Date expiryDate = new Date(System.currentTimeMillis() + TRIAL_DAYS * 24L * 3600L * 1000000L);
             settingsService.setVideoTrialExpires(expiryDate);
             settingsService.save();
         }

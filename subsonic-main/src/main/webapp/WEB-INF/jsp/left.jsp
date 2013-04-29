@@ -2,19 +2,54 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/smooth-scroll.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/engine.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/dwr/interface/playlistService.js"/>"></script>
+    <script type="text/javascript" language="javascript">
+
+        var playlists;
+
+        function init() {
+            dwr.engine.setErrorHandler(null);
+            updatePlaylists();
+        }
+
+        function updatePlaylists() {
+            playlistService.getReadablePlaylists(playlistCallback);
+        }
+
+        function createEmptyPlaylist() {
+            playlistService.createEmptyPlaylist(playlistCallback);
+        }
+
+        function showAllPlaylists() {
+            $('#playlistOverflow').show('blind');
+            $('#showAllPlaylists').hide('blind');
+        }
+
+        function playlistCallback(playlists) {
+            this.playlists = playlists;
+
+            $("#playlists").empty();
+            $("#playlistOverflow").empty();
+            for (var i = 0; i < playlists.length; i++) {
+                var playlist = playlists[i];
+                var overflow = i > 9;
+                $("<p class='dense'><a target='main' href='playlist.view?id=" +
+                        playlist.id + "'>" + playlist.name + "&nbsp;(" + playlist.fileCount + ")</a></p>").appendTo(overflow ? "#playlistOverflow" : "#playlists");
+            }
+
+            if (playlists.length > 10 && !$('#playlistOverflow').is(":visible")) {
+                $('#showAllPlaylists').show();
+            }
+        }
+    </script>
 </head>
 
-<body class="bgcolor2 leftframe">
+<body class="bgcolor2 leftframe" onload="init()">
 <a name="top"></a>
-
-<c:if test="${model.scanning}">
-    <div style="padding-bottom:1.0em">
-        <div class="warning"><fmt:message key="left.scanning"/></div>
-        <div class="forward"><a href="left.view"><fmt:message key="common.refresh"/></a></div>
-    </div>
-</c:if>
 
 <div style="padding-bottom:0.5em">
     <c:forEach items="${model.indexes}" var="index">
@@ -22,20 +57,21 @@
     </c:forEach>
 </div>
 
-<c:if test="${model.statistics.songCount gt 0}">
-    <div class="detail">
-        <fmt:message key="left.statistics">
-            <fmt:param value="${model.statistics.artistCount}"/>
-            <fmt:param value="${model.statistics.albumCount}"/>
-            <fmt:param value="${model.statistics.songCount}"/>
-            <fmt:param value="${model.bytes}"/>
-            <fmt:param value="${model.hours}"/>
-        </fmt:message>
+<div style="padding-bottom:0.5em">
+    <div class="forward">
+        <c:choose>
+            <c:when test="${model.scanning}">
+                <a href="left.view"><fmt:message key="common.refresh"/></a>
+            </c:when>
+            <c:otherwise>
+                <a href="left.view?refresh=true"><fmt:message key="common.refresh"/></a>
+            </c:otherwise>
+        </c:choose>
     </div>
-</c:if>
+</div>
 
 <c:if test="${fn:length(model.musicFolders) > 1}">
-    <div style="padding-top:1em">
+    <div style="padding-top:0.3em">
         <select name="musicFolderId" style="width:100%" onchange="location='left.view?musicFolderId=' + options[selectedIndex].value;" >
             <option value="-1"><fmt:message key="left.allfolders"/></option>
             <c:forEach items="${model.musicFolders}" var="musicFolder">
@@ -56,6 +92,16 @@
         </p>
     </c:forEach>
 </c:if>
+
+<h2 class="bgcolor1"><fmt:message key="left.playlists"/></h2>
+<div id="playlistWrapper" style='padding-left:0.5em'>
+    <div id="playlists"></div>
+    <div id="playlistOverflow" style="display:none"></div>
+    <div style="padding-top: 0.3em"/>
+    <div id="showAllPlaylists" style="display: none"><a href="javascript:noop()" onclick="showAllPlaylists()"><fmt:message key="left.showallplaylists"/></a></div>
+    <div><a href="javascript:noop()" onclick="createEmptyPlaylist()"><fmt:message key="left.createplaylist"/></a></div>
+    <div><a href="importPlaylist.view" target="main"><fmt:message key="left.importplaylist"/></a></div>
+</div>
 
 <c:if test="${not empty model.radios}">
     <h2 class="bgcolor1"><fmt:message key="left.radio"/></h2>
@@ -108,7 +154,6 @@
         <span title="${song.title}">
             <c:import url="playAddDownload.jsp">
                 <c:param name="id" value="${song.id}"/>
-                <c:param name="path" value="${song.path}"/>
                 <c:param name="playEnabled" value="${model.user.streamRole and not model.partyMode}"/>
                 <c:param name="addEnabled" value="${model.user.streamRole}"/>
                 <c:param name="downloadEnabled" value="${model.user.downloadRole and not model.partyMode}"/>
@@ -119,7 +164,20 @@
     </p>
 </c:forEach>
 
+<c:if test="${model.statistics.songCount gt 0}">
+    <div class="detail" style="padding-top: 0.1em; padding-left: 0.7em">
+        <fmt:message key="left.statistics">
+            <fmt:param value="${model.statistics.artistCount}"/>
+            <fmt:param value="${model.statistics.albumCount}"/>
+            <fmt:param value="${model.statistics.songCount}"/>
+            <fmt:param value="${model.bytes}"/>
+            <fmt:param value="${model.hours}"/>
+        </fmt:message>
+    </div>
+</c:if>
+
 <div style="height:5em"></div>
+
 
 <div class="bgcolor2" style="opacity: 1.0; clear: both; position: fixed; bottom: 0; right: 0; left: 0;
       padding: 0.25em 0.75em 0.25em 0.75em; border-top:1px solid black; max-width: 850px;">
@@ -127,6 +185,5 @@
         <a href="#${index.index}">${index.index}</a>
     </c:forEach>
 </div>
-
 
 </body></html>

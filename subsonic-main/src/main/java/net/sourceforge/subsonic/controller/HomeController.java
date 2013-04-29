@@ -33,7 +33,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,7 +98,7 @@ public class HomeController extends ParameterizableViewController {
         } else if ("random".equals(listType)) {
             albums = getRandom(listSize);
         } else if ("alphabetical".equals(listType)) {
-            albums = getAlphabetical(listOffset, listSize);
+            albums = getAlphabetical(listOffset, listSize, true);
         } else {
             albums = Collections.emptyList();
         }
@@ -161,7 +161,7 @@ public class HomeController extends ParameterizableViewController {
             if (album != null) {
                 Date created = file.getCreated();
                 if (created == null) {
-                    created = file.getLastModified();
+                    created = file.getChanged();
                 }
                 album.setCreated(created);
                 result.add(album);
@@ -192,9 +192,9 @@ public class HomeController extends ParameterizableViewController {
         return result;
     }
 
-    List<Album> getAlphabetical(int offset, int count) throws IOException {
+    List<Album> getAlphabetical(int offset, int count, boolean byArtist) throws IOException {
         List<Album> result = new ArrayList<Album>();
-        for (MediaFile file : mediaFileService.getAlphabetialAlbums(offset, count)) {
+        for (MediaFile file : mediaFileService.getAlphabetialAlbums(offset, count, byArtist)) {
             Album album = createAlbum(file);
             if (album != null) {
                 result.add(album);
@@ -205,6 +205,7 @@ public class HomeController extends ParameterizableViewController {
 
     private Album createAlbum(MediaFile file) {
         Album album = new Album();
+        album.setId(file.getId());
         album.setPath(file.getPath());
         try {
             resolveArtistAndAlbumTitle(album, file);
@@ -252,6 +253,7 @@ public class HomeController extends ParameterizableViewController {
     /**
      * Contains info for a single album.
      */
+    @Deprecated
     public static class Album {
         private String path;
         private String coverArtPath;
@@ -261,6 +263,15 @@ public class HomeController extends ParameterizableViewController {
         private Date lastPlayed;
         private Integer playCount;
         private Integer rating;
+        private int id;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
 
         public String getPath() {
             return path;

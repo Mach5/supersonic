@@ -20,6 +20,8 @@ package net.sourceforge.subsonic.dao;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Album;
+import net.sourceforge.subsonic.domain.MediaFile;
+import org.apache.commons.lang.ObjectUtils;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.ParameterizedRowMapper;
 
@@ -29,14 +31,14 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Provides database services for artists.
+ * Provides database services for albums.
  *
  * @author Sindre Mehus
  */
 public class AlbumDao extends AbstractDao {
 
     private static final Logger LOG = Logger.getLogger(AlbumDao.class);
-    private static final String COLUMNS = "id, name, artist, song_count, duration_seconds, cover_art_path, " +
+    private static final String COLUMNS = "id, path, name, artist, song_count, duration_seconds, cover_art_path, " +
             "play_count, last_played, comment, created, last_scanned, present";
 
     private final RowMapper rowMapper = new AlbumMapper();
@@ -50,6 +52,38 @@ public class AlbumDao extends AbstractDao {
      */
     public Album getAlbum(String artistName, String albumName) {
         return queryOne("select " + COLUMNS + " from album where artist=? and name=?", rowMapper, artistName, albumName);
+    }
+
+    /**
+     * Returns the album that the given file (most likely) is part of.
+     *
+     * @param file The media file.
+     * @return The album or null.
+     */
+    public Album getAlbumForFile(MediaFile file) {
+
+        // First, get all albums with the correct album name (irrespective of artist).
+        List<Album> candidates = query("select " + COLUMNS + " from album where name=?", rowMapper, file.getAlbumName());
+        if (candidates.isEmpty()) {
+            return null;
+        }
+
+        // Look for album with the correct artist.
+        for (Album candidate : candidates) {
+            if (ObjectUtils.equals(candidate.getArtist(), file.getArtist())) {
+                return candidate;
+            }
+        }
+
+        // Look for album with the same path as the file.
+        for (Album candidate : candidates) {
+            if (ObjectUtils.equals(candidate.getPath(), file.getParentPath())) {
+                return candidate;
+            }
+        }
+
+        // No appropriate album found.
+        return null;
     }
 
     public Album getAlbum(int id) {
@@ -83,7 +117,7 @@ public class AlbumDao extends AbstractDao {
 
         if (n == 0) {
 
-            update("insert into album (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")", null, album.getName(), album.getArtist(),
+            update("insert into album (" + COLUMNS + ") values (" + questionMarks(COLUMNS) + ")", null, album.getPath(), album.getName(), album.getArtist(),
                     album.getSongCount(), album.getDurationSeconds(), album.getCoverArtPath(), album.getPlayCount(), album.getLastPlayed(),
                     album.getComment(), album.getCreated(), album.getLastScanned(), album.isPresent());
         }
@@ -95,12 +129,14 @@ public class AlbumDao extends AbstractDao {
     /**
      * Returns albums in alphabetical order.
      *
-     * @param offset Number of albums to skip.
-     * @param count  Maximum number of albums to return.
+     * @param offset   Number of albums to skip.
+     * @param count    Maximum number of albums to return.
+     * @param byArtist Whether to sort by artist name
      * @return Albums in alphabetical order.
      */
-    public List<Album> getAlphabetialAlbums(int offset, int count) {
-        return query("select " + COLUMNS + " from album where present order by artist, name limit ? offset ?", rowMapper, count, offset);
+    public List<Album> getAlphabetialAlbums(int offset, int count, boolean byArtist) {
+        String orderBy = byArtist ? "artist, name" : "name";
+        return query("select " + COLUMNS + " from album where present order by " + orderBy + " limit ? offset ?", rowMapper, count, offset);
     }
 
     /**
@@ -154,12 +190,22 @@ public class AlbumDao extends AbstractDao {
     }
 
     public void markNonPresent(Date lastScanned) {
-        int minId = queryForInt("select id from album where true limit 1", 0);
-        int maxId = queryForInt("select max(id) from album", 0);
+        int minId = queryForInt("select top 1 id from album where last_scanned != ? and present", 0, lastScanned);
+        int maxId = queryForInt("select max(id) from album where last_scanned != ? and present", 0, lastScanned);
 
         final int batchSize = 1000;
         for (int id = minId; id <= maxId; id += batchSize) {
             update("update album set present=false where id between ? and ? and last_scanned != ? and present", id, id + batchSize, lastScanned);
+        }
+    }
+
+    public void expunge() {
+        int minId = queryForInt("select top 1 id from album where not present", 0);
+        int maxId = queryForInt("select max(id) from album where not present", 0);
+
+        final int batchSize = 1000;
+        for (int id = minId; id <= maxId; id += batchSize) {
+            update("delete from album where id between ? and ? and not present", id, id + batchSize);
         }
     }
 
@@ -182,15 +228,16 @@ public class AlbumDao extends AbstractDao {
                     rs.getInt(1),
                     rs.getString(2),
                     rs.getString(3),
-                    rs.getInt(4),
+                    rs.getString(4),
                     rs.getInt(5),
-                    rs.getString(6),
-                    rs.getInt(7),
-                    rs.getTimestamp(8),
-                    rs.getString(9),
-                    rs.getTimestamp(10),
+                    rs.getInt(6),
+                    rs.getString(7),
+                    rs.getInt(8),
+                    rs.getTimestamp(9),
+                    rs.getString(10),
                     rs.getTimestamp(11),
-                    rs.getBoolean(12));
+                    rs.getTimestamp(12),
+                    rs.getBoolean(13));
         }
     }
 }

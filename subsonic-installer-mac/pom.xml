@@ -11,6 +11,7 @@
         <groupId>com.github.mach5.supersonic</groupId>
         <artifactId>supersonic</artifactId>
         <version>4.7.beta1</version>
+        <version>4.7</version>
     </parent>
 
     <dependencies>
@@ -54,7 +55,7 @@
                                                     name="Supersonic"
                                                     mainclass="net.sourceforge.subsonic.booter.Main"
                                                     arguments="-mac"
-                                                    vmoptions="-Xmx100m"
+                                                    vmoptions="-Xmx150m"
                                                     version="${project.version}"
                                                     jvmversion="1.5+"
                                                     jar="../subsonic-booter/target/supersonic-booter-jar-with-dependencies.jar"

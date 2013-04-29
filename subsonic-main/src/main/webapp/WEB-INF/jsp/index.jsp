@@ -16,7 +16,7 @@
                 <frame name="main" src="home.view?listSize=10&listType=newest" marginwidth="0" marginheight="0">
                 <frame name="right" src="right.view?">
             </frameset>
-            <frame name="playlist" src="playlist.view?">
+            <frame name="playQueue" src="playQueue.view?">
         </frameset>
     </frameset>
     <frame name="hidden" frameborder="0" noresize="noresize">

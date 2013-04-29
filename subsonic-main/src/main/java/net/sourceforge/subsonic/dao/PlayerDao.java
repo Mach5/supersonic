@@ -32,7 +32,7 @@ import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.CoverArtScheme;
 import net.sourceforge.subsonic.domain.Player;
 import net.sourceforge.subsonic.domain.PlayerTechnology;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.TranscodeScheme;
 
 /**
@@ -47,7 +47,7 @@ public class PlayerDao extends AbstractDao {
             "last_seen, cover_art_scheme, transcode_scheme, dynamic_ip, technology, client_id";
 
     private PlayerRowMapper rowMapper = new PlayerRowMapper();
-    private Map<String, Playlist> playlists = Collections.synchronizedMap(new HashMap<String, Playlist>());
+    private Map<String, PlayQueue> playlists = Collections.synchronizedMap(new HashMap<String, PlayQueue>());
 
     /**
      * Returns all players.
@@ -162,12 +162,12 @@ public class PlayerDao extends AbstractDao {
     }
 
     private void addPlaylist(Player player) {
-        Playlist playlist = playlists.get(player.getId());
-        if (playlist == null) {
-            playlist = new Playlist();
-            playlists.put(player.getId(), playlist);
+        PlayQueue playQueue = playlists.get(player.getId());
+        if (playQueue == null) {
+            playQueue = new PlayQueue();
+            playlists.put(player.getId(), playQueue);
         }
-        player.setPlaylist(playlist);
+        player.setPlayQueue(playQueue);
     }
 
     private class PlayerRowMapper implements ParameterizedRowMapper<Player> {

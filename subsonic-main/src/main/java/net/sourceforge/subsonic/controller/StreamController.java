@@ -44,11 +44,11 @@ import org.springframework.web.servlet.mvc.Controller;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
-import net.sourceforge.subsonic.io.PlaylistInputStream;
+import net.sourceforge.subsonic.io.PlayQueueInputStream;
 import net.sourceforge.subsonic.io.RangeOutputStream;
 import net.sourceforge.subsonic.io.ShoutCastOutputStream;
 import net.sourceforge.subsonic.service.AudioScrobblerService;
@@ -64,7 +64,7 @@ import net.sourceforge.subsonic.util.Util;
 import de.rjan.subsonic.service.CachedTranscodingService;
 
 /**
- * A controller which streams the content of a {@link Playlist} to a remote
+ * A controller which streams the content of a {@link net.sourceforge.subsonic.domain.PlayQueue} to a remote
  * {@link Player}.
  *
  * @author Sindre Mehus
@@ -86,7 +86,7 @@ public class StreamController implements Controller {
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         TransferStatus status = null;
-        InputStream in = null;
+        PlayQueueInputStream in = null;
         Player player = playerService.getPlayer(request, response, false, true);
         User user = securityService.getUserByName(player.getUsername());
 
@@ -98,15 +98,15 @@ public class StreamController implements Controller {
             }
 
             // If "playlist" request parameter is set, this is a Podcast request. In that case, create a separate
-            // playlist (in order to support multiple parallel Podcast streams).
-            String playlistName = request.getParameter("playlist");
-            boolean isPodcast = playlistName != null;
+            // play queue (in order to support multiple parallel Podcast streams).
+            Integer playlistId = ServletRequestUtils.getIntParameter(request, "playlist");
+            boolean isPodcast = playlistId != null;
             if (isPodcast) {
-                Playlist playlist = new Playlist();
-                playlistService.loadPlaylist(playlist, playlistName);
-                player.setPlaylist(playlist);
-                Util.setContentLength(response, playlist.length());
-                LOG.info("Incoming Podcast request for playlist " + playlistName);
+                PlayQueue playQueue = new PlayQueue();
+                playQueue.addFiles(false, playlistService.getFilesInPlaylist(playlistId));
+                player.setPlayQueue(playQueue);
+                Util.setContentLength(response, playQueue.length());
+                LOG.info("Incoming Podcast request for playlist " + playlistId);
             }
 
             String contentType = StringUtil.getMimeType(request.getParameter("suffix"));
@@ -128,21 +128,26 @@ public class StreamController implements Controller {
             LongRange range = null;
 
             if (isSingleFile) {
-                Playlist playlist = new Playlist();
-                playlist.addFiles(true, file);
-                player.setPlaylist(playlist);
+                PlayQueue playQueue = new PlayQueue();
+                playQueue.addFiles(true, file);
+                player.setPlayQueue(playQueue);
 
                 if (!file.isVideo()) {
                     response.setIntHeader("ETag", file.getId());
                 }
 
+                boolean isHls = ServletRequestUtils.getBooleanParameter(request, "hls", false);
 
                 range = getRange(request, file);
 
-                String transcodedSuffix = transcodingService.getSuffix(player, file, preferredTargetFormat);
-                response.setContentType(StringUtil.getMimeType(transcodedSuffix));
+                if (isHls) {
+                    response.setContentType(StringUtil.getMimeType("ts")); // HLS is always MPEG TS.
+                } else {
+                    String transcodedSuffix = transcodingService.getSuffix(player, file, preferredTargetFormat);
+                    response.setContentType(StringUtil.getMimeType(transcodedSuffix));
+                }
 
-                if (file.isVideo()) {
+                if (file.isVideo() || isHls) {
                     videoTranscodingSettings = createVideoTranscodingSettings(file, request);
                 }
             }
@@ -162,7 +167,7 @@ public class StreamController implements Controller {
 
             status = statusService.createStreamStatus(player);
 
-            in = new PlaylistInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, transcodingService,
+            in = new PlayQueueInputStream(player, status, maxBitRate, preferredTargetFormat, videoTranscodingSettings, transcodingService,
                     audioScrobblerService, mediaFileService, searchService);
             final int BUFFER_SIZE = 2048;
             byte[] buf = new byte[BUFFER_SIZE];
@@ -178,7 +183,7 @@ public class StreamController implements Controller {
                 response.setHeader("icy-name", "Subsonic");
                 response.setHeader("icy-genre", "Mixed");
                 response.setHeader("icy-url", "http://subsonic.org/");
-                out = new ShoutCastOutputStream(out, player.getPlaylist(), settingsService);
+                out = new ShoutCastOutputStream(out, player.getPlayQueue(), settingsService);
             }
 
             if (isSingleFile) {
@@ -208,7 +213,7 @@ public class StreamController implements Controller {
                 if (status.terminated()) {
                     return null;
                 }
-                if (player.getPlaylist().getStatus() == Playlist.Status.STOPPED) {
+                if (player.getPlayQueue().getStatus() == PlayQueue.Status.STOPPED) {
                     if (isPodcast || isSingleFile) {
                         break;
                     } else {
@@ -260,7 +265,7 @@ public class StreamController implements Controller {
             long length = transcodingService.getTranscodedLength(parameters);
             LOG.info("Got length "+length+" from TranscodingService");
             if (length > 0) return length;
-        }    
+        }
 
         Integer duration = file.getDurationSeconds();
         Integer maxBitRate = parameters.getMaxBitRate();
@@ -324,13 +329,16 @@ public class StreamController implements Controller {
         Integer existingHeight = file.getHeight();
         Integer maxBitRate = ServletRequestUtils.getIntParameter(request, "maxBitRate");
         int timeOffset = ServletRequestUtils.getIntParameter(request, "timeOffset", 0);
+        int defaultDuration = file.getDurationSeconds() == null ? Integer.MAX_VALUE : file.getDurationSeconds() - timeOffset;
+        int duration = ServletRequestUtils.getIntParameter(request, "duration", defaultDuration);
+        boolean hls = ServletRequestUtils.getBooleanParameter(request, "hls", false);
 
         Dimension dim = getRequestedVideoSize(request.getParameter("size"));
         if (dim == null) {
             dim = getSuitableVideoSize(existingWidth, existingHeight, maxBitRate);
         }
 
-        return new VideoTranscodingSettings(dim.width, dim.height, timeOffset);
+        return new VideoTranscodingSettings(dim.width, dim.height, timeOffset, duration, hls);
     }
 
     protected Dimension getRequestedVideoSize(String sizeSpec) {

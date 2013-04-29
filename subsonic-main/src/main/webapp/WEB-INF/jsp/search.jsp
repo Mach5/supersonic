@@ -3,20 +3,7 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
-    <script type="text/javascript" src="<c:url value='/script/scripts.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/script/prototype.js'/>"></script>
-    <script type="text/javascript" src="<c:url value='/dwr/util.js'/>"></script>
-
-    <script type="text/javascript">
-        function more(rowSelector, moreId) {
-            var rows = $$(rowSelector);
-            for (var i = 0; i < rows.length; i++) {
-                rows[i].show();
-            }
-            $(moreId).hide();
-        }
-    </script>
-
+    <%@ include file="jquery.jsp" %>
 </head>
 <body class="mainframe bgcolor1">
 
@@ -56,7 +43,6 @@
             <tr class="artistRow" ${loopStatus.count > 5 ? "style='display:none'" : ""}>
                 <c:import url="playAddDownload.jsp">
                     <c:param name="id" value="${match.id}"/>
-                    <c:param name="path" value="${match.path}"/>
                     <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>
                     <c:param name="addEnabled" value="${command.user.streamRole and (not command.partyModeEnabled or not match.directory)}"/>
                     <c:param name="downloadEnabled" value="${command.user.downloadRole and not command.partyModeEnabled}"/>
@@ -70,7 +56,7 @@
             </c:forEach>
     </table>
     <c:if test="${fn:length(command.artists) gt 5}">
-        <div id="moreArtists" class="forward"><a href="javascript:noop()" onclick="more('tr.artistRow', 'moreArtists')"><fmt:message key="search.hits.more"/></a></div>
+        <div id="moreArtists" class="forward"><a href="#" onclick="$('.artistRow').show(); $('#moreArtists').hide();"><fmt:message key="search.hits.more"/></a></div>
     </c:if>
 </c:if>
 
@@ -86,7 +72,6 @@
             <tr class="albumRow" ${loopStatus.count > 5 ? "style='display:none'" : ""}>
                 <c:import url="playAddDownload.jsp">
                     <c:param name="id" value="${match.id}"/>
-                    <c:param name="path" value="${match.path}"/>
                     <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>
                     <c:param name="addEnabled" value="${command.user.streamRole and (not command.partyModeEnabled or not match.directory)}"/>
                     <c:param name="downloadEnabled" value="${command.user.downloadRole and not command.partyModeEnabled}"/>
@@ -105,7 +90,7 @@
             </c:forEach>
     </table>
     <c:if test="${fn:length(command.albums) gt 5}">
-        <div id="moreAlbums" class="forward"><a href="javascript:noop()" onclick="more('tr.albumRow', 'moreAlbums')"><fmt:message key="search.hits.more"/></a></div>
+        <div id="moreAlbums" class="forward"><a href="#" onclick="$('.albumRow').show(); $('#moreAlbums').hide();"><fmt:message key="search.hits.more"/></a></div>
     </c:if>
 </c:if>
 
@@ -122,7 +107,6 @@
             <tr class="songRow" ${loopStatus.count > 15 ? "style='display:none'" : ""}>
                 <c:import url="playAddDownload.jsp">
                     <c:param name="id" value="${match.id}"/>
-                    <c:param name="path" value="${match.path}"/>
                     <c:param name="playEnabled" value="${command.user.streamRole and not command.partyModeEnabled}"/>
                     <c:param name="addEnabled" value="${command.user.streamRole and (not command.partyModeEnabled or not match.directory)}"/>
                     <c:param name="downloadEnabled" value="${command.user.downloadRole and not command.partyModeEnabled}"/>
@@ -146,7 +130,7 @@
             </c:forEach>
     </table>
 <c:if test="${fn:length(command.songs) gt 15}">
-    <div id="moreSongs" class="forward"><a href="javascript:noop()" onclick="more('tr.songRow', 'moreSongs')"><fmt:message key="search.hits.more"/></a></div>
+    <div id="moreSongs" class="forward"><a href="#" onclick="$('.songRow').show();$('#moreSongs').hide(); "><fmt:message key="search.hits.more"/></a></div>
 </c:if>
 </c:if>
 

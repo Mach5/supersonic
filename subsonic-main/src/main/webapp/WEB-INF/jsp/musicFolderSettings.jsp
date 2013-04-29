@@ -3,11 +3,13 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
 </head>
 <body class="mainframe bgcolor1">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="musicFolder"/>
+    <c:param name="toast" value="${command.reload}"/>
 </c:import>
 
 <form:form commandName="command" action="musicFolderSettings.view" method="post">
@@ -80,6 +82,11 @@
 
     <p class="detail" style="width:60%;white-space:normal;">
         <fmt:message key="musicfoldersettings.fastcache.description"/>
+    </p>
+
+    <p class="forward"><a href="musicFolderSettings.view?expunge"><fmt:message key="musicfoldersettings.expunge"/></a></p>
+    <p class="detail" style="width:60%;white-space:normal;margin-top:-10px;">
+        <fmt:message key="musicfoldersettings.expunge.description"/>
     </p>
 
     <%--<div>--%>

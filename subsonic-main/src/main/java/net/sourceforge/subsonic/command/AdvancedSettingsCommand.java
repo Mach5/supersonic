@@ -26,7 +26,7 @@ import net.sourceforge.subsonic.controller.AdvancedSettingsController;
  * @author Sindre Mehus
  */
 public class AdvancedSettingsCommand {
-    private String downsampleCommand;
+
     private String coverArtLimit;
     private String downloadLimit;
     private String uploadLimit;
@@ -39,14 +39,7 @@ public class AdvancedSettingsCommand {
     private boolean ldapAutoShadowing;
     private String brand;
     private boolean isReloadNeeded;
-
-    public String getDownsampleCommand() {
-        return downsampleCommand;
-    }
-
-    public void setDownsampleCommand(String downsampleCommand) {
-        this.downsampleCommand = downsampleCommand;
-    }
+    private boolean toast;
 
     public String getCoverArtLimit() {
         return coverArtLimit;
@@ -142,5 +135,13 @@ public class AdvancedSettingsCommand {
 
     public boolean isReloadNeeded() {
         return isReloadNeeded;
+    }
+
+    public boolean isToast() {
+        return toast;
+    }
+
+    public void setToast(boolean toast) {
+        this.toast = toast;
     }
 }

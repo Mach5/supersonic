@@ -3,11 +3,13 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
 </head>
 <body class="mainframe bgcolor1">
 
 <c:import url="settingsHeader.jsp">
     <c:param name="cat" value="share"/>
+    <c:param name="toast" value="${model.toast}"/>
     <c:param name="restricted" value="${not model.user.adminRole}"/>
 </c:import>
 

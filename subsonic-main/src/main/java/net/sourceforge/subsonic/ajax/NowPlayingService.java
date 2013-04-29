@@ -104,17 +104,12 @@ public class NowPlayingService {
 
                 String artist = mediaFile.getArtist();
                 String title = mediaFile.getTitle();
-                String streamUrl = url.replaceFirst("/dwr/.*", "/stream?player=" + player.getId() + "&pathUtf8Hex=" +
-                        StringUtil.utf8HexEncode(file.getPath()));
-                String albumUrl = url.replaceFirst("/dwr/.*", "/main.view?pathUtf8Hex=" +
-                        StringUtil.utf8HexEncode(mediaFile.getParentPath()));
-                String lyricsUrl = url.replaceFirst("/dwr/.*", "/lyrics.view?artistUtf8Hex=" +
-                        StringUtil.utf8HexEncode(artist) +
+                String streamUrl = url.replaceFirst("/dwr/.*", "/stream?player=" + player.getId() + "&id=" + mediaFile.getId());
+                String albumUrl = url.replaceFirst("/dwr/.*", "/main.view?id=" + mediaFile.getId());
+                String lyricsUrl = url.replaceFirst("/dwr/.*", "/lyrics.view?artistUtf8Hex=" + StringUtil.utf8HexEncode(artist) +
                         "&songUtf8Hex=" + StringUtil.utf8HexEncode(title));
-                String coverArtUrl = coverArt == null ? null :
-                        url.replaceFirst("/dwr/.*", "/coverArt.view?size=48&pathUtf8Hex=" + StringUtil.utf8HexEncode(coverArt.getPath()));
-                String coverArtZoomUrl = coverArt == null ? null :
-                        url.replaceFirst("/dwr/.*", "/coverArt.view?pathUtf8Hex=" + StringUtil.utf8HexEncode(coverArt.getPath()));
+                String coverArtUrl = coverArt == null ? null : url.replaceFirst("/dwr/.*", "/coverArt.view?size=48&id=" + mediaFile.getId());
+                String coverArtZoomUrl = coverArt == null ? null : url.replaceFirst("/dwr/.*", "/coverArt.view?id=" + mediaFile.getId());
 
                 String avatarUrl = null;
                 if (userSettings.getAvatarScheme() == AvatarScheme.SYSTEM) {

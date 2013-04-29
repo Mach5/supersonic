@@ -50,6 +50,7 @@ public class Schema47 extends Schema {
                     "title varchar," +
                     "album varchar," +
                     "artist varchar," +
+                    "album_artist varchar," +
                     "disc_number int," +
                     "track_number int," +
                     "year int," +
@@ -61,12 +62,12 @@ public class Schema47 extends Schema {
                     "width int," +
                     "height int," +
                     "cover_art_path varchar," +
-                    "parent_path varchar not null," +
+                    "parent_path varchar," +
                     "play_count int not null," +
                     "last_played datetime," +
                     "comment varchar," +
                     "created datetime not null," +
-                    "last_modified datetime not null," +
+                    "changed datetime not null," +
                     "last_scanned datetime not null," +
                     "children_last_updated datetime not null," +
                     "present boolean not null," +
@@ -78,6 +79,7 @@ public class Schema47 extends Schema {
             template.execute("create index idx_media_file_type on media_file(type)");
             template.execute("create index idx_media_file_album on media_file(album)");
             template.execute("create index idx_media_file_artist on media_file(artist)");
+            template.execute("create index idx_media_file_album_artist on media_file(album_artist)");
             template.execute("create index idx_media_file_present on media_file(present)");
             template.execute("create index idx_media_file_genre on media_file(genre)");
             template.execute("create index idx_media_file_play_count on media_file(play_count)");
@@ -108,6 +110,7 @@ public class Schema47 extends Schema {
             LOG.info("Database table 'album' not found.  Creating it.");
             template.execute("create cached table album (" +
                     "id identity," +
+                    "path varchar not null," +
                     "name varchar not null," +
                     "artist varchar not null," +
                     "song_count int default 0 not null," +
@@ -127,6 +130,12 @@ public class Schema47 extends Schema {
             template.execute("create index idx_album_present on album(present)");
 
             LOG.info("Database table 'album' was created successfully.");
+        }
+
+        // Added in 4.7.beta3
+        if (!rowExists(template, "table_name='ALBUM' and column_name='NAME' and ordinal_position=1",
+                "information_schema.system_indexinfo")) {
+            template.execute("create index idx_album_name on album(name)");
         }
 
         if (!tableExists(template, "starred_media_file")) {
@@ -178,6 +187,54 @@ public class Schema47 extends Schema {
             template.execute("create index idx_starred_artist_username on starred_artist(username)");
 
             LOG.info("Database table 'starred_artist' was created successfully.");
+        }
+
+        if (!tableExists(template, "playlist")) {
+            LOG.info("Database table 'playlist' not found.  Creating it.");
+            template.execute("create table playlist (" +
+                    "id identity," +
+                    "username varchar not null," +
+                    "is_public boolean not null," +
+                    "name varchar not null," +
+                    "comment varchar," +
+                    "file_count int default 0 not null," +
+                    "duration_seconds int default 0 not null," +
+                    "created datetime not null," +
+                    "changed datetime not null," +
+                    "foreign key (username) references user(username) on delete cascade)");
+
+            LOG.info("Database table 'playlist' was created successfully.");
+        }
+
+        if (!columnExists(template, "imported_from", "playlist")) {
+            LOG.info("Database column 'playlist.imported_from' not found.  Creating it.");
+            template.execute("alter table playlist add imported_from varchar");
+            LOG.info("Database column 'playlist.imported_from' was added successfully.");
+        }
+
+        if (!tableExists(template, "playlist_file")) {
+            LOG.info("Database table 'playlist_file' not found.  Creating it.");
+            template.execute("create cached table playlist_file (" +
+                    "id identity," +
+                    "playlist_id int not null," +
+                    "media_file_id int not null," +
+                    "foreign key (playlist_id) references playlist(id) on delete cascade," +
+                    "foreign key (media_file_id) references media_file(id) on delete cascade)");
+
+            LOG.info("Database table 'playlist_file' was created successfully.");
+        }
+
+        if (!tableExists(template, "playlist_user")) {
+            LOG.info("Database table 'playlist_user' not found.  Creating it.");
+            template.execute("create table playlist_user (" +
+                    "id identity," +
+                    "playlist_id int not null," +
+                    "username varchar not null," +
+                    "unique(playlist_id, username)," +
+                    "foreign key (playlist_id) references playlist(id) on delete cascade," +
+                    "foreign key (username) references user(username) on delete cascade)");
+
+            LOG.info("Database table 'playlist_user' was created successfully.");
         }
     }
 }

@@ -12,6 +12,10 @@
             <param name="beanName" value="ajaxNowPlayingService"/>
         </create>
 
+        <create creator="spring" javascript="playQueueService">
+            <param name="beanName" value="ajaxPlayQueueService"/>
+        </create>
+
         <create creator="spring" javascript="playlistService">
             <param name="beanName" value="ajaxPlaylistService"/>
         </create>
@@ -43,8 +47,11 @@
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.NetworkStatus"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.NowPlayingInfo"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.ScanInfo"/>
+        <convert converter="bean" match="net.sourceforge.subsonic.ajax.PlayQueueInfo"/>
+        <convert converter="bean" match="net.sourceforge.subsonic.ajax.PlayQueueInfo$Entry"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.PlaylistInfo"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.PlaylistInfo$Entry"/>
+        <convert converter="bean" match="net.sourceforge.subsonic.domain.Playlist"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.UploadInfo"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.LyricsInfo"/>
         <convert converter="bean" match="net.sourceforge.subsonic.ajax.CoverArtInfo"/>

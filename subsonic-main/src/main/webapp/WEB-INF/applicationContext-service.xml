@@ -22,6 +22,10 @@
         <property name="daoHelper" ref="daoHelper"/>
     </bean>
 
+    <bean id="playlistDao" class="net.sourceforge.subsonic.dao.PlaylistDao">
+        <property name="daoHelper" ref="daoHelper"/>
+    </bean>
+
     <bean id="internetRadioDao" class="net.sourceforge.subsonic.dao.InternetRadioDao">
         <property name="daoHelper" ref="daoHelper"/>
     </bean>
@@ -86,6 +90,7 @@
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
         <property name="mediaFileDao" ref="mediaFileDao"/>
+        <property name="playlistService" ref="playlistService"/>
         <property name="artistDao" ref="artistDao"/>
         <property name="albumDao" ref="albumDao"/>
         <property name="searchService" ref="searchService"/>
@@ -110,9 +115,11 @@
     </bean>
 
     <bean id="playlistService" class="net.sourceforge.subsonic.service.PlaylistService">
-        <property name="settingsService" ref="settingsService"/>
-        <property name="securityService" ref="securityService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="settingsService" ref="settingsService"/>
+        <property name="mediaFileDao" ref="mediaFileDao"/>
+        <property name="playlistDao" ref="playlistDao"/>
     </bean>
 
     <bean id="versionService" class="net.sourceforge.subsonic.service.VersionService"/>
@@ -128,7 +135,6 @@
     <bean id="musicIndexService" class="net.sourceforge.subsonic.service.MusicIndexService">
         <property name="settingsService" ref="settingsService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
-        <property name="mediaFileDao" ref="mediaFileDao"/>
     </bean>
 
     <bean id="audioScrobblerService" class="net.sourceforge.subsonic.service.AudioScrobblerService">
@@ -190,12 +196,23 @@
         <property name="mediaScannerService" ref="mediaScannerService"/>
     </bean>
 
-    <bean id="ajaxPlaylistService" class="net.sourceforge.subsonic.ajax.PlaylistService">
+    <bean id="ajaxPlayQueueService" class="net.sourceforge.subsonic.ajax.PlayQueueService">
         <property name="playerService" ref="playerService"/>
+        <property name="playlistService" ref="playlistService"/>
         <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="mediaFileDao" ref="mediaFileDao"/>
         <property name="jukeboxService" ref="jukeboxService"/>
         <property name="transcodingService" ref="transcodingService"/>
         <property name="settingsService" ref="settingsService"/>
+        <property name="securityService" ref="securityService"/>
+    </bean>
+
+    <bean id="ajaxPlaylistService" class="net.sourceforge.subsonic.ajax.PlaylistService">
+        <property name="playlistService" ref="playlistService"/>
+        <property name="securityService" ref="securityService"/>
+        <property name="settingsService" ref="settingsService"/>
+        <property name="mediaFileService" ref="mediaFileService"/>
+        <property name="mediaFileDao" ref="mediaFileDao"/>
     </bean>
 
     <bean id="ajaxLyricsService" class="net.sourceforge.subsonic.ajax.LyricsService"/>

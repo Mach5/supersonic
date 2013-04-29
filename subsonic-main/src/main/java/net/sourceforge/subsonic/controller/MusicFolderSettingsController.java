@@ -19,6 +19,9 @@
 package net.sourceforge.subsonic.controller;
 
 import net.sourceforge.subsonic.command.MusicFolderSettingsCommand;
+import net.sourceforge.subsonic.dao.AlbumDao;
+import net.sourceforge.subsonic.dao.ArtistDao;
+import net.sourceforge.subsonic.dao.MediaFileDao;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.service.MediaScannerService;
 import net.sourceforge.subsonic.service.SettingsService;
@@ -39,12 +42,18 @@ public class MusicFolderSettingsController extends SimpleFormController {
 
     private SettingsService settingsService;
     private MediaScannerService mediaScannerService;
+    private ArtistDao artistDao;
+    private AlbumDao albumDao;
+    private MediaFileDao mediaFolderDao;
 
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         MusicFolderSettingsCommand command = new MusicFolderSettingsCommand();
 
         if (request.getParameter("scanNow") != null) {
             mediaScannerService.scanLibrary();
+        }
+        if (request.getParameter("expunge") != null) {
+            expunge();
         }
 
         command.setInterval(String.valueOf(settingsService.getIndexCreationInterval()));
@@ -56,6 +65,12 @@ public class MusicFolderSettingsController extends SimpleFormController {
         command.setNewMusicFolder(new MusicFolderSettingsCommand.MusicFolderInfo());
         command.setReload(request.getParameter("reload") != null || request.getParameter("scanNow") != null);
         return command;
+    }
+
+    private void expunge() {
+        artistDao.expunge();
+        albumDao.expunge();
+        mediaFolderDao.expunge();
     }
 
     private List<MusicFolderSettingsCommand.MusicFolderInfo> wrap(List<MusicFolder> musicFolders) {
@@ -99,5 +114,17 @@ public class MusicFolderSettingsController extends SimpleFormController {
 
     public void setMediaScannerService(MediaScannerService mediaScannerService) {
         this.mediaScannerService = mediaScannerService;
+    }
+
+    public void setArtistDao(ArtistDao artistDao) {
+        this.artistDao = artistDao;
+    }
+
+    public void setAlbumDao(AlbumDao albumDao) {
+        this.albumDao = albumDao;
+    }
+
+    public void setMediaFolderDao(MediaFileDao mediaFolderDao) {
+        this.mediaFolderDao = mediaFolderDao;
     }
 }

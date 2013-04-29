@@ -18,19 +18,20 @@
  */
 package net.sourceforge.subsonic.service;
 
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
+
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Playlist;
 import net.sourceforge.subsonic.domain.Transcoding;
 import net.sourceforge.subsonic.domain.TransferStatus;
 import net.sourceforge.subsonic.domain.User;
 import net.sourceforge.subsonic.domain.VideoTranscodingSettings;
 import net.sourceforge.subsonic.service.jukebox.AudioPlayer;
 import net.sourceforge.subsonic.util.FileUtil;
-import org.apache.commons.io.IOUtils;
-
-import java.io.InputStream;
 
 import static net.sourceforge.subsonic.service.jukebox.AudioPlayer.State.EOM;
 
@@ -70,11 +71,11 @@ public class JukeboxService implements AudioPlayer.Listener {
             return;
         }
 
-        if (player.getPlaylist().getStatus() == Playlist.Status.PLAYING) {
+        if (player.getPlayQueue().getStatus() == PlayQueue.Status.PLAYING) {
             this.player = player;
             MediaFile result;
-            synchronized (player.getPlaylist()) {
-                result = player.getPlaylist().getCurrentFile();
+            synchronized (player.getPlayQueue()) {
+                result = player.getPlayQueue().getCurrentFile();
             }
             play(result, offset);
         } else {
@@ -103,7 +104,8 @@ public class JukeboxService implements AudioPlayer.Listener {
                 }
 
                 if (file != null) {
-                    TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, new VideoTranscodingSettings(0, 0, offset));
+                    int duration = file.getDurationSeconds() == null ? 0 : file.getDurationSeconds() - offset;
+                    TranscodingService.Parameters parameters = new TranscodingService.Parameters(file, new VideoTranscodingSettings(0, 0, offset, duration, false));
                     String command = settingsService.getJukeboxCommand();
                     parameters.setTranscoding(new Transcoding(null, null, null, null, command, null, null, false));
                     in = transcodingService.getTranscodedInputStream(parameters);
@@ -124,10 +126,10 @@ public class JukeboxService implements AudioPlayer.Listener {
 
     public synchronized void stateChanged(AudioPlayer audioPlayer, AudioPlayer.State state) {
         if (state == EOM) {
-            player.getPlaylist().next();
+            player.getPlayQueue().next();
             MediaFile result;
-            synchronized (player.getPlaylist()) {
-                result = player.getPlaylist().getCurrentFile();
+            synchronized (player.getPlayQueue()) {
+                result = player.getPlayQueue().getCurrentFile();
             }
             play(result, 0);
         }
@@ -169,7 +171,7 @@ public class JukeboxService implements AudioPlayer.Listener {
 
     private void scrobble(MediaFile file, boolean submission) {
         if (player.getClientId() == null) {  // Don't scrobble REST players.
-            audioScrobblerService.register(file, player.getUsername(), submission);
+            audioScrobblerService.register(file, player.getUsername(), submission, null);
         }
     }
 

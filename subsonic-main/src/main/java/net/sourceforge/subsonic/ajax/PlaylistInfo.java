@@ -20,6 +20,9 @@ package net.sourceforge.subsonic.ajax;
 
 import java.util.List;
 
+import net.sourceforge.subsonic.domain.MediaFile;
+import net.sourceforge.subsonic.domain.Playlist;
+
 /**
  * The playlist of a player.
  *
@@ -27,83 +30,41 @@ import java.util.List;
  */
 public class PlaylistInfo {
 
+    private final Playlist playlist;
     private final List<Entry> entries;
-    private final int index;
-    private final boolean stopEnabled;
-    private final boolean repeatEnabled;
-    private final boolean sendM3U;
-    private final float gain;
 
-    public PlaylistInfo(List<Entry> entries, int index, boolean stopEnabled, boolean repeatEnabled, boolean sendM3U, float gain) {
+    public PlaylistInfo(Playlist playlist, List<Entry> entries) {
+        this.playlist = playlist;
         this.entries = entries;
-        this.index = index;
-        this.stopEnabled = stopEnabled;
-        this.repeatEnabled = repeatEnabled;
-        this.sendM3U = sendM3U;
-        this.gain = gain;
+    }
+
+    public Playlist getPlaylist() {
+        return playlist;
     }
 
     public List<Entry> getEntries() {
         return entries;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
-    public boolean isStopEnabled() {
-        return stopEnabled;
-    }
-
-    public boolean isSendM3U() {
-        return sendM3U;
-    }
-
-    public boolean isRepeatEnabled() {
-        return repeatEnabled;
-    }
-
-    public float getGain() {
-        return gain;
-    }
-
     public static class Entry {
-        private final Integer trackNumber;
+        private final int id;
         private final String title;
         private final String artist;
         private final String album;
-        private final String genre;
-        private final Integer year;
-        private final String bitRate;
-        private final Integer duration;
         private final String durationAsString;
-        private final String format;
-        private final String contentType;
-        private final String fileSize;
-        private final String albumUrl;
-        private final String streamUrl;
+        private final boolean starred;
 
-        public Entry(Integer trackNumber, String title, String artist, String album, String genre, Integer year,
-                     String bitRate, Integer duration, String durationAsString, String format, String contentType, String fileSize,
-                     String albumUrl, String streamUrl) {
-            this.trackNumber = trackNumber;
+        public Entry(int id, String title, String artist, String album, String durationAsString, boolean starred) {
+            this.id = id;
             this.title = title;
             this.artist = artist;
             this.album = album;
-            this.genre = genre;
-            this.year = year;
-            this.bitRate = bitRate;
-            this.duration = duration;
             this.durationAsString = durationAsString;
-            this.format = format;
-            this.contentType = contentType;
-            this.fileSize = fileSize;
-            this.albumUrl = albumUrl;
-            this.streamUrl = streamUrl;
+            this.starred = starred;
         }
 
-        public Integer getTrackNumber() {
-            return trackNumber;
+        public int getId() {
+            return id;
         }
 
         public String getTitle() {
@@ -118,45 +79,12 @@ public class PlaylistInfo {
             return album;
         }
 
-        public String getGenre() {
-            return genre;
-        }
-
-        public Integer getYear() {
-            return year;
-        }
-
-        public String getBitRate() {
-            return bitRate;
-        }
-
         public String getDurationAsString() {
             return durationAsString;
         }
 
-        public Integer getDuration() {
-            return duration;
-        }
-
-        public String getFormat() {
-            return format;
-        }
-
-        public String getContentType() {
-            return contentType;
-        }
-
-        public String getFileSize() {
-            return fileSize;
-        }
-
-        public String getAlbumUrl() {
-            return albumUrl;
-        }
-
-        public String getStreamUrl() {
-            return streamUrl;
+        public boolean isStarred() {
+            return starred;
         }
     }
-
 }

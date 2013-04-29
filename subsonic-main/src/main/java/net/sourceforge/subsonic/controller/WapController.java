@@ -30,6 +30,7 @@ import java.util.SortedSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.multiaction.MultiActionController;
 
@@ -37,7 +38,7 @@ import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.MusicFolder;
 import net.sourceforge.subsonic.domain.MusicIndex;
 import net.sourceforge.subsonic.domain.Player;
-import net.sourceforge.subsonic.domain.Playlist;
+import net.sourceforge.subsonic.domain.PlayQueue;
 import net.sourceforge.subsonic.domain.RandomSearchCriteria;
 import net.sourceforge.subsonic.domain.SearchCriteria;
 import net.sourceforge.subsonic.domain.SearchResult;
@@ -77,12 +78,12 @@ public class WapController extends MultiActionController {
             map.put("noMusic", true);
         } else {
 
-            SortedMap<MusicIndex, SortedSet<MusicIndex.Artist>> allArtists = musicIndexService.getIndexedArtists(folders);
+            SortedMap<MusicIndex, SortedSet<MusicIndex.SortableArtistWithMediaFiles>> allArtists = musicIndexService.getIndexedArtists(folders, false);
 
             // If an index is given as parameter, only show music files for this index.
             String index = request.getParameter("index");
             if (index != null) {
-                SortedSet<MusicIndex.Artist> artists = allArtists.get(new MusicIndex(index));
+                SortedSet<MusicIndex.SortableArtistWithMediaFiles> artists = allArtists.get(new MusicIndex(index));
                 if (artists == null) {
                     map.put("noMusic", true);
                 } else {
@@ -136,24 +137,25 @@ public class WapController extends MultiActionController {
         Map<String, Object> map = new HashMap<String, Object>();
 
         for (Player player : players) {
-            Playlist playlist = player.getPlaylist();
-            map.put("playlist", playlist);
+            PlayQueue playQueue = player.getPlayQueue();
+            map.put("playlist", playQueue);
 
             if (request.getParameter("play") != null) {
                 MediaFile file = mediaFileService.getMediaFile(request.getParameter("play"));
-                playlist.addFiles(false, file);
+                playQueue.addFiles(false, file);
             } else if (request.getParameter("add") != null) {
                 MediaFile file = mediaFileService.getMediaFile(request.getParameter("add"));
-                playlist.addFiles(true, file);
+                playQueue.addFiles(true, file);
             } else if (request.getParameter("skip") != null) {
-                playlist.setIndex(Integer.parseInt(request.getParameter("skip")));
+                playQueue.setIndex(Integer.parseInt(request.getParameter("skip")));
             } else if (request.getParameter("clear") != null) {
-                playlist.clear();
+                playQueue.clear();
             } else if (request.getParameter("load") != null) {
-                playlistService.loadPlaylist(playlist, request.getParameter("load"));
+                List<MediaFile> songs = playlistService.getFilesInPlaylist(ServletRequestUtils.getIntParameter(request, "id"));
+                playQueue.addFiles(false, songs);
             } else if (request.getParameter("random") != null) {
                 List<MediaFile> randomFiles = searchService.getRandomSongs(new RandomSearchCriteria(20, null, null, null, null));
-                playlist.addFiles(false, randomFiles);
+                playQueue.addFiles(false, randomFiles);
             }
         }
 
@@ -163,7 +165,7 @@ public class WapController extends MultiActionController {
 
     public ModelAndView loadPlaylist(HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("playlists", playlistService.getSavedPlaylists());
+        map.put("playlists", playlistService.getReadablePlaylistsForUser(securityService.getCurrentUsername(request)));
         return new ModelAndView("wap/loadPlaylist", "model", map);
     }
 

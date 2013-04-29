@@ -34,6 +34,7 @@ public class NetworkSettingsCommand {
     private Date trialExpires;
     private boolean trialExpired;
     private String subsonicUrl;
+    private boolean toast;
 
     public void setPortForwardingEnabled(boolean portForwardingEnabled) {
         this.portForwardingEnabled = portForwardingEnabled;
@@ -44,7 +45,7 @@ public class NetworkSettingsCommand {
     }
 
     public boolean isUrlRedirectionEnabled() {
-        return false;
+        return urlRedirectionEnabled;
     }
 
     public void setUrlRedirectionEnabled(boolean urlRedirectionEnabled) {
@@ -89,6 +90,14 @@ public class NetworkSettingsCommand {
 
     public boolean isTrialExpired() {
         return trialExpired;
+    }
+
+    public boolean isToast() {
+        return toast;
+    }
+
+    public void setToast(boolean toast) {
+        this.toast = toast;
     }
     
     public String getSubsonicUrl() {

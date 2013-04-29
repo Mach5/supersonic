@@ -25,12 +25,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import net.sourceforge.subsonic.domain.MediaFile;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.RandomStringUtils;
 
 import net.sourceforge.subsonic.Logger;
 import net.sourceforge.subsonic.dao.ShareDao;
+import net.sourceforge.subsonic.domain.MediaFile;
 import net.sourceforge.subsonic.domain.Share;
 import net.sourceforge.subsonic.domain.User;
 
@@ -71,7 +71,10 @@ public class ShareService {
         List<MediaFile> result = new ArrayList<MediaFile>();
         for (String path : shareDao.getSharedFiles(id)) {
             try {
-                result.add(mediaFileService.getMediaFile(path));
+                MediaFile mediaFile = mediaFileService.getMediaFile(path);
+                if (mediaFile != null) {
+                    result.add(mediaFile);
+                }
             } catch (Exception x) {
                 // Ignored
             }

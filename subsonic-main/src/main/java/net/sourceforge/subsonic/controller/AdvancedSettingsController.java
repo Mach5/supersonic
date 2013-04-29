@@ -38,7 +38,6 @@ public class AdvancedSettingsController extends SimpleFormController {
     protected Object formBackingObject(HttpServletRequest request) throws Exception {
         AdvancedSettingsCommand command = new AdvancedSettingsCommand();
         command.setCoverArtLimit(String.valueOf(settingsService.getCoverArtLimit()));
-        command.setDownsampleCommand(settingsService.getDownsamplingCommand());
         command.setDownloadLimit(String.valueOf(settingsService.getDownloadBitrateLimit()));
         command.setUploadLimit(String.valueOf(settingsService.getUploadBitrateLimit()));
         command.setStreamPort(String.valueOf(settingsService.getStreamPort()));
@@ -56,8 +55,8 @@ public class AdvancedSettingsController extends SimpleFormController {
     protected void doSubmitAction(Object comm) throws Exception {
         AdvancedSettingsCommand command = (AdvancedSettingsCommand) comm;
 
+        command.setToast(true);
         command.setReloadNeeded(false);
-        settingsService.setDownsamplingCommand(command.getDownsampleCommand());
 
         try {
             settingsService.setCoverArtLimit(Integer.parseInt(command.getCoverArtLimit()));

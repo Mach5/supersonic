@@ -42,11 +42,11 @@ public class RatingDao extends AbstractDao {
         if (count < 1) {
             return new ArrayList<String>();
         }
-        String sql = "select path from user_rating " +
-                "where exists (select 1 from media_file where user_rating.path = media_file.path and present) " +
+
+        String sql = "select user_rating.path from user_rating, media_file " +
+                "where user_rating.path=media_file.path and media_file.present " +
                 "group by path " +
-                "order by avg(rating) desc " +
-                " limit " + count + " offset " + offset;
+                "order by avg(rating) desc limit " + count + " offset " + offset;
         return queryForStrings(sql);
     }
 

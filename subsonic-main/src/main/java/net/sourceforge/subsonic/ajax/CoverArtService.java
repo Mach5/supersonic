@@ -52,16 +52,17 @@ public class CoverArtService {
     /**
      * Downloads and saves the cover art at the given URL.
      *
-     * @param path The directory in which to save the image.
+     * @param albumId ID of the album in question.
      * @param url  The image URL.
      * @return The error string if something goes wrong, <code>null</code> otherwise.
      */
-    public String setCoverArtImage(String path, String url) {
+    public String setCoverArtImage(int albumId, String url) {
         try {
-            saveCoverArt(path, url);
+            MediaFile mediaFile = mediaFileService.getMediaFile(albumId);
+            saveCoverArt(mediaFile.getPath(), url);
             return null;
         } catch (Exception x) {
-            LOG.warn("Failed to save cover art for " + path, x);
+            LOG.warn("Failed to save cover art for album " + albumId, x);
             return x.toString();
         }
     }

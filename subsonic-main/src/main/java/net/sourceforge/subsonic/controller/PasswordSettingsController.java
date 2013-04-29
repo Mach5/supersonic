@@ -50,6 +50,7 @@ public class PasswordSettingsController extends SimpleFormController {
 
         command.setPassword(null);
         command.setConfirmPassword(null);
+        command.setToast(true);
     }
 
     public void setSecurityService(SecurityService securityService) {

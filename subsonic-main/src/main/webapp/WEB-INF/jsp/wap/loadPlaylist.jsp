@@ -12,9 +12,9 @@
 
             <c:forEach items="${model.playlists}" var="playlist">
                 <sub:url var="url" value="/wap/playlist.view">
-                    <sub:param name="load" value="${playlist.name}"/>
+                    <sub:param name="load" value="${playlist.id}"/>
                 </sub:url>
-                <b><a href="${url}">${fn:escapeXml(fn:substringBefore(playlist.name, '.'))}</a></b><br/>
+                <b><a href="${url}">${fn:escapeXml(playlist.name)}</a></b><br/>
             </c:forEach>
         </small></p>
 

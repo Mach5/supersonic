@@ -3,14 +3,22 @@
 
 <html><head>
     <%@ include file="head.jsp" %>
+    <%@ include file="jquery.jsp" %>
     <link href="<c:url value="/style/shadow.css"/>" rel="stylesheet">
-    <c:if test="${model.listType eq 'random'}">
-        <meta http-equiv="refresh" content="20">
-    </c:if>
-    <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/scriptaculous.js?load=effects"/>"></script>
+
+    <script type="text/javascript" language="javascript">
+        function init() {
+        <c:if test="${model.listType eq 'random'}">
+            setTimeout("refresh()", 20000);
+        </c:if>
+        }
+
+        function refresh() {
+            top.main.location.href = top.main.location.href;
+        }
+    </script>
 </head>
-<body class="mainframe bgcolor1">
+<body class="mainframe bgcolor1" onload="init();">
 <h1>
     <img src="<spring:theme code="homeImage"/>" alt="">
     ${model.welcomeTitle}
@@ -83,10 +91,9 @@
                 <table>
                     <tr><td>
                             <c:import url="coverArt.jsp">
-                                <c:param name="albumPath" value="${album.path}"/>
+                                <c:param name="albumId" value="${album.id}"/>
                                 <c:param name="albumName" value="${album.albumTitle}"/>
                                 <c:param name="coverArtSize" value="110"/>
-                                <c:param name="coverArtPath" value="${album.coverArtPath}"/>
                                 <c:param name="showLink" value="true"/>
                                 <c:param name="showZoom" value="false"/>
                                 <c:param name="showChange" value="false"/>

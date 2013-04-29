@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import net.sourceforge.subsonic.domain.MediaLibraryStatistics;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.HttpClient;
@@ -99,6 +100,7 @@ public class SettingsService {
     private static final String KEY_LICENSE_CODE = "LicenseCode";
     private static final String KEY_LICENSE_DATE = "LicenseDate";
     private static final String KEY_DOWNSAMPLING_COMMAND = "DownsamplingCommand3";
+    private static final String KEY_HLS_COMMAND = "HlsCommand2";
     private static final String KEY_JUKEBOX_COMMAND = "JukeboxCommand";
     private static final String KEY_REWRITE_URL = "RewriteUrl";
     private static final String KEY_LDAP_ENABLED = "LdapEnabled";
@@ -122,6 +124,7 @@ public class SettingsService {
     private static final String KEY_LAST_SCANNED = "LastScanned";
     private static final String KEY_ORGANIZE_BY_FOLDER_STRUCTURE = "OrganizeByFolderStructure";
     private static final String KEY_SUBSONIC_URL = "SubsonicUrl";
+    private static final String KEY_MEDIA_LIBRARY_STATISTICS = "MediaLibraryStatistics";
   
     // Default values.
     private static final String DEFAULT_INDEX_STRING = "A B C D E F G H I J K L M N O P Q R S T U V W X-Z(XYZ)";
@@ -161,6 +164,7 @@ public class SettingsService {
     private static final String DEFAULT_LICENSE_CODE = null;
     private static final String DEFAULT_LICENSE_DATE = null;
     private static final String DEFAULT_DOWNSAMPLING_COMMAND = "ffmpeg -i %s -ab %bk -v 0 -f mp3 -";
+    private static final String DEFAULT_HLS_COMMAND = "ffmpeg -ss %o -t %d -i %s -async 1 -b %bk -s %wx%h -ar 44100 -ac 2 -v 0 -f mpegts -vcodec libx264 -preset superfast -acodec libmp3lame -threads 0 -";
     private static final String DEFAULT_JUKEBOX_COMMAND = "ffmpeg -ss %o -i %s -v 0 -f au -";
     private static final boolean DEFAULT_REWRITE_URL = true;
     private static final boolean DEFAULT_LDAP_ENABLED = false;
@@ -182,11 +186,13 @@ public class SettingsService {
     private static final String DEFAULT_SERVER_ID = null;
     private static final long DEFAULT_SETTINGS_CHANGED = 0L;
     private static final boolean DEFAULT_ORGANIZE_BY_FOLDER_STRUCTURE = true;
-     private static final String DEFAULT_SUBSONIC_URL = "http://www.yourdomain.com";
-     
+    private static final boolean DEFAULT_SORT_ALBUMS_BY_YEAR = true;
+    private static final String DEFAULT_SUBSONIC_URL = "http://www.yourdomain.com";
+    private static final String DEFAULT_MEDIA_LIBRARY_STATISTICS = "0 0 0 0 0";
+
     // Array of obsolete keys.  Used to clean property file.
     private static final List<String> OBSOLETE_KEYS = Arrays.asList("PortForwardingPublicPort", "PortForwardingLocalPort",
-            "DownsamplingCommand", "DownsamplingCommand2", "AutoCoverBatch", "MusicMask", "VideoMask", "CoverArtMask");
+            "DownsamplingCommand", "DownsamplingCommand2", "AutoCoverBatch", "MusicMask", "VideoMask", "CoverArtMask, HlsCommand");
 
     private static final String LOCALES_FILE = "/net/sourceforge/subsonic/i18n/locales.txt";
     private static final String THEMES_FILE = "/net/sourceforge/subsonic/theme/themes.txt";
@@ -318,6 +324,14 @@ public class SettingsService {
         setProperty(key, String.valueOf(value));
     }
 
+    private String getString(String key, String defaultValue) {
+        return properties.getProperty(key, defaultValue);
+    }
+
+    private void setString(String key, String value) {
+        setProperty(key, value);
+    }
+
     public String getIndexString() {
         return properties.getProperty(KEY_INDEX_STRING, DEFAULT_INDEX_STRING);
     }
@@ -352,10 +366,6 @@ public class SettingsService {
 
     public String getPlaylistFolder() {
         return properties.getProperty(KEY_PLAYLIST_FOLDER, DEFAULT_PLAYLIST_FOLDER);
-    }
-
-    public void setPlaylistFolder(String playlistFolder) {
-        setProperty(KEY_PLAYLIST_FOLDER, playlistFolder);
     }
 
     public String getMusicFileTypes() {
@@ -626,6 +636,14 @@ public class SettingsService {
         setProperty(KEY_DOWNSAMPLING_COMMAND, command);
     }
 
+    public String getHlsCommand() {
+        return properties.getProperty(KEY_HLS_COMMAND, DEFAULT_HLS_COMMAND);
+    }
+
+    public void setHlsCommand(String command) {
+        setProperty(KEY_HLS_COMMAND, command);
+    }
+
     public String getJukeboxCommand() {
         return properties.getProperty(KEY_JUKEBOX_COMMAND, DEFAULT_JUKEBOX_COMMAND);
     }
@@ -790,7 +808,7 @@ public class SettingsService {
     public void setServerId(String serverId) {
         properties.setProperty(KEY_SERVER_ID, serverId);
     }
-    
+
     public String getSubsonicUrl() {
         return properties.getProperty(KEY_SUBSONIC_URL, DEFAULT_SUBSONIC_URL);
     }
@@ -822,6 +840,22 @@ public class SettingsService {
 
     public void setOrganizeByFolderStructure(boolean b) {
         setBoolean(KEY_ORGANIZE_BY_FOLDER_STRUCTURE, b);
+    }
+
+    public boolean isSortAlbumsByYear() {
+        return getBoolean(KEY_SORT_ALBUMS_BY_YEAR, DEFAULT_SORT_ALBUMS_BY_YEAR);
+    }
+
+    public void setSortAlbumsByYear(boolean b) {
+        setBoolean(KEY_SORT_ALBUMS_BY_YEAR, b);
+    }
+
+    public MediaLibraryStatistics getMediaLibraryStatistics() {
+        return MediaLibraryStatistics.parse(getString(KEY_MEDIA_LIBRARY_STATISTICS, DEFAULT_MEDIA_LIBRARY_STATISTICS));
+    }
+
+    public void setMediaLibraryStatistics(MediaLibraryStatistics statistics) {
+        setString(KEY_MEDIA_LIBRARY_STATISTICS, statistics.format());
     }
 
     /**

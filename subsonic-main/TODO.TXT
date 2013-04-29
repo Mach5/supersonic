@@ -1,95 +1,46 @@
 DONE IN 4.7
------------------
-Improvements to lyrics search, courtesy of Juan Carlos Díaz.
-Updated Dutch translation, courtesy of W. van der Heijden.
-Updated Swedish translation, courtesy of Fritte Jensen.
-Update Lucene index concurrently, not afterwards.
-Fixed missing db table indexes.
-Use Lucene for random song/album search.
-Never remove rows from media_file, set present=false instead.
-  Would make IDs really permanent
-  Simplify archiving stuff.
-  Don't need media_file_archive longer.  Copy from music_file_info when creating new rows.
-  Add lastScanned timestamp, use this to set stuff to not present after scanning.
-  Use "present" in album list and other queries. MAKE SURE THESE WORK FIRST!
-Support old-style IDs in REST API.
-Always use fast access mode in LeftController.
-  Refactor accessMode in MediaFileService.
-Create new album list type: alphabetic, starred
-Top Rated is broken.
-MetaDataParer.guessArtist etc: Don't return empty strings.
-Added "created" and "discNumber" to Child in REST xsd
-Update playCount, lastPlayed in Album table.
-Remove MediaFileService.getFirstChild.
-Create MediaType music, audiobook and podcast.
-
+-------------
 
 TODO IN 4.7
 -----------------
-Add getStarred() (songCount, songOffset, albumCount, ....)
-Add getStarred2()
-Web support for starring individual songs in playlist.
-Web support for showing starred stuff.
-Find nicer icons.
+S1000 Data file size limit is reached in statement
+  http://forum.subsonic.org/forum/viewtopic.php?f=4&t=9998&start=75#p44643 (sent email Sep 7)
+Reconsider album artist.
+Prefill minisub
+  https://mail.google.com/mail/u/0/?ui=2&shva=1#inbox/1394bd52aaaf4969
+FLAC crashes Flash in Firefox (with server on Linux).
+  http://forum.subsonic.org/forum/viewtopic.php?f=2&t=10027&p=44673#p44673
 
-Update subsonic-tools.
-Test upgrade 4.6->4.7
-Avoid long db startup. Reduce hsql log size?
-Blacklist abusers of my email.
+Something wrong with matching players/users in Now Playing.
+  https://mail.google.com/mail/?tab=cm#inbox/137dcaaddeba0936
+SourceForge, hosted apps retirement
+  https://mail.google.com/mail/u/0/?tab=cm#inbox/1386c503c5c2c564
 
-New playlist implementation.
-  - Create database schema
-  - Cascading delete when user is deleted.
-  - Update "present" when scanning media library?
-  - Initally import existing playlists if table is empty.
-  - Change appendPlaylist and loadPlaylist page, show meta data (owner, public/private, #songs, duration, created date, comment).
-  - Create new Playlists button in top frame.
-  - managePlaylist -> Play, Download, Export (m3u), Delete, Private/Shared, Change owner
-  - Shared/private
-  - Admin can change owner.
-  - Keep existing playlist role, but make it enabled by default.
-  - REST support
+Postponed:
+  - ConcurrentModificationException
+      https://mail.google.com/mail/u/0/?tab=cm#inbox/13822e43383dca84
+  - Add "Force rescan" option.
+  - Increase line height in playlist.jsp
+  - Rename to play queue in Settings > Player.
+  - Show message if no songs are selected when doing add to playlist.
+  - Encourage users to save email addresses, also for admin.  Explain why.
+  - Update apps to include PlayBook version.
+  - REST: Add example links to demo server.
+  - Eliminate HomeController.Album.
+  - Clicking play button on a video podcast doesn't work.
 
-REST
-  - Document in api.jsp
-  - Add example links to demo server.
-  - Create example for videos.
-  - Test video streaming to Android.
-
-Shortcuts display ID3 names
-
-Encourage users to save email addresses, also for admin.  Explain why.
+Replace usage of dwr.util and prototype with jquery.
 Handle albums without artist. Don't create them?
-Bug: Playlist frame > Combo box > Selected songs > Add to playlist is broken.
-test that getRandomSongs doesn't return audiobooks and podcast.
-How to uniquely identify an album? Disregard artists, use all artists, or use one artist.
 Support comment and ratings for Album table.
-JSON exception with ampersand.
-minisub doesn't play.
-wget "http://localhost:8080/rest/getMusicDirectory.view?u=admin&p=admin&v=1.6&c=android&id=2f55736572732f73696e6472652f4d757369632f4c756e67732043442031000000" -O -
-wget "http://localhost:8080/rest/getArtists.view?u=admin&p=admin&v=1.6&c=android" -O -
 Test getPlaylist vs old-style IDs.
-Test that Fast access mode works.
-Move statistcs to About page?
-Include minisub
-    http://forum.subsonic.org/forum/viewtopic.php?f=8&t=7553
-
 Fix broken REST scrobbling, as reported by Ben.
-Don't throw NPE if requesting non-existent ID in REST.
-Optionally, create "Clean database" setting
-Never use fast access mode in podcast folder.
-Improve documentation of REST "download" method.
-Use media file IDs in web interface etc.
-Make it work with 64-bit Java 7.  Problem with exe4j?
-Better error message if media file not found, in main.jsp
-Document MediaFileService.
-Check file I/O.
-Optimize MediaFile getters.
--
-Maintain track order for offline files in Android. Prepend track number for sortability?
-REST: Ensure that podcast dir is included.
-Star support
+JWPlayer subtitle plugin
+  http://forum.subsonic.org/forum/viewtopic.php?t=5708
 
+-
+
+Evaluate HTML5.
+Extend demo music, and add video.
 Support ISO files.
 wtv support   http://forum.subsonic.org/forum/viewtopic.php?f=2&t=7668
 Add "-map_meta_data 0:0" to transcoding?
@@ -111,20 +62,13 @@ Support custom domain name in sharing (Settings > Advanced)
 Rename "offsetSeconds" to "timeOffset" in StreamController, and update API doc.
 Add "byteOffset" parameter as well.
 Add rating attributes to <directory> in getMusicDirectory.
-Subsonic Chumby
-  http://www.activeobjects.no/subsonic/forum/viewtopic.php?t=7154
-  http://forum.chumby.com/viewtopic.php?id=6733
 REST: add method to get everything in search index (binary, compressed)?
 
-Favorite rather than rating?
 Bookmark support (for audiobooks, podcasts)
 Stream from devices
   https://mail.google.com/mail/?shva=1#inbox/13352f77f870eba1
-Instant playlist
-  https://mail.google.com/mail/?ui=2&shva=1#inbox/1323fe922bb985af
 Go through tracker.
 Does canaca allow outgoing port 4040?
-Backend service to email license keys on request.
 Recursive getFolders API method?
   https://mail.google.com/mail/?shva=1#inbox/13090cd32a9922bd
 Checkbox, combobox bg color
@@ -153,7 +97,6 @@ Playing only first three seconds of podcast
   http://mail.google.com/a/activeobjects.no/#inbox/12e341aeae9535eb
 GPU-accellerated ffmpeg
   https://mail.google.com/a/activeobjects.no/#inbox/12f50fffffd6fecf
-Add to playlist from main.jsp
 Sencha Touch
 Subsonic for Boxee
 Linux locale issue
@@ -168,9 +111,18 @@ Improve caching of artist list.
 
 TODO IN ANDROID 3.4
 --------------------
+Patch "Host name cannot be null"
+  https://mail.google.com/mail/?ui=2&shva=1#inbox/137195c3dc8510ad
+  https://mail.google.com/mail/u/0/?shva=1#inbox/138ec0b544998d8b
+Support Bluetooth play/pause buttons in ICS.
+Subphonic
+  http://forum.subsonic.org/forum/viewtopic.php?f=5&t=9864
+Wifi lock.
+HLS video.
+Problem if underscore/dash in server name.
+  https://mail.google.com/mail/?shva=1#inbox/1365ef6ddc03e31a
 Music controls in notification.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/136242ab25baddad
-Support Bluetooth play/pause buttons in ICS.
 Holo theme
   http://android-developers.blogspot.com/2012/01/holo-everywhere.html
 Update artist list in background.
@@ -182,6 +134,7 @@ ICS theme
 https://mail.google.com/mail/?tab=cm#inbox/135bb6c0d53edd42
 Browser / web page widget for Android
 
+Sleep timer.
 Maintain track order for offline files.
 Check for lingering .partial files.
   https://mail.google.com/mail/?ui=2&shva=1#inbox/134082ca4244da22
@@ -774,9 +727,9 @@ cd subsonic-assembly; mvn assembly:assembly; cd ..
 Deploy
 Check that correct local version is displayed.
 Upload files to SourceForge (in separate shell, REMEMBER TO CHANGE VERSION BELOW).
-  rsync -avP -e ssh subsonic-installer-windows/target/subsonic*-setup.exe  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.7.beta1/
-  rsync -avP -e ssh subsonic-assembly/target/subsonic* sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.7.beta1/
-  rsync -avP -e ssh subsonic-installer-mac/target/subsonic*.pkg subsonic-installer-debian/target/subsonic*.deb subsonic-installer-rpm/target/subsonic*.rpm sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.7.beta1/
+  rsync -avP -e ssh subsonic-installer-windows/target/subsonic*-setup.exe  sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.7/
+  rsync -avP -e ssh subsonic-assembly/target/subsonic* sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.7/
+  rsync -avP -e ssh subsonic-installer-mac/target/subsonic*.pkg subsonic-installer-debian/target/subsonic*.deb subsonic-installer-rpm/target/subsonic*.rpm sindre_mehus,subsonic@frs.sourceforge.net:/home/frs/project/s/su/subsonic/subsonic/4.7/
 
 Modify FRS properties
   https://sourceforge.net/projects/subsonic/files/subsonic/
@@ -787,7 +740,7 @@ Upload site (OLD):
 Upload site (NEW):
   rsync -avP -e ssh --exclude ".*" subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps/pages/
 
-svn copy https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk https://subsonic.svn.sourceforge.net/svnroot/subsonic/tags/release-4.7.beta1 -m "Tagging 4.7.beta1"
+svn copy https://subsonic.svn.sourceforge.net/svnroot/subsonic/trunk https://subsonic.svn.sourceforge.net/svnroot/subsonic/tags/release-4.7 -m "Tagging 4.7"
 Register at freshmeat.
 Post message on forum.
 Update version number in pom.xml etc.
@@ -797,18 +750,16 @@ Upgrade Subsonic backend: CHANGE DATE BELOW
   Backup backend database.
     Checkpoint database (db.view)
     cd /var/subsonic-backend
-    tar cvf db-backup-2011-12-06.tar db
+    tar cvf db-backup-2012-06-09.tar db
   cd subsonic-backend
   mvn clean install
 
-  mkdir /usr/local/jakarta/tomcat/webapps-2011-12-06/
+  mkdir /usr/local/jakarta/tomcat/webapps-2012-08-03/
 
-  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/ROOT.war
-  scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/demo.war
-  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2011-12-06/pages
-
-
-  Blacklist abusers of my email.
+  scp subsonic-site/src/main/webapp/apps.jsp root@subsonic.org:/usr/local/jakarta/tomcat/webapps/pages
+  scp subsonic-backend/target/subsonic-backend-*.war root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2012-08-03/ROOT.war
+  scp subsonic-main/target/subsonic.war              root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2012-08-03/demo.war
+  rsync -rlptDvP -e ssh --exclude .svn subsonic-site/src/main/webapp/  root@subsonic.org:/usr/local/jakarta/tomcat/webapps-2012-08-03/pages
 
 
   Checkpoint database (db.view)
@@ -817,7 +768,7 @@ Upgrade Subsonic backend: CHANGE DATE BELOW
   ps -elf | grep jsvc
   /usr/sbin/stoptomcat
   rm webapps
-  ln -s webapps-2011-12-06 webapps
+  ln -s webapps-2012-08-03 webapps
 
   rm -rf work logs/*
   /usr/sbin/starttomcat
@@ -937,15 +888,14 @@ http://kickyoutube.com/
 http://www.schillmania.com/projects/soundmanager2/
 http://code.google.com/p/mobbler/
 
-My address:
-Sindre Mehus
-Ogmunds vei 11
-0488 Oslo
-Norway
-
-Account number: 97223688407
 IBAN number: NO7297223688407
 SWIFT/BIC code: DNBANOKK
+
+My address:
+Sindre Mehus
+Saturnveien 9
+0492 Oslo
+Norway
 
 Bank address:
 DnB NOR
@@ -975,3 +925,11 @@ Use color: #ff8200
 Getting started, yellow marker
 Use brush: circle fuzzy 17, transparency 67.3
 Use color: #ffe200
+
+CrashPlan
+---------
+To make it work on subsonic.org:
+- Put jre in /usr/local/crashplan/jre (copy from forum.subsonic.org)
+- Install libffi for Centos
+- Extract libjnidispatch.so from jna-3.2.5 and put it in /usr/local/crashplan
+- Remote UI: http://support.crashplan.com/doku.php/how_to/configure_a_headless_client

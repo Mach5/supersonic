@@ -5,11 +5,10 @@
     <groupId>com.github.mach5.supersonic</groupId>
     <artifactId>supersonic-booter</artifactId>
     <name>Supersonic Booter</name>
-
     <parent>
         <groupId>com.github.mach5.supersonic</groupId>
         <artifactId>supersonic</artifactId>
-        <version>4.7.beta1</version>
+        <version>4.7</version>
     </parent>
 
     <dependencies>
