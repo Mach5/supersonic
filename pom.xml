@@ -63,37 +63,8 @@
         </pluginRepository>
     </pluginRepositories>
 
-<<<<<<< HEAD
-=======
-    <scm>
-        <connection>scm:svn:svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk</connection>
-        <developerConnection>scm:svn:svn+ssh://sindre_mehus@svn.code.sf.net/p/subsonic/code/trunk</developerConnection>
-        <url>https://sourceforge.net/p/subsonic/code</url>
-    </scm>
-
-    <ciManagement>
-        <system>continuum</system>
-        <notifiers>
-            <notifier>
-                <type>mail</type>
-                <configuration>
-                    <address>sindre@activeobjects.no</address>
-                </configuration>
-            </notifier>
-        </notifiers>
-    </ciManagement>
-
-    <developers>
-        <developer>
-            <name>Sindre Mehus</name>
-            <email>sindre@activeobjects.no</email>
-        </developer>
-    </developers>
-
->>>>>>> subsonic.upstream.4.7
     <modules>
         <module>subsonic-main</module>
-    </modules>
     </modules>
 
     <profiles>
@@ -311,40 +282,8 @@
             </plugins>
     </pluginManagement>
 
-        <plugins>
-
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
-                    <encoding>ISO-8859-1</encoding>
-                    <verbose>false</verbose>
-                    <compilerVersion>1.5</compilerVersion>
-                    <showWarnings>true</showWarnings>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>analyze</id>
-                        <goals>
-                            <goal>analyze-only</goal>
-                        </goals>
-                        <configuration>
-                            <failOnWarning>${failOnDependencyWarning}</failOnWarning>
-                            <ignoreNonCompile>true</ignoreNonCompile>
-                        </configuration>
-            </plugins>
-    </pluginManagement>
 
         <plugins>
-
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
