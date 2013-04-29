@@ -74,7 +74,7 @@ public class VideoPlayerController extends ParameterizableViewController {
         map.put("bitRates", BIT_RATES);
 
         if (!settingsService.isLicenseValid() && settingsService.getVideoTrialExpires() == null) {
-            Date expiryDate = new Date(System.currentTimeMillis() + TRIAL_DAYS * 24L * 3600L * 1000L);
+            Date expiryDate = new Date(System.currentTimeMillis() + TRIAL_DAYS * 24L * 3600L * 1000000L);
             settingsService.setVideoTrialExpires(expiryDate);
             settingsService.save();
         }

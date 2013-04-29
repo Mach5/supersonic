@@ -624,10 +624,7 @@ public class SettingsService {
     }
 
     public boolean isLicenseValid(String email, String license) {
-        if (email == null || license == null) {
-            return false;
-        }
-        return license.equalsIgnoreCase(StringUtil.md5Hex(email.toLowerCase()));
+        return true;
     }
 
     public String getDownsamplingCommand() {
