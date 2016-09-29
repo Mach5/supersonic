@@ -4,7 +4,7 @@
     <%@ include file="head.jsp" %>
     <script type="text/javascript" src="<c:url value="/script/prototype.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/scripts.js"/>"></script>
-    <script type="text/javascript" src="<c:url value="/script/swfobject.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/script/jwplayer.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/range.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/timer.js"/>"></script>
     <script type="text/javascript" src="<c:url value="/script/webfx/slider.js"/>"></script>
@@ -40,6 +40,7 @@
     </c:choose>
     }
 
+    
     function startTimer() {
         <!-- Periodically check if the current song has changed. -->
         nowPlayingService.getNowPlayingForCurrentPlayer(nowPlayingCallback);
@@ -59,22 +60,23 @@
         </c:if>
         }
     }
-
+    
     function createPlayer() {
-        var flashvars = {
-            backcolor:"<spring:theme code="backgroundColor"/>",
-            frontcolor:"<spring:theme code="textColor"/>",
-            id:"player1"
-        };
-        var params = {
-            allowfullscreen:"true",
-            allowscriptaccess:"always"
-        };
-        var attributes = {
-            id:"player1",
-            name:"player1"
-        };
-        swfobject.embedSWF("<c:url value="/flash/jw-player-5.6.swf"/>", "placeholder", "340", "24", "9.0.0", false, flashvars, params, attributes);
+	   jwplayer("player1").setup({
+	         flashplayer:"<c:url value="/flash/jw-player-5.9.swf"/>",
+	         id:"player1",
+	         name:"player1",
+	         backcolor:"<spring:theme code="backgroundColor"/>",
+	         frontcolor:"<spring:theme code="textColor"/>",
+	         controlbar:"bottom",
+	         width:"340",
+	         height:"24",
+	         allowscriptaccess:'always',
+	         modes: [
+	            {type: "html5"},
+	            {type: "flash", src:"<c:url value="/flash/jw-player-5.9.swf"/>"}
+	         ]
+	      });
     }
 
     function playerReady(thePlayer) {
@@ -413,9 +415,10 @@
                     </c:forEach>
                 </select></td>
             </c:if>
+            
+         
             <c:if test="${model.player.web}">
-                <td style="width:340px; height:24px;padding-left:10px;padding-right:10px"><div id="placeholder">
-                    <a href="http://www.adobe.com/go/getflashplayer" target="_blank"><fmt:message key="playlist.getflash"/></a>
+                <td style="width:340px; height:24px;padding-left:10px;padding-right:10px"><div id="player1">
                 </div></td>
             </c:if>
 
