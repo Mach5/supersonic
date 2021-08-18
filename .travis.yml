@@ -10,3 +10,7 @@ branches:
   except:
     - upstream
 
+
+cache:
+  directories:
+  - $HOME/.m2
