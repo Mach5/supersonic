@@ -163,7 +163,7 @@
         <dependency>
             <groupId>org.directwebremoting</groupId>
             <artifactId>dwr</artifactId>
-            <version>3.0.rc2</version>
+            <version>3.0.1-RELEASE</version>
         </dependency>
 
         <!--Needed by dwr-->
